@@ -14,7 +14,7 @@
  */
 //Note, the above license and copyright applies to this file only.
 
-package edu.cornell.jade.seatt.lwjgl3;
+package edu.cornell.jade.seasthethrone.lwjgl3;
 
 import org.lwjgl.system.macosx.LibC;
 

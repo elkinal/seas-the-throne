@@ -1,4 +1,4 @@
-package edu.cornell.jade.seatt;
+package edu.cornell.jade.seasthethrone;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
