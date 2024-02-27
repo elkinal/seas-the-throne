@@ -248,12 +248,12 @@ public class GameCanvas {
      * @param fullscreen Whether this canvas should change to fullscreen.
      * @param desktop 	 Whether to use the current desktop resolution
      */
-    public void setFullscreen(boolean fullscreen, boolean desktop) {
+    public void setFullscreen(boolean value, boolean desktop) {
         if (active != DrawPass.INACTIVE) {
             Gdx.app.error("GameCanvas", "Cannot alter property while drawing active", new IllegalStateException());
             return;
         }
-        if (fullscreen) {
+        if (value) {
             Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
         } else {
             Gdx.graphics.setWindowedMode(width, height);
