@@ -10,6 +10,9 @@ public class RenderingEngine {
     public void addRenderable(Renderable r){
         renderables.add(r);
     }
+    public String getType(Renderable r){
+        return r.getType();
+    }
     public void drawRenderables(){
 
     }
