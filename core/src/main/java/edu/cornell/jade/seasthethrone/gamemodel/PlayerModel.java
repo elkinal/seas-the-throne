@@ -5,6 +5,7 @@ import edu.cornell.jade.seasthethrone.model.ComplexModel;
 
 public class PlayerModel extends ComplexModel {
 
+    // built from multiple polygonmodels?
     @Override
     protected boolean createJoints(World world) {
         // TODO:

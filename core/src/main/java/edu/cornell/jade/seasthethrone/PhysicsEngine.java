@@ -3,18 +3,83 @@ package edu.cornell.jade.seasthethrone;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
+import edu.cornell.jade.seasthethrone.gamemodel.PlayerModel;
+import edu.cornell.jade.seasthethrone.model.Model;
+import edu.cornell.jade.util.PooledList;
 
 public class PhysicsEngine implements ContactListener {
 
+    /** All the objects in the world. */
+    protected PooledList<Model> objects  = new PooledList<Model>();
     /** The Box2D world */
-    protected World world;
+    private World world;
     /** The boundary of the world */
-    protected Rectangle bounds;
+    private Rectangle bounds;
     /** The world scale */
-    protected Vector2 scale;
+    private Vector2 scale;
+    /** The player */
+    private PlayerModel player;
 
+    public PhysicsEngine(Rectangle bounds, Vector2 gravity){
+
+        // not sure if its gonna make sense to have some concept of gravity
+        world = new World(gravity, false);
+        this.bounds = new Rectangle(bounds);
+        this.scale = new Vector2(1, 1);
+        world.setContactListener(this);
+    }
+
+    /**
+     * Resets the status of the game so that we can play again.
+     *
+     * This method disposes of the world and creates a new one.
+     */
+    public void reset() {
+        Vector2 gravity = new Vector2(world.getGravity() );
+        objects.clear();
+        world.dispose();
+
+        world = new World(gravity,false);
+        world.setContactListener(this);
+        setupWorld();
+    }
+
+    private void setupWorld(){
+        player = new PlayerModel();
+        addObject(player);
+
+        BulletModel bullet = new BulletModel(0, 0, 5);
+        bullet.createFixtures();
+        addObject(bullet);
+    }
     public void update(float dt){
 
+    }
+
+    /**
+     * Immediately adds the object to the physics world
+     *
+     * @param obj The object to add
+     */
+    protected void addObject(Model obj) {
+        assert inBounds(obj) : "Object is not in bounds";
+        objects.add(obj);
+    }
+
+    /**
+     * Returns true if the object is in bounds.
+     *
+     * This assertion is useful for debugging the physics.
+     *
+     * @param obj The object to check.
+     *
+     * @return true if the object is in bounds.
+     */
+    public boolean inBounds(Model obj) {
+        boolean horiz = (bounds.x <= obj.getX() && obj.getX() <= bounds.x+bounds.width);
+        boolean vert  = (bounds.y <= obj.getY() && obj.getY() <= bounds.y+bounds.height);
+        return horiz && vert;
     }
 
     @Override

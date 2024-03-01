@@ -1,40 +1,45 @@
+/*
+ * SimpleObstacle.java
+ *
+ * This class is a subclass of Obstacle that supports only one Body.
+ * it is the prime subclass of most models in the game.
+ *
+ * This class does not provide Shape information, and cannot be instantiated
+ * directly.
+ *
+ * Many of the method comments in this class are taken from the Box2d manual by
+ * Erin Catto (2011).
+ *
+ * Author: Walker M. White
+ * Based on original PhysicsDemo Lab by Don Holden, 2007
+ * LibGDX version, 2/6/2015
+ */
 package edu.cornell.jade.seasthethrone.model;
 
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.*;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
-public abstract class Model {
 
-    /// Initialization structures to store body information
-    /** Stores the body information for this shape */
-    protected BodyDef bodyinfo;
-    /** Stores the fixture information for this shape */
-    protected FixtureDef fixture;
-    /** The mass data of this shape (which may override the fixture) */
-    protected MassData massdata;
-    /** Whether or not to use the custom mass data */
-    protected boolean masseffect;
-    /** A tag for debugging purposes */
-    private String nametag;
-    /** Drawing scale to convert physics units to pixels */
-    protected Vector2 drawScale;
+/**
+ * Base model class to support collisions.
+ *
+ * This is an instance of a Obstacle with just one body. It does not have any joints.
+ * It is the primary type of physics object. 
+ *
+ * This class does not provide Shape information, and cannot be instantiated directly.
+ */
+public abstract class SimpleModel extends Model {
+    /** The physics body for Box2D. */
+    protected Body body;
 
-    /// Track garbage collection status
-    /** Whether the object should be removed from the world on next pass */
-    private boolean toRemove;
-    /** Whether the object has changed shape and needs a new fixture */
-    private boolean isDirty;
+    /** The texture for the shape. */
+    protected TextureRegion texture;
 
-    /// Caching objects
-    /** A cache value for when the user wants to access the body position */
-    protected Vector2 positionCache = new Vector2();
-    /** A cache value for when the user wants to access the linear velocity */
-    protected Vector2 velocityCache = new Vector2();
-    /** A cache value for when the user wants to access the center of mass */
-    protected Vector2 centroidCache = new Vector2();
-    /** A cache value for when the user wants to access the drawing scale */
-    protected Vector2 scaleCache = new Vector2();
-
+    /** The texture origin for drawing */
+    protected Vector2 origin;
 
     /// BodyDef Methods
     /**
@@ -46,8 +51,8 @@ public abstract class Model {
      *
      * @return the body type for Box2D physics
      */
-    public BodyDef.BodyType getBodyType() {
-        return bodyinfo.type;
+    public BodyType getBodyType() {
+        return (body != null ? body.getType() : super.getBodyType());
     }
 
     /**
@@ -59,8 +64,12 @@ public abstract class Model {
      *
      * @return the body type for Box2D physics
      */
-    public void setBodyType(BodyDef.BodyType value) {
-        bodyinfo.type = value;
+    public void setBodyType(BodyType value) {
+        if (body != null) {
+            body.setType(value);
+        } else {
+            super.setBodyType(value);
+        }
     }
 
     /**
@@ -73,7 +82,7 @@ public abstract class Model {
      * @return the current position for this physics body
      */
     public Vector2 getPosition() {
-        return positionCache.set(bodyinfo.position);
+        return (body != null ? body.getPosition() : super.getPosition());
     }
 
     /**
@@ -84,7 +93,11 @@ public abstract class Model {
      * @param value  the current position for this physics body
      */
     public void setPosition(Vector2 value) {
-        bodyinfo.position.set(value);
+        if (body != null) {
+            body.setTransform(value,body.getAngle());
+        } else {
+            super.setPosition(value);
+        }
     }
 
     /**
@@ -94,7 +107,12 @@ public abstract class Model {
      * @param y  the y-coordinate for this physics body
      */
     public void setPosition(float x, float y) {
-        bodyinfo.position.set(x, y);
+        if (body != null) {
+            positionCache.set(x,y);
+            body.setTransform(positionCache,body.getAngle());
+        } else {
+            super.setPosition(x,y);
+        }
     }
 
     /**
@@ -103,7 +121,7 @@ public abstract class Model {
      * @return the x-coordinate for this physics body
      */
     public float getX() {
-        return bodyinfo.position.x;
+        return (body != null ? body.getPosition().x : super.getX());
     }
 
     /**
@@ -112,7 +130,12 @@ public abstract class Model {
      * @param value  the x-coordinate for this physics body
      */
     public void setX(float value) {
-        bodyinfo.position.x = value;
+        if (body != null) {
+            positionCache.set(value,body.getPosition().y);
+            body.setTransform(positionCache,body.getAngle());
+        } else {
+            super.setX(value);
+        }
     }
 
     /**
@@ -121,7 +144,7 @@ public abstract class Model {
      * @return the y-coordinate for this physics body
      */
     public float getY() {
-        return bodyinfo.position.y;
+        return (body != null ? body.getPosition().y : super.getY());
     }
 
     /**
@@ -130,7 +153,12 @@ public abstract class Model {
      * @param value  the y-coordinate for this physics body
      */
     public void setY(float value) {
-        bodyinfo.position.y = value;
+        if (body != null) {
+            positionCache.set(body.getPosition().x,value);
+            body.setTransform(positionCache,body.getAngle());
+        } else {
+            super.setY(value);
+        }
     }
 
     /**
@@ -141,7 +169,7 @@ public abstract class Model {
      * @return the angle of rotation for this body
      */
     public float getAngle() {
-        return bodyinfo.angle;
+        return (body != null ? body.getAngle() : super.getAngle());
     }
 
     /**
@@ -150,7 +178,11 @@ public abstract class Model {
      * @param value  the angle of rotation for this body (in radians)
      */
     public void setAngle(float value) {
-        bodyinfo.angle = value;
+        if (body != null) {
+            body.setTransform(body.getPosition(),value);
+        } else {
+            super.setAngle(value);
+        }
     }
 
     /**
@@ -163,7 +195,7 @@ public abstract class Model {
      * @return the linear velocity for this physics body
      */
     public Vector2 getLinearVelocity() {
-        return velocityCache.set(bodyinfo.linearVelocity);
+        return (body != null ? body.getLinearVelocity() : super.getLinearVelocity());
     }
 
     /**
@@ -174,7 +206,11 @@ public abstract class Model {
      * @param value  the linear velocity for this physics body
      */
     public void setLinearVelocity(Vector2 value) {
-        bodyinfo.linearVelocity.set(value);
+        if (body != null) {
+            body.setLinearVelocity(value);
+        } else {
+            super.setLinearVelocity(value);
+        }
     }
 
     /**
@@ -183,7 +219,7 @@ public abstract class Model {
      * @return the x-velocity for this physics body
      */
     public float getVX() {
-        return bodyinfo.linearVelocity.x;
+        return (body != null ? body.getLinearVelocity().x : super.getVX());
     }
 
     /**
@@ -192,7 +228,12 @@ public abstract class Model {
      * @param value  the x-velocity for this physics body
      */
     public void setVX(float value) {
-        bodyinfo.linearVelocity.x = value;
+        if (body != null) {
+            velocityCache.set(value,body.getLinearVelocity().y);
+            body.setLinearVelocity(velocityCache);
+        } else {
+            super.setVX(value);
+        }
     }
 
     /**
@@ -201,7 +242,7 @@ public abstract class Model {
      * @return the y-velocity for this physics body
      */
     public float getVY() {
-        return bodyinfo.linearVelocity.y;
+        return (body != null ? body.getLinearVelocity().y : super.getVY());
     }
 
     /**
@@ -210,7 +251,12 @@ public abstract class Model {
      * @param value  the y-velocity for this physics body
      */
     public void setVY(float value) {
-        bodyinfo.linearVelocity.y = value;
+        if (body != null) {
+            velocityCache.set(body.getLinearVelocity().x,value);
+            body.setLinearVelocity(velocityCache);
+        } else {
+            super.setVY(value);
+        }
     }
 
     /**
@@ -221,7 +267,7 @@ public abstract class Model {
      * @return the angular velocity for this physics body
      */
     public float getAngularVelocity() {
-        return bodyinfo.angularVelocity;
+        return (body != null ? body.getAngularVelocity() : super.getAngularVelocity());
     }
 
     /**
@@ -230,7 +276,11 @@ public abstract class Model {
      * @param value the angular velocity for this physics body (in radians)
      */
     public void setAngularVelocity(float value) {
-        bodyinfo.angularVelocity = value;
+        if (body != null) {
+            body.setAngularVelocity(value);
+        } else {
+            super.setAngularVelocity(value);
+        }
     }
 
     /**
@@ -244,7 +294,7 @@ public abstract class Model {
      * @return true if the body is active
      */
     public boolean isActive() {
-        return bodyinfo.active;
+        return (body != null ? body.isActive() : super.isActive());
     }
 
     /**
@@ -258,7 +308,11 @@ public abstract class Model {
      * @param value  whether the body is active
      */
     public void setActive(boolean value) {
-        bodyinfo.active = value;
+        if (body != null) {
+            body.setActive(value);
+        } else {
+            super.setActive(value);
+        }
     }
 
     /**
@@ -272,7 +326,7 @@ public abstract class Model {
      * @return true if the body is awake
      */
     public boolean isAwake() {
-        return bodyinfo.awake;
+        return (body != null ? body.isAwake() : super.isAwake());
     }
 
     /**
@@ -286,7 +340,11 @@ public abstract class Model {
      * @param value  whether the body is awake
      */
     public void setAwake(boolean value) {
-        bodyinfo.awake = value;
+        if (body != null) {
+            body.setAwake(value);
+        } else {
+            super.setAwake(value);
+        }
     }
 
     /**
@@ -300,7 +358,7 @@ public abstract class Model {
      * @return false if this body should never fall asleep
      */
     public boolean isSleepingAllowed() {
-        return bodyinfo.allowSleep;
+        return (body != null ? body.isSleepingAllowed() : super.isSleepingAllowed());
     }
 
     /**
@@ -314,7 +372,11 @@ public abstract class Model {
      * @param value  whether the body should ever fall asleep
      */
     public void setSleepingAllowed(boolean value) {
-        bodyinfo.allowSleep = value;
+        if (body != null) {
+            body.setSleepingAllowed(value);
+        } else {
+            super.setSleepingAllowed(value);
+        }
     }
 
     /**
@@ -334,7 +396,7 @@ public abstract class Model {
      * @return true if this body is a bullet
      */
     public boolean isBullet() {
-        return bodyinfo.bullet;
+        return (body != null ? body.isBullet() : super.isBullet());
     }
 
     /**
@@ -354,7 +416,11 @@ public abstract class Model {
      * @param value  whether this body is a bullet
      */
     public void setBullet(boolean value) {
-        bodyinfo.bullet = value;
+        if (body != null) {
+            body.setBullet(value);
+        } else {
+            super.setBullet(value);
+        }
     }
 
     /**
@@ -365,7 +431,7 @@ public abstract class Model {
      * @return true if this body be prevented from rotating
      */
     public boolean isFixedRotation() {
-        return bodyinfo.fixedRotation;
+        return (body != null ? body.isFixedRotation() : super.isFixedRotation());
     }
 
     /**
@@ -376,7 +442,11 @@ public abstract class Model {
      * @param value  whether this body be prevented from rotating
      */
     public void setFixedRotation(boolean value) {
-        bodyinfo.fixedRotation = value;
+        if (body != null) {
+            body.setFixedRotation(value);
+        } else {
+            super.setFixedRotation(value);
+        }
     }
 
     /**
@@ -388,7 +458,7 @@ public abstract class Model {
      * @return the gravity scale to apply to this body
      */
     public float getGravityScale() {
-        return bodyinfo.gravityScale;
+        return (body != null ? body.getGravityScale() : super.getGravityScale());
     }
 
     /**
@@ -400,7 +470,11 @@ public abstract class Model {
      * @param value  the gravity scale to apply to this body
      */
     public void setGravityScale(float value) {
-        bodyinfo.gravityScale = value;
+        if (body != null) {
+            body.setGravityScale(value);
+        } else {
+            super.setGravityScale(value);
+        }
     }
 
     /**
@@ -417,7 +491,7 @@ public abstract class Model {
      * @return the linear damping for this body.
      */
     public float getLinearDamping() {
-        return bodyinfo.linearDamping;
+        return (body != null ? body.getLinearDamping() : super.getLinearDamping());
     }
 
     /**
@@ -434,7 +508,11 @@ public abstract class Model {
      * @param value  the linear damping for this body.
      */
     public void setLinearDamping(float value) {
-        bodyinfo.linearDamping = value;
+        if (body != null) {
+            body.setLinearDamping(value);
+        } else {
+            super.setLinearDamping(value);
+        }
     }
 
     /**
@@ -451,7 +529,7 @@ public abstract class Model {
      * @return the angular damping for this body.
      */
     public float getAngularDamping() {
-        return bodyinfo.angularDamping;
+        return (body != null ? body.getAngularDamping() : super.getAngularDamping());
     }
 
     /**
@@ -468,44 +546,14 @@ public abstract class Model {
      * @param value  the angular damping for this body.
      */
     public void setAngularDamping(float value) {
-        bodyinfo.angularDamping = value;
-    }
-
-    /**
-     * Copies the state from the given body to the body def.
-     *
-     * This is important if you want to save the state of the body before removing
-     * it from the world.
-     */
-    protected void setBodyState(Body body) {
-        bodyinfo.type   = body.getType();
-        bodyinfo.angle  = body.getAngle();
-        bodyinfo.active = body.isActive();
-        bodyinfo.awake  = body.isAwake();
-        bodyinfo.bullet = body.isBullet();
-        bodyinfo.position.set(body.getPosition());
-        bodyinfo.linearVelocity.set(body.getLinearVelocity());
-        bodyinfo.allowSleep = body.isSleepingAllowed();
-        bodyinfo.fixedRotation = body.isFixedRotation();
-        bodyinfo.gravityScale  = body.getGravityScale();
-        bodyinfo.angularDamping = body.getAngularDamping();
-        bodyinfo.linearDamping  = body.getLinearDamping();
+        if (body != null) {
+            body.setAngularDamping(value);
+        } else {
+            super.setAngularDamping(value);
+        }
     }
 
     /// FixtureDef Methods
-    /**
-     * Returns the density of this body
-     *
-     * The density is typically measured in usually in kg/m^2. The density can be zero or
-     * positive. You should generally use similar densities for all your fixtures. This
-     * will improve stacking stability.
-     *
-     * @return the density of this body
-     */
-    public float getDensity() {
-        return fixture.density;
-    }
-
     /**
      * Sets the density of this body
      *
@@ -516,22 +564,12 @@ public abstract class Model {
      * @param value  the density of this body
      */
     public void setDensity(float value) {
-        fixture.density = value;
-    }
-
-    /**
-     * Returns the friction coefficient of this body
-     *
-     * The friction parameter is usually set between 0 and 1, but can be any non-negative
-     * value. A friction value of 0 turns off friction and a value of 1 makes the friction
-     * strong. When the friction force is computed between two shapes, Box2D must combine
-     * the friction parameters of the two parent fixtures. This is done with the geometric
-     * mean.
-     *
-     * @return the friction coefficient of this body
-     */
-    public float getFriction() {
-        return fixture.friction;
+        super.setDensity(value);
+        if (body != null) {
+            for(Fixture f : body.getFixtureList()) {
+                f.setDensity(value);
+            }
+        }
     }
 
     /**
@@ -546,22 +584,12 @@ public abstract class Model {
      * @param value  the friction coefficient of this body
      */
     public void setFriction(float value) {
-        fixture.friction = value;
-    }
-
-    /**
-     * Returns the restitution of this body
-     *
-     * Restitution is used to make objects bounce. The restitution value is usually set
-     * to be between 0 and 1. Consider dropping a ball on a table. A value of zero means
-     * the ball won't bounce. This is called an inelastic collision. A value of one means
-     * the ball's velocity will be exactly reflected. This is called a perfectly elastic
-     * collision.
-     *
-     * @return the restitution of this body
-     */
-    public float getRestitution() {
-        return fixture.restitution;
+        super.setFriction(value);
+        if (body != null) {
+            for(Fixture f : body.getFixtureList()) {
+                f.setFriction(value);
+            }
+        }
     }
 
     /**
@@ -576,20 +604,12 @@ public abstract class Model {
      * @param value  the restitution of this body
      */
     public void setRestitution(float value) {
-        fixture.restitution = value;
-    }
-
-    /**
-     * Returns true if this object is a sensor.
-     *
-     * Sometimes game logic needs to know when two entities overlap yet there should be
-     * no collision response. This is done by using sensors. A sensor is an entity that
-     * detects collision but does not produce a response.
-     *
-     * @return true if this object is a sensor.
-     */
-    public boolean isSensor() {
-        return fixture.isSensor;
+        super.setRestitution(value);
+        if (body != null) {
+            for(Fixture f : body.getFixtureList()) {
+                f.setRestitution(value);
+            }
+        }
     }
 
     /**
@@ -602,22 +622,12 @@ public abstract class Model {
      * @param value  whether this object is a sensor.
      */
     public void setSensor(boolean value) {
-        fixture.isSensor = value;
-    }
-
-    /**
-     * Returns the filter data for this object (or null if there is none)
-     *
-     * Collision filtering allows you to prevent collision between fixtures. For example,
-     * say you make a character that rides a bicycle. You want the bicycle to collide
-     * with the terrain and the character to collide with the terrain, but you don't want
-     * the character to collide with the bicycle (because they must overlap). Box2D
-     * supports such collision filtering using categories and groups.
-     *
-     * @return the filter data for this object (or null if there is none)
-     */
-    public Filter getFilterData() {
-        return fixture.filter;
+        super.setSensor(value);
+        if (body != null) {
+            for(Fixture f : body.getFixtureList()) {
+                f.setSensor(value);
+            }
+        }
     }
 
     /**
@@ -634,14 +644,11 @@ public abstract class Model {
      * @param value  the filter data for this object
      */
     public void setFilterData(Filter value) {
-        if (value !=  null) {
-            fixture.filter.categoryBits = value.categoryBits;
-            fixture.filter.groupIndex = value.groupIndex;
-            fixture.filter.maskBits   = value.maskBits;
-        } else {
-            fixture.filter.categoryBits = 0x0001;
-            fixture.filter.groupIndex = 0;
-            fixture.filter.maskBits   = -1;
+        super.setFilterData(value);
+        if (body != null) {
+            for(Fixture f : body.getFixtureList()) {
+                f.setFilterData(value);
+            }
         }
     }
 
@@ -656,7 +663,7 @@ public abstract class Model {
      * @return the center of mass for this physics body
      */
     public Vector2 getCentroid() {
-        return centroidCache.set(massdata.center);
+        return  (body != null ? body.getLocalCenter() : super.getCentroid());
     }
 
     /**
@@ -667,12 +674,10 @@ public abstract class Model {
      * @param value  the center of mass for this physics body
      */
     public void setCentroid(Vector2 value) {
-        if (!masseffect) {
-            masseffect = true;
-            massdata.I = getInertia();
-            massdata.mass = getMass();
+        super.setCentroid(value);
+        if (body != null) {
+            body.setMassData(massdata); // Protected accessor?
         }
-        massdata.center.set(value);
     }
 
     /**
@@ -684,7 +689,7 @@ public abstract class Model {
      * @return the rotational inertia of this body
      */
     public float getInertia() {
-        return massdata.I;
+        return  (body != null ? body.getInertia() : super.getInertia());
     }
 
     /**
@@ -696,12 +701,10 @@ public abstract class Model {
      * @param value  the rotational inertia of this body
      */
     public void setInertia(float value) {
-        if (!masseffect) {
-            masseffect = true;
-            massdata.center.set(getCentroid());
-            massdata.mass = getMass();
+        super.setInertia(value);
+        if (body != null) {
+            body.setMassData(massdata); // Protected accessor?
         }
-        massdata.I = value;
     }
 
     /**
@@ -712,7 +715,7 @@ public abstract class Model {
      * @return the mass of this body
      */
     public float getMass() {
-        return massdata.mass;
+        return  (body != null ? body.getMass() : super.getMass());
     }
 
     /**
@@ -723,71 +726,58 @@ public abstract class Model {
      * @param value  the mass of this body
      */
     public void setMass(float value) {
-        if (!masseffect) {
-            masseffect = true;
-            massdata.center.set(getCentroid());
-            massdata.I = getInertia();
+        super.setMass(value);
+        if (body != null) {
+            body.setMassData(massdata); // Protected accessor?
         }
-        massdata.mass = value;
     }
 
     /**
      * Resets this body to use the mass computed from the its shape and density
      */
     public void resetMass() {
-        masseffect = false;
+        super.resetMass();
+        if (body != null) {
+            body.resetMassData();
+        }
     }
 
-    /// Garbage Collection Methods
+    /// Texture Information
     /**
-     * Returns true if our object has been flagged for garbage collection
+     * Returns the object texture for drawing purposes.
      *
-     * A garbage collected object will be removed from the physics world at
-     * the next time step.
+     * In order for drawing to work properly, you MUST set the drawScale.
+     * The drawScale converts the physics units to pixels.
      *
-     * @return true if our object has been flagged for garbage collection
+     * @return the object texture for drawing purposes.
      */
-    public boolean isRemoved() {
-        return toRemove;
-    }
-
-    /**
-     * Sets whether our object has been flagged for garbage collection
-     *
-     * A garbage collected object will be removed from the physics world at
-     * the next time step.
-     *
-     * @param value  whether our object has been flagged for garbage collection
-     */
-    public void markRemoved(boolean value) {
-        toRemove = value;
+    public TextureRegion getTexture() {
+        return texture;
     }
 
     /**
-     * Returns true if the shape information must be updated.
+     * Sets the object texture for drawing purposes.
      *
-     * Attributes tied to the geometry (and not just forces/position) must wait for
-     * collisions to complete before they are reset.  Shapes (and their properties)
-     * are reset in the update method.
+     * In order for drawing to work properly, you MUST set the drawScale.
+     * The drawScale converts the physics units to pixels.
      *
-     * @return true if the shape information must be updated.
+     * @param value  the object texture for drawing purposes.
      */
-    public boolean isDirty() {
-        return isDirty;
+    public void setTexture(TextureRegion value) {
+        texture = value;
+        origin.set(texture.getRegionWidth()/2.0f, texture.getRegionHeight()/2.0f);
     }
-
-    /**
-     * Sets whether the shape information must be updated.
-     *
-     * Attributes tied to the geometry (and not just forces/position) must wait for
-     * collisions to complete before they are reset.  Shapes (and their properties)
-     * are reset in the update method.
-     *
-     * @param value  whether the shape information must be updated.
-     */
-    public void markDirty(boolean value) {
-        isDirty = value;
-    }
+//
+//    /**
+//     * Draws the physics object.
+//     *
+//     * @param canvas Drawing context
+//     */
+//    public void draw(GameCanvas canvas) {
+//        if (texture != null) {
+//            canvas.draw(texture,Color.WHITE,origin.x,origin.y,getX()*drawScale.x,getY()*drawScale.x,getAngle(),1,1);
+//        }
+//    }
 
     /**
      * Returns the Box2D body for this object.
@@ -797,127 +787,29 @@ public abstract class Model {
      * @return the Box2D body for this object.
      */
     public Body getBody() {
-        return null;
-    }
-
-    /// DRAWING METHODS
-    /**
-     * Returns the drawing scale for this physics object
-     *
-     * The drawing scale is the number of pixels to draw before Box2D unit. Because
-     * mass is a function of area in Box2D, we typically want the physics objects
-     * to be small.  So we decouple that scale from the physics object.  However,
-     * we must track the scale difference to communicate with the scene graph.
-     *
-     * This method does NOT return a reference to the drawing scale. Changes to this
-     * vector will not affect the body.  However, it returns the same vector each time
-     * its is called, and so cannot be used as an allocator.
-
-     * We allow for the scaling factor to be non-uniform.
-     *
-     * @return the drawing scale for this physics object
-     */
-    public Vector2 getDrawScale() {
-        scaleCache.set(drawScale);
-        return scaleCache;
+        return body;
     }
 
     /**
-     * Sets the drawing scale for this physics object
+     * Creates a new simple physics object at the origin.
      *
-     * The drawing scale is the number of pixels to draw before Box2D unit. Because
-     * mass is a function of area in Box2D, we typically want the physics objects
-     * to be small.  So we decouple that scale from the physics object.  However,
-     * we must track the scale difference to communicate with the scene graph.
-     *
-     * We allow for the scaling factor to be non-uniform.
-     *
-     * @param value  the drawing scale for this physics object
+     * REMEMBER: The size is in physics units, not pixels.
      */
-    public void setDrawScale(Vector2 value) {
-        setDrawScale(value.x,value.y);
-    }
-
-    /**
-     * Sets the drawing scale for this physics object
-     *
-     * The drawing scale is the number of pixels to draw before Box2D unit. Because
-     * mass is a function of area in Box2D, we typically want the physics objects
-     * to be small.  So we decouple that scale from the physics object.  However,
-     * we must track the scale difference to communicate with the scene graph.
-     *
-     * We allow for the scaling factor to be non-uniform.
-     *
-     * @param x  the x-axis scale for this physics object
-     * @param y  the y-axis scale for this physics object
-     */
-    public void setDrawScale(float x, float y) {
-        drawScale.set(x,y);
-    }
-
-    /// DEBUG METHODS
-    /**
-     * Returns the physics object tag.
-     *
-     * A tag is a string attached to an object, in order to identify it in debugging.
-     *
-     * @return the physics object tag.
-     */
-    public String getName() {
-        return nametag;
-    }
-
-    /**
-     * Sets the physics object tag.
-     *
-     * A tag is a string attached to an object, in order to identify it in debugging.
-     *
-     * @param  value    the physics object tag
-     */
-    public void setName(String value) {
-        nametag = value;
-    }
-
-    /**
-     * Create a new physics object at the origin.
-     */
-    protected Model() {
+    protected SimpleModel() {
         this(0,0);
     }
 
     /**
-     * Create a new physics object
+     * Creates a new simple physics object
      *
-     * @param x Initial x position in world coordinates
-     * @param y Initial y position in world coordinates
+     * @param x  Initial x position in world coordinates
+     * @param y  Initial y position in world coordinates
      */
-    protected Model(float x, float y) {
-        // Object has yet to be deactivated
-        toRemove = false;
-
-        // Allocate the body information
-        bodyinfo = new BodyDef();
-        bodyinfo.awake  = true;
-        bodyinfo.allowSleep = true;
-        bodyinfo.gravityScale = 1.0f;
-        bodyinfo.position.set(x,y);
-        bodyinfo.fixedRotation = false;
-        // Objects are physics objects unless otherwise noted
-        bodyinfo.type = BodyDef.BodyType.DynamicBody;
-
-        // Allocate the fixture information
-        // Default values are okay
-        fixture = new FixtureDef();
-
-        // Allocate the mass information, but turn it off
-        masseffect = false;
-        massdata = new MassData();
-
-        // Set the default drawing scale
-        drawScale = new Vector2(1,1);
+    protected SimpleModel(float x, float y) {
+        super(x,y);
+        origin = new Vector2();
+        body = null;
     }
-
-    /// Abstract Methods
 
 //    /**
 //     * Creates the physics Body(s) for this object, adding them to the world.
@@ -929,7 +821,21 @@ public abstract class Model {
 //     *
 //     * @return true if object allocation succeeded
 //     */
-//    public abstract boolean activatePhysics(World world);
+//    public boolean activatePhysics(World world) {
+//        // Make a body, if possible
+//        bodyinfo.active = true;
+//        body = world.createBody(bodyinfo);
+//        body.setUserData(this);
+//
+//        // Only initialize if a body was created.
+//        if (body != null) {
+//            createFixtures();
+//            return true;
+//        }
+//
+//        bodyinfo.active = false;
+//        return false;
+//    }
 //
 //    /**
 //     * Destroys the physics Body(s) of this object if applicable,
@@ -937,7 +843,30 @@ public abstract class Model {
 //     *
 //     * @param world Box2D world that stores body
 //     */
-//    public abstract void deactivatePhysics(World world);
+//    public void deactivatePhysics(World world) {
+//        // Should be good for most (simple) applications.
+//        if (body != null) {
+//            // Snapshot the values
+//            setBodyState(body);
+//            world.destroyBody(body);
+//            body = null;
+//            bodyinfo.active = false;
+//        }
+//    }
+
+    /**
+     * Create new fixtures for this body, defining the shape
+     *
+     * This is the primary method to override for custom physics objects
+     */
+    protected abstract void createFixtures();
+
+    /**
+     * Release the fixtures for this body, reseting the shape
+     *
+     * This is the primary method to override for custom physics objects.
+     */
+    protected abstract void releaseFixtures();
 
     /**
      * Updates the object's physics state (NOT GAME LOGIC).
@@ -950,21 +879,9 @@ public abstract class Model {
      * @param delta Timing values from parent loop
      */
     public void update(float delta) {
+        // Recreate the fixture object if dimensions changed.
+        if (isDirty()) {
+            createFixtures();
+        }
     }
-
-//    /**
-//     * Draws the texture physics object.
-//     *
-//     * @param canvas Drawing context
-//     */
-//    public abstract void draw(GameCanvas canvas);
-//
-//    /**
-//     * Draws the outline of the physics body.
-//     *
-//     * This method can be helpful for understanding issues with collisions.
-//     *
-//     * @param canvas Drawing context
-//     */
-//    public abstract void drawDebug(GameCanvas canvas);
 }

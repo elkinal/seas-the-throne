@@ -950,54 +950,54 @@ public abstract class ComplexModel extends Model {
         joints = new Array<Joint>();
     }
 
-    /**
-     * Creates the physics Body(s) for this object, adding them to the world.
-     *
-     * This method invokes ActivatePhysics for the individual PhysicsObjects
-     * in the list. It also calls the internal method createJoints() to
-     * link them all together. You should override that method, not this one,
-     * for specific physics objects.
-     *
-     * @param world Box2D world to store body
-     *
-     * @return true if object allocation succeeded
-     */
-    public boolean activatePhysics(World world) {
-        bodyinfo.active = true;
-        boolean success = true;
-
-        // Create all other bodies.
-        for(Model obj : bodies) {
-            success = success && obj.activatePhysics(world);
-        }
-        success = success && createJoints(world);
-
-        // Clean up if we failed
-        if (!success) {
-            deactivatePhysics(world);
-        }
-        return success;
-    }
-
-    /**
-     * Destroys the physics Body(s) of this object if applicable,
-     * removing them from the world.
-     *
-     * @param world Box2D world that stores body
-     */
-    public void deactivatePhysics(World world) {
-        if (bodyinfo.active) {
-            // Should be good for most (simple) applications.
-            for (Joint joint : joints) {
-                world.destroyJoint(joint);
-            }
-            joints.clear();
-            for (Model obj : bodies) {
-                obj.deactivatePhysics(world);
-            }
-            bodyinfo.active = false;
-        }
-    }
+//    /**
+//     * Creates the physics Body(s) for this object, adding them to the world.
+//     *
+//     * This method invokes ActivatePhysics for the individual PhysicsObjects
+//     * in the list. It also calls the internal method createJoints() to
+//     * link them all together. You should override that method, not this one,
+//     * for specific physics objects.
+//     *
+//     * @param world Box2D world to store body
+//     *
+//     * @return true if object allocation succeeded
+//     */
+//    public boolean activatePhysics(World world) {
+//        bodyinfo.active = true;
+//        boolean success = true;
+//
+//        // Create all other bodies.
+//        for(Model obj : bodies) {
+//            success = success && obj.activatePhysics(world);
+//        }
+//        success = success && createJoints(world);
+//
+//        // Clean up if we failed
+//        if (!success) {
+//            deactivatePhysics(world);
+//        }
+//        return success;
+//    }
+//
+//    /**
+//     * Destroys the physics Body(s) of this object if applicable,
+//     * removing them from the world.
+//     *
+//     * @param world Box2D world that stores body
+//     */
+//    public void deactivatePhysics(World world) {
+//        if (bodyinfo.active) {
+//            // Should be good for most (simple) applications.
+//            for (Joint joint : joints) {
+//                world.destroyJoint(joint);
+//            }
+//            joints.clear();
+//            for (Model obj : bodies) {
+//                obj.deactivatePhysics(world);
+//            }
+//            bodyinfo.active = false;
+//        }
+//    }
 
     /**
      * Creates the joints for this object.
@@ -1011,6 +1011,7 @@ public abstract class ComplexModel extends Model {
      */
     protected abstract boolean createJoints(World world);
 
+
     /**
      * Updates the object's physics state (NOT GAME LOGIC).
      *
@@ -1019,7 +1020,7 @@ public abstract class ComplexModel extends Model {
      * primary purpose is to adjust changes to the fixture, which have to take place
      * after collision.
      *
-     * @param dt Timing values from parent loop
+     * @param delta Timing values from parent loop
      */
     public void update(float delta) {
         // Delegate to components
