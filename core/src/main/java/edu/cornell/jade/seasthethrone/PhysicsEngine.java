@@ -46,14 +46,14 @@ public class PhysicsEngine implements ContactListener {
     }
 
     private void setupWorld(){
-        player = new PlayerModel();
+        player = new PlayerModel(0, 0);
         addObject(player);
 
-        BulletModel bullet = new BulletModel(0, 0, 5);
+        BulletModel bullet = new BulletModel(10, 10, 5);
         bullet.createFixtures();
         addObject(bullet);
     }
-    public void update(float dt){
+    public void update(float delta){
 
     }
 
