@@ -1,4 +1,4 @@
-package edu.cornell.jade.seasthethrone;
+package edu.cornell.jade.seasthethrone.render;
 
 public interface Renderable {
 
