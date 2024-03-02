@@ -1,13 +1,16 @@
 package edu.cornell.jade.seasthethrone.gamemodel;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.jade.seasthethrone.model.ComplexModel;
 import edu.cornell.jade.seasthethrone.model.PolygonModel;
 
 public class PlayerModel extends ComplexModel {
 
     private boolean isDashing;
+
+    private String pointSensorName;
 
     /**
      * Returns true if the player is dashing.
@@ -33,6 +36,32 @@ public class PlayerModel extends ComplexModel {
         PolygonModel nose = new PolygonModel(vertices);
         nose.setName("nose");
         bodies.add(nose);
+
+        pointSensorName = "NosePointSensor";
+
+        // Create sensor on the points of the "nose," this should be factored to a diff function later
+        Vector2 sensorCenter = new Vector2(0, 1);
+        FixtureDef sensorDef = new FixtureDef();
+        sensorDef.isSensor = true;
+        CircleShape sensorShape = new CircleShape();
+        //sensor has 0 radius, maybe modify?
+        sensorShape.setRadius(0);
+        sensorShape.setPosition(sensorCenter);
+        sensorDef.shape = sensorShape;
+
+        Fixture sensorFixture = body.createFixture( sensorDef );
+        sensorFixture.setUserData(getPointSensorName());
+    }
+
+    /**
+     * Returns the name of the nose point sensor
+     *
+     * This is used by ContactListener
+     *
+     * @return the name of the nose point sensor
+     */
+    public String getPointSensorName() {
+        return pointSensorName;
     }
 
     // built from multiple polygonmodels?

@@ -97,7 +97,32 @@ public class PhysicsEngine implements ContactListener {
 
     @Override
     public void beginContact(Contact contact) {
+        Fixture fix1 = contact.getFixtureA();
+        Fixture fix2 = contact.getFixtureB();
 
+        Body body1 = fix1.getBody();
+        Body body2 = fix2.getBody();
+
+        Object fd1 = fix1.getUserData();
+        Object fd2 = fix2.getUserData();
+
+        try {
+            Model bd1 = (Model)body1.getUserData();
+            Model bd2 = (Model)body2.getUserData();
+
+            // See if we have landed on the ground.
+            if (player.isDashing()) {
+                if(player.getPointSensorName().equals(fd2) && bd1.getName().equals("bullet")){
+                    bd1.markRemoved(true);
+                }
+                if(player.getPointSensorName().equals(fd1) && bd2.getName().equals("bullet")){
+                    bd2.markRemoved(true);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
