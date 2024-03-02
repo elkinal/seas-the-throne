@@ -5,22 +5,26 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.jade.seasthethrone.model.ComplexModel;
 import edu.cornell.jade.seasthethrone.model.PolygonModel;
+import edu.cornell.jade.seasthethrone.updateengine.UpdateEngine;
 
+/**
+ * Model for the main player object of the game. This class extends
+ * {@link ComplexModel} to support multiple joints and bodies for flexible
+ * collision control and movement display.
+ */
 public class PlayerModel extends ComplexModel {
 
+    /** Whether the player is dashing */
     private boolean isDashing;
-
+    /** Unique identifier for the point sensor; used in collision handling */
     private String pointSensorName;
 
     /**
-     * Returns true if the player is dashing.
+     * {@link PlayerModel} constructor using an x and y coordinate.
      *
-     * @return true if the player is dashing.
+     * @param x     The x-position for this player in world coordinates
+     * @param y     The y-position for this player in world coordinates
      */
-    public boolean isDashing() {
-        return isDashing;
-    }
-
     public PlayerModel(float x, float y){
         super(x, y);
 
@@ -51,6 +55,15 @@ public class PlayerModel extends ComplexModel {
 
         Fixture sensorFixture = body.createFixture( sensorDef );
         sensorFixture.setUserData(getPointSensorName());
+    }
+
+    /**
+     * Returns true if the player is dashing.
+     *
+     * @return true if the player is dashing.
+     */
+    public boolean isDashing() {
+        return isDashing;
     }
 
     /**

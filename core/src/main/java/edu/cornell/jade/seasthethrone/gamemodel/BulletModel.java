@@ -2,15 +2,31 @@ package edu.cornell.jade.seasthethrone.gamemodel;
 
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import edu.cornell.jade.seasthethrone.model.ComplexModel;
 import edu.cornell.jade.seasthethrone.model.SimpleModel;
 
+/**
+ * Model for the game bullet objects. This class extends
+ * {@link SimpleModel} to be represented as a single body (with circular shape).
+ * This is subject to change later as we design bullets with more complex shapes.
+ */
 public class BulletModel extends SimpleModel {
 
-    // MODELING BULLETS AS A CIRCLE TEMPORARILY
+    /** Shape of the bullet, modeled as a circle */
     public CircleShape shape;
-    
+
+    /** Fixture to be attached to the body */
     private Fixture geometry;
 
+    /**
+     * {@link BulletModel} constructor using an x and y coordinate & radius.
+     * NOTE: as of now, you must call activatePhysics then createFixtures
+     * after constructing the BulletModel for it to be properly created.
+     *
+     * @param x         The x-position for this bullet in world coordinates
+     * @param y         The y-position for this bullet in world coordinates
+     * @param radius    The radius of this bullet
+     */
     public BulletModel(float x, float y, float radius){
         super(x, y);
         shape = new CircleShape();

@@ -919,25 +919,25 @@ public abstract class Model {
 
     /// Abstract Methods
 
-//    /**
-//     * Creates the physics Body(s) for this object, adding them to the world.
-//     *
-//     * Implementations of this method should NOT retain a reference to World.
-//     * That is a tight coupling that we should avoid.
-//     *
-//     * @param world Box2D world to store body
-//     *
-//     * @return true if object allocation succeeded
-//     */
-//    public abstract boolean activatePhysics(World world);
-//
-//    /**
-//     * Destroys the physics Body(s) of this object if applicable,
-//     * removing them from the world.
-//     *
-//     * @param world Box2D world that stores body
-//     */
-//    public abstract void deactivatePhysics(World world);
+    /**
+     * Creates the physics Body(s) for this object, adding them to the world.
+     *
+     * Implementations of this method should NOT retain a reference to World.
+     * That is a tight coupling that we should avoid.
+     *
+     * @param world Box2D world to store body
+     *
+     * @return true if object allocation succeeded
+     */
+    public abstract boolean activatePhysics(World world);
+
+    /**
+     * Destroys the physics Body(s) of this object if applicable,
+     * removing them from the world.
+     *
+     * @param world Box2D world that stores body
+     */
+    public abstract void deactivatePhysics(World world);
 
     /**
      * Updates the object's physics state (NOT GAME LOGIC).

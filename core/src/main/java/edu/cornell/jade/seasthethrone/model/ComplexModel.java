@@ -25,13 +25,13 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 /**
  * Composite model class to support collisions.
  *
- * ComplexObstacle instances are built of many bodies, and are assumed to be connected
+ * ComplexModel instances are built of many bodies, and are assumed to be connected
  * by joints (though this is not actually a requirement). This is the class to use for
  * chains, ropes, levers, and so on. This class does not provide Shape information, and
  * cannot be instantiated directly.
  *
- * ComplexObstacle is a hierarchical class.  It groups children as Obstacles, not bodies.
- * So you could have a ComplexObstacle made up of other ComplexObstacles.  However, it
+ * ComplexModel is a hierarchical class.  It groups children as Models, not bodies.
+ * So you could have a ComplexModel made up of other ComplexModels.  However, it
  * also has a root body which may or may not be attached to the other bodies in the
  * hierarchy. All of the physics methods in the class apply to the root, not the body.
  * To move the other bodies, they should either be iterated over directly, or attached
@@ -950,54 +950,54 @@ public abstract class ComplexModel extends Model {
         joints = new Array<Joint>();
     }
 
-//    /**
-//     * Creates the physics Body(s) for this object, adding them to the world.
-//     *
-//     * This method invokes ActivatePhysics for the individual PhysicsObjects
-//     * in the list. It also calls the internal method createJoints() to
-//     * link them all together. You should override that method, not this one,
-//     * for specific physics objects.
-//     *
-//     * @param world Box2D world to store body
-//     *
-//     * @return true if object allocation succeeded
-//     */
-//    public boolean activatePhysics(World world) {
-//        bodyinfo.active = true;
-//        boolean success = true;
-//
-//        // Create all other bodies.
-//        for(Model obj : bodies) {
-//            success = success && obj.activatePhysics(world);
-//        }
-//        success = success && createJoints(world);
-//
-//        // Clean up if we failed
-//        if (!success) {
-//            deactivatePhysics(world);
-//        }
-//        return success;
-//    }
-//
-//    /**
-//     * Destroys the physics Body(s) of this object if applicable,
-//     * removing them from the world.
-//     *
-//     * @param world Box2D world that stores body
-//     */
-//    public void deactivatePhysics(World world) {
-//        if (bodyinfo.active) {
-//            // Should be good for most (simple) applications.
-//            for (Joint joint : joints) {
-//                world.destroyJoint(joint);
-//            }
-//            joints.clear();
-//            for (Model obj : bodies) {
-//                obj.deactivatePhysics(world);
-//            }
-//            bodyinfo.active = false;
-//        }
-//    }
+    /**
+     * Creates the physics Body(s) for this object, adding them to the world.
+     *
+     * This method invokes ActivatePhysics for the individual PhysicsObjects
+     * in the list. It also calls the internal method createJoints() to
+     * link them all together. You should override that method, not this one,
+     * for specific physics objects.
+     *
+     * @param world Box2D world to store body
+     *
+     * @return true if object allocation succeeded
+     */
+    public boolean activatePhysics(World world) {
+        bodyinfo.active = true;
+        boolean success = true;
+
+        // Create all other bodies.
+        for(Model obj : bodies) {
+            success = success && obj.activatePhysics(world);
+        }
+        success = success && createJoints(world);
+
+        // Clean up if we failed
+        if (!success) {
+            deactivatePhysics(world);
+        }
+        return success;
+    }
+
+    /**
+     * Destroys the physics Body(s) of this object if applicable,
+     * removing them from the world.
+     *
+     * @param world Box2D world that stores body
+     */
+    public void deactivatePhysics(World world) {
+        if (bodyinfo.active) {
+            // Should be good for most (simple) applications.
+            for (Joint joint : joints) {
+                world.destroyJoint(joint);
+            }
+            joints.clear();
+            for (Model obj : bodies) {
+                obj.deactivatePhysics(world);
+            }
+            bodyinfo.active = false;
+        }
+    }
 
     /**
      * Creates the joints for this object.
