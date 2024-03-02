@@ -6,7 +6,8 @@ import com.badlogic.gdx.physics.box2d.*;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import edu.cornell.jade.seasthethrone.gamemodel.PlayerModel;
 import edu.cornell.jade.seasthethrone.model.Model;
-import edu.cornell.jade.util.PooledList;
+import edu.cornell.jade.util.*;
+// DO NOT IMPORT GameplayController
 
 public class PhysicsEngine implements ContactListener {
 
@@ -54,6 +55,7 @@ public class PhysicsEngine implements ContactListener {
         addObject(bullet);
     }
     public void update(float delta){
+        // Pretend we got some input
 
     }
 
@@ -65,6 +67,17 @@ public class PhysicsEngine implements ContactListener {
     protected void addObject(Model obj) {
         assert inBounds(obj) : "Object is not in bounds";
         objects.add(obj);
+    }
+
+    /**
+     * Creates the physics body for this model and adds it to the physics engine.
+     *
+     * @param obj Model to be added to the world
+     * TODO: Finish this implementation; must call world.createBody(BodyDef).
+     * */
+    public void activatePhysics(Model obj) {
+        obj.setActive(true);
+
     }
 
     /**
