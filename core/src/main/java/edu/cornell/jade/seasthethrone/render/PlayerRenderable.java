@@ -8,4 +8,10 @@ public interface PlayerRenderable extends Renderable {
    * @return if the spear animation should begin to play
    */
   public boolean spearExtended();
+  /**
+   * Returns the frame number the player is currently at
+   *
+   * @return current frame number for player
+   */
+  public int frameNumber();
 }

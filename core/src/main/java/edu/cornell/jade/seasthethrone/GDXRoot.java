@@ -20,7 +20,7 @@ public class GDXRoot extends ApplicationAdapter {
         image = new Texture("libgdx.png");
         renderingEngine = new RenderingEngine();
         canvas = new GameCanvas();
-        //renderingEngine.addRenderable(new FishTest());
+        renderingEngine.addRenderable(new FishTest());
         renderingEngine.addRenderable(new PlayerTest());
     }
 

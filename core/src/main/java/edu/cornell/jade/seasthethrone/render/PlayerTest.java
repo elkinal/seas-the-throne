@@ -7,6 +7,11 @@ public class PlayerTest implements PlayerRenderable{
     }
 
     @Override
+    public int frameNumber() {
+        return 0;
+    }
+
+    @Override
     public float getX() {
         return 80f;
     }
