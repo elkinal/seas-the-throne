@@ -11,7 +11,7 @@ public class RenderingEngine {
   private static final Texture PLAYER_TEXTURE = new Texture("spritebox_down.png");
 
   /** FIXME: stop hardcoding texture regions */
-  private static final Texture FISH_TEXTURE = new Texture("spear_up_down.png");
+  private static final Texture FISH_TEXTURE = new Texture("bullet_test.png");
 
   /**
    * Creates a new RenderingEngine

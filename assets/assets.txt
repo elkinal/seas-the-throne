@@ -1,3 +1,4 @@
+bullet_test.png
 libgdx.png
 spear_left_right.png
 spear_up_down.png
