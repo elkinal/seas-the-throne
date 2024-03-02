@@ -20,7 +20,7 @@ public class GDXRoot extends ApplicationAdapter {
         image = new Texture("libgdx.png");
         renderingEngine = new RenderingEngine();
         canvas = new GameCanvas();
-        renderingEngine.addRenderable(new FishTest());
+        //renderingEngine.addRenderable(new FishTest());
         renderingEngine.addRenderable(new PlayerTest());
     }
 
@@ -30,8 +30,10 @@ public class GDXRoot extends ApplicationAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         batch.draw(image, 140, 210);
-        renderingEngine.drawRenderables(canvas);
         batch.end();
+        canvas.begin();
+        renderingEngine.drawRenderables(canvas);
+        canvas.end();
     }
 
     @Override

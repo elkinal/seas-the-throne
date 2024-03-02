@@ -1,1 +1,7 @@
 libgdx.png
+spear_left_right.png
+spear_up_down.png
+spritebox_down.png
+spritebox_left.png
+spritebox_right.png
+spritebox_up.png
