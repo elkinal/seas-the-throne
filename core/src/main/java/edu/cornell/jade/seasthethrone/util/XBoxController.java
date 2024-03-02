@@ -19,7 +19,7 @@
  * Based on original GameX Ship Demo by Rama C. Hoetzlein, 2002
  * LibGDX version, 2/8/2021
  */
-package edu.cornell.jade.seasthethrone;
+package edu.cornell.jade.seasthethrone.util;
 
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerListener;

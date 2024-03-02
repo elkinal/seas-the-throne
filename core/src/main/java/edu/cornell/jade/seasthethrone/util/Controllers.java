@@ -9,7 +9,7 @@
  * Author: Walker M. White
  * LibGDX version, 1/2/2021
  */
-package edu.cornell.jade.seasthethrone;
+package edu.cornell.jade.seasthethrone.util;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.controllers.Controller;

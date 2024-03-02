@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 /*
  * InputController.java
  *
@@ -137,3 +138,136 @@ public class InputController {
 
 }
 
+=======
+/*
+ * InputController.java
+ *
+ * This class collects all actions of characters. It reads from either the player
+ * input or the AI controller to determine the move for each character. It then
+ * calls respective methods in the controller class to process the input. This class also
+ * contains any key remapping information.
+ *
+ * Contains code written by Walker M. White
+ * Based on original Optimization Lab by Don Holden, 2007
+ * LibGDX version, 2/2/2015
+ *
+ */
+
+package edu.cornell.jade.seasthethrone;
+
+import java.util.*;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.Vector2;
+import edu.cornell.jade.seasthethrone.util.XBoxController;
+
+/**
+ * Processes movements for player and AI
+ */
+public class InputController {
+
+    /** List of all the player input controllers */
+    private ArrayList<PlayerController> players;
+
+    /** XBox Controller support */
+    private XBoxController xbox;
+
+    /**
+     * Adds p to 'players.' Adding a duplicated object does nothing.
+     *
+     * @param p the PlayerController to be added
+     */
+    public void add(PlayerController p) {
+        if(!players.contains(p)){
+            players.add(p);
+        }
+    }
+
+    /**
+     * Removes p from 'players.' Removing an object which was never added does nothing.
+     *
+     * @param p the PlayerController to be removed
+     */
+    public void remove(PlayerController p) {
+        if(players != null){
+            players.remove(p);
+        }
+    }
+
+    /**
+     * Constructor for InputController.
+     */
+    public InputController(){
+        players = new ArrayList<>();
+        PlayerController player = new PlayerController();
+        players.add(player);
+    }
+
+    /**
+     * Updates the state of this object (position) both vertically and horizontally.
+     */
+    public void update() {
+        for (PlayerController p : players) {
+            readInput(p);
+        }
+    }
+
+    /**
+     * Reads the input for the player and converts the result into game logic.
+     */
+    public void readInput(PlayerController p) {
+        // Check to see if a GamePad is connected
+        if (xbox != null && xbox.isConnected()) {
+            readController(p);
+        } else {
+            readKeyboard(p);
+        }
+    }
+
+  /**
+   * Reads input from an XBox controller connected to this computer to determine the
+   * actions of the player. Then calls the corresponding methods in the controller
+   * to process the actions.
+   *
+   * Change the controller keys mapped to primary and secondary actions here.
+   *
+   * @param obj Controller for the player
+   */
+  private void readController(PlayerController obj) {
+        obj.moveHorizontal(xbox.getLeftX());
+        obj.moveVertical(xbox.getLeftY());
+
+        obj.pressPrimary(xbox.getRightTrigger() > 0.6f);
+    }
+
+  /**
+   * Reads input from the keyboard to determine the actions of the player.
+   * Then calls the corresponding methods in the controller to process the actions.
+   * Reads from the keyboard regardless of whether an X-Box controller is connected.
+   *
+   * Change the keyboard keys mapped to primary and secondary actions here.
+   *
+   * @param obj Controller for the player
+   */
+  private void readKeyboard(PlayerController obj) {
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            obj.moveHorizontal(1);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            obj.moveHorizontal(-1);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            obj.moveVertical(1);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            obj.moveVertical(-1);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            obj.pressPrimary(true);
+        }
+    }
+
+}
+
+>>>>>>> Stashed changes
