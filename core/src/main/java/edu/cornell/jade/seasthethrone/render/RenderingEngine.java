@@ -15,6 +15,7 @@ public class RenderingEngine {
     }
     /**
      * Adds a renderable object to the list to be rendered
+     *
      * @param r The renderable to be added
      */
     public void addRenderable(Renderable r) {
@@ -22,6 +23,7 @@ public class RenderingEngine {
     }
     /**
      * Draws all the renderable objects in the list to be rendered
+     *
      * @param canvas  Drawing Context
      */
     public void drawRenderables(GameCanvas canvas) {
