@@ -1,18 +1,7 @@
 package edu.cornell.jade.seasthethrone;
 
-public class PlayerRenderable implements Renderable{
-    @Override
-    public float getX() {
-        return 0;
-    }
+public interface PlayerRenderable extends Renderable {
+  public float getX();
 
-    @Override
-    public float getY() {
-        return 0;
-    }
-
-    @Override
-    public String getType() {
-        return "player";
-    }
+  public float getY();
 }
