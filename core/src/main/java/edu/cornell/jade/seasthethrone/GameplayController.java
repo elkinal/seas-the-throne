@@ -23,16 +23,16 @@ public class GameplayController implements Screen {
 
     protected boolean active;
 
-    /** All the objects in the world. */
-    protected PooledList<Model> objects  = new PooledList<Model>();
+//    /** All the objects in the world. */
+//    protected PooledList<Model> objects  = new PooledList<Model>();
 
     private PlayerModel player;
 
-    private void populateLevel() {
-        player = new PlayerModel(0,0);
-        objects.add(player);
-        physicsEngine.activatePhysics(player);
-    }
+//    private void populateLevel() {
+//        player = new PlayerModel(0,0);
+//        objects.add(player);
+//        physicsEngine.activatePhysics(player);
+//    }
 
 
     public void show() {}

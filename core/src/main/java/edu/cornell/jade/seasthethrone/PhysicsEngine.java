@@ -3,9 +3,8 @@ package edu.cornell.jade.seasthethrone;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
-import edu.cornell.jade.seasthethrone.gamemodel.PlayerModel;
-import edu.cornell.jade.seasthethrone.model.Model;
+import edu.cornell.jade.seasthethrone.gamemodel.*;
+import edu.cornell.jade.seasthethrone.model.*;
 import edu.cornell.jade.util.*;
 // DO NOT IMPORT GameplayController
 
@@ -54,6 +53,12 @@ public class PhysicsEngine implements ContactListener {
         bullet.createFixtures();
         addObject(bullet);
     }
+
+    /**
+     * @return the world of this physics engine.
+     * */
+    public World getWorld() {return world;}
+
     public void update(float delta){
         // Pretend we got some input
 
@@ -67,18 +72,19 @@ public class PhysicsEngine implements ContactListener {
     protected void addObject(Model obj) {
         assert inBounds(obj) : "Object is not in bounds";
         objects.add(obj);
+        obj.activatePhysics(world);
     }
 
-    /**
-     * Creates the physics body for this model and adds it to the physics engine.
-     *
-     * @param obj Model to be added to the world
-     * TODO: Finish this implementation; must call world.createBody(BodyDef).
-     * */
-    public void activatePhysics(Model obj) {
-        obj.setActive(true);
-
-    }
+//    /**
+//     * Creates the physics body for this model and adds it to the physics engine.
+//     *
+//     * @param obj Model to be added to the world
+//     * TODO: Finish this implementation; must call world.createBody(BodyDef).
+//     * */
+//    public void activatePhysics(Model obj) {
+//        obj.setActive(true);
+//
+//    }
 
     /**
      * Returns true if the object is in bounds.
