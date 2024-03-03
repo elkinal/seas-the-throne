@@ -16,6 +16,15 @@ public class PlayerModel extends ComplexModel {
 
     /** Whether the player is dashing */
     private boolean isDashing;
+    /** Frame counter for dashing. Tracks how long the player has been dashing for and how long until
+     * they can dash again. */
+    private int dashCounter;
+    /** The time limit (in frames) between dashes */
+    private int dashCooldownLimit;
+
+    /** The number of frames a dash lasts */
+    private int dashLength;
+
     /** Unique identifier for the point sensor; used in collision handling */
     private String pointSensorName;
 
@@ -40,8 +49,12 @@ public class PlayerModel extends ComplexModel {
         vertices[4] = 0;
         vertices[5] = 1;
 
-        // Set move speed
-        moveSpeed = 1f;
+        // Set constants
+        moveSpeed = 20f;
+        dashCounter = 0;
+        dashCooldownLimit = 30;
+        dashLength = 30;
+        isDashing = false;
 
         PolygonModel nose = new PolygonModel(vertices);
         nose.setName("nose");
@@ -85,6 +98,34 @@ public class PlayerModel extends ComplexModel {
     public boolean isDashing() {
         return isDashing;
     }
+
+    /**
+     * Sets if the player is dashing
+     *
+     * @param value is the player dashing
+     * */
+    public void setDashing(boolean value) { isDashing = value; }
+
+    /** Returns if the player can dash */
+    public boolean canDash() {
+        return !isDashing && dashCounter == 0;
+    }
+
+    /** Sets value for dash cooldown */
+    public void setDashCounter(int value) { dashCounter = value; }
+
+    /** Returns current value of dash cooldown */
+    public int getDashCounter() { return dashCounter; }
+
+    /** Returns dash limit */
+    public int getDashCooldownLimit() { return dashCooldownLimit; }
+
+    /** Decriments dash cooldown */
+    public void decrementDashCounter() { dashCounter -= 1; }
+
+    /** Returns length of dash in frames */
+    public int getDashLength() { return dashLength; }
+
 
     /**
      * Returns the name of the nose point sensor

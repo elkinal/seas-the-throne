@@ -22,6 +22,8 @@ public class PhysicsEngine implements ContactListener {
     private Vector2 scale;
     /** The player */
     private PlayerModel player;
+    /** The time since the last dash */
+
 
     public PhysicsEngine(Rectangle bounds){
 
@@ -73,10 +75,27 @@ public class PhysicsEngine implements ContactListener {
         // Pretend we got some input
         float inputX = 0f;
         float inputY = 0f;
+        boolean dashInput = true;
 
         float moveSpeed = player.getMoveSpeed();
+
+        // Check if we begin a dash
+        if (player.canDash() && dashInput) {
+            player.setDashing(true);
+            player.setDashCounter(player.getDashLength());
+        }
+
+        // Handle dashing
         if (player.isDashing()) {
             moveSpeed *= 2;
+            player.decrementDashCounter();
+            if (player.getDashCounter() <= 0) {
+                // exit dash
+                player.setDashing(false);
+                player.setDashCounter(player.getDashCooldownLimit());
+            }
+        } else {
+            player.setDashCounter(Math.max(0, player.getDashCounter() - 1));
         }
 
         // Just for keyboard input for now.
