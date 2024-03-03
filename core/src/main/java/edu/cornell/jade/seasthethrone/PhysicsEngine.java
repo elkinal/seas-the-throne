@@ -23,10 +23,10 @@ public class PhysicsEngine implements ContactListener {
     /** The player */
     private PlayerModel player;
 
-    public PhysicsEngine(Rectangle bounds, Vector2 gravity){
+    public PhysicsEngine(Rectangle bounds){
 
         // not sure if its gonna make sense to have some concept of gravity
-        world = new World(gravity, false);
+        world = new World(new Vector2(0, 0), false);
         this.bounds = new Rectangle(bounds);
         this.scale = new Vector2(1, 1);
         world.setContactListener(this);

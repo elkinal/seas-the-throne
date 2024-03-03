@@ -14,6 +14,11 @@ import edu.cornell.jade.seasthethrone.model.PolygonModel;
 
 public class GameplayController implements Screen {
 
+    /** Width of the game world in Box2d units */
+    protected static final float DEFAULT_WIDTH  = 32.0f;
+    /** Height of the game world in Box2d units */
+    protected static final float DEFAULT_HEIGHT = 18.0f;
+
     /** The Box2D world */
     protected PhysicsEngine physicsEngine;
     /** The boundary of the world */
@@ -22,6 +27,7 @@ public class GameplayController implements Screen {
     protected Vector2 scale;
 
     protected boolean active;
+
 
 //    /** All the objects in the world. */
 //    protected PooledList<Model> objects  = new PooledList<Model>();
@@ -33,9 +39,18 @@ public class GameplayController implements Screen {
 //        objects.add(player);
 //        physicsEngine.activatePhysics(player);
 //    }
+    protected GameplayController() {
+        bounds = new Rectangle(0,0,DEFAULT_WIDTH,DEFAULT_HEIGHT);
+        physicsEngine = new PhysicsEngine(bounds);
+        physicsEngine.reset();
 
+        this.scale = new Vector2(1,1);
+        active = false;
+    }
 
-    public void show() {}
+    public void show() {
+        active = true;
+    }
 
     public void render(float delta) {
         if (active) {
@@ -44,7 +59,9 @@ public class GameplayController implements Screen {
         draw(delta);
     }
     public void draw(float delta) {}
-    public void update(float delta) {}
+    public void update(float delta) {
+        physicsEngine.update(delta);
+    }
 
     public void resize(int width, int height) {}
 
@@ -52,7 +69,9 @@ public class GameplayController implements Screen {
 
     public void resume() {}
 
-    public void hide() {}
+    public void hide() {
+        active = false;
+    }
 
     public void dispose() {}
 }
