@@ -1,5 +1,6 @@
 package edu.cornell.jade.seasthethrone.gamemodel;
 
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import edu.cornell.jade.seasthethrone.model.ComplexModel;
@@ -31,6 +32,7 @@ public class BulletModel extends SimpleModel {
         super(x, y);
         shape = new CircleShape();
         shape.setRadius(radius);
+        setBodyType(BodyDef.BodyType.DynamicBody);
     }
 
     /**

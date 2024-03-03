@@ -58,22 +58,8 @@ public class PlayerModel extends ComplexModel {
 
         PolygonModel nose = new PolygonModel(vertices);
         nose.setName("nose");
+        nose.setBodyType(BodyDef.BodyType.DynamicBody);
         bodies.add(nose);
-
-        pointSensorName = "NosePointSensor";
-
-        // Create sensor on the points of the "nose," this should be factored to a diff function later
-        Vector2 sensorCenter = new Vector2(0, 1);
-        FixtureDef sensorDef = new FixtureDef();
-        sensorDef.isSensor = true;
-        CircleShape sensorShape = new CircleShape();
-        //sensor has 0 radius, maybe modify?
-        sensorShape.setRadius(0);
-        sensorShape.setPosition(sensorCenter);
-        sensorDef.shape = sensorShape;
-
-        Fixture sensorFixture = body.createFixture( sensorDef );
-        sensorFixture.setUserData(getPointSensorName());
     }
 
     /**
@@ -141,7 +127,22 @@ public class PlayerModel extends ComplexModel {
     // built from multiple polygonmodels?
     @Override
     protected boolean createJoints(World world) {
-        // TODO:
-        return false;
+
+        pointSensorName = "NosePointSensor";
+
+        // Create sensor on the points of the "nose," this should be factored to a diff function later
+        Vector2 sensorCenter = new Vector2(0, 1);
+        FixtureDef sensorDef = new FixtureDef();
+        sensorDef.isSensor = true;
+        CircleShape sensorShape = new CircleShape();
+        //sensor has 0 radius, maybe modify?
+        sensorShape.setRadius(0);
+        sensorShape.setPosition(sensorCenter);
+        sensorDef.shape = sensorShape;
+
+        Fixture sensorFixture = bodies.get(0).getBody().createFixture( sensorDef );
+        sensorFixture.setUserData(getPointSensorName());
+
+        return true;
     }
 }

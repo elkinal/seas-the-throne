@@ -53,9 +53,9 @@ public class PhysicsEngine implements ContactListener {
         player = new PlayerModel(0, 0);
         addObject(player);
 
-        BulletModel bullet = new BulletModel(10, 10, 5);
-        bullet.createFixtures();
+        BulletModel bullet = new BulletModel(10, 10, 1);
         addObject(bullet);
+        bullet.createFixtures();
     }
 
     /**
