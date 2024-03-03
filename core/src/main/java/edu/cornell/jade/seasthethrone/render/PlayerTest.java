@@ -12,6 +12,11 @@ public class PlayerTest implements PlayerRenderable{
     }
 
     @Override
+    public int direction() {
+        return 2;
+    }
+
+    @Override
     public float getX() {
         return 80f;
     }

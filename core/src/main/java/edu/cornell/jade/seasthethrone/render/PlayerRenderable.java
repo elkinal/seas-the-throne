@@ -14,4 +14,10 @@ public interface PlayerRenderable extends Renderable {
    * @return current frame number for player
    */
   public int frameNumber();
+  /**
+   * Returns the direction player is facing
+   *
+   * @return direction of player, 0 if up, 1 if down, 2 if left, 3 if right
+   */
+  public int direction();
 }
