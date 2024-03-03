@@ -19,6 +19,9 @@ public class PlayerModel extends ComplexModel {
     /** Unique identifier for the point sensor; used in collision handling */
     private String pointSensorName;
 
+    /** Scaling factor for player movement */
+    private float moveSpeed;
+
     /**
      * {@link PlayerModel} constructor using an x and y coordinate.
      *
@@ -36,6 +39,9 @@ public class PlayerModel extends ComplexModel {
         vertices[3] = -1;
         vertices[4] = 0;
         vertices[5] = 1;
+
+        // Set move speed
+        moveSpeed = 1f;
 
         PolygonModel nose = new PolygonModel(vertices);
         nose.setName("nose");
@@ -56,6 +62,20 @@ public class PlayerModel extends ComplexModel {
         Fixture sensorFixture = body.createFixture( sensorDef );
         sensorFixture.setUserData(getPointSensorName());
     }
+
+    /**
+     * Returns player's move speed.
+     *
+     *
+     * @return player's move speed.
+     * */
+    public float getMoveSpeed() {return moveSpeed;}
+    /**
+     * Sets player's move speed.
+     *
+     * @param speed new value for move speed.
+     * */
+    public void setMoveSpeed(float speed) {moveSpeed = speed;}
 
     /**
      * Returns true if the player is dashing.

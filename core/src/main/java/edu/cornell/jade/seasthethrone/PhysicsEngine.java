@@ -6,6 +6,8 @@ import com.badlogic.gdx.physics.box2d.*;
 import edu.cornell.jade.seasthethrone.gamemodel.*;
 import edu.cornell.jade.seasthethrone.model.*;
 import edu.cornell.jade.util.*;
+
+import java.lang.invoke.VolatileCallSite;
 // DO NOT IMPORT GameplayController
 
 public class PhysicsEngine implements ContactListener {
@@ -59,9 +61,33 @@ public class PhysicsEngine implements ContactListener {
      * */
     public World getWorld() {return world;}
 
+    /**
+     * The core gameplay loop of this world.
+     *
+     * This method is called after input is read, but before collisions are resolved.
+     * The very last thing that it should do is apply forces to the appropriate objects.
+     *
+     * @param delta	Number of seconds since last animation frame
+     */
     public void update(float delta){
         // Pretend we got some input
+        float inputX = 0f;
+        float inputY = 0f;
 
+        float moveSpeed = player.getMoveSpeed();
+        if (player.isDashing()) {
+            moveSpeed *= 2;
+        }
+
+        // Just for keyboard input for now.
+        if (inBounds(player)) {
+            if (inputX > 0 && inputY > 0) {
+                player.setVX(moveSpeed / (float)Math.sqrt(2));
+                player.setVY(moveSpeed / (float)Math.sqrt(2));
+            }
+            else if (inputX > 0) {player.setVX(moveSpeed);}
+            else if (inputY > 0) {player.setVY(moveSpeed);}
+        }
     }
 
     /**
