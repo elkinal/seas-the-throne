@@ -20,4 +20,10 @@ public interface PlayerRenderable extends Renderable {
    * @return direction of player, 0 if up, 1 if down, 2 if left, 3 if right
    */
   public int direction();
+  /**
+   * Returns whether the player is dashing
+   *
+   * @return true if player is dashing and false if not
+   */
+  public boolean isDashing();
 }

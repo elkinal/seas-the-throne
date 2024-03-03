@@ -17,6 +17,11 @@ public class PlayerTest implements PlayerRenderable{
     }
 
     @Override
+    public boolean isDashing() {
+        return false;
+    }
+
+    @Override
     public float getX() {
         return 80f;
     }
