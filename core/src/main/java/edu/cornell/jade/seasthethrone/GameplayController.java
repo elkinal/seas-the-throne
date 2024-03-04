@@ -78,6 +78,7 @@ public class GameplayController implements Screen {
     playerController.update();
     physicsEngine.update(delta);
     physicsEngine.getWorld().step(delta, 8, 4);
+    draw(delta);
   }
 
   public void resize(int width, int height) {

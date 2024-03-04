@@ -57,10 +57,10 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     vertices[5] = 1;
 
     // Set constants
-    moveSpeed = 8f;
+    moveSpeed = 6f;
     dashCounter = 0;
-    dashCooldownLimit = 30;
-    dashLength = 30;
+    dashCooldownLimit = 25;
+    dashLength = 12;
     isDashing = false;
 
     PolygonModel nose = new PolygonModel(vertices);
@@ -188,13 +188,17 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   public int direction() {
     if (Math.abs(getVX()) > Math.abs(getVY())) {
       if (getVX() > 0)
+        // Right
         return 3;
       else
+        // Left
         return 2;
     } else {
       if (getVY() > 0)
+        // Up
         return 0;
       else
+        // Down
         return 1;
     }
   }

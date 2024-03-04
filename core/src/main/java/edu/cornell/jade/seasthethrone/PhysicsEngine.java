@@ -23,6 +23,9 @@ public class PhysicsEngine implements ContactListener {
   /** The player */
   private PlayerModel player;
 
+  /** Timer for spawning bullets */
+  private int bulletTimer;
+
   /** The time since the last dash */
 
   public PhysicsEngine(Rectangle bounds) {
@@ -31,6 +34,7 @@ public class PhysicsEngine implements ContactListener {
     world = new World(new Vector2(0, 0), false);
     this.bounds = new Rectangle(bounds);
     this.scale = new Vector2(1, 1);
+    this.bulletTimer = 0;
     world.setContactListener(this);
   }
 
@@ -62,9 +66,9 @@ public class PhysicsEngine implements ContactListener {
     player = new PlayerModel(0, 0);
     addObject(player);
 
-    BulletModel bullet = new BulletModel(3, 3, 1);
-    addObject(bullet);
-    bullet.createFixtures();
+//    BulletModel bullet = new BulletModel(3, 3, 0.5f);
+//    addObject(bullet);
+//    bullet.createFixtures();
   }
 
   /**
@@ -91,11 +95,32 @@ public class PhysicsEngine implements ContactListener {
     }
     float moveSpeed = player.getMoveSpeed();
     if (player.isDashing())
-      moveSpeed *= 2;
+      moveSpeed *= 3;
 
     player.getPointModel().setVX(x * moveSpeed / mag);
     player.getPointModel().setVY(y * moveSpeed / mag);
   }
+
+  /** Orients the player model based on their primary direction of movement */
+  public void orientPlayer() {
+    int dir = player.direction();
+
+    switch (dir) {
+      case 0:
+        player.setAngle(0f);
+        break;
+      case 1:
+        player.setAngle(180f);
+        break;
+      case 2:
+        player.setAngle(90f);
+        break;
+      case 3:
+        player.setAngle(-90f);
+        break;
+    }
+  }
+
 
   /**
    * Begin dashing if possible
@@ -108,6 +133,23 @@ public class PhysicsEngine implements ContactListener {
   }
 
   /**
+   * Spawns bullets at a set interval in a circular pattern
+   *
+   * @param bulletTimer value of the timer, used to set angle
+   * */
+  public void spawnBulletPattern(int bulletTimer) {
+    float speed = 2;
+    BulletModel bullet = new BulletModel(3,3,0.5f);
+    float theta = bulletTimer * 2;
+    Vector2 v_i = new Vector2((float)Math.cos(theta), (float)Math.sin(theta));
+    bullet.setVX(speed * v_i.x);
+    bullet.setVY(speed * v_i.y);
+    addObject(bullet);
+    bullet.createFixtures();
+  }
+
+
+  /**
    * The core gameplay loop of this world.
    *
    * This method is called after input is read, but before collisions are
@@ -118,6 +160,11 @@ public class PhysicsEngine implements ContactListener {
    * @param delta Number of seconds since last animation frame
    */
   public void update(float delta) {
+    if (bulletTimer % 60 == 0) {
+      spawnBulletPattern(bulletTimer);
+    }
+    bulletTimer += 1;
+
     // Handle dashing
     if (player.isDashing()) {
       player.decrementDashCounter();
@@ -187,7 +234,7 @@ public class PhysicsEngine implements ContactListener {
       Model bd1 = (Model) body1.getUserData();
       Model bd2 = (Model) body2.getUserData();
 
-      // See if we have landed on the ground.
+      // See if we have skewered a bullet.
       if (player.isDashing()) {
         if (player.getPointSensorName().equals(fd2) && bd1.getName().equals("bullet")) {
           bd1.markRemoved(true);

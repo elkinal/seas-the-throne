@@ -53,6 +53,7 @@ public class RenderingEngine {
    * @param canvas Drawing Context
    */
   public void drawRenderables() {
+    canvas.clear();
     canvas.begin();
     for (Renderable r : renderables) {
       float x = toScreenCoord(r.getX());
