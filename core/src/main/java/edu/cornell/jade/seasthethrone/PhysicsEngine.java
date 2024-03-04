@@ -6,6 +6,8 @@ import com.badlogic.gdx.physics.box2d.*;
 import edu.cornell.jade.seasthethrone.gamemodel.*;
 import edu.cornell.jade.seasthethrone.model.*;
 import edu.cornell.jade.util.*;
+
+import java.util.Iterator;
 // DO NOT IMPORT GameplayController
 
 public class PhysicsEngine implements ContactListener {
@@ -60,7 +62,7 @@ public class PhysicsEngine implements ContactListener {
     player = new PlayerModel(0, 0);
     addObject(player);
 
-    BulletModel bullet = new BulletModel(10, 10, 1);
+    BulletModel bullet = new BulletModel(3, 3, 1);
     addObject(bullet);
     bullet.createFixtures();
   }
@@ -91,8 +93,8 @@ public class PhysicsEngine implements ContactListener {
     if (player.isDashing())
       moveSpeed *= 2;
 
-    player.setVX(x * moveSpeed / mag);
-    player.setVX(y * moveSpeed / mag);
+    player.getPointModel().setVX(x * moveSpeed / mag);
+    player.getPointModel().setVY(y * moveSpeed / mag);
   }
 
   /**
@@ -126,6 +128,21 @@ public class PhysicsEngine implements ContactListener {
       }
     } else {
       player.setDashCounter(Math.max(0, player.getDashCounter() - 1));
+    }
+
+    // Garbage collect the deleted objects.
+    // Note how we use the linked list nodes to delete O(1) in place.
+    // This is O(n) without copying.
+    Iterator<PooledList<Model>.Entry> iterator = objects.entryIterator();
+    while (iterator.hasNext()) {
+      PooledList<Model>.Entry entry = iterator.next();
+      Model obj = entry.getValue();
+      if (obj.isRemoved()) {
+        obj.deactivatePhysics(world);
+        entry.remove();
+      } else {
+        obj.update(delta);
+      }
     }
   }
 

@@ -1,5 +1,6 @@
 package edu.cornell.jade.seasthethrone;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.*;
@@ -16,7 +17,7 @@ import com.badlogic.gdx.math.Matrix4;
 
 public class GameplayController implements Screen {
   Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
-  Matrix4 cam = new Matrix4().scl(0.2f);
+  Matrix4 cam = new Matrix4().scl(0.1f);
   /** Sub-controller for collecting input */
   InputController inputController;
   /** Sub-controller for handling updating physics engine based on input */
@@ -24,9 +25,9 @@ public class GameplayController implements Screen {
   /** Rendering Engine */
   RenderingEngine renderEngine;
   /** Width of the game world in Box2d units */
-  protected static final float DEFAULT_WIDTH = 32.0f;
+  protected static final float DEFAULT_WIDTH = 64.0f;
   /** Height of the game world in Box2d units */
-  protected static final float DEFAULT_HEIGHT = 18.0f;
+  protected static final float DEFAULT_HEIGHT = 48.0f;
 
   /** The Box2D world */
   protected PhysicsEngine physicsEngine;
@@ -64,7 +65,7 @@ public class GameplayController implements Screen {
     if (active) {
       update(delta);
     }
-    draw(delta);
+    //draw(delta);
     debugRenderer.render(physicsEngine.getWorld(), cam);
   }
 

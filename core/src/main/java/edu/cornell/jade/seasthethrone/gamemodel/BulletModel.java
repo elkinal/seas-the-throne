@@ -33,6 +33,7 @@ public class BulletModel extends SimpleModel {
         shape = new CircleShape();
         shape.setRadius(radius);
         setBodyType(BodyDef.BodyType.DynamicBody);
+        setName("bullet");
     }
 
     /**

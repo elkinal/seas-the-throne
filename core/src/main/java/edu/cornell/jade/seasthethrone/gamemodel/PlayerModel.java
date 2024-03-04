@@ -3,6 +3,7 @@ package edu.cornell.jade.seasthethrone.gamemodel;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import edu.cornell.jade.seasthethrone.model.ComplexModel;
+import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.model.PolygonModel;
 import edu.cornell.jade.seasthethrone.render.PlayerRenderable;
 
@@ -56,7 +57,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     vertices[5] = 1;
 
     // Set constants
-    moveSpeed = 20f;
+    moveSpeed = 8f;
     dashCounter = 0;
     dashCooldownLimit = 30;
     dashLength = 30;
@@ -145,6 +146,9 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   public String getPointSensorName() {
     return pointSensorName;
   }
+
+  /** Returns the model of the "nose", hard-coded in for now */
+  public Model getPointModel() { return bodies.get(0); }
 
   // built from multiple polygonmodels?
   @Override
