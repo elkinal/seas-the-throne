@@ -8,7 +8,7 @@
  *
  */
 
-package edu.cornell.jade.seasthethrone;
+package edu.cornell.jade.seasthethrone.input;
 
 public class PlayerController implements Controllable {
     /** Whether the primary (dash) button is pressed. */

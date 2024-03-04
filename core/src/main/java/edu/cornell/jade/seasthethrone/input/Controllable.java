@@ -6,7 +6,7 @@
  *
  */
 
-package edu.cornell.jade.seasthethrone;
+package edu.cornell.jade.seasthethrone.input;
 
 public interface Controllable {
 

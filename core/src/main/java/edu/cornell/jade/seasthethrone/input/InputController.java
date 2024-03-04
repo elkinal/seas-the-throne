@@ -12,7 +12,7 @@
  *
  */
 
-package edu.cornell.jade.seasthethrone;
+package edu.cornell.jade.seasthethrone.input;
 
 import java.util.*;
 
