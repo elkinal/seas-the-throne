@@ -5,13 +5,14 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import edu.cornell.jade.seasthethrone.model.ComplexModel;
 import edu.cornell.jade.seasthethrone.model.SimpleModel;
+import edu.cornell.jade.seasthethrone.render.FishRenderable;
 
 /**
  * Model for the game bullet objects. This class extends
  * {@link SimpleModel} to be represented as a single body (with circular shape).
  * This is subject to change later as we design bullets with more complex shapes.
  */
-public class BulletModel extends SimpleModel {
+public class BulletModel extends SimpleModel implements FishRenderable {
 
     /** Shape of the bullet, modeled as a circle */
     public CircleShape shape;

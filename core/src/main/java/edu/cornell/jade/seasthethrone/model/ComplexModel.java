@@ -147,7 +147,7 @@ public abstract class ComplexModel extends Model {
      * @return the x-coordinate for this physics body
      */
     public float getX() {
-        return (body != null ? body.getPosition().x : super.getX());
+        return (getBody() != null ? getBody().getPosition().x : super.getX());
     }
 
     /**
@@ -176,7 +176,7 @@ public abstract class ComplexModel extends Model {
      * @return the y-coordinate for this physics body
      */
     public float getY() {
-        return (body != null ? body.getPosition().y : super.getY());
+        return (getBody() != null ? getBody().getPosition().y : super.getY());
     }
 
     /**

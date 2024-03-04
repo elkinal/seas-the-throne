@@ -2,8 +2,9 @@ package edu.cornell.jade.seasthethrone.model;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import edu.cornell.jade.seasthethrone.render.Renderable;
 
-public abstract class Model {
+public abstract class Model implements Renderable {
 
     /// Initialization structures to store body information
     /** Stores the body information for this shape */

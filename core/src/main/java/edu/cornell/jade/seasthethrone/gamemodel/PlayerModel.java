@@ -67,6 +67,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     nose.setName("nose");
     nose.setBodyType(BodyDef.BodyType.DynamicBody);
     bodies.add(nose);
+    body = nose.getBody();
   }
 
   /**
@@ -167,7 +168,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     sensorShape.setPosition(sensorCenter);
     sensorDef.shape = sensorShape;
 
-    Fixture sensorFixture = bodies.get(0).getBody().createFixture(sensorDef);
+    Fixture sensorFixture = getPointModel().getBody().createFixture(sensorDef);
     sensorFixture.setUserData(getPointSensorName());
 
     return true;
