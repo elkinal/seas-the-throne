@@ -10,12 +10,7 @@
 
 package edu.cornell.jade.seasthethrone;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.utils.Array;
-import edu.cornell.jade.seasthethrone.util.*;
 public class PlayerController implements Controllable {
-    //fields to manage game state
     /** Whether the primary (dash) button is pressed. */
     protected boolean dashPressed;
 

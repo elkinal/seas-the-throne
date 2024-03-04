@@ -10,20 +10,19 @@ package edu.cornell.jade.seasthethrone;
 
 public interface Controllable {
 
-    /**
-     * Updates the horizontal movement of the character.
-     */
-    public void moveHorizontal(float movement);
+  /**
+   * Updates the horizontal movement of the character.
+   */
+  public void moveHorizontal(float movement);
 
-    /**
-     * Updates the vertical movement of the character.
-     */
-    public void moveVertical(float movement);
+  /**
+   * Updates the vertical movement of the character.
+   */
+  public void moveVertical(float movement);
 
-    /**
-     * Updates the primary attack state of the character.
-     */
-    public void pressPrimary(boolean pressed);
-
+  /**
+   * Updates the primary attack state of the character.
+   */
+  public void pressPrimary(boolean pressed);
 
 }
