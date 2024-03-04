@@ -47,6 +47,10 @@ public class PhysicsEngine implements ContactListener {
     return player;
   }
 
+  public PooledList<Model> getObjects(){
+    return objects;
+  }
+
   /**
    * Resets the status of the game so that we can play again.
    *
