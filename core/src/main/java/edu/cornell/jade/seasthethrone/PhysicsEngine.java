@@ -82,12 +82,18 @@ public class PhysicsEngine implements ContactListener {
    */
   public void setVelPercentages(float x, float y) {
     float mag = (x * x + y * y) / (float) Math.sqrt(2);
+    // TODO: Change this to compare with some epsilong probably
+    // this does techinically work though
+    if (mag == 0f) {
+      mag = 1;
+    }
     float moveSpeed = player.getMoveSpeed();
     if (player.isDashing())
       moveSpeed *= 2;
 
     player.setVX(x * moveSpeed / mag);
     player.setVX(y * moveSpeed / mag);
+    System.out.println(player.getVX());
   }
 
   /**
