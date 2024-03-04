@@ -3,17 +3,18 @@ package edu.cornell.jade.seasthethrone;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.*;
-import com.badlogic.gdx.physics.box2d.*;
 
 import edu.cornell.jade.util.*;
-import edu.cornell.jade.seasthethrone.PhysicsEngine;
+import edu.cornell.jade.seasthethrone.input.InputController;
 import edu.cornell.jade.seasthethrone.model.*;
-import edu.cornell.jade.seasthethrone.gamemodel.*;
-import edu.cornell.jade.seasthethrone.model.PolygonModel;
+import edu.cornell.jade.seasthethrone.input.PlayerController;
 // IMPORT INPUT CONTROLLER
 
 public class GameplayController implements Screen {
-
+  /** Sub-controller for collecting input */
+  InputController inputController;
+  /** Sub-controller for handling updating physics engine based on input */
+  PlayerController playerController;
   /** Width of the game world in Box2d units */
   protected static final float DEFAULT_WIDTH = 32.0f;
   /** Height of the game world in Box2d units */
@@ -31,13 +32,6 @@ public class GameplayController implements Screen {
   /** All the objects in the world. */
   protected PooledList<Model> objects = new PooledList<Model>();
 
-  private PlayerModel player;
-
-  private void populateLevel() {
-    player = new PlayerModel(0, 0);
-    objects.add(player);
-  }
-
   protected GameplayController() {
     bounds = new Rectangle(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
     physicsEngine = new PhysicsEngine(bounds);
@@ -45,6 +39,9 @@ public class GameplayController implements Screen {
 
     this.scale = new Vector2(1, 1);
     active = false;
+
+    this.inputController = new InputController();
+    this.playerController = new PlayerController(physicsEngine);
   }
 
   public void show() {
@@ -62,6 +59,8 @@ public class GameplayController implements Screen {
   }
 
   public void update(float delta) {
+    inputController.update();
+    playerController.update();
     physicsEngine.update(delta);
   }
 

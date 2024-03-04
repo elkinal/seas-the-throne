@@ -10,83 +10,45 @@
 
 package edu.cornell.jade.seasthethrone.input;
 
+// TODO: make this not have to import physics engine by moving logic directly in here
+import edu.cornell.jade.seasthethrone.PhysicsEngine;
+
 public class PlayerController implements Controllable {
-    /** Whether the primary (dash) button is pressed. */
-    protected boolean dashPressed;
+  /** The player controlled by the controller */
+  PhysicsEngine physicsEngine;
 
-    /** Movement left/right */
-    private float hOffset;
+  /** Horizontal offset, -1 to 1 */
+  float hoff;
+  /** Vertical offset, -1 to 1 */
+  float voff;
+  /** If dashing pressed in since last update */
+  boolean dashing;
 
-    /** Movement up/down */
-    private float vOffset;
+  /**
+   * Constructs PlayerController
+   */
+  public PlayerController(PhysicsEngine physicsEngine) {
+    this.physicsEngine = physicsEngine;
+  }
 
-    /**
-     * Returns horizontal movement of player. This value should be multiplied by
-     * the player's velocity to calculate the actual movement.
-     *
-     * @return the horizontal movement of player (from -1 to 1)
-     */
-    public float getHOffset(){
-        return hOffset;
+  public void moveHorizontal(float movement) {
+    hoff = movement;
+  }
+
+  public void moveVertical(float movement) {
+    voff = movement;
+  }
+
+  public void pressPrimary() {
+    dashing = true;
+  }
+
+  public void update() {
+    if (dashing) {
+      physicsEngine.beginDashing();
     }
-
-    /**
-     * Returns vertical movement of player. This value should be multipleid by
-     * the player's velocity to calculate the actual movement.
-     *
-     * @return the vertical movement of player (from -1 to 1)
-     */
-    public float getVOffset(){
-        return vOffset;
-    }
-
-    /**
-     * Returns whether the player is dashing.
-     *
-     * @return true if the player is dashing
-     */
-    public boolean getPrimary(){
-        return dashPressed;
-    }
-
-    /**
-     * Creates a new player controller.
-     */
-    public PlayerController() {
-        dashPressed = false;
-        hOffset = 0.0f;
-        vOffset = 0.0f;
-    }
-
-    /**
-     * Process horizontal movement.
-     *
-     * 1 (or positive) = right, -1 (or negative) = left, 0 = still
-     *
-     * @param movement amount of horizontal movement
-     */
-    public void moveHorizontal(float movement){
-        hOffset = movement;
-    }
-
-    /**
-     * Process vertical movement.
-     *
-     * 1 (or positive) = up, -1 (or negative) = down, 0 = still
-     *
-     * @param movement amount of vertical movement
-     */
-    public void moveVertical(float movement){
-        vOffset = movement;
-    }
-
-    /**
-     * Process primary button pressed.
-     *
-     * @param pressed true if the button is pressed
-     */
-    public void pressPrimary(boolean pressed){
-        dashPressed = pressed;
-    }
+    physicsEngine.setVelPercentages(hoff, voff);
+    dashing = false;
+  }
 
 }

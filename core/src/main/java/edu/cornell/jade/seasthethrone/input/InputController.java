@@ -113,21 +113,25 @@ public class InputController {
    * @param obj Controller for the player
    */
   private void readKeyboard(Controllable obj) {
+    float hoff = 0;
+    float voff = 0;
     if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-      obj.moveHorizontal(1);
+      hoff += 1;
     }
     if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-      obj.moveHorizontal(-1);
+      hoff -= 1;
     }
     if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-      obj.moveVertical(1);
+      voff += 1;
     }
     if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-      obj.moveVertical(-1);
+      voff -= 1;
     }
     if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
       obj.pressPrimary();
     }
+    obj.moveHorizontal(hoff);
+    obj.moveVertical(voff);
   }
 
 }
