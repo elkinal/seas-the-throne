@@ -59,8 +59,6 @@ public class InputController {
    */
   public InputController() {
     players = new ArrayList<>();
-    PlayerController player = new PlayerController();
-    players.add(player);
   }
 
   /**
@@ -98,7 +96,9 @@ public class InputController {
     obj.moveHorizontal(xbox.getLeftX());
     obj.moveVertical(xbox.getLeftY());
 
-    obj.pressPrimary(xbox.getRightTrigger() > 0.6f);
+    if (xbox.getRightTrigger() > 0.6f) {
+      obj.pressPrimary();
+    }
   }
 
   /**
@@ -113,21 +113,25 @@ public class InputController {
    * @param obj Controller for the player
    */
   private void readKeyboard(Controllable obj) {
+    float hoff = 0;
+    float voff = 0;
     if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-      obj.moveHorizontal(1);
+      hoff += 1;
     }
     if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-      obj.moveHorizontal(-1);
+      hoff -= 1;
     }
     if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-      obj.moveVertical(1);
+      voff += 1;
     }
     if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-      obj.moveVertical(-1);
+      voff -= 1;
     }
     if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-      obj.pressPrimary(true);
+      obj.pressPrimary();
     }
+    obj.moveHorizontal(hoff);
+    obj.moveVertical(voff);
   }
 
 }
