@@ -59,8 +59,6 @@ public class InputController {
    */
   public InputController() {
     players = new ArrayList<>();
-    PlayerController player = new PlayerController();
-    players.add(player);
   }
 
   /**
@@ -98,7 +96,9 @@ public class InputController {
     obj.moveHorizontal(xbox.getLeftX());
     obj.moveVertical(xbox.getLeftY());
 
-    obj.pressPrimary(xbox.getRightTrigger() > 0.6f);
+    if (xbox.getRightTrigger() > 0.6f) {
+      obj.pressPrimary();
+    }
   }
 
   /**
@@ -126,7 +126,7 @@ public class InputController {
       obj.moveVertical(-1);
     }
     if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-      obj.pressPrimary(true);
+      obj.pressPrimary();
     }
   }
 

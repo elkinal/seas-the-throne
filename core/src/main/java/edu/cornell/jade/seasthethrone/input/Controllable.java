@@ -23,6 +23,6 @@ public interface Controllable {
   /**
    * Updates the primary attack state of the character.
    */
-  public void pressPrimary(boolean pressed);
+  public void pressPrimary();
 
 }
