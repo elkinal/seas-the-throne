@@ -63,6 +63,32 @@ public class PhysicsEngine implements ContactListener {
      * */
     public World getWorld() {return world;}
 
+    /** 
+     * Move in given direction based on offset
+     *
+     * @param x a value from -1 to 1 representing the percentage of movement speed to be at in the given direction
+     * @param y a value from -1 to 1 representing the percentage of movement speed to be at in the given direction
+     */
+    public void setVelPercentages(float x, float y) {
+      float mag = (x * x + y * y) / (float) Math.sqrt(2);
+      float moveSpeed = player.getMoveSpeed();
+      if (player.isDashing()) 
+        moveSpeed *= 2;
+
+      player.setVX(x * moveSpeed / mag);
+      player.setVX(y * moveSpeed / mag);
+    }
+
+    /**
+     * Begin dashing if possible
+     */
+    public void beginDashing() {
+      if (player.canDash()) {
+        player.setDashing(true);
+        player.setDashCounter(player.getDashLength());
+      }
+    }
+
     /**
      * The core gameplay loop of this world.
      *
@@ -72,22 +98,8 @@ public class PhysicsEngine implements ContactListener {
      * @param delta	Number of seconds since last animation frame
      */
     public void update(float delta){
-        // Pretend we got some input
-        float inputX = 0f;
-        float inputY = 0f;
-        boolean dashInput = true;
-
-        float moveSpeed = player.getMoveSpeed();
-
-        // Check if we begin a dash
-        if (player.canDash() && dashInput) {
-            player.setDashing(true);
-            player.setDashCounter(player.getDashLength());
-        }
-
         // Handle dashing
         if (player.isDashing()) {
-            moveSpeed *= 2;
             player.decrementDashCounter();
             if (player.getDashCounter() <= 0) {
                 // exit dash
@@ -96,16 +108,6 @@ public class PhysicsEngine implements ContactListener {
             }
         } else {
             player.setDashCounter(Math.max(0, player.getDashCounter() - 1));
-        }
-
-        // Just for keyboard input for now.
-        if (inBounds(player)) {
-            if (inputX > 0 && inputY > 0) {
-                player.setVX(moveSpeed / (float)Math.sqrt(2));
-                player.setVY(moveSpeed / (float)Math.sqrt(2));
-            }
-            else if (inputX > 0) {player.setVX(moveSpeed);}
-            else if (inputY > 0) {player.setVY(moveSpeed);}
         }
     }
 
@@ -119,17 +121,6 @@ public class PhysicsEngine implements ContactListener {
         objects.add(obj);
         obj.activatePhysics(world);
     }
-
-//    /**
-//     * Creates the physics body for this model and adds it to the physics engine.
-//     *
-//     * @param obj Model to be added to the world
-//     * TODO: Finish this implementation; must call world.createBody(BodyDef).
-//     * */
-//    public void activatePhysics(Model obj) {
-//        obj.setActive(true);
-//
-//    }
 
     /**
      * Returns true if the object is in bounds.
