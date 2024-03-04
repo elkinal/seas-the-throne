@@ -11,12 +11,19 @@ public class RenderingEngine {
   Array<Renderable> renderables;
 
   /**
+   * Internal game canvas to handle rendering
+   * TODO: REPLACE WITH HOMEBREWED THING
+   */
+  GameCanvas canvas;
+
+  /**
    * FIXME: stop hardcoding texture regions
    */
   private static final Texture PLAYER_TEXTURE_UP = new Texture("playerspriterunfilmstrip_up.png");
   private static final Texture PLAYER_TEXTURE_DOWN = new Texture("playerspriterunfilmstrip_down.png");
   private static final Texture SPEAR_TEXTURE_DOWN = new Texture("spear_up_down.png");
   private static final Texture SPEAR_TEXTURE_LEFT = new Texture("spear_left_right.png");
+  FilmStrip filmStrip = new FilmStrip(PLAYER_TEXTURE_DOWN, 1, 7, 6);
 
   /**
    * FIXME: stop hardcoding texture regions
@@ -28,6 +35,7 @@ public class RenderingEngine {
    */
   public RenderingEngine() {
     renderables = new Array<>();
+    canvas = new GameCanvas();
   }
 
   /**
@@ -44,7 +52,8 @@ public class RenderingEngine {
    *
    * @param canvas Drawing Context
    */
-  public void drawRenderables(GameCanvas canvas) {
+  public void drawRenderables() {
+    canvas.begin();
     for (Renderable r : renderables) {
       float x = toScreenCoord(r.getX());
       float y = toScreenCoord(r.getY());
@@ -75,14 +84,16 @@ public class RenderingEngine {
           spearx = x + 6;
           speary = y + 20;
         }
-        FilmStrip filmStrip = new FilmStrip(texture, 1, 7, 6);
+        filmStrip.setTexture(texture);
         filmStrip.setFrame(((PlayerRenderable) r).frameNumber());
         canvas.draw(filmStrip, x, y);
         canvas.draw(speartexture, spearx, speary);
+        ((PlayerRenderable) r).updateAnimationFrame();
       } else if (r instanceof FishRenderable) {
         canvas.draw(FISH_TEXTURE, x, y);
       }
     }
+    canvas.end();
   }
 
   /**

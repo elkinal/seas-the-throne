@@ -2,17 +2,20 @@ package edu.cornell.jade.seasthethrone.gamemodel;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.utils.JsonValue;
 import edu.cornell.jade.seasthethrone.model.ComplexModel;
 import edu.cornell.jade.seasthethrone.model.PolygonModel;
-import edu.cornell.jade.seasthethrone.updateengine.UpdateEngine;
+import edu.cornell.jade.seasthethrone.render.PlayerRenderable;
 
 /**
  * Model for the main player object of the game. This class extends
  * {@link ComplexModel} to support multiple joints and bodies for flexible
  * collision control and movement display.
  */
-public class PlayerModel extends ComplexModel {
+public class PlayerModel extends ComplexModel implements PlayerRenderable {
+  /** FIXME: stop hardcoding this */
+  private static int FRAMES_IN_FISH_ANIMATION = 6;
+  /** current animation frame */
+  private int animationFrame;
 
   /** Whether the player is dashing */
   private boolean isDashing;
@@ -165,4 +168,31 @@ public class PlayerModel extends ComplexModel {
 
     return true;
   }
+
+  public boolean spearExtended() {
+    return isDashing();
+  }
+
+  public int frameNumber() {
+    return animationFrame;
+  }
+
+  public void updateAnimationFrame() {
+    animationFrame = (animationFrame + 1) % FRAMES_IN_FISH_ANIMATION;
+  }
+
+  public int direction() {
+    if (Math.abs(getVX()) > Math.abs(getVY())) {
+      if (getVX() > 0)
+        return 3;
+      else
+        return 2;
+    } else {
+      if (getVY() > 0)
+        return 0;
+      else
+        return 1;
+    }
+  }
+
 }
