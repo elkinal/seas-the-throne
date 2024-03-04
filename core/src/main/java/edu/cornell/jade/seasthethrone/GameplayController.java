@@ -52,6 +52,8 @@ public class GameplayController implements Screen {
     this.playerController = new PlayerController(physicsEngine);
     this.renderEngine = new RenderingEngine();
     renderEngine.addRenderable(physicsEngine.getPlayerModel());
+
+    this.inputController.add(playerController);
   }
 
   public void show() {
@@ -74,6 +76,7 @@ public class GameplayController implements Screen {
     inputController.update();
     playerController.update();
     physicsEngine.update(delta);
+    physicsEngine.getWorld().step(delta, 8, 4);
   }
 
   public void resize(int width, int height) {
