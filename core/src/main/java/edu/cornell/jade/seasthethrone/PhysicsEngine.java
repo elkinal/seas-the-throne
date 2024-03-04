@@ -93,7 +93,6 @@ public class PhysicsEngine implements ContactListener {
 
     player.setVX(x * moveSpeed / mag);
     player.setVX(y * moveSpeed / mag);
-    System.out.println(player.getVX());
   }
 
   /**
