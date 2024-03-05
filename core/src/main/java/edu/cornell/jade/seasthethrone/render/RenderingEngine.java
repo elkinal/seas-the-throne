@@ -68,7 +68,7 @@ public class RenderingEngine {
     /** LOADING IN FONT, might be better to have an AssetDirectory later */
     FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("EBGaramond.ttf"));
     FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-    parameter.size = 30; // font size
+    parameter.size = 50; // font size
     textFont = generator.generateFont(parameter);
 
     playerAnimCounter = 0;
@@ -157,7 +157,7 @@ public class RenderingEngine {
 
   public void drawGameOver() {
     canvas.begin();
-    canvas.drawTextCentered("Game Over!", textFont, 40f);
+    canvas.drawTextCentered("Game Over!", textFont, 60f);
     canvas.drawTextCentered("Press R to Restart", textFont, 0);
     canvas.end();
   }
