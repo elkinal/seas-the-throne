@@ -1,6 +1,8 @@
 package edu.cornell.jade.seasthethrone.render;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
@@ -56,8 +58,9 @@ public class RenderingEngine {
     canvas.clear();
     canvas.begin();
     for (Renderable r : renderables) {
-      float x = toScreenCoord(r.getX());
-      float y = toScreenCoord(r.getY());
+      Vector2 position = new Vector2(r.getX(),r.getY());
+      float x = toScreenCoord(position).x;
+      float y = toScreenCoord(position).y;
       if (r instanceof PlayerRenderable) {
         Texture texture;
         Texture speartexture;
@@ -102,10 +105,14 @@ public class RenderingEngine {
    *
    * @return screen coordinate
    *
-   * @param x the coordinate to be converted
+   * @param pos the coordinate to be converted
    */
-  public float toScreenCoord(float x) {
-    return x;
+  //TODO: fix this to utilize the camera, right now collisioin looks sketchy with this transformation. 
+  public Vector2 toScreenCoord(Vector2 pos) {
+    return pos.scl(10f, 4f).sub(-300f, -45f);
+  }
+  public void clear(){
+    renderables.clear();
   }
 
   @Override
