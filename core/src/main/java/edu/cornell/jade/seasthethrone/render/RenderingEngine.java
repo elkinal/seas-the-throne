@@ -116,11 +116,11 @@ public class RenderingEngine {
         }
         filmStrip.setTexture(texture);
         filmStrip.setFrame(((PlayerRenderable) r).frameNumber());
-        canvas.draw(filmStrip, Color.WHITE, -303, -220, x, y, 0, PLAYER_SCALE, PLAYER_SCALE);
-        canvas.draw(speartexture, Color.WHITE, -220, -233, spearx, speary, 0, PLAYER_SCALE, PLAYER_SCALE);
+        canvas.draw(filmStrip, Color.WHITE, -303, -247, x, y, 0, PLAYER_SCALE, PLAYER_SCALE);
+        canvas.draw(speartexture, Color.WHITE, -220, -263, spearx, speary, 0, PLAYER_SCALE, PLAYER_SCALE);
         ((PlayerRenderable) r).updateAnimationFrame();
       } else if (r instanceof FishRenderable) {
-        canvas.draw(FISH_TEXTURE, Color.WHITE, -157, -117, x, y, 0, BULLET_SCALE, BULLET_SCALE);
+        canvas.draw(FISH_TEXTURE, Color.WHITE, -157, -132, x, y, 0, BULLET_SCALE, BULLET_SCALE);
       }
     }
     canvas.end();
