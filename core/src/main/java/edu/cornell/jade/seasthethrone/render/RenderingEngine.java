@@ -91,7 +91,7 @@ public class RenderingEngine {
   public void drawBackground(){
     canvas.clear();
     canvas.begin();
-    canvas.draw(BACKGROUND, Color.WHITE, 0, 0, 0, 0, 0, 2.5f, 2.5f);
+    canvas.draw(BACKGROUND, Color.WHITE, 0, 0, 0, 0, 0, 4f, 4f);
     canvas.end();
   }
 

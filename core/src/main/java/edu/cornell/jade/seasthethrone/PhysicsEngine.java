@@ -166,7 +166,7 @@ public class PhysicsEngine implements ContactListener {
    * @param bulletTimer value of the timer, used to set angle
    * */
   public void spawnBulletPattern(int bulletTimer) {
-    float speed = 2;
+    float speed = 4;
     BulletModel bullet = new BulletModel(3,3,0.5f);
     float theta = bulletTimer * 2;
     Vector2 v_i = new Vector2((float)Math.cos(theta), (float)Math.sin(theta));
