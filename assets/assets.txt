@@ -1,11 +1,13 @@
-libgdx.png
 bullet_test.png
+EBGaramond.ttf
+libgdx.png
 playerspriterunfilmstrip_down.png
+playerspriterunfilmstrip_down_full.png
 playerspriterunfilmstrip_up.png
+playerspriterun_down_clean.png
 spear_left_right.png
 spear_up_down.png
 spritebox_down.png
 spritebox_left.png
 spritebox_right.png
 spritebox_up.png
-EBGaramond.ttf
