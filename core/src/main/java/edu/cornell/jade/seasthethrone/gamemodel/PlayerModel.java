@@ -14,7 +14,7 @@ import edu.cornell.jade.seasthethrone.render.PlayerRenderable;
  */
 public class PlayerModel extends ComplexModel implements PlayerRenderable {
   /** FIXME: stop hardcoding this */
-  private static int FRAMES_IN_FISH_ANIMATION = 6;
+  private static int FRAMES_IN_FISH_ANIMATION = 12;
   /** current animation frame */
   private int animationFrame;
 

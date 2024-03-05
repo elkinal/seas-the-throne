@@ -17,6 +17,9 @@ public class RenderingEngine {
   /** Bullet sprite scale to world scale */
   private float BULLET_SCALE = 0.2f;
 
+  /** Counter to track player sprite animation */
+  private int playerAnimCounter;
+
   /**
    * The Renderable objects for rendering
    */
@@ -38,10 +41,10 @@ public class RenderingEngine {
    * FIXME: stop hardcoding texture regions
    */
   private static final Texture PLAYER_TEXTURE_UP = new Texture("playerspriterunfilmstrip_up.png");
-  private static final Texture PLAYER_TEXTURE_DOWN = new Texture("playerspriterunfilmstrip_down.png");
-  private static final Texture SPEAR_TEXTURE_DOWN = new Texture("spear_up_down.png");
-  private static final Texture SPEAR_TEXTURE_LEFT = new Texture("spear_left_right.png");
-  FilmStrip filmStrip = new FilmStrip(PLAYER_TEXTURE_DOWN, 1, 7, 6);
+  private static final Texture PLAYER_TEXTURE_DOWN = new Texture("playerspriterun_down_clean.png");
+  private static final Texture SPEAR_TEXTURE_VERT = new Texture("spear_up_down.png");
+  private static final Texture SPEAR_TEXTURE_HORI = new Texture("spear_left_right.png");
+  FilmStrip filmStrip = new FilmStrip(PLAYER_TEXTURE_DOWN, 1, 12, 12);
 
   /**
    * FIXME: stop hardcoding texture regions
@@ -66,6 +69,8 @@ public class RenderingEngine {
     parameter.size = 30; // font size
     textFont = generator.generateFont(parameter);
 
+    playerAnimCounter = 0;
+
     this.viewport = new FitViewport(worldWidth, worldHeight);
   }
 
@@ -88,41 +93,47 @@ public class RenderingEngine {
       float x = r.getX();
       float y = r.getY();
       if (r instanceof PlayerRenderable) {
-        Texture texture;
+//        Texture texture;
         Texture speartexture;
+        int dir = ((PlayerRenderable) r).direction();
         float spearx = 0;
         float speary = 0;
-        if (((PlayerRenderable) r).direction() == 0) {
-          texture = PLAYER_TEXTURE_UP;
-          speartexture = SPEAR_TEXTURE_DOWN;
+        if (dir == 0) {
+//          texture = PLAYER_TEXTURE_UP;
+          speartexture = SPEAR_TEXTURE_VERT;
           spearx = x + 10;
           speary = y;
-        } else if (((PlayerRenderable) r).direction() == 1) {
-          texture = PLAYER_TEXTURE_DOWN;
-          speartexture = SPEAR_TEXTURE_DOWN;
+        } else if (dir == 1) {
+//          texture = PLAYER_TEXTURE_DOWN;
+          speartexture = SPEAR_TEXTURE_VERT;
           spearx = x + 10;
           speary = y;
-        } else if (((PlayerRenderable) r).direction() == 2) {
+        } else if (dir == 2 || dir == 6 || dir == 7) {
+          // If facing Left, NW, SW
           // FIXME: Replace with Texture Left and Right when we have those
-          texture = PLAYER_TEXTURE_DOWN;
-          speartexture = SPEAR_TEXTURE_LEFT;
+//          texture = PLAYER_TEXTURE_DOWN;
+          speartexture = SPEAR_TEXTURE_HORI;
           spearx = x + 6;
           speary = y + 20;
         } else {
-          texture = PLAYER_TEXTURE_UP;
-          speartexture = SPEAR_TEXTURE_LEFT;
+          // If facing Right, NE, SE
+//          texture = PLAYER_TEXTURE_UP;
+          speartexture = SPEAR_TEXTURE_HORI;
           spearx = x + 6;
           speary = y + 20;
         }
-        filmStrip.setTexture(texture);
+        filmStrip.setTexture(PLAYER_TEXTURE_DOWN);
         filmStrip.setFrame(((PlayerRenderable) r).frameNumber());
-        canvas.draw(filmStrip, Color.WHITE, -303, -247, x, y, 0, PLAYER_SCALE, PLAYER_SCALE);
+        canvas.draw(filmStrip, Color.WHITE, -303, -225, x, y, 0, PLAYER_SCALE, PLAYER_SCALE);
         canvas.draw(speartexture, Color.WHITE, -220, -263, spearx, speary, 0, PLAYER_SCALE, PLAYER_SCALE);
-        ((PlayerRenderable) r).updateAnimationFrame();
+        if (playerAnimCounter % 4 == 0){
+          ((PlayerRenderable) r).updateAnimationFrame();
+        }
       } else if (r instanceof FishRenderable) {
-        canvas.draw(FISH_TEXTURE, Color.WHITE, -157, -132, x, y, 0, BULLET_SCALE, BULLET_SCALE);
+        canvas.draw(FISH_TEXTURE, Color.WHITE, -157, -117, x, y, 0, BULLET_SCALE, BULLET_SCALE);
       }
     }
+    playerAnimCounter += 1;
     canvas.end();
   }
 
