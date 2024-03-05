@@ -147,7 +147,7 @@ public abstract class ComplexModel extends Model {
      * @return the x-coordinate for this physics body
      */
     public float getX() {
-        return (getBody() != null ? getBody().getPosition().x : super.getX());
+        return (body != null ? body.getPosition().x : super.getX());
     }
 
     /**
@@ -176,7 +176,7 @@ public abstract class ComplexModel extends Model {
      * @return the y-coordinate for this physics body
      */
     public float getY() {
-        return (getBody() != null ? getBody().getPosition().y : super.getY());
+        return (body != null ? body.getPosition().y : super.getY());
     }
 
     /**
@@ -958,6 +958,8 @@ public abstract class ComplexModel extends Model {
      * link them all together. You should override that method, not this one,
      * for specific physics objects.
      *
+     * NOTE: RIGHT NOW WE SET THE "MAIN" BODY TO BE THE BODY OF THE FIRST MODEL
+     *
      * @param world Box2D world to store body
      *
      * @return true if object allocation succeeded
@@ -971,6 +973,9 @@ public abstract class ComplexModel extends Model {
             success = success && obj.activatePhysics(world);
         }
         success = success && createJoints(world);
+
+        //set body to the first element in bodies
+        if( bodies.size > 0 ) body = bodies.first().getBody();
 
         // Clean up if we failed
         if (!success) {

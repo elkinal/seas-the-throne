@@ -67,7 +67,6 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     nose.setName("nose");
     nose.setBodyType(BodyDef.BodyType.DynamicBody);
     bodies.add(nose);
-    body = nose.getBody();
   }
 
   /**
