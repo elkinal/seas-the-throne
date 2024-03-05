@@ -60,7 +60,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     moveSpeed = 6f;
     dashCounter = 0;
     dashCooldownLimit = 25;
-    dashLength = 12;
+    dashLength = 20;
     isDashing = false;
 
     PolygonModel nose = new PolygonModel(vertices);
