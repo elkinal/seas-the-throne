@@ -98,6 +98,8 @@ public class RenderingEngine {
         int dir = ((PlayerRenderable) r).direction();
         float spearx = 0;
         float speary = 0;
+        int ospearx = -220;
+        int ospeary = -250;
         if (dir == 0) {
 //          texture = PLAYER_TEXTURE_UP;
           speartexture = SPEAR_TEXTURE_VERT;
@@ -108,6 +110,7 @@ public class RenderingEngine {
           speartexture = SPEAR_TEXTURE_VERT;
           spearx = x + 10;
           speary = y;
+          ospeary = -205;
         } else if (dir == 2 || dir == 6 || dir == 7) {
           // If facing Left, NW, SW
           // FIXME: Replace with Texture Left and Right when we have those
@@ -115,17 +118,21 @@ public class RenderingEngine {
           speartexture = SPEAR_TEXTURE_HORI;
           spearx = x + 6;
           speary = y + 20;
+          ospearx = -230;
+          ospeary = -40;
         } else {
           // If facing Right, NE, SE
 //          texture = PLAYER_TEXTURE_UP;
           speartexture = SPEAR_TEXTURE_HORI;
           spearx = x + 6;
           speary = y + 20;
+          ospearx = -268;
+          ospeary = -40;
         }
         filmStrip.setTexture(PLAYER_TEXTURE_DOWN);
         filmStrip.setFrame(((PlayerRenderable) r).frameNumber());
         canvas.draw(filmStrip, Color.WHITE, -303, -225, x, y, 0, PLAYER_SCALE, PLAYER_SCALE);
-        canvas.draw(speartexture, Color.WHITE, -220, -263, spearx, speary, 0, PLAYER_SCALE, PLAYER_SCALE);
+        canvas.draw(speartexture, Color.WHITE, ospearx, ospeary, spearx, speary, 0, PLAYER_SCALE, PLAYER_SCALE);
         if (playerAnimCounter % 4 == 0){
           ((PlayerRenderable) r).updateAnimationFrame();
         }
