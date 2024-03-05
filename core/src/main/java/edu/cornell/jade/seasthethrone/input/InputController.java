@@ -31,6 +31,18 @@ public class InputController {
   /** XBox Controller support */
   private XBoxController xbox;
 
+  /** Whether the reset button was pressed. */
+  protected boolean resetPressed;
+
+  /**
+   * Returns true if the reset button was pressed.
+   *
+   * @return true if the reset button was pressed.
+   */
+  public boolean didReset() {
+    return resetPressed;
+  }
+
   /**
    * Adds p to 'players.' Adding a duplicated object does nothing.
    *
@@ -93,6 +105,8 @@ public class InputController {
    * @param obj Controller for the player
    */
   private void readController(Controllable obj) {
+    resetPressed = xbox.getA();
+
     obj.moveHorizontal(xbox.getLeftX());
     obj.moveVertical(xbox.getLeftY());
 
@@ -115,6 +129,8 @@ public class InputController {
   private void readKeyboard(Controllable obj) {
     float hoff = 0;
     float voff = 0;
+    resetPressed = Gdx.input.isKeyPressed(Input.Keys.R);
+
     if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
       hoff += 1;
     }

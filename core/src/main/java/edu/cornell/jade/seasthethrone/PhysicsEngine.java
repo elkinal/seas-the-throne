@@ -47,6 +47,15 @@ public class PhysicsEngine implements ContactListener {
     return player;
   }
 
+  /**
+   * Returns true if the currently active player is alive.
+   *
+   * @return true if the currently active player is alive.
+   */
+  public boolean isAlive() {
+    return player != null;
+  }
+
   public PooledList<Model> getObjects(){
     return objects;
   }
@@ -191,6 +200,7 @@ public class PhysicsEngine implements ContactListener {
       if (obj.isRemoved()) {
         obj.deactivatePhysics(world);
         entry.remove();
+        if(obj == player) player = null;
       } else {
         obj.update(delta);
       }
@@ -237,6 +247,13 @@ public class PhysicsEngine implements ContactListener {
     try {
       Model bd1 = (Model) body1.getUserData();
       Model bd2 = (Model) body2.getUserData();
+
+      // End game if hit
+      if((bd1.getName().equals("bullet") && bd2.getName().equals("nose")) ||
+              (bd2.getName().equals("bullet") && bd1.getName().equals("nose"))){
+        player.markRemoved(true);
+        contact.setEnabled(false); // Disable the collision response
+      }
 
       // See if we have skewered a bullet.
       if (player.isDashing()) {

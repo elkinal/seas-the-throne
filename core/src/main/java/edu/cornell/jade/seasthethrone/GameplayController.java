@@ -16,6 +16,16 @@ import com.badlogic.gdx.math.Matrix4;
 // IMPORT INPUT CONTROLLER
 
 public class GameplayController implements Screen {
+
+  /** Track state of the game */
+  public enum GameState {
+    /** While we are playing the game */
+    PLAY,
+    /** When the ships is dead (but shells still work) */
+    OVER
+  }
+
+  private GameState gameState;
   Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
   Matrix4 cam = new Matrix4().scl(0.1f);
   /** Sub-controller for collecting input */
@@ -42,6 +52,7 @@ public class GameplayController implements Screen {
   protected PooledList<Model> objects = new PooledList<Model>();
 
   protected GameplayController() {
+    gameState = GameState.PLAY;
     bounds = new Rectangle(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
     physicsEngine = new PhysicsEngine(bounds);
     physicsEngine.reset();
@@ -66,7 +77,6 @@ public class GameplayController implements Screen {
       update(delta);
     }
     //draw(delta);
-    debugRenderer.render(physicsEngine.getWorld(), cam);
   }
 
   public void draw(float delta) {
@@ -74,16 +84,35 @@ public class GameplayController implements Screen {
   }
 
   public void update(float delta) {
+
     inputController.update();
-    playerController.update();
-    physicsEngine.update(delta);
+
+    // Right now just errors if you try to update playerController or physicsEngine when player is null
+    if(gameState != GameState.OVER){
+      playerController.update();
+      physicsEngine.update(delta);
+    }
     physicsEngine.getWorld().step(delta, 8, 4);
+
+    if(!physicsEngine.isAlive()){
+      gameState = GameState.OVER;
+    }
+
     draw(delta);
+    debugRenderer.render(physicsEngine.getWorld(), cam);
     renderEngine.clear();
     for (Model obj: physicsEngine.getObjects()){
       renderEngine.addRenderable(obj);
     }
-    System.out.println(physicsEngine.getPlayerModel().getX());
+    if(gameState == GameState.OVER){
+      if(inputController.didReset()){
+        gameState = GameState.PLAY;
+        physicsEngine.reset();
+      } else{
+        renderEngine.drawGameOver();
+      }
+    }
+    //System.out.println(physicsEngine.getPlayerModel().getX());
   }
 
   public void resize(int width, int height) {

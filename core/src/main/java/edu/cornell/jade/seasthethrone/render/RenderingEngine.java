@@ -1,6 +1,9 @@
 package edu.cornell.jade.seasthethrone.render;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -17,6 +20,9 @@ public class RenderingEngine {
    * TODO: REPLACE WITH HOMEBREWED THING
    */
   GameCanvas canvas;
+
+  /** Font for display text */
+  BitmapFont textFont;
 
   /**
    * FIXME: stop hardcoding texture regions
@@ -38,6 +44,12 @@ public class RenderingEngine {
   public RenderingEngine() {
     renderables = new Array<>();
     canvas = new GameCanvas();
+
+    /** LOADING IN FONT, might be better to have an AssetDirectory later */
+    FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("EBGaramond.ttf"));
+    FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+    parameter.size = 30; //font size
+    textFont = generator.generateFont(parameter);
   }
 
   /**
@@ -51,8 +63,6 @@ public class RenderingEngine {
 
   /**
    * Draws all the renderable objects in the list to be rendered
-   *
-   * @param canvas Drawing Context
    */
   public void drawRenderables() {
     canvas.clear();
@@ -98,6 +108,13 @@ public class RenderingEngine {
       }
     }
     canvas.end();
+  }
+
+  public void drawGameOver(){
+      canvas.begin();
+      canvas.drawTextCentered("Game Over!",textFont, 40f);
+      canvas.drawTextCentered("Press R to Restart", textFont, 0);
+      canvas.end();
   }
 
   /**
