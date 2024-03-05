@@ -44,6 +44,8 @@ public class RenderingEngine {
   private static final Texture PLAYER_TEXTURE_DOWN = new Texture("playerspriterun_down_clean.png");
   private static final Texture SPEAR_TEXTURE_VERT = new Texture("spear_up_down.png");
   private static final Texture SPEAR_TEXTURE_HORI = new Texture("spear_left_right.png");
+
+  private static final Texture BACKGROUND = new Texture("background.jpeg");
   FilmStrip filmStrip = new FilmStrip(PLAYER_TEXTURE_DOWN, 1, 12, 12);
 
   /**
@@ -84,10 +86,19 @@ public class RenderingEngine {
   }
 
   /**
+   * Draw the background for the game
+   */
+  public void drawBackground(){
+    canvas.clear();
+    canvas.begin();
+    canvas.draw(BACKGROUND, Color.WHITE, 0, 0, 0, 0, 0, 2.5f, 2.5f);
+    canvas.end();
+  }
+
+  /**
    * Draws all the renderable objects in the list to be rendered
    */
   public void drawRenderables() {
-    canvas.clear();
     canvas.begin(canvas.getWidth() / viewport.getWorldWidth(), canvas.getHeight() / viewport.getWorldHeight());
     for (Renderable r : renderables) {
       float x = r.getX();

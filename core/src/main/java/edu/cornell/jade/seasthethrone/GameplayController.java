@@ -79,6 +79,7 @@ public class GameplayController implements Screen {
   }
 
   public void draw(float delta) {
+    renderEngine.drawBackground();
     renderEngine.drawRenderables();
   }
 
