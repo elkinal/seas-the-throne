@@ -163,7 +163,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     sensorDef.isSensor = true;
     CircleShape sensorShape = new CircleShape();
     // sensor has 0 radius, maybe modify?
-    sensorShape.setRadius(0);
+    sensorShape.setRadius(0.4f);
     sensorShape.setPosition(sensorCenter);
     sensorDef.shape = sensorShape;
 
@@ -186,20 +186,45 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   }
 
   public int direction() {
-    if (Math.abs(getVX()) > Math.abs(getVY())) {
-      if (getVX() > 0)
+    float vx = getVX();
+    float vy = getVY();
+
+    if (vx == 0 && vx == vy ) {
+      return -1;
+    }
+
+    if (Math.abs(vx) > Math.abs(vy)) {
+      if (vx > 0)
         // Right
         return 3;
       else
         // Left
         return 2;
-    } else {
-      if (getVY() > 0)
+    } else if (Math.abs(vy) > Math.abs(vx)){
+      if (vy > 0)
         // Up
         return 0;
       else
         // Down
         return 1;
+    } else {
+      if (vx > 0) {
+        if (vy > 0) {
+          // North east
+          return 4;
+        } else {
+          // South east
+          return 5;
+        }
+      } else {
+        if (vy > 0) {
+          // North west
+          return 7;
+        } else {
+          // South west
+          return 6;
+        }
+      }
     }
   }
 

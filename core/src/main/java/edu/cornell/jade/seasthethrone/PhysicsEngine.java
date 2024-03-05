@@ -107,8 +107,9 @@ public class PhysicsEngine implements ContactListener {
       mag = 1;
     }
     float moveSpeed = player.getMoveSpeed();
-    if (player.isDashing())
+    if (player.isDashing()){
       moveSpeed *= 3;
+    }
 
     player.getPointModel().setVX(x * moveSpeed / mag);
     player.getPointModel().setVY(y * moveSpeed / mag);
@@ -117,19 +118,33 @@ public class PhysicsEngine implements ContactListener {
   /** Orients the player model based on their primary direction of movement */
   public void orientPlayer() {
     int dir = player.direction();
-
+    // Up, down, left, right, NE, SE, SW, NW
     switch (dir) {
       case 0:
         player.setAngle(0f);
         break;
       case 1:
-        player.setAngle(180f);
+        player.setAngle((float)Math.PI);
         break;
       case 2:
-        player.setAngle(90f);
+        player.setAngle((float)Math.PI/2);
         break;
       case 3:
-        player.setAngle(-90f);
+        player.setAngle(-(float)Math.PI/2);
+        break;
+      case 4:
+        player.setAngle(-(float)Math.PI/4);
+        break;
+      case 5:
+        player.setAngle(-3f*(float)Math.PI/4);
+        break;
+      case 6:
+        player.setAngle(3f*(float)Math.PI/4);
+        break;
+      case 7:
+        player.setAngle((float)Math.PI/4);
+        break;
+      default:
         break;
     }
   }
