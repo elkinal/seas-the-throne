@@ -248,13 +248,6 @@ public class PhysicsEngine implements ContactListener {
       Model bd1 = (Model) body1.getUserData();
       Model bd2 = (Model) body2.getUserData();
 
-      // End game if hit
-      if((bd1.getName().equals("bullet") && bd2.getName().equals("nose")) ||
-              (bd2.getName().equals("bullet") && bd1.getName().equals("nose"))){
-        player.markRemoved(true);
-        contact.setEnabled(false); // Disable the collision response
-      }
-
       // See if we have skewered a bullet.
       if (player.isDashing()) {
         if (player.getPointSensorName().equals(fd2) && bd1.getName().equals("bullet")) {
@@ -262,6 +255,15 @@ public class PhysicsEngine implements ContactListener {
         }
         if (player.getPointSensorName().equals(fd1) && bd2.getName().equals("bullet")) {
           bd2.markRemoved(true);
+        }
+      }
+
+      // End game if hit
+      if((bd1.getName().equals("bullet") && bd2.getName().equals("nose")) ||
+              (bd2.getName().equals("bullet") && bd1.getName().equals("nose"))){
+        if (!bd1.isRemoved() && !bd2.isRemoved()) {
+          player.markRemoved(true);
+          contact.setEnabled(false); // Disable the collision response
         }
       }
 
