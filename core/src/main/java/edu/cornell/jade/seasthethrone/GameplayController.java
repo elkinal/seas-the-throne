@@ -12,7 +12,7 @@ import edu.cornell.jade.seasthethrone.input.PlayerController;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 // IMPORT INPUT CONTROLLER
 
 public class GameplayController implements Screen {
@@ -27,7 +27,6 @@ public class GameplayController implements Screen {
 
   private GameState gameState;
   Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
-  Matrix4 cam = new Matrix4().scl(0.1f);
   /** Sub-controller for collecting input */
   InputController inputController;
   /** Sub-controller for handling updating physics engine based on input */
@@ -62,7 +61,7 @@ public class GameplayController implements Screen {
 
     this.inputController = new InputController();
     this.playerController = new PlayerController(physicsEngine);
-    this.renderEngine = new RenderingEngine();
+    this.renderEngine = new RenderingEngine(DEFAULT_WIDTH, DEFAULT_HEIGHT);
     renderEngine.addRenderable(physicsEngine.getPlayerModel());
 
     this.inputController.add(playerController);
@@ -99,7 +98,7 @@ public class GameplayController implements Screen {
     }
 
     draw(delta);
-    debugRenderer.render(physicsEngine.getWorld(), cam);
+    debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
     renderEngine.clear();
     for (Model obj: physicsEngine.getObjects()){
       renderEngine.addRenderable(obj);
@@ -116,6 +115,7 @@ public class GameplayController implements Screen {
   }
 
   public void resize(int width, int height) {
+    renderEngine.resize(width, height);
   }
 
   public void pause() {
