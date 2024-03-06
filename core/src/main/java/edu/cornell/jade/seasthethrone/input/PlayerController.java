@@ -48,7 +48,7 @@ public class PlayerController implements Controllable {
       physicsEngine.beginDashing();
     }
     physicsEngine.setVelPercentages(hoff, voff);
-    physicsEngine.orientPlayer();
+    physicsEngine.orientPlayer(hoff,voff);
     dashing = false;
   }
 
