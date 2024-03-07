@@ -1,9 +1,11 @@
 package edu.cornell.jade.seasthethrone;
 
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import edu.cornell.jade.seasthethrone.gamemodel.*;
+import edu.cornell.jade.seasthethrone.model.ComplexModel;
 import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.util.PooledList;
 
@@ -18,14 +20,15 @@ public class PhysicsEngine implements ContactListener {
   private Rectangle bounds;
   /** Timer for spawning bullets */
   private int bulletTimer;
+  /** reference to player */
+  private PlayerModel player;
 
-  /** The time since the last dash */
-
-  public PhysicsEngine(Rectangle bounds, PlayerModel player) {
-    world = new World(new Vector2(0, 0), false);
+  public PhysicsEngine(Rectangle bounds, World world, PlayerModel player) {
+    this.world = world;
     this.bounds = new Rectangle(bounds);
     this.bulletTimer = 0;
     world.setContactListener(this);
+    this.player = player;
     addObject(player);
   }
 
@@ -146,21 +149,22 @@ public class PhysicsEngine implements ContactListener {
       Model bd2 = (Model) body2.getUserData();
 
       // See if we have skewered a bullet.
-      if( bd1 instanceof PlayerModel){
-        PlayerModel pm1 = (PlayerModel) bd1;
-        if (pm1.isDashing() && pm1.getPointSensorName().equals(fd1) && bd2.getName().equals("bullet")) {
-          bd2.markRemoved(true); //remove bullet
-        } else{
-          bd1.markRemoved(true); //player is hit
-          contact.setEnabled(false); // Disable the collision response
+      if (player.isDashing()) {
+        if (player.getPointSensorName().equals(fd2) && bd1.getName().equals("bullet")) {
+          System.out.println(((PlayerModel)bd2).getName());
+          bd1.markRemoved(true);
+        }
+        if (player.getPointSensorName().equals(fd1) && bd2.getName().equals("bullet")) {
+          System.out.println(((PlayerModel)bd1).getName());
+          bd2.markRemoved(true);
         }
       }
-      else if( bd2 instanceof PlayerModel){
-        PlayerModel pm2 = (PlayerModel) bd2;
-        if (pm2.isDashing() && pm2.getPointSensorName().equals(fd1) && bd1.getName().equals("bullet")) {
-          bd1.markRemoved(true); //remove bullet
-        } else{
-          bd2.markRemoved(true); //player is hit
+
+      // End game if hit
+      if((bd1.getName().equals("bullet") && bd2.getName().equals("nose")) ||
+              (bd2.getName().equals("bullet") && bd1.getName().equals("nose"))){
+        if (!bd1.isRemoved() && !bd2.isRemoved()) {
+          player.markRemoved(true);
           contact.setEnabled(false); // Disable the collision response
         }
       }

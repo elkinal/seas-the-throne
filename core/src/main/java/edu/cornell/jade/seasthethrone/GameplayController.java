@@ -4,6 +4,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
+import com.badlogic.gdx.physics.box2d.World;
 import edu.cornell.jade.seasthethrone.gamemodel.PlayerModel;
 import edu.cornell.jade.seasthethrone.input.InputController;
 import edu.cornell.jade.seasthethrone.input.PlayerController;
@@ -53,6 +54,8 @@ public class GameplayController implements Screen {
     active = false;
     bounds = new Rectangle(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
     scale = new Vector2(1, 1);
+    inputController = new InputController();
+    renderEngine = new RenderingEngine(DEFAULT_WIDTH, DEFAULT_HEIGHT);
     setupGameplay();
   }
 
@@ -65,11 +68,10 @@ public class GameplayController implements Screen {
     gameState = GameState.PLAY;
 
     // create playermodel for the game
+    World world = new World(new Vector2(0, 0), false);
     PlayerModel player = new PlayerModel(0, 0);
-    physicsEngine = new PhysicsEngine(bounds, player);
-    inputController = new InputController();
+    physicsEngine = new PhysicsEngine(bounds, world, player);
     playerController = new PlayerController(player);
-    renderEngine = new RenderingEngine(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 
     renderEngine.addRenderable(player);
     inputController.add(playerController);
