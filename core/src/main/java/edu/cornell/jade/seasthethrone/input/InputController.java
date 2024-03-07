@@ -160,8 +160,8 @@ public class InputController {
     float voff = 0;
     resetPressed = Gdx.input.isKeyPressed(Input.Keys.R);
 
-    hoff += Gdx.input.getDeltaX();
-    voff -= Gdx.input.getDeltaY();
+    hoff = Gdx.input.getDeltaX();
+    voff = Gdx.input.getDeltaY();
     if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
       obj.pressPrimary();
     }
