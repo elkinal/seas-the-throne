@@ -169,13 +169,11 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
 
     // Create sensor on the points of the "nose," this should be factored to a diff
     // function later
-    Vector2 sensorCenter = new Vector2(0, 1);
+    Vector2 sensorCenter = new Vector2(0, 1.6f);
     FixtureDef sensorDef = new FixtureDef();
     sensorDef.isSensor = true;
-    CircleShape sensorShape = new CircleShape();
-    // sensor has 0 radius, maybe modify?
-    sensorShape.setRadius(0.4f);
-    sensorShape.setPosition(sensorCenter);
+    PolygonShape sensorShape = new PolygonShape();
+    sensorShape.setAsBox(0.3f, 1.6f, sensorCenter, 0f);
     sensorDef.shape = sensorShape;
 
     Fixture sensorFixture = getPointModel().getBody().createFixture(sensorDef);
