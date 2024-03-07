@@ -47,6 +47,13 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   public PlayerModel(float x, float y) {
     super(x, y);
 
+    // Set constants
+    moveSpeed = 6f;
+    dashCounter = 0;
+    dashCooldownLimit = 25;
+    dashLength = 20;
+    isDashing = false;
+
     // make a triangle for now
     float vertices[] = new float[6];
     vertices[0] = -0.5f;
@@ -55,13 +62,6 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     vertices[3] = -1;
     vertices[4] = 0;
     vertices[5] = 1;
-
-    // Set constants
-    moveSpeed = 6f;
-    dashCounter = 0;
-    dashCooldownLimit = 25;
-    dashLength = 20;
-    isDashing = false;
 
     PolygonModel nose = new PolygonModel(vertices);
     nose.setName("nose");

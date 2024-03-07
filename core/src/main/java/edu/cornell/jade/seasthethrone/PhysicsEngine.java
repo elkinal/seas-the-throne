@@ -4,12 +4,10 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import edu.cornell.jade.seasthethrone.gamemodel.*;
-import edu.cornell.jade.seasthethrone.model.*;
+import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.util.PooledList;
 
 import java.util.Iterator;
-// DO NOT IMPORT GameplayController
-
 public class PhysicsEngine implements ContactListener {
 
   /** All the objects in the world. */
@@ -18,70 +16,26 @@ public class PhysicsEngine implements ContactListener {
   private World world;
   /** The boundary of the world */
   private Rectangle bounds;
-  /** The world scale */
-  private Vector2 scale;
-  /** The player */
-  private PlayerModel player;
-
   /** Timer for spawning bullets */
   private int bulletTimer;
 
   /** The time since the last dash */
 
-  public PhysicsEngine(Rectangle bounds) {
-
-    // not sure if its gonna make sense to have some concept of gravity
+  public PhysicsEngine(Rectangle bounds, PlayerModel player) {
     world = new World(new Vector2(0, 0), false);
     this.bounds = new Rectangle(bounds);
-    this.scale = new Vector2(1, 1);
     this.bulletTimer = 0;
     world.setContactListener(this);
-  }
-
-  /**
-   * Returns player model.
-   *
-   * @return the player model in the physics engine
-   */
-  public PlayerModel getPlayerModel() {
-    return player;
-  }
-
-  /**
-   * Returns true if the currently active player is alive.
-   *
-   * @return true if the currently active player is alive.
-   */
-  public boolean isAlive() {
-    return player != null;
+    addObject(player);
   }
 
   public PooledList<Model> getObjects(){
     return objects;
   }
 
-  /**
-   * Resets the status of the game so that we can play again.
-   *
-   * This method disposes of the world and creates a new one.
-   */
-  public void reset() {
-    Vector2 gravity = new Vector2(world.getGravity());
+  public void dispose(){
     objects.clear();
     world.dispose();
-
-    world = new World(gravity, false);
-    world.setContactListener(this);
-    setupWorld();
-  }
-
-  private void setupWorld() {
-    player = new PlayerModel(0, 0);
-    addObject(player);
-
-//    BulletModel bullet = new BulletModel(3, 3, 0.5f);
-//    addObject(bullet);
-//    bullet.createFixtures();
   }
 
   /**
@@ -89,75 +43,6 @@ public class PhysicsEngine implements ContactListener {
    */
   public World getWorld() {
     return world;
-  }
-
-  /**
-   * Move in given direction based on offset
-   *
-   * @param x a value from -1 to 1 representing the percentage of movement speed
-   *          to be at in the given direction
-   * @param y a value from -1 to 1 representing the percentage of movement speed
-   *          to be at in the given direction
-   */
-  public void setVelPercentages(float x, float y) {
-    float mag = (x * x + y * y) / (float) Math.sqrt(2);
-    // TODO: Change this to compare with some epsilong probably
-    // this does techinically work though
-    if (mag == 0f) {
-      mag = 1;
-    }
-    float moveSpeed = player.getMoveSpeed();
-    if (player.isDashing()){
-      moveSpeed *= 3;
-    }
-
-    player.getPointModel().setVX(x * moveSpeed / mag);
-    player.getPointModel().setVY(y * moveSpeed / mag);
-  }
-
-  /** Orients the player model based on their primary direction of movement */
-  public void orientPlayer() {
-    int dir = player.direction();
-    // Up, down, left, right, NE, SE, SW, NW
-    switch (dir) {
-      case 0:
-        player.setAngle(0f);
-        break;
-      case 1:
-        player.setAngle((float)Math.PI);
-        break;
-      case 2:
-        player.setAngle((float)Math.PI/2);
-        break;
-      case 3:
-        player.setAngle(-(float)Math.PI/2);
-        break;
-      case 4:
-        player.setAngle(-(float)Math.PI/4);
-        break;
-      case 5:
-        player.setAngle(-3f*(float)Math.PI/4);
-        break;
-      case 6:
-        player.setAngle(3f*(float)Math.PI/4);
-        break;
-      case 7:
-        player.setAngle((float)Math.PI/4);
-        break;
-      default:
-        break;
-    }
-  }
-
-
-  /**
-   * Begin dashing if possible
-   */
-  public void beginDashing() {
-    if (player.canDash()) {
-      player.setDashing(true);
-      player.setDashCounter(player.getDashLength());
-    }
   }
 
   /**
@@ -176,7 +61,6 @@ public class PhysicsEngine implements ContactListener {
     bullet.createFixtures();
   }
 
-
   /**
    * The core gameplay loop of this world.
    *
@@ -193,18 +77,6 @@ public class PhysicsEngine implements ContactListener {
     }
     bulletTimer += 1;
 
-    // Handle dashing
-    if (player.isDashing()) {
-      player.decrementDashCounter();
-      if (player.getDashCounter() <= 0) {
-        // exit dash
-        player.setDashing(false);
-        player.setDashCounter(player.getDashCooldownLimit());
-      }
-    } else {
-      player.setDashCounter(Math.max(0, player.getDashCounter() - 1));
-    }
-
     // turn the physics engine crank
     world.step(delta, 8, 4);
 
@@ -218,7 +90,6 @@ public class PhysicsEngine implements ContactListener {
       if (obj.isRemoved()) {
         obj.deactivatePhysics(world);
         entry.remove();
-        if(obj == player) player = null;
       } else {
         obj.update(delta);
       }
@@ -275,23 +146,25 @@ public class PhysicsEngine implements ContactListener {
       Model bd2 = (Model) body2.getUserData();
 
       // See if we have skewered a bullet.
-      if (player.isDashing()) {
-        if (player.getPointSensorName().equals(fd2) && bd1.getName().equals("bullet")) {
-          bd1.markRemoved(true);
-        }
-        if (player.getPointSensorName().equals(fd1) && bd2.getName().equals("bullet")) {
-          bd2.markRemoved(true);
-        }
-      }
-
-      // End game if hit
-      if((bd1.getName().equals("bullet") && bd2.getName().equals("nose")) ||
-              (bd2.getName().equals("bullet") && bd1.getName().equals("nose"))){
-        if (!bd1.isRemoved() && !bd2.isRemoved()) {
-          player.markRemoved(true);
+      if( bd1 instanceof PlayerModel){
+        PlayerModel pm1 = (PlayerModel) bd1;
+        if (pm1.isDashing() && pm1.getPointSensorName().equals(fd1) && bd2.getName().equals("bullet")) {
+          bd2.markRemoved(true); //remove bullet
+        } else{
+          bd1.markRemoved(true); //player is hit
           contact.setEnabled(false); // Disable the collision response
         }
       }
+      else if( bd2 instanceof PlayerModel){
+        PlayerModel pm2 = (PlayerModel) bd2;
+        if (pm2.isDashing() && pm2.getPointSensorName().equals(fd1) && bd1.getName().equals("bullet")) {
+          bd1.markRemoved(true); //remove bullet
+        } else{
+          bd2.markRemoved(true); //player is hit
+          contact.setEnabled(false); // Disable the collision response
+        }
+      }
+
 
     } catch (Exception e) {
       e.printStackTrace();
