@@ -20,15 +20,12 @@ public class PhysicsEngine implements ContactListener {
   private Rectangle bounds;
   /** Timer for spawning bullets */
   private int bulletTimer;
-  /** reference to player */
-  private PlayerModel player;
 
   public PhysicsEngine(Rectangle bounds, World world, PlayerModel player) {
     this.world = world;
     this.bounds = new Rectangle(bounds);
     this.bulletTimer = 0;
     world.setContactListener(this);
-    this.player = player;
     addObject(player);
   }
 
@@ -148,27 +145,24 @@ public class PhysicsEngine implements ContactListener {
       Model bd1 = (Model) body1.getUserData();
       Model bd2 = (Model) body2.getUserData();
 
-      // See if we have skewered a bullet.
-      if (player.isDashing()) {
-        if (player.getPointSensorName().equals(fd2) && bd1.getName().equals("bullet")) {
-          System.out.println(((PlayerModel)bd2).getName());
-          bd1.markRemoved(true);
-        }
-        if (player.getPointSensorName().equals(fd1) && bd2.getName().equals("bullet")) {
-          System.out.println(((PlayerModel)bd1).getName());
+      if(bd1 instanceof PlayerBodyModel && bd2 instanceof BulletModel){
+        PlayerBodyModel pm1 = (PlayerBodyModel) bd1;
+        if(pm1.isDashing() && pm1.getPointSensorName().equals(fd1)){
           bd2.markRemoved(true);
-        }
-      }
-
-      // End game if hit
-      if((bd1.getName().equals("bullet") && bd2.getName().equals("nose")) ||
-              (bd2.getName().equals("bullet") && bd1.getName().equals("nose"))){
-        if (!bd1.isRemoved() && !bd2.isRemoved()) {
-          player.markRemoved(true);
+        } else{
+          bd1.markRemoved(true);
           contact.setEnabled(false); // Disable the collision response
         }
       }
-
+      else if(bd2 instanceof PlayerBodyModel && bd1 instanceof BulletModel) {
+        PlayerBodyModel pm2 = (PlayerBodyModel) bd2;
+        if (pm2.isDashing() && pm2.getPointSensorName().equals(fd2)) {
+          bd1.markRemoved(true);
+        } else {
+          bd2.markRemoved(true);
+          contact.setEnabled(false); // Disable the collision response
+        }
+      }
 
     } catch (Exception e) {
       e.printStackTrace();

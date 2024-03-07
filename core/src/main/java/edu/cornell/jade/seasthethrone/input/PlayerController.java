@@ -71,9 +71,8 @@ public class PlayerController implements Controllable {
       moveSpeed *= 3;
     }
 
-    // TODO: GET RID OF GETPOINTMODEL
-    player.getPointModel().setVX(x * moveSpeed / mag);
-    player.getPointModel().setVY(y * moveSpeed / mag);
+    player.setVX(x * moveSpeed / mag);
+    player.setVY(y * moveSpeed / mag);
   }
 
   /** Orients the player model based on their primary direction of movement */

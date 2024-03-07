@@ -929,6 +929,8 @@ public abstract class ComplexModel extends Model {
         return joints;
     }
 
+    public boolean isRemoved(){ return (bodies.size > 0 && bodies.get(0).isRemoved()); }
+
     /**
      * Creates a new complex physics object at the origin.
      */

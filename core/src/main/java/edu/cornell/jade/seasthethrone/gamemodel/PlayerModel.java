@@ -102,7 +102,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
    */
   public void setDashing(boolean value) {
     isDashing = value;
-    getBodyModel().
+    getBodyModel().setDashing(value);
   }
 
   /** Returns if the player can dash */
@@ -145,7 +145,6 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   public String getPointSensorName() {
     return pointSensorName;
   }
-
   /** Returns the player body model */
   public PlayerBodyModel getBodyModel() { return (PlayerBodyModel) bodies.get(0); }
 
