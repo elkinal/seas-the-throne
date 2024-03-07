@@ -101,6 +101,17 @@ public class PhysicsEngine implements ContactListener {
    */
   public void setVelPercentages(float x, float y) {
     float mag = (x * x + y * y) / (float) Math.sqrt(2);
+    final double sqrt = Math.sqrt(x * x + y * y);
+    float magx;
+    float magy;
+    if (sqrt == 0){
+      magx = 1;
+      magy = 1;
+    }
+    else {
+      magx = (float) (Math.sqrt(Math.abs(x)) / sqrt);
+      magy = (float) (Math.sqrt(Math.abs(y)) / sqrt);
+    }
     // TODO: Change this to compare with some epsilong probably
     // this does techinically work though
     if (mag == 0f) {
@@ -111,8 +122,8 @@ public class PhysicsEngine implements ContactListener {
       moveSpeed *= 3;
     }
 
-    player.getPointModel().setVX(x * moveSpeed / mag);
-    player.getPointModel().setVY(y * moveSpeed / mag);
+    player.getPointModel().setVX(x * moveSpeed * magx);
+    player.getPointModel().setVY(y * moveSpeed * magy);
   }
 
   /** Orients the player model based on their primary direction of movement */
