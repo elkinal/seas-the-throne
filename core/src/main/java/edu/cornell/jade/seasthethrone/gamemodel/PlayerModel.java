@@ -63,10 +63,8 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     vertices[4] = 0;
     vertices[5] = 1;
 
-    PolygonModel nose = new PolygonModel(vertices);
-    nose.setName("nose");
-    nose.setBodyType(BodyDef.BodyType.DynamicBody);
-    bodies.add(nose);
+    PlayerBodyModel playerBody = new PlayerBodyModel(vertices);
+    bodies.add(playerBody);
   }
 
   /**
@@ -104,6 +102,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
    */
   public void setDashing(boolean value) {
     isDashing = value;
+    getBodyModel().
   }
 
   /** Returns if the player can dash */
@@ -147,8 +146,8 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     return pointSensorName;
   }
 
-  /** Returns the model of the "nose", hard-coded in for now */
-  public Model getPointModel() { return bodies.get(0); }
+  /** Returns the player body model */
+  public PlayerBodyModel getBodyModel() { return (PlayerBodyModel) bodies.get(0); }
 
   // built from multiple polygonmodels?
   @Override
@@ -167,7 +166,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     sensorShape.setPosition(sensorCenter);
     sensorDef.shape = sensorShape;
 
-    Fixture sensorFixture = getPointModel().getBody().createFixture(sensorDef);
+    Fixture sensorFixture = getBodyModel().getBody().createFixture(sensorDef);
     sensorFixture.setUserData(getPointSensorName());
 
     return true;
