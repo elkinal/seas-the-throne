@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import edu.cornell.jade.seasthethrone.gamemodel.*;
 import edu.cornell.jade.seasthethrone.model.*;
-import edu.cornell.jade.util.*;
+import edu.cornell.jade.seasthethrone.util.PooledList;
 
 import java.util.Iterator;
 // DO NOT IMPORT GameplayController
@@ -205,6 +205,9 @@ public class PhysicsEngine implements ContactListener {
       player.setDashCounter(Math.max(0, player.getDashCounter() - 1));
     }
 
+    // turn the physics engine crank
+    world.step(delta, 8, 4);
+
     // Garbage collect the deleted objects.
     // Note how we use the linked list nodes to delete O(1) in place.
     // This is O(n) without copying.
@@ -248,6 +251,14 @@ public class PhysicsEngine implements ContactListener {
     return horiz && vert;
   }
 
+  /**
+   * Callback method for the start of a collision
+   *
+   * This method is called when we first get a collision between two objects.  We use
+   * this method to test if it is the "right" kind of collision.
+   *
+   * @param contact The two bodies that collided
+   */
   @Override
   public void beginContact(Contact contact) {
     Fixture fix1 = contact.getFixtureA();

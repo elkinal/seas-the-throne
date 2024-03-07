@@ -13,7 +13,7 @@
   * Based on original PhysicsDemo Lab by Don Holden, 2007
   * LibGDX version, 2/6/2015
   */
- package edu.cornell.jade.util;
+ package edu.cornell.jade.seasthethrone.util;
 
  import java.util.*;
  import com.badlogic.gdx.utils.*;
