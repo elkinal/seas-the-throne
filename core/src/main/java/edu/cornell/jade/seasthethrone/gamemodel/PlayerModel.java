@@ -7,6 +7,8 @@ import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.model.PolygonModel;
 import edu.cornell.jade.seasthethrone.render.PlayerRenderable;
 
+import java.util.Vector;
+
 /**
  * Model for the main player object of the game. This class extends
  * {@link ComplexModel} to support multiple joints and bodies for flexible
@@ -31,6 +33,9 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
 
   /** The number of frames a dash lasts */
   private int dashLength;
+
+  /** The angle direction of this dash in radians */
+  private Vector2 dashDirection;
 
   /** Unique identifier for the point sensor; used in collision handling */
   private String pointSensorName;
@@ -135,6 +140,12 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     return dashLength;
   }
 
+  /** Returns dash direction */
+  public Vector2 getDashDirection() { return dashDirection; }
+
+  /** Sets dash direction */
+  public void setDashDirection(Vector2 dir) { dashDirection = dir; }
+
   /**
    * Returns the name of the nose point sensor
    *
@@ -156,13 +167,11 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
 
     // Create sensor on the points of the "nose," this should be factored to a diff
     // function later
-    Vector2 sensorCenter = new Vector2(0, 1);
+    Vector2 sensorCenter = new Vector2(0, 1.6f);
     FixtureDef sensorDef = new FixtureDef();
     sensorDef.isSensor = true;
-    CircleShape sensorShape = new CircleShape();
-    // sensor has 0 radius, maybe modify?
-    sensorShape.setRadius(0.4f);
-    sensorShape.setPosition(sensorCenter);
+    PolygonShape sensorShape = new PolygonShape();
+    sensorShape.setAsBox(0.3f, 1.6f, sensorCenter, 0f);
     sensorDef.shape = sensorShape;
 
     Fixture sensorFixture = getBodyModel().getBody().createFixture(sensorDef);

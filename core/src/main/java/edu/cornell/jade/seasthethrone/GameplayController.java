@@ -12,6 +12,9 @@ import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+
+import java.util.Vector;
 
 /**
  * The primary controller class for the game.
@@ -71,7 +74,7 @@ public class GameplayController implements Screen {
     World world = new World(new Vector2(0, 0), false);
     PlayerModel player = new PlayerModel(0, 0);
     physicsEngine = new PhysicsEngine(bounds, world, player);
-    playerController = new PlayerController(player);
+    playerController = new PlayerController(bounds, player);
 
     renderEngine.addRenderable(player);
     inputController.add(playerController);
@@ -90,6 +93,8 @@ public class GameplayController implements Screen {
   }
 
   public void update(float delta) {
+    Vector2 screenDims = new Vector2(renderEngine.getCanvas().getWidth(), renderEngine.getCanvas().getHeight());
+    playerController.setScreenDims(screenDims);
 
     inputController.update();
 
