@@ -1,29 +1,34 @@
 package edu.cornell.jade.seasthethrone;
 
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.*;
 
-import edu.cornell.jade.util.*;
+import com.badlogic.gdx.physics.box2d.World;
+import edu.cornell.jade.seasthethrone.gamemodel.PlayerModel;
 import edu.cornell.jade.seasthethrone.input.InputController;
-import edu.cornell.jade.seasthethrone.model.*;
 import edu.cornell.jade.seasthethrone.input.PlayerController;
+import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import java.util.Vector;
-// IMPORT INPUT CONTROLLER
 
+/**
+ * The primary controller class for the game.
+ *
+ * Delegates all of the work to other subcontrollers including input control,
+ * physics engine, and rendering engine. Contains the central update method.
+ */
 public class GameplayController implements Screen {
 
   /** Track state of the game */
   public enum GameState {
     /** While we are playing the game */
     PLAY,
-    /** When the ships is dead (but shells still work) */
+    /** Game over */
     OVER
   }
 
@@ -39,38 +44,40 @@ public class GameplayController implements Screen {
   protected static final float DEFAULT_WIDTH = 64.0f;
   /** Height of the game world in Box2d units */
   protected static final float DEFAULT_HEIGHT = 48.0f;
-
   /** The Box2D world */
   protected PhysicsEngine physicsEngine;
   /** The boundary of the world */
   protected Rectangle bounds;
   /** The world scale */
   protected Vector2 scale;
-
+  /** If the current (gameplay) screen is active */
   protected boolean active;
 
-  /** All the objects in the world. */
-  protected PooledList<Model> objects = new PooledList<Model>();
-
   protected GameplayController() {
-    gameState = GameState.PLAY;
-    bounds = new Rectangle(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-    physicsEngine = new PhysicsEngine(bounds);
-    physicsEngine.reset();
-
-    this.scale = new Vector2(1, 1);
     active = false;
-
-    this.inputController = new InputController();
-    this.playerController = new PlayerController(physicsEngine);
-    this.renderEngine = new RenderingEngine(DEFAULT_WIDTH, DEFAULT_HEIGHT);
-    renderEngine.addRenderable(physicsEngine.getPlayerModel());
-
-    this.inputController.add(playerController);
+    bounds = new Rectangle(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+    scale = new Vector2(1, 1);
+    inputController = new InputController();
+    renderEngine = new RenderingEngine(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+    setupGameplay();
   }
 
   public void show() {
     active = true;
+  }
+
+  public void setupGameplay() {
+    dispose();
+    gameState = GameState.PLAY;
+
+    // create playermodel for the game
+    World world = new World(new Vector2(0, 0), false);
+    PlayerModel player = new PlayerModel(0, 0);
+    physicsEngine = new PhysicsEngine(bounds, world, player);
+    playerController = new PlayerController(bounds, player);
+
+    renderEngine.addRenderable(player);
+    inputController.add(playerController);
   }
 
   public void render(float delta) {
@@ -87,7 +94,7 @@ public class GameplayController implements Screen {
 
   public void update(float delta) {
     Vector2 screenDims = new Vector2(renderEngine.getCanvas().getWidth(), renderEngine.getCanvas().getHeight());
-    physicsEngine.setScreenDims(screenDims);
+    playerController.setScreenDims(screenDims);
 
     inputController.update();
 
@@ -96,9 +103,8 @@ public class GameplayController implements Screen {
       playerController.update();
       physicsEngine.update(delta);
     }
-    physicsEngine.getWorld().step(delta, 8, 4);
 
-    if(!physicsEngine.isAlive()){
+    if(!playerController.isAlive()){
       gameState = GameState.OVER;
     }
 
@@ -110,8 +116,7 @@ public class GameplayController implements Screen {
     }
     if(gameState == GameState.OVER){
       if(inputController.didReset()){
-        gameState = GameState.PLAY;
-        physicsEngine.reset();
+        setupGameplay();
       } else{
         renderEngine.drawGameOver();
       }
@@ -134,5 +139,6 @@ public class GameplayController implements Screen {
   }
 
   public void dispose() {
+    if(physicsEngine != null) physicsEngine.dispose();
   }
 }

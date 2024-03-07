@@ -52,6 +52,13 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   public PlayerModel(float x, float y) {
     super(x, y);
 
+    // Set constants
+    moveSpeed = 6f;
+    dashCounter = 0;
+    dashCooldownLimit = 25;
+    dashLength = 20;
+    isDashing = false;
+
     // make a triangle for now
     float vertices[] = new float[6];
     vertices[0] = -0.5f;
@@ -61,17 +68,8 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     vertices[4] = 0;
     vertices[5] = 1;
 
-    // Set constants
-    moveSpeed = 6f;
-    dashCounter = 0;
-    dashCooldownLimit = 25;
-    dashLength = 20;
-    isDashing = false;
-
-    PolygonModel nose = new PolygonModel(vertices);
-    nose.setName("nose");
-    nose.setBodyType(BodyDef.BodyType.DynamicBody);
-    bodies.add(nose);
+    PlayerBodyModel playerBody = new PlayerBodyModel(vertices);
+    bodies.add(playerBody);
   }
 
   /**
@@ -109,6 +107,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
    */
   public void setDashing(boolean value) {
     isDashing = value;
+    getBodyModel().setDashing(value);
   }
 
   /** Returns if the player can dash */
@@ -157,9 +156,8 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   public String getPointSensorName() {
     return pointSensorName;
   }
-
-  /** Returns the model of the "nose", hard-coded in for now */
-  public Model getPointModel() { return bodies.get(0); }
+  /** Returns the player body model */
+  public PlayerBodyModel getBodyModel() { return (PlayerBodyModel) bodies.get(0); }
 
   // built from multiple polygonmodels?
   @Override
@@ -176,7 +174,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     sensorShape.setAsBox(0.3f, 1.6f, sensorCenter, 0f);
     sensorDef.shape = sensorShape;
 
-    Fixture sensorFixture = getPointModel().getBody().createFixture(sensorDef);
+    Fixture sensorFixture = getBodyModel().getBody().createFixture(sensorDef);
     sensorFixture.setUserData(getPointSensorName());
 
     return true;
