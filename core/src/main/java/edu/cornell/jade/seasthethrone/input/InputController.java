@@ -16,6 +16,7 @@ package edu.cornell.jade.seasthethrone.input;
 
 import java.util.*;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import edu.cornell.jade.seasthethrone.util.XBoxController;
@@ -90,6 +91,7 @@ public class InputController {
     if (xbox != null && xbox.isConnected()) {
       readController(p);
     } else {
+      readMouse(p);
       readKeyboard(p);
     }
   }
@@ -131,16 +133,16 @@ public class InputController {
     float voff = 0;
     resetPressed = Gdx.input.isKeyPressed(Input.Keys.R);
 
-    if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+    if (Gdx.input.isKeyPressed(Input.Keys.D)) {
       hoff += 1;
     }
-    if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+    if (Gdx.input.isKeyPressed(Input.Keys.A)) {
       hoff -= 1;
     }
-    if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+    if (Gdx.input.isKeyPressed(Input.Keys.W)) {
       voff += 1;
     }
-    if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+    if (Gdx.input.isKeyPressed(Input.Keys.S)) {
       voff -= 1;
     }
     if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
@@ -148,6 +150,11 @@ public class InputController {
     }
     obj.moveHorizontal(hoff);
     obj.moveVertical(voff);
+  }
+
+  private void readMouse(Controllable obj) {
+    Vector2 mousePos = new Vector2(Gdx.input.getX(), Gdx.input.getY());
+    obj.updateDirection(mousePos);
   }
 
 }

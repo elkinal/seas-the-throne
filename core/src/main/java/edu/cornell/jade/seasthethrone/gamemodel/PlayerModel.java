@@ -7,6 +7,8 @@ import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.model.PolygonModel;
 import edu.cornell.jade.seasthethrone.render.PlayerRenderable;
 
+import java.util.Vector;
+
 /**
  * Model for the main player object of the game. This class extends
  * {@link ComplexModel} to support multiple joints and bodies for flexible
@@ -31,6 +33,9 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
 
   /** The number of frames a dash lasts */
   private int dashLength;
+
+  /** The angle direction of this dash in radians */
+  private Vector2 dashDirection;
 
   /** Unique identifier for the point sensor; used in collision handling */
   private String pointSensorName;
@@ -135,6 +140,12 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   public int getDashLength() {
     return dashLength;
   }
+
+  /** Returns dash direction */
+  public Vector2 getDashDirection() { return dashDirection; }
+
+  /** Sets dash direction */
+  public void setDashDirection(Vector2 dir) { dashDirection = dir; }
 
   /**
    * Returns the name of the nose point sensor

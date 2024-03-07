@@ -198,6 +198,9 @@ public class RenderingEngine {
     return viewport;
   }
 
+  /** Returns the gameCanvas */
+  public GameCanvas getCanvas() { return canvas; }
+
   @Override
   public String toString() {
     return "RenderingEngine [renderables=" + renderables + "]";

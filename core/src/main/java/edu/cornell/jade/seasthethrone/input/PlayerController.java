@@ -11,6 +11,8 @@
 package edu.cornell.jade.seasthethrone.input;
 
 // TODO: make this not have to import physics engine by moving logic directly in here
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import edu.cornell.jade.seasthethrone.PhysicsEngine;
 
 public class PlayerController implements Controllable {
@@ -23,6 +25,9 @@ public class PlayerController implements Controllable {
   float voff;
   /** If dashing pressed in since last update */
   boolean dashing;
+
+  /** The vector direction of the player for dashing */
+  Vector2 dashDirection;
 
   /**
    * Constructs PlayerController
@@ -43,8 +48,27 @@ public class PlayerController implements Controllable {
     dashing = true;
   }
 
+  /**
+   * Updates the dash direction of the player based on the position of the
+   *  mouse relative to the player
+   *
+   * @param mousePos the position of the mouse on the screen
+   *  */
+  @Override
+  public void updateDirection(Vector2 mousePos) {
+    Vector2 playerPos = physicsEngine.getPlayerModel().getPosition();
+
+    Vector2 centeredPlayerPos = physicsEngine.worldToCenteredCoords(playerPos);
+    Vector2 centeredMousePos = physicsEngine.screenToCenteredCoords(mousePos);
+
+    Vector2 diffV = centeredMousePos.sub(centeredPlayerPos);
+    System.out.println(diffV);
+    dashDirection = diffV;
+  }
+
   public void update() {
     if (dashing) {
+      physicsEngine.getPlayerModel().setDashDirection(dashDirection);
       physicsEngine.beginDashing();
     }
     physicsEngine.setVelPercentages(hoff, voff);
