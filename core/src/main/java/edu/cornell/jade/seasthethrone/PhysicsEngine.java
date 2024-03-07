@@ -87,10 +87,6 @@ public class PhysicsEngine implements ContactListener {
   private void setupWorld() {
     player = new PlayerModel(0, 0);
     addObject(player);
-
-//    BulletModel bullet = new BulletModel(3, 3, 0.5f);
-//    addObject(bullet);
-//    bullet.createFixtures();
   }
 
   /**
@@ -101,7 +97,9 @@ public class PhysicsEngine implements ContactListener {
   }
 
   /**
-   * Move in given direction based on offset
+   * Move in given direction based on offset.
+   *
+   * If the player is dashing, instead move in the direction of the dash.
    *
    * @param x a value from -1 to 1 representing the percentage of movement speed
    *          to be at in the given direction
@@ -117,7 +115,7 @@ public class PhysicsEngine implements ContactListener {
     }
     float moveSpeed = player.getMoveSpeed();
     if (player.isDashing()){
-      moveSpeed *= 3;
+      moveSpeed *= 4;
       Vector2 dashDirection = normalize(player.getDashDirection());
       player.getPointModel().setVX(moveSpeed * dashDirection.x);
       player.getPointModel().setVY(moveSpeed * dashDirection.y);
@@ -201,7 +199,7 @@ public class PhysicsEngine implements ContactListener {
    */
   public void update(float delta) {
     if (bulletTimer % 60 == 0) {
-//      spawnBulletPattern(bulletTimer);
+      spawnBulletPattern(bulletTimer);
     }
     bulletTimer += 1;
 

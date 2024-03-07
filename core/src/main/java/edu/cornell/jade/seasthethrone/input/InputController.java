@@ -152,6 +152,15 @@ public class InputController {
     obj.moveVertical(voff);
   }
 
+  /**
+   * Reads input from the mouse to determine the actions of the player.
+   * Then calls the corresponding methods in the controller to process the
+   * actions.
+   * Reads from the mouse regardless of whether an X-Box controller is
+   * connected.
+   *
+   * @param obj Controller for the player
+   * */
   private void readMouse(Controllable obj) {
     Vector2 mousePos = new Vector2(Gdx.input.getX(), Gdx.input.getY());
     obj.updateDirection(mousePos);

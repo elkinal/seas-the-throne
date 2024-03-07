@@ -49,21 +49,21 @@ public class PlayerController implements Controllable {
   }
 
   /**
-   * Updates the dash direction of the player based on the position of the
-   *  mouse relative to the player
+   * Transforms the player and mouse positions to the same, centered coordinate system
+   * and sets this player's dash direction to the vector difference of those positions.
    *
-   * @param mousePos the position of the mouse on the screen
+   * @param mousePos the position of the mouse in screen coordinates
    *  */
   @Override
   public void updateDirection(Vector2 mousePos) {
+    if (physicsEngine.getPlayerModel() == null) {return;}
+
     Vector2 playerPos = physicsEngine.getPlayerModel().getPosition();
 
     Vector2 centeredPlayerPos = physicsEngine.worldToCenteredCoords(playerPos);
     Vector2 centeredMousePos = physicsEngine.screenToCenteredCoords(mousePos);
 
-    Vector2 diffV = centeredMousePos.sub(centeredPlayerPos);
-    System.out.println(diffV);
-    dashDirection = diffV;
+    dashDirection = centeredMousePos.sub(centeredPlayerPos);
   }
 
   public void update() {
