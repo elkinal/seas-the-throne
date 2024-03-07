@@ -2,6 +2,11 @@ package edu.cornell.jade.seasthethrone.gamemodel;
 
 import edu.cornell.jade.seasthethrone.model.BoxModel;
 
+/**
+ * Model for the player spear. When the spear is extended,
+ * it will have an active hitbox that will allow the spear to
+ * pierce through enemies.
+ */
 public class PlayerSpearModel extends BoxModel {
 
     /** If the spear is extended (during dash) */
