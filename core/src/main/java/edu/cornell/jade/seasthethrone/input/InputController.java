@@ -33,7 +33,6 @@ public class InputController {
 
   /** Whether the reset button was pressed. */
   protected boolean resetPressed;
-  private boolean mouseinput = true;
 
   /**
    * Returns true if the reset button was pressed.
@@ -90,11 +89,7 @@ public class InputController {
     // Check to see if a GamePad is connected
     if (xbox != null && xbox.isConnected()) {
       readController(p);
-    }
-    else if (mouseinput){
-      readMouse(p);
-    }
-    else {
+    } else {
       readKeyboard(p);
     }
   }
@@ -148,20 +143,6 @@ public class InputController {
     if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
       voff -= 1;
     }
-    if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-      obj.pressPrimary();
-    }
-    obj.moveHorizontal(hoff);
-    obj.moveVertical(voff);
-  }
-
-  private void readMouse(Controllable obj) {
-    float hoff = 0;
-    float voff = 0;
-    resetPressed = Gdx.input.isKeyPressed(Input.Keys.R);
-
-    hoff = Gdx.input.getDeltaX();
-    voff = Gdx.input.getDeltaY();
     if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
       obj.pressPrimary();
     }
