@@ -7,6 +7,7 @@ import edu.cornell.jade.seasthethrone.gamemodel.*;
 import edu.cornell.jade.seasthethrone.model.*;
 import edu.cornell.jade.util.*;
 
+import java.net.DatagramSocket;
 import java.util.Iterator;
 // DO NOT IMPORT GameplayController
 
@@ -26,7 +27,15 @@ public class PhysicsEngine implements ContactListener {
   /** Timer for spawning bullets */
   private int bulletTimer;
 
-  /** The time since the last dash */
+  /** Dimensions of the game canvas */
+  private Vector2 screenDims;
+
+  /**
+   * Stores the canvas dimensions in pixels as a Vector2
+   *
+   * @param dims the vector of screen dimensions
+   * */
+  public void setScreenDims(Vector2 dims) { screenDims = dims; }
 
   public PhysicsEngine(Rectangle bounds) {
 
@@ -78,10 +87,6 @@ public class PhysicsEngine implements ContactListener {
   private void setupWorld() {
     player = new PlayerModel(0, 0);
     addObject(player);
-
-//    BulletModel bullet = new BulletModel(3, 3, 0.5f);
-//    addObject(bullet);
-//    bullet.createFixtures();
   }
 
   /**
@@ -92,7 +97,9 @@ public class PhysicsEngine implements ContactListener {
   }
 
   /**
-   * Move in given direction based on offset
+   * Move in given direction based on offset.
+   *
+   * If the player is dashing, instead move in the direction of the dash.
    *
    * @param x a value from -1 to 1 representing the percentage of movement speed
    *          to be at in the given direction
@@ -108,11 +115,14 @@ public class PhysicsEngine implements ContactListener {
     }
     float moveSpeed = player.getMoveSpeed();
     if (player.isDashing()){
-      moveSpeed *= 3;
+      moveSpeed *= 4;
+      Vector2 dashDirection = normalize(player.getDashDirection());
+      player.getPointModel().setVX(moveSpeed * dashDirection.x);
+      player.getPointModel().setVY(moveSpeed * dashDirection.y);
+    } else {
+      player.getPointModel().setVX(x * moveSpeed / mag);
+      player.getPointModel().setVY(y * moveSpeed / mag);
     }
-
-    player.getPointModel().setVX(x * moveSpeed / mag);
-    player.getPointModel().setVY(y * moveSpeed / mag);
   }
 
   /** Orients the player model based on their primary direction of movement */
@@ -248,6 +258,28 @@ public class PhysicsEngine implements ContactListener {
     return horiz && vert;
   }
 
+  /**
+   * Converts world coordinates to centered coords with the dimensions of the game canvas
+   * The origin is correct, this involves scaling.
+   * */
+  public Vector2 worldToCenteredCoords(Vector2 pos) {
+    float scaleX = screenDims.x / bounds.width;
+    float scaleY = screenDims.y / bounds.height;
+
+    return new Vector2(pos.x * scaleX, pos.y * scaleY);
+  }
+
+  /**
+   * Converts screen coordinates to centered coords with the dimensions of the game canvas.
+   * The scale is correct, this involves reflecting about y and translating the origin.
+  */
+  public Vector2 screenToCenteredCoords(Vector2 pos) {
+    Vector2 centeredCoords = pos.sub(screenDims.x/2, screenDims.y/2);
+    centeredCoords.y = -centeredCoords.y;
+    return centeredCoords;
+
+  }
+
   @Override
   public void beginContact(Contact contact) {
     Fixture fix1 = contact.getFixtureA();
@@ -285,6 +317,12 @@ public class PhysicsEngine implements ContactListener {
     } catch (Exception e) {
       e.printStackTrace();
     }
+  }
+
+  /** Returns the norm of a Vector2 */
+  public Vector2 normalize(Vector2 v) {
+    float magnitude = (float)Math.sqrt(Math.pow(v.x,2) + Math.pow(v.y,2));
+    return new Vector2(v.x/magnitude, v.y/magnitude);
   }
 
   @Override

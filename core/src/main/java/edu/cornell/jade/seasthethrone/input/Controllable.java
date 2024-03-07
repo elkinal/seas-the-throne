@@ -8,6 +8,8 @@
 
 package edu.cornell.jade.seasthethrone.input;
 
+import com.badlogic.gdx.math.Vector2;
+
 public interface Controllable {
 
   /**
@@ -25,4 +27,6 @@ public interface Controllable {
    */
   public void pressPrimary();
 
+  /** Updates the direction the character is pointing for dash */
+  public void updateDirection(Vector2 mouseDir);
 }

@@ -13,6 +13,8 @@ import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+
+import java.util.Vector;
 // IMPORT INPUT CONTROLLER
 
 public class GameplayController implements Screen {
@@ -84,6 +86,8 @@ public class GameplayController implements Screen {
   }
 
   public void update(float delta) {
+    Vector2 screenDims = new Vector2(renderEngine.getCanvas().getWidth(), renderEngine.getCanvas().getHeight());
+    physicsEngine.setScreenDims(screenDims);
 
     inputController.update();
 
