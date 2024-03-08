@@ -2,9 +2,8 @@ package edu.cornell.jade.seasthethrone.model;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import edu.cornell.jade.seasthethrone.render.Renderable;
 
-public abstract class Model implements Renderable {
+public abstract class Model {
 
     /// Initialization structures to store body information
     /** Stores the body information for this shape */
@@ -952,20 +951,4 @@ public abstract class Model implements Renderable {
      */
     public void update(float delta) {
     }
-
-//    /**
-//     * Draws the texture physics object.
-//     *
-//     * @param canvas Drawing context
-//     */
-//    public abstract void draw(GameCanvas canvas);
-//
-//    /**
-//     * Draws the outline of the physics body.
-//     *
-//     * This method can be helpful for understanding issues with collisions.
-//     *
-//     * @param canvas Drawing context
-//     */
-//    public abstract void drawDebug(GameCanvas canvas);
 }

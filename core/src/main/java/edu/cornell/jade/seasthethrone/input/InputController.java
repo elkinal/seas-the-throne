@@ -20,11 +20,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import edu.cornell.jade.seasthethrone.util.XBoxController;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 /**
  * Processes movements for player and AI
  */
 public class InputController {
+  /** Viewport to unproject screen coordinates */
+  Viewport viewport;
 
   /** List of all the player input controllers */
   private ArrayList<Controllable> players;
@@ -34,6 +37,11 @@ public class InputController {
 
   /** Whether the reset button was pressed. */
   protected boolean resetPressed;
+
+  /**
+   * Cache vector to return containing the moues coordinates of the previous read
+   */
+  Vector2 mouseCoordCache;
 
   /**
    * Returns true if the reset button was pressed.
@@ -68,10 +76,16 @@ public class InputController {
   }
 
   /**
-   * Constructor for InputController.
+   * Constructor for InputController with a parameter to convert between screens
+   * and the world.
+   *
+   * @param screenToWorld viewport to support an unproject operation to convert
+   *                      screen coord to mouse coord.
    */
-  public InputController() {
-    players = new ArrayList<>();
+  public InputController(Viewport screenToWorld) {
+    this.players = new ArrayList<>();
+    this.viewport = screenToWorld;
+    this.mouseCoordCache = new Vector2();
   }
 
   /**
@@ -159,11 +173,14 @@ public class InputController {
    * Reads from the mouse regardless of whether an X-Box controller is
    * connected.
    *
+   * Updates position in world coordinates.
+   *
    * @param obj Controller for the player
-   * */
+   */
   private void readMouse(Controllable obj) {
-    Vector2 mousePos = new Vector2(Gdx.input.getX(), Gdx.input.getY());
-    obj.updateDirection(mousePos);
+    mouseCoordCache.set(Gdx.input.getX(), Gdx.input.getY());
+    viewport.unproject(mouseCoordCache);
+    obj.updateDirection(mouseCoordCache);
   }
 
 }

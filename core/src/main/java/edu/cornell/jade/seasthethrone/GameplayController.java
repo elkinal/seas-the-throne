@@ -13,8 +13,7 @@ import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-
-import java.util.Vector;
+import edu.cornell.jade.seasthethrone.render.Renderable;
 
 /**
  * The primary controller class for the game.
@@ -44,21 +43,28 @@ public class GameplayController implements Screen {
   protected static final float DEFAULT_WIDTH = 64.0f;
   /** Height of the game world in Box2d units */
   protected static final float DEFAULT_HEIGHT = 48.0f;
+  /** Ratio between the pixel in a texture and the meter in the world */ 
+  private static final float WORLD_SCALE = 0.1f;
   /** The Box2D world */
   protected PhysicsEngine physicsEngine;
   /** The boundary of the world */
   protected Rectangle bounds;
-  /** The world scale */
-  protected Vector2 scale;
-  /** If the current (gameplay) screen is active */
+  /** Viewport maintaining relation between screen and world coordinates */
+  private FitViewport viewport;
+
   protected boolean active;
 
   protected GameplayController() {
-    active = false;
+    gameState = GameState.PLAY;
     bounds = new Rectangle(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-    scale = new Vector2(1, 1);
-    inputController = new InputController();
-    renderEngine = new RenderingEngine(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+
+    this.viewport = new FitViewport(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+
+    active = false;
+
+    this.inputController = new InputController(viewport);
+    this.renderEngine = new RenderingEngine(DEFAULT_WIDTH, DEFAULT_HEIGHT, viewport, WORLD_SCALE);
+
     setupGameplay();
   }
 
@@ -84,7 +90,7 @@ public class GameplayController implements Screen {
     if (active) {
       update(delta);
     }
-    //draw(delta);
+    // draw(delta);
   }
 
   public void draw(float delta) {
@@ -93,13 +99,12 @@ public class GameplayController implements Screen {
   }
 
   public void update(float delta) {
-    Vector2 screenDims = new Vector2(renderEngine.getCanvas().getWidth(), renderEngine.getCanvas().getHeight());
-    playerController.setScreenDims(screenDims);
-
+    viewport.apply();
     inputController.update();
 
-    // Right now just errors if you try to update playerController or physicsEngine when player is null
-    if(gameState != GameState.OVER){
+    // Right now just errors if you try to update playerController or physicsEngine
+    // when player is null
+    if (gameState != GameState.OVER) {
       playerController.update();
       physicsEngine.update(delta);
     }
@@ -111,8 +116,9 @@ public class GameplayController implements Screen {
     draw(delta);
     debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
     renderEngine.clear();
-    for (Model obj: physicsEngine.getObjects()){
-      renderEngine.addRenderable(obj);
+    for (Model obj : physicsEngine.getObjects()) {
+      if (obj instanceof Renderable r)
+        renderEngine.addRenderable(r);
     }
     if(gameState == GameState.OVER){
       if(inputController.didReset()){
@@ -121,11 +127,10 @@ public class GameplayController implements Screen {
         renderEngine.drawGameOver();
       }
     }
-    //System.out.println(physicsEngine.getPlayerModel().getX());
   }
 
   public void resize(int width, int height) {
-    renderEngine.resize(width, height);
+    viewport.update(width, height);
   }
 
   public void pause() {

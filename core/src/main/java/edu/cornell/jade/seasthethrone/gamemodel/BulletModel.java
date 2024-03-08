@@ -11,8 +11,10 @@ import edu.cornell.jade.seasthethrone.render.FishRenderable;
  * Model for the game bullet objects. This class extends
  * {@link SimpleModel} to be represented as a single body (with circular shape).
  * This is subject to change later as we design bullets with more complex shapes.
+ *
+ * TODO: make this implement Fish Renderable
  */
-public class BulletModel extends SimpleModel implements FishRenderable {
+public class BulletModel extends SimpleModel {
 
     /** Shape of the bullet, modeled as a circle */
     public CircleShape shape;

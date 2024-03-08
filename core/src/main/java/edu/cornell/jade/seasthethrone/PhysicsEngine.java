@@ -15,8 +15,10 @@ public class PhysicsEngine implements ContactListener {
 
   /** All the objects in the world. */
   protected PooledList<Model> objects = new PooledList<Model>();
+
   /** The Box2D world */
   private World world;
+
   /** The boundary of the world */
   private Rectangle bounds;
   /** Timer for spawning bullets */

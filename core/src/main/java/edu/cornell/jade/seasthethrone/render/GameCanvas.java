@@ -91,6 +91,16 @@ public class GameCanvas {
     private TextureRegion holder;
 
     /**
+     * Gets the canvas's sprite batch for lower level usage such as directly setting its matrix
+     *
+     * @return the canvas's sprite batch
+     */
+    public PolygonSpriteBatch getSpriteBatch() {
+      return spriteBatch;
+    }
+
+
+    /**
      * Creates a new GameCanvas determined by the application configuration.
      *
      * Width, height, and fullscreen are taken from the LWGJApplicationConfig

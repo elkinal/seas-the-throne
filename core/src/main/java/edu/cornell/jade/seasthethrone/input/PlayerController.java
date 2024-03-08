@@ -15,6 +15,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import edu.cornell.jade.seasthethrone.GameplayController;
 import edu.cornell.jade.seasthethrone.gamemodel.PlayerModel;
+import edu.cornell.jade.seasthethrone.util.Direction;
 
 public class PlayerController implements Controllable {
 
@@ -22,33 +23,21 @@ public class PlayerController implements Controllable {
   private PlayerModel player;
   /** Horizontal offset, -1 to 1 */
   float hoff;
+
   /** Vertical offset, -1 to 1 */
   float voff;
+
   /** If dashing pressed in since last update */
   boolean dashingPressed;
 
   /** The vector direction of the player for dashing */
   Vector2 dashDirection;
 
-  /** The boundary of the world */
-  private Rectangle bounds;
-
-  /** Dimensions of the game canvas */
-  private Vector2 screenDims;
-
-  /**
-   * Stores the canvas dimensions in pixels as a Vector2
-   *
-   * @param dims the vector of screen dimensions
-   * */
-  public void setScreenDims(Vector2 dims) { screenDims = dims; }
-
   /**
    * Constructs PlayerController
    */
   public PlayerController(Rectangle bounds, PlayerModel player) {
     this.player = player;
-    this.bounds = bounds;
   }
 
   /**
@@ -101,34 +90,20 @@ public class PlayerController implements Controllable {
 
   /** Orients the player model based on their primary direction of movement */
   public void orientPlayer() {
-    int dir = player.direction();
+    Direction dir = player.direction();
     // Up, down, left, right, NE, SE, SW, NW
     switch (dir) {
-      case 0:
+      case UP:
         player.setAngle(0f);
         break;
-      case 1:
+      case DOWN:
         player.setAngle((float)Math.PI);
         break;
-      case 2:
+      case LEFT:
         player.setAngle((float)Math.PI/2);
         break;
-      case 3:
+      case RIGHT:
         player.setAngle(-(float)Math.PI/2);
-        break;
-      case 4:
-        player.setAngle(-(float)Math.PI/4);
-        break;
-      case 5:
-        player.setAngle(-3f*(float)Math.PI/4);
-        break;
-      case 6:
-        player.setAngle(3f*(float)Math.PI/4);
-        break;
-      case 7:
-        player.setAngle((float)Math.PI/4);
-        break;
-      default:
         break;
     }
   }
@@ -144,42 +119,21 @@ public class PlayerController implements Controllable {
   }
 
   /**
-   * Converts world coordinates to centered coords with the dimensions of the game canvas
-   * The origin is correct, this involves scaling.
-   * */
-  public Vector2 worldToCenteredCoords(Vector2 pos) {
-    float scaleX = screenDims.x / bounds.width;
-    float scaleY = screenDims.y / bounds.height;
-
-    return new Vector2(pos.x * scaleX, pos.y * scaleY);
-  }
-
-  /**
-   * Converts screen coordinates to centered coords with the dimensions of the game canvas.
-   * The scale is correct, this involves reflecting about y and translating the origin.
-   */
-  public Vector2 screenToCenteredCoords(Vector2 pos) {
-    Vector2 centeredCoords = pos.sub(screenDims.x/2, screenDims.y/2);
-    centeredCoords.y = -centeredCoords.y;
-    return centeredCoords;
-  }
-
-  /**
-   * Transforms the player and mouse positions to the same, centered coordinate system
-   * and sets this player's dash direction to the vector difference of those positions.
+   * Transforms the player and mouse positions to the same, centered coordinate
+   * system
+   * and sets this player's dash direction to the vector difference of those
+   * positions.
    *
    * @param mousePos the position of the mouse in screen coordinates
-   *  */
+   */
   @Override
   public void updateDirection(Vector2 mousePos) {
+    //TODO: actually figure out when player is set to null instead of simply handling the case
     if (player == null) {return;}
 
     Vector2 playerPos = player.getPosition();
 
-    Vector2 centeredPlayerPos = worldToCenteredCoords(playerPos);
-    Vector2 centeredMousePos = screenToCenteredCoords(mousePos);
-
-    dashDirection = centeredMousePos.sub(centeredPlayerPos);
+    dashDirection = mousePos.sub(playerPos);
   }
 
   public void update() {
