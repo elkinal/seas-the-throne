@@ -1,6 +1,36 @@
 package edu.cornell.jade.seasthethrone.render;
 
+import com.badlogic.gdx.graphics.Texture;
+import edu.cornell.jade.seasthethrone.util.FilmStrip;
+import edu.cornell.jade.seasthethrone.util.Direction;
+import com.badlogic.gdx.math.Vector2;
+
+/**
+ * An interface defining the required information for a {@link RenderingEngine}
+ * to render a player.
+ */
 public interface PlayerRenderable extends Renderable {
+  /**
+   * Returns the player's texture for when they face up
+   *
+   * @return the player's texture when facing up
+   */
+  public Texture getTextureUp();
+
+  /**
+   * Returns the player's texture for when they face down
+   *
+   * @return the player's texture when facing down
+   */
+  public Texture getTextureDown();
+
+  /**
+   * Returns the player's texture for when they face in a horizontal direction
+   *
+   * @return the player's texture when facing in a horizontal direction
+   */
+  public Texture getTextureHori();
+
   /**
    * Returns if the spear of the player is extended and the animation should begin
    * playing.
@@ -8,28 +38,41 @@ public interface PlayerRenderable extends Renderable {
    * @return if the spear animation should begin to play
    */
   public boolean spearExtended();
-  /**
-   * Returns the frame number the player is currently at
-   *
-   * @return current frame number for player
-   */
-  public int frameNumber();
+
   /**
    * Returns the direction player is facing
    *
-   * TODO: make this map to an enum
-   *
-   * @return direction of player, 0 if up, 1 if down, 2 if left, 3 if right
+   * @return direction of player
    */
-  public int direction();
+  public Direction direction();
+
   /**
    * Returns whether the player is dashing
    *
    * @return true if player is dashing and false if not
    */
   public boolean isDashing();
-  /**
-   * Updates animation frame
-   */
-  public void updateAnimationFrame();
+
+  public default void draw(RenderingEngine renderer) {
+    int frame = getFrameNumber();
+    FilmStrip filmStrip = getFilmStrip();
+    switch (direction()) {
+      case UP:
+        filmStrip.setTexture(getTextureUp());
+        break;
+      case DOWN:
+        filmStrip.setTexture(getTextureDown());
+        break;
+      case LEFT:
+        break;
+      case RIGHT:
+        break;
+    }
+    filmStrip.setFrame(frame);
+
+    Vector2 pos = getPosition();
+    renderer.draw(filmStrip, pos.x, pos.y);
+
+    setFrameNumber((frame + 1) % getFramesInAnimation());
+  }
 }

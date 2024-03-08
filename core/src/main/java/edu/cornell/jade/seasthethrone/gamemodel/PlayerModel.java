@@ -6,6 +6,9 @@ import edu.cornell.jade.seasthethrone.model.ComplexModel;
 import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.model.PolygonModel;
 import edu.cornell.jade.seasthethrone.render.PlayerRenderable;
+import com.badlogic.gdx.graphics.Texture;
+import edu.cornell.jade.seasthethrone.util.FilmStrip;
+import edu.cornell.jade.seasthethrone.util.Direction;
 
 import java.util.Vector;
 
@@ -15,8 +18,25 @@ import java.util.Vector;
  * collision control and movement display.
  */
 public class PlayerModel extends ComplexModel implements PlayerRenderable {
-  /** FIXME: stop hardcoding this */
-  private static int FRAMES_IN_FISH_ANIMATION = 12;
+  /** FIXME: stop hardcoding textures */
+  /** Frame is player animation */
+  private static int FRAMES_IN_ANIMATION = 12;
+
+  /** Player texture when facing up */
+  public Texture PLAYER_TEXTURE_UP = new Texture("playerspriterunfilmstrip_up.png");
+
+  /** Player texture when facing down */
+  public static final Texture PLAYER_TEXTURE_DOWN = new Texture("playerspriterun_down_clean.png");
+
+  /**
+   * Player texture when facing horizontally
+   * FIXME: actually add this texture
+   */
+  public static final Texture PLAYER_TEXTURE_HORI = null;
+
+  /** FilmStrip cache object */
+  public FilmStrip filmStrip;
+
   /** current animation frame */
   private int animationFrame;
 
@@ -28,6 +48,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
    * they can dash again.
    */
   private int dashCounter;
+
   /** The time limit (in frames) between dashes */
   private int dashCooldownLimit;
 
@@ -72,6 +93,36 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     nose.setName("nose");
     nose.setBodyType(BodyDef.BodyType.DynamicBody);
     bodies.add(nose);
+
+    filmStrip = new FilmStrip(PLAYER_TEXTURE_DOWN, 1, FRAMES_IN_ANIMATION);
+  }
+
+  public FilmStrip getFilmStrip() {
+    return filmStrip;
+  }
+
+  public int getFrameNumber() {
+    return animationFrame;
+  }
+
+  public void setFrameNumber(int animationFrame) {
+    this.animationFrame = animationFrame;
+  }
+
+  public int getFramesInAnimation() {
+    return FRAMES_IN_ANIMATION;
+  }
+
+  public Texture getTextureUp() {
+    return PLAYER_TEXTURE_UP;
+  }
+
+  public Texture getTextureDown() {
+    return PLAYER_TEXTURE_DOWN;
+  }
+
+  public Texture getTextureHori() {
+    return PLAYER_TEXTURE_HORI;
   }
 
   /**
@@ -142,10 +193,14 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   }
 
   /** Returns dash direction */
-  public Vector2 getDashDirection() { return dashDirection; }
+  public Vector2 getDashDirection() {
+    return dashDirection;
+  }
 
   /** Sets dash direction */
-  public void setDashDirection(Vector2 dir) { dashDirection = dir; }
+  public void setDashDirection(Vector2 dir) {
+    dashDirection = dir;
+  }
 
   /**
    * Returns the name of the nose point sensor
@@ -159,7 +214,9 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   }
 
   /** Returns the model of the "nose", hard-coded in for now */
-  public Model getPointModel() { return bodies.get(0); }
+  public Model getPointModel() {
+    return bodies.get(0);
+  }
 
   // built from multiple polygonmodels?
   @Override
@@ -190,50 +247,25 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     return animationFrame;
   }
 
-  public void updateAnimationFrame() {
-    animationFrame = (animationFrame + 1) % FRAMES_IN_FISH_ANIMATION;
-  }
-
-  public int direction() {
+  public Direction direction() {
     float vx = getVX();
     float vy = getVY();
 
-    if (vx == 0 && vx == vy ) {
-      return -1;
+    // Default to facing right
+    if (vx == 0 && vx == vy) {
+      return Direction.RIGHT;
     }
 
     if (Math.abs(vx) > Math.abs(vy)) {
       if (vx > 0)
-        // Right
-        return 3;
+        return Direction.RIGHT;
       else
-        // Left
-        return 2;
-    } else if (Math.abs(vy) > Math.abs(vx)){
-      if (vy > 0)
-        // Up
-        return 0;
-      else
-        // Down
-        return 1;
+        return Direction.LEFT;
     } else {
-      if (vx > 0) {
-        if (vy > 0) {
-          // North east
-          return 4;
-        } else {
-          // South east
-          return 5;
-        }
-      } else {
-        if (vy > 0) {
-          // North west
-          return 7;
-        } else {
-          // South west
-          return 6;
-        }
-      }
+      if (vy > 0)
+        return Direction.UP;
+      else
+        return Direction.DOWN;
     }
   }
 

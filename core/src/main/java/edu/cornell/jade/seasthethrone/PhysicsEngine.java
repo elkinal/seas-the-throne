@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import edu.cornell.jade.seasthethrone.gamemodel.*;
 import edu.cornell.jade.seasthethrone.model.*;
 import edu.cornell.jade.util.*;
+import edu.cornell.jade.seasthethrone.util.Direction;
 
 import java.net.DatagramSocket;
 import java.util.Iterator;
@@ -15,34 +16,23 @@ public class PhysicsEngine implements ContactListener {
 
   /** All the objects in the world. */
   protected PooledList<Model> objects = new PooledList<Model>();
+
   /** The Box2D world */
   private World world;
+
   /** The boundary of the world */
   private Rectangle bounds;
-  /** The world scale */
-  private Vector2 scale;
+
   /** The player */
   private PlayerModel player;
 
   /** Timer for spawning bullets */
   private int bulletTimer;
 
-  /** Dimensions of the game canvas */
-  private Vector2 screenDims;
-
-  /**
-   * Stores the canvas dimensions in pixels as a Vector2
-   *
-   * @param dims the vector of screen dimensions
-   * */
-  public void setScreenDims(Vector2 dims) { screenDims = dims; }
-
   public PhysicsEngine(Rectangle bounds) {
-
     // not sure if its gonna make sense to have some concept of gravity
     world = new World(new Vector2(0, 0), false);
     this.bounds = new Rectangle(bounds);
-    this.scale = new Vector2(1, 1);
     this.bulletTimer = 0;
     world.setContactListener(this);
   }
@@ -127,34 +117,20 @@ public class PhysicsEngine implements ContactListener {
 
   /** Orients the player model based on their primary direction of movement */
   public void orientPlayer() {
-    int dir = player.direction();
+    Direction dir = player.direction();
     // Up, down, left, right, NE, SE, SW, NW
     switch (dir) {
-      case 0:
+      case UP:
         player.setAngle(0f);
         break;
-      case 1:
+      case DOWN:
         player.setAngle((float)Math.PI);
         break;
-      case 2:
+      case LEFT:
         player.setAngle((float)Math.PI/2);
         break;
-      case 3:
+      case RIGHT:
         player.setAngle(-(float)Math.PI/2);
-        break;
-      case 4:
-        player.setAngle(-(float)Math.PI/4);
-        break;
-      case 5:
-        player.setAngle(-3f*(float)Math.PI/4);
-        break;
-      case 6:
-        player.setAngle(3f*(float)Math.PI/4);
-        break;
-      case 7:
-        player.setAngle((float)Math.PI/4);
-        break;
-      default:
         break;
     }
   }
@@ -256,28 +232,6 @@ public class PhysicsEngine implements ContactListener {
     boolean horiz = (bounds.x <= obj.getX() && obj.getX() <= bounds.x + bounds.width);
     boolean vert = (bounds.y <= obj.getY() && obj.getY() <= bounds.y + bounds.height);
     return horiz && vert;
-  }
-
-  /**
-   * Converts world coordinates to centered coords with the dimensions of the game canvas
-   * The origin is correct, this involves scaling.
-   * */
-  public Vector2 worldToCenteredCoords(Vector2 pos) {
-    float scaleX = screenDims.x / bounds.width;
-    float scaleY = screenDims.y / bounds.height;
-
-    return new Vector2(pos.x * scaleX, pos.y * scaleY);
-  }
-
-  /**
-   * Converts screen coordinates to centered coords with the dimensions of the game canvas.
-   * The scale is correct, this involves reflecting about y and translating the origin.
-  */
-  public Vector2 screenToCenteredCoords(Vector2 pos) {
-    Vector2 centeredCoords = pos.sub(screenDims.x/2, screenDims.y/2);
-    centeredCoords.y = -centeredCoords.y;
-    return centeredCoords;
-
   }
 
   @Override
