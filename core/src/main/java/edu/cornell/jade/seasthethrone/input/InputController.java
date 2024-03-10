@@ -134,20 +134,8 @@ public class InputController {
     float hoff = 0;
     float voff = 0;
 
-    float speedCalibration = 0.45f; // TODO: calibrate speed value
-
-    // left joystick movement
-    if (Math.abs(xbox.getLeftX()) != 0) {
-      int leftDirection = xbox.getLeftX() <= 0 ? -1 : 1;
-      float magnitude = Math.max((1 - Math.abs(xbox.getLeftX())), speedCalibration);
-      hoff = magnitude * leftDirection;
-    }
-
-    if (Math.abs(xbox.getLeftY()) != 0) {
-      int upDirection = xbox.getLeftY() > 0 ? -1 : 1;
-      float magnitude = Math.max((1 - Math.abs(xbox.getLeftY())), speedCalibration);
-      voff = magnitude * upDirection;
-    }
+    hoff = xbox.getLeftX();
+    voff = -xbox.getLeftY();
 
     // dashing
     if (xbox.getRightTrigger() > 0.6f && hoff != 0 && voff != 0) {
