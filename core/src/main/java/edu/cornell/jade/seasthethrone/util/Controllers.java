@@ -112,7 +112,7 @@ public class Controllers {
             try {
                 for(Controller controller: com.badlogic.gdx.controllers.Controllers.getControllers()) {
                     String name = controller.getName().toLowerCase();
-                    if (name.contains( "xbox" ) || name.contains( "pc" ) || name.contains( "xinput" ) || name.contains( "controller" )) {
+                    if (name.contains( "xbox" ) || name.contains( "pc" ) || name.contains( "xinput" ) || name.contains( "ps4 controller" )) {
                         xBoxControllers.add(new XBoxController(controller));
                     }
                 }
