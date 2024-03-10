@@ -12,24 +12,17 @@ import com.badlogic.gdx.math.Vector2;
 
 public interface Controllable {
 
-  /**
-   * Updates the horizontal movement of the character.
-   */
+  /** Updates the horizontal movement of the character. */
   public void moveHorizontal(float movement);
 
-  /**
-   * Updates the vertical movement of the character.
-   */
+  /** Updates the vertical movement of the character. */
   public void moveVertical(float movement);
 
-  /**
-   * Updates the primary attack state of the character.
-   */
+  /** Updates the primary attack state of the character. */
   public void pressPrimary();
 
   /** Updates the direction the character is pointing for dash */
   public void updateDirection(Vector2 mouseDir);
-
 
   /** Returns the current location of the controllable object */
   public Vector2 getLocation();

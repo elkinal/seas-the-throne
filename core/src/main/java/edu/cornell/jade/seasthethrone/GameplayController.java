@@ -3,23 +3,21 @@ package edu.cornell.jade.seasthethrone;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import edu.cornell.jade.seasthethrone.gamemodel.PlayerModel;
 import edu.cornell.jade.seasthethrone.input.InputController;
 import edu.cornell.jade.seasthethrone.input.PlayerController;
 import edu.cornell.jade.seasthethrone.model.Model;
-import edu.cornell.jade.seasthethrone.render.RenderingEngine;
-
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import edu.cornell.jade.seasthethrone.render.Renderable;
+import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 
 /**
  * The primary controller class for the game.
  *
- * Delegates all of the work to other subcontrollers including input control,
- * physics engine, and rendering engine. Contains the central update method.
+ * <p>Delegates all of the work to other subcontrollers including input control, physics engine, and
+ * rendering engine. Contains the central update method.
  */
 public class GameplayController implements Screen {
 
@@ -33,22 +31,31 @@ public class GameplayController implements Screen {
 
   private GameState gameState;
   Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
+
   /** Sub-controller for collecting input */
   InputController inputController;
+
   /** Sub-controller for handling updating physics engine based on input */
   PlayerController playerController;
+
   /** Rendering Engine */
   RenderingEngine renderEngine;
+
   /** Width of the game world in Box2d units */
   protected static final float DEFAULT_WIDTH = 64.0f;
+
   /** Height of the game world in Box2d units */
   protected static final float DEFAULT_HEIGHT = 48.0f;
-  /** Ratio between the pixel in a texture and the meter in the world */ 
+
+  /** Ratio between the pixel in a texture and the meter in the world */
   private static final float WORLD_SCALE = 0.1f;
+
   /** The Box2D world */
   protected PhysicsEngine physicsEngine;
+
   /** The boundary of the world */
   protected Rectangle bounds;
+
   /** Viewport maintaining relation between screen and world coordinates */
   private FitViewport viewport;
 
@@ -109,7 +116,7 @@ public class GameplayController implements Screen {
       physicsEngine.update(delta);
     }
 
-    if(!playerController.isAlive()){
+    if (!playerController.isAlive()) {
       gameState = GameState.OVER;
     }
 
@@ -117,13 +124,12 @@ public class GameplayController implements Screen {
     debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
     renderEngine.clear();
     for (Model obj : physicsEngine.getObjects()) {
-      if (obj instanceof Renderable r)
-        renderEngine.addRenderable(r);
+      if (obj instanceof Renderable r) renderEngine.addRenderable(r);
     }
-    if(gameState == GameState.OVER){
-      if(inputController.didReset()){
+    if (gameState == GameState.OVER) {
+      if (inputController.didReset()) {
         setupGameplay();
-      } else{
+      } else {
         renderEngine.drawGameOver();
       }
     }
@@ -133,17 +139,15 @@ public class GameplayController implements Screen {
     viewport.update(width, height);
   }
 
-  public void pause() {
-  }
+  public void pause() {}
 
-  public void resume() {
-  }
+  public void resume() {}
 
   public void hide() {
     active = false;
   }
 
   public void dispose() {
-    if(physicsEngine != null) physicsEngine.dispose();
+    if (physicsEngine != null) physicsEngine.dispose();
   }
 }

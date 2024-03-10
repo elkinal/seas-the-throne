@@ -1,26 +1,22 @@
 package edu.cornell.jade.seasthethrone.render;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.badlogic.gdx.graphics.Color;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
 public class RenderingEngine {
-  /**
-   * The Renderable objects for rendering
-   */
+  /** The Renderable objects for rendering */
   private Array<Renderable> renderables;
 
   /** Game Viewport */
   private Viewport viewport;
 
-  /**
-   * Internal game canvas to handle rendering
-   */
+  /** Internal game canvas to handle rendering */
   private GameCanvas canvas;
 
   /** Font for display text */
@@ -31,26 +27,24 @@ public class RenderingEngine {
 
   private static final Texture BACKGROUND = new Texture("background.jpeg");
 
-  /**
-   * FIXME: stop hardcoding texture regions
-   */
+  /** FIXME: stop hardcoding texture regions */
   private static final Texture FISH_TEXTURE = new Texture("bullet_test.png");
 
   /**
-   * Creates a new RenderingEngine based on the world width and world height for
-   * the camera.
+   * Creates a new RenderingEngine based on the world width and world height for the camera.
    *
-   * @param worldWidth  the width in world coords on the camera
+   * @param worldWidth the width in world coords on the camera
    * @param worldHeight the width in world coords on the camera
-   *
    */
   public RenderingEngine(float worldWidth, float worldHeight, Viewport viewport, float worldScale) {
     renderables = new Array<>();
     canvas = new GameCanvas();
 
     /** LOADING IN FONT, might be better to have an AssetDirectory later */
-    FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("EBGaramond.ttf"));
-    FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+    FreeTypeFontGenerator generator =
+        new FreeTypeFontGenerator(Gdx.files.internal("EBGaramond.ttf"));
+    FreeTypeFontGenerator.FreeTypeFontParameter parameter =
+        new FreeTypeFontGenerator.FreeTypeFontParameter();
     parameter.size = 50; // font size
     textFont = generator.generateFont(parameter);
 
@@ -67,9 +61,7 @@ public class RenderingEngine {
     renderables.add(r);
   }
 
-  /**
-   * Draw the background for the game
-   */
+  /** Draw the background for the game */
   public void drawBackground() {
     canvas.clear();
     canvas.begin();
@@ -77,9 +69,7 @@ public class RenderingEngine {
     canvas.end();
   }
 
-  /**
-   * Draws all the renderable objects in the list to be rendered
-   */
+  /** Draws all the renderable objects in the list to be rendered */
   public void drawRenderables() {
     canvas.begin();
     canvas.getSpriteBatch().setProjectionMatrix(getViewport().getCamera().combined);
@@ -89,9 +79,7 @@ public class RenderingEngine {
     canvas.end();
   }
 
-  /**
-   * Gets the viewport of the render engine
-   */
+  /** Gets the viewport of the render engine */
   public Viewport getViewport() {
     return viewport;
   }
@@ -130,5 +118,4 @@ public class RenderingEngine {
   public String toString() {
     return "RenderingEngine [renderables=" + renderables + "]";
   }
-
 }

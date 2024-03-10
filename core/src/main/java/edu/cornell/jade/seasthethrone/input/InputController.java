@@ -14,19 +14,15 @@
 
 package edu.cornell.jade.seasthethrone.input;
 
-import java.util.*;
-
-import com.badlogic.gdx.controllers.Controller;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import edu.cornell.jade.seasthethrone.util.Controllers;
 import edu.cornell.jade.seasthethrone.util.XBoxController;
-import com.badlogic.gdx.utils.viewport.Viewport;
+import java.util.*;
 
-/**
- * Processes movements for player and AI
- */
+/** Processes movements for player and AI */
 public class InputController {
   /** Viewport to unproject screen coordinates */
   Viewport viewport;
@@ -40,9 +36,7 @@ public class InputController {
   /** Whether the reset button was pressed. */
   protected boolean resetPressed;
 
-  /**
-   * Cache vector to return containing the dash coordinates of the previous read
-   */
+  /** Cache vector to return containing the dash coordinates of the previous read */
   Vector2 dashCoordCache;
 
   /**
@@ -66,8 +60,7 @@ public class InputController {
   }
 
   /**
-   * Removes p from 'players.' Removing an object which was never added does
-   * nothing.
+   * Removes p from 'players.' Removing an object which was never added does nothing.
    *
    * @param p the PlayerController to be removed
    */
@@ -78,11 +71,10 @@ public class InputController {
   }
 
   /**
-   * Constructor for InputController with a parameter to convert between screens
-   * and the world.
+   * Constructor for InputController with a parameter to convert between screens and the world.
    *
-   * @param screenToWorld viewport to support an unproject operation to convert
-   *                      screen coord to mouse coord.
+   * @param screenToWorld viewport to support an unproject operation to convert screen coord to
+   *     mouse coord.
    */
   public InputController(Viewport screenToWorld) {
     this.players = new ArrayList<>();
@@ -96,18 +88,14 @@ public class InputController {
     }
   }
 
-  /**
-   * Updates the state of this object (position) both vertically and horizontally.
-   */
+  /** Updates the state of this object (position) both vertically and horizontally. */
   public void update() {
     for (Controllable p : players) {
       readInput(p);
     }
   }
 
-  /**
-   * Reads the input for the player and converts the result into game logic.
-   */
+  /** Reads the input for the player and converts the result into game logic. */
   public void readInput(Controllable p) {
     // Check to see if a GamePad is connected
 
@@ -117,16 +105,13 @@ public class InputController {
       readMouse(p);
       readKeyboard(p);
     }
-
   }
 
   /**
-   * Reads input from an XBox controller connected to this computer to determine
-   * the
-   * actions of the player. Then calls the corresponding methods in the controller
-   * to process the actions.
+   * Reads input from an XBox controller connected to this computer to determine the actions of the
+   * player. Then calls the corresponding methods in the controller to process the actions.
    *
-   * Change the controller keys mapped to primary and secondary actions here.
+   * <p>Change the controller keys mapped to primary and secondary actions here.
    *
    * @param obj Controller for the player
    */
@@ -153,13 +138,11 @@ public class InputController {
   }
 
   /**
-   * Reads input from the keyboard to determine the actions of the player.
-   * Then calls the corresponding methods in the controller to process the
-   * actions.
-   * Reads from the keyboard regardless of whether an X-Box controller is
-   * connected.
+   * Reads input from the keyboard to determine the actions of the player. Then calls the
+   * corresponding methods in the controller to process the actions. Reads from the keyboard
+   * regardless of whether an X-Box controller is connected.
    *
-   * Change the keyboard keys mapped to primary and secondary actions here.
+   * <p>Change the keyboard keys mapped to primary and secondary actions here.
    *
    * @param obj Controller for the player
    */
@@ -185,18 +168,14 @@ public class InputController {
     }
     obj.moveHorizontal(hoff);
     obj.moveVertical(voff);
-
-
   }
 
   /**
-   * Reads input from the mouse to determine the actions of the player.
-   * Then calls the corresponding methods in the controller to process the
-   * actions.
-   * Reads from the mouse regardless of whether an X-Box controller is
-   * connected.
+   * Reads input from the mouse to determine the actions of the player. Then calls the corresponding
+   * methods in the controller to process the actions. Reads from the mouse regardless of whether an
+   * X-Box controller is connected.
    *
-   * Updates position in world coordinates.
+   * <p>Updates position in world coordinates.
    *
    * @param obj Controller for the player
    */
@@ -206,5 +185,4 @@ public class InputController {
     obj.updateDirection(dashCoordCache);
     System.out.println(dashCoordCache);
   }
-
 }

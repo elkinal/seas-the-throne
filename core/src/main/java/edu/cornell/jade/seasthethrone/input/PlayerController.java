@@ -12,8 +12,6 @@ package edu.cornell.jade.seasthethrone.input;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-
-import edu.cornell.jade.seasthethrone.GameplayController;
 import edu.cornell.jade.seasthethrone.gamemodel.PlayerModel;
 import edu.cornell.jade.seasthethrone.util.Direction;
 
@@ -21,6 +19,7 @@ public class PlayerController implements Controllable {
 
   /** The player */
   private PlayerModel player;
+
   /** Horizontal offset, -1 to 1 */
   float hoff;
 
@@ -33,9 +32,7 @@ public class PlayerController implements Controllable {
   /** The vector direction of the player for dashing */
   Vector2 dashDirection;
 
-  /**
-   * Constructs PlayerController
-   */
+  /** Constructs PlayerController */
   public PlayerController(Rectangle bounds, PlayerModel player) {
     this.player = player;
   }
@@ -64,10 +61,10 @@ public class PlayerController implements Controllable {
   /**
    * Move in given direction based on offset
    *
-   * @param x a value from -1 to 1 representing the percentage of movement speed
-   *          to be at in the given direction
-   * @param y a value from -1 to 1 representing the percentage of movement speed
-   *          to be at in the given direction
+   * @param x a value from -1 to 1 representing the percentage of movement speed to be at in the
+   *     given direction
+   * @param y a value from -1 to 1 representing the percentage of movement speed to be at in the
+   *     given direction
    */
   public void setVelPercentages(float x, float y) {
     float mag = (x * x + y * y) / (float) Math.sqrt(2);
@@ -77,7 +74,7 @@ public class PlayerController implements Controllable {
       mag = 1;
     }
     float moveSpeed = player.getMoveSpeed();
-    if (player.isDashing()){
+    if (player.isDashing()) {
       moveSpeed *= 4;
       Vector2 dashDirection = normalize(player.getDashDirection());
       player.setVX(moveSpeed * dashDirection.x);
@@ -97,20 +94,18 @@ public class PlayerController implements Controllable {
         player.setAngle(0f);
         break;
       case DOWN:
-        player.setAngle((float)Math.PI);
+        player.setAngle((float) Math.PI);
         break;
       case LEFT:
-        player.setAngle((float)Math.PI/2);
+        player.setAngle((float) Math.PI / 2);
         break;
       case RIGHT:
-        player.setAngle(-(float)Math.PI/2);
+        player.setAngle(-(float) Math.PI / 2);
         break;
     }
   }
 
-  /**
-   * Begin dashing if possible
-   */
+  /** Begin dashing if possible */
   public void beginDashing() {
     if (player.canDash()) {
       player.setDashing(true);
@@ -119,17 +114,17 @@ public class PlayerController implements Controllable {
   }
 
   /**
-   * Transforms the player and mouse positions to the same, centered coordinate
-   * system
-   * and sets this player's dash direction to the vector difference of those
-   * positions.
+   * Transforms the player and mouse positions to the same, centered coordinate system and sets this
+   * player's dash direction to the vector difference of those positions.
    *
    * @param mousePos the position of the mouse in screen coordinates
    */
   @Override
   public void updateDirection(Vector2 mousePos) {
-    //TODO: actually figure out when player is set to null instead of simply handling the case
-    if (player == null) {return;}
+    // TODO: actually figure out when player is set to null instead of simply handling the case
+    if (player == null) {
+      return;
+    }
 
     Vector2 playerPos = player.getPosition();
 
@@ -166,8 +161,7 @@ public class PlayerController implements Controllable {
 
   /** Returns the norm of a Vector2 */
   public Vector2 normalize(Vector2 v) {
-    float magnitude = (float)Math.sqrt(Math.pow(v.x,2) + Math.pow(v.y,2));
-    return new Vector2(v.x/magnitude, v.y/magnitude);
+    float magnitude = (float) Math.sqrt(Math.pow(v.x, 2) + Math.pow(v.y, 2));
+    return new Vector2(v.x / magnitude, v.y / magnitude);
   }
-
 }

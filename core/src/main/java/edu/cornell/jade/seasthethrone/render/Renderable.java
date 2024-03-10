@@ -1,7 +1,7 @@
 package edu.cornell.jade.seasthethrone.render;
 
-import edu.cornell.jade.seasthethrone.util.FilmStrip;
 import com.badlogic.gdx.math.Vector2;
+import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
 public interface Renderable {
 
@@ -34,8 +34,8 @@ public interface Renderable {
   public void setFrameNumber(int frameNumber);
 
   /**
-   * Gets a cache film strip to be used for animation. It should be the same
-   * object (or a copy of it) over all calls
+   * Gets a cache film strip to be used for animation. It should be the same object (or a copy of
+   * it) over all calls
    *
    * @return film strip used for animation
    */
