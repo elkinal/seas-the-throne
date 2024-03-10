@@ -41,9 +41,9 @@ public class InputController {
   protected boolean resetPressed;
 
   /**
-   * Cache vector to return containing the moues coordinates of the previous read
+   * Cache vector to return containing the dash coordinates of the previous read
    */
-  Vector2 mouseCoordCache;
+  Vector2 dashCoordCache;
 
   /**
    * Returns true if the reset button was pressed.
@@ -87,7 +87,7 @@ public class InputController {
   public InputController(Viewport screenToWorld) {
     this.players = new ArrayList<>();
     this.viewport = screenToWorld;
-    this.mouseCoordCache = new Vector2();
+    this.dashCoordCache = new Vector2();
 
     // initializing the xbox controller
     if (Controllers.get().getControllers().size > 0) {
@@ -137,10 +137,12 @@ public class InputController {
     hoff = xbox.getLeftX();
     voff = -xbox.getLeftY();
 
+    Vector2 location = obj.getLocation();
+    dashCoordCache.set(location.x + hoff, location.y + voff);
+    obj.updateDirection(dashCoordCache);
+
     // dashing
-    if (xbox.getRightTrigger() > 0.6f && hoff != 0 && voff != 0) {
-      Vector2 location = obj.getLocation();
-      obj.updateDirection(new Vector2(location.x + hoff, location.y + voff));
+    if (xbox.getRightTrigger() > 0.6f) {
       obj.pressPrimary();
     }
 
@@ -199,10 +201,10 @@ public class InputController {
    * @param obj Controller for the player
    */
   private void readMouse(Controllable obj) {
-    mouseCoordCache.set(Gdx.input.getX(), Gdx.input.getY());
-    viewport.unproject(mouseCoordCache);
-    obj.updateDirection(mouseCoordCache);
-    System.out.println(mouseCoordCache);
+    dashCoordCache.set(Gdx.input.getX(), Gdx.input.getY());
+    viewport.unproject(dashCoordCache);
+    obj.updateDirection(dashCoordCache);
+    System.out.println(dashCoordCache);
   }
 
 }
