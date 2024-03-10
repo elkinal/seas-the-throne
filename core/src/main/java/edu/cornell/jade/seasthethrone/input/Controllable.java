@@ -29,4 +29,8 @@ public interface Controllable {
 
   /** Updates the direction the character is pointing for dash */
   public void updateDirection(Vector2 mouseDir);
+
+
+  /** Returns the current location of the controllable object */
+  public Vector2 getLocation();
 }

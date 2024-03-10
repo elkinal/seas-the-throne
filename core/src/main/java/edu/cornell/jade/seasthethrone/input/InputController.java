@@ -16,9 +16,11 @@ package edu.cornell.jade.seasthethrone.input;
 
 import java.util.*;
 
+import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import edu.cornell.jade.seasthethrone.util.Controllers;
 import edu.cornell.jade.seasthethrone.util.XBoxController;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -39,9 +41,9 @@ public class InputController {
   protected boolean resetPressed;
 
   /**
-   * Cache vector to return containing the moues coordinates of the previous read
+   * Cache vector to return containing the dash coordinates of the previous read
    */
-  Vector2 mouseCoordCache;
+  Vector2 dashCoordCache;
 
   /**
    * Returns true if the reset button was pressed.
@@ -85,7 +87,13 @@ public class InputController {
   public InputController(Viewport screenToWorld) {
     this.players = new ArrayList<>();
     this.viewport = screenToWorld;
-    this.mouseCoordCache = new Vector2();
+    this.dashCoordCache = new Vector2();
+
+    // initializing the xbox controller
+    if (Controllers.get().getControllers().size > 0) {
+      xbox = Controllers.get().getXBoxControllers().get(0);
+      xbox.setDeadZone(0.2f);
+    }
   }
 
   /**
@@ -102,12 +110,14 @@ public class InputController {
    */
   public void readInput(Controllable p) {
     // Check to see if a GamePad is connected
+
     if (xbox != null && xbox.isConnected()) {
       readController(p);
     } else {
       readMouse(p);
       readKeyboard(p);
     }
+
   }
 
   /**
@@ -121,14 +131,25 @@ public class InputController {
    * @param obj Controller for the player
    */
   private void readController(Controllable obj) {
-    resetPressed = xbox.getA();
+    float hoff = 0;
+    float voff = 0;
 
-    obj.moveHorizontal(xbox.getLeftX());
-    obj.moveVertical(xbox.getLeftY());
+    hoff = xbox.getLeftX();
+    voff = -xbox.getLeftY();
 
+    Vector2 location = obj.getLocation();
+    dashCoordCache.set(location.x + hoff, location.y + voff);
+    obj.updateDirection(dashCoordCache);
+
+    // dashing
     if (xbox.getRightTrigger() > 0.6f) {
       obj.pressPrimary();
     }
+
+    resetPressed = xbox.getY();
+
+    obj.moveHorizontal(hoff);
+    obj.moveVertical(voff);
   }
 
   /**
@@ -164,6 +185,8 @@ public class InputController {
     }
     obj.moveHorizontal(hoff);
     obj.moveVertical(voff);
+
+
   }
 
   /**
@@ -178,9 +201,10 @@ public class InputController {
    * @param obj Controller for the player
    */
   private void readMouse(Controllable obj) {
-    mouseCoordCache.set(Gdx.input.getX(), Gdx.input.getY());
-    viewport.unproject(mouseCoordCache);
-    obj.updateDirection(mouseCoordCache);
+    dashCoordCache.set(Gdx.input.getX(), Gdx.input.getY());
+    viewport.unproject(dashCoordCache);
+    obj.updateDirection(dashCoordCache);
+    System.out.println(dashCoordCache);
   }
 
 }

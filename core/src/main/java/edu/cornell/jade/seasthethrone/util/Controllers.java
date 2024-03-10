@@ -106,13 +106,13 @@ public class Controllers {
      *
      * @return an array of connected {@link XBoxController} instances.
      */
-    public Array<XBoxController> getXBoxControllers () {
+    public Array<XBoxController> getXBoxControllers() {
         Array<XBoxController> xBoxControllers = new Array<XBoxController>();
         if (active) {
             try {
                 for(Controller controller: com.badlogic.gdx.controllers.Controllers.getControllers()) {
                     String name = controller.getName().toLowerCase();
-                    if (name.contains( "xbox" ) || name.contains( "pc" )) {
+                    if (name.contains( "xbox" ) || name.contains( "pc" ) || name.contains( "xinput" ) || name.contains( "ps4 controller" )) {
                         xBoxControllers.add(new XBoxController(controller));
                     }
                 }
