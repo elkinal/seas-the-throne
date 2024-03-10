@@ -136,6 +136,11 @@ public class PlayerController implements Controllable {
     dashDirection = mousePos.sub(playerPos);
   }
 
+  @Override
+  public Vector2 getLocation() {
+    return new Vector2(player.getX(), player.getY());
+  }
+
   public void update() {
     if (dashingPressed) {
       beginDashing();

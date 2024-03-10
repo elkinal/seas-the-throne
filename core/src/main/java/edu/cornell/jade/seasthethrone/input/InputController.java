@@ -16,9 +16,11 @@ package edu.cornell.jade.seasthethrone.input;
 
 import java.util.*;
 
+import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import edu.cornell.jade.seasthethrone.util.Controllers;
 import edu.cornell.jade.seasthethrone.util.XBoxController;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -86,6 +88,12 @@ public class InputController {
     this.players = new ArrayList<>();
     this.viewport = screenToWorld;
     this.mouseCoordCache = new Vector2();
+
+    // initializing the xbox controller
+    if (Controllers.get().getControllers().size > 0) {
+      xbox = Controllers.get().getXBoxControllers().get(0);
+      xbox.setDeadZone(0.2f);
+    }
   }
 
   /**
@@ -102,12 +110,14 @@ public class InputController {
    */
   public void readInput(Controllable p) {
     // Check to see if a GamePad is connected
+
     if (xbox != null && xbox.isConnected()) {
       readController(p);
     } else {
       readMouse(p);
       readKeyboard(p);
     }
+
   }
 
   /**
@@ -121,14 +131,35 @@ public class InputController {
    * @param obj Controller for the player
    */
   private void readController(Controllable obj) {
-    resetPressed = xbox.getA();
+    float hoff = 0;
+    float voff = 0;
 
-    obj.moveHorizontal(xbox.getLeftX());
-    obj.moveVertical(xbox.getLeftY());
+    float speedCalibration = 0.45f; // TODO: calibrate speed value
 
-    if (xbox.getRightTrigger() > 0.6f) {
+    // left joystick movement
+    if (Math.abs(xbox.getLeftX()) != 0) {
+      int leftDirection = xbox.getLeftX() <= 0 ? -1 : 1;
+      float magnitude = Math.max((1 - Math.abs(xbox.getLeftX())), speedCalibration);
+      hoff = magnitude * leftDirection;
+    }
+
+    if (Math.abs(xbox.getLeftY()) != 0) {
+      int upDirection = xbox.getLeftY() > 0 ? -1 : 1;
+      float magnitude = Math.max((1 - Math.abs(xbox.getLeftY())), speedCalibration);
+      voff = magnitude * upDirection;
+    }
+
+    // dashing
+    if (xbox.getRightTrigger() > 0.6f && hoff != 0 && voff != 0) {
+      Vector2 location = obj.getLocation();
+      obj.updateDirection(new Vector2(location.x + hoff, location.y + voff));
       obj.pressPrimary();
     }
+
+    resetPressed = xbox.getY();
+
+    obj.moveHorizontal(hoff);
+    obj.moveVertical(voff);
   }
 
   /**
@@ -164,6 +195,8 @@ public class InputController {
     }
     obj.moveHorizontal(hoff);
     obj.moveVertical(voff);
+
+
   }
 
   /**
@@ -181,6 +214,7 @@ public class InputController {
     mouseCoordCache.set(Gdx.input.getX(), Gdx.input.getY());
     viewport.unproject(mouseCoordCache);
     obj.updateDirection(mouseCoordCache);
+    System.out.println(mouseCoordCache);
   }
 
 }
