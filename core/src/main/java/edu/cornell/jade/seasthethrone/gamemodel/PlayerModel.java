@@ -1,21 +1,16 @@
 package edu.cornell.jade.seasthethrone.gamemodel;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import edu.cornell.jade.seasthethrone.model.ComplexModel;
-import edu.cornell.jade.seasthethrone.model.Model;
-import edu.cornell.jade.seasthethrone.model.PolygonModel;
 import edu.cornell.jade.seasthethrone.render.PlayerRenderable;
-import com.badlogic.gdx.graphics.Texture;
-import edu.cornell.jade.seasthethrone.util.FilmStrip;
 import edu.cornell.jade.seasthethrone.util.Direction;
-
-import java.util.Vector;
+import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
 /**
- * Model for the main player object of the game. This class extends
- * {@link ComplexModel} to support multiple joints and bodies for flexible
- * collision control and movement display.
+ * Model for the main player object of the game. This class extends {@link ComplexModel} to support
+ * multiple joints and bodies for flexible collision control and movement display.
  */
 public class PlayerModel extends ComplexModel implements PlayerRenderable {
   /** FIXME: stop hardcoding textures */
@@ -28,10 +23,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   /** Player texture when facing down */
   public static final Texture PLAYER_TEXTURE_DOWN = new Texture("playerspriterun_down_clean.png");
 
-  /**
-   * Player texture when facing horizontally
-   * FIXME: actually add this texture
-   */
+  /** Player texture when facing horizontally FIXME: actually add this texture */
   public static final Texture PLAYER_TEXTURE_HORI = null;
 
   /** FilmStrip cache object */
@@ -42,9 +34,9 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
 
   /** Whether the player is dashing */
   private boolean isDashing;
+
   /**
-   * Frame counter for dashing. Tracks how long the player has been dashing for
-   * and how long until
+   * Frame counter for dashing. Tracks how long the player has been dashing for and how long until
    * they can dash again.
    */
   private int dashCounter;
@@ -126,7 +118,6 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   /**
    * Returns player's move speed.
    *
-   *
    * @return player's move speed.
    */
   public float getMoveSpeed() {
@@ -204,15 +195,18 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   /**
    * Returns the name of the nose point sensor
    *
-   * This is used by ContactListener
+   * <p>This is used by ContactListener
    *
    * @return the name of the nose point sensor
    */
   public String getPointSensorName() {
     return pointSensorName;
   }
+
   /** Returns the player body model */
-  public PlayerBodyModel getBodyModel() { return (PlayerBodyModel) bodies.get(0); }
+  public PlayerBodyModel getBodyModel() {
+    return (PlayerBodyModel) bodies.get(0);
+  }
 
   // built from multiple polygonmodels?
   @Override
@@ -253,16 +247,11 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     }
 
     if (Math.abs(vx) > Math.abs(vy)) {
-      if (vx > 0)
-        return Direction.RIGHT;
-      else
-        return Direction.LEFT;
+      if (vx > 0) return Direction.RIGHT;
+      else return Direction.LEFT;
     } else {
-      if (vy > 0)
-        return Direction.UP;
-      else
-        return Direction.DOWN;
+      if (vy > 0) return Direction.UP;
+      else return Direction.DOWN;
     }
   }
-
 }

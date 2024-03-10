@@ -1,13 +1,12 @@
 package edu.cornell.jade.seasthethrone.render;
 
 import com.badlogic.gdx.graphics.Texture;
-import edu.cornell.jade.seasthethrone.util.FilmStrip;
-import edu.cornell.jade.seasthethrone.util.Direction;
 import com.badlogic.gdx.math.Vector2;
+import edu.cornell.jade.seasthethrone.util.Direction;
+import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
 /**
- * An interface defining the required information for a {@link RenderingEngine}
- * to render a player.
+ * An interface defining the required information for a {@link RenderingEngine} to render a player.
  */
 public interface PlayerRenderable extends Renderable {
   /**
@@ -32,8 +31,7 @@ public interface PlayerRenderable extends Renderable {
   public Texture getTextureHori();
 
   /**
-   * Returns if the spear of the player is extended and the animation should begin
-   * playing.
+   * Returns if the spear of the player is extended and the animation should begin playing.
    *
    * @return if the spear animation should begin to play
    */
