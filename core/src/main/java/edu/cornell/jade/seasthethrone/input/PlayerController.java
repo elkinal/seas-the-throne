@@ -138,7 +138,7 @@ public class PlayerController implements Controllable {
 
   @Override
   public Vector2 getLocation() {
-    return new Vector2(player.getX(), player.getY());
+    return player.getPosition();
   }
 
   public void update() {
