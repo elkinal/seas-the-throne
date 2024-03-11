@@ -17,6 +17,9 @@ import edu.cornell.jade.seasthethrone.util.Direction;
 
 public class PlayerController implements Controllable {
 
+  /** Error value for how close the mouse is to the player for dash to not count */
+  private static final float NO_DASH_ERROR = 0.5f;
+
   /** The player */
   private PlayerModel player;
 
@@ -107,10 +110,13 @@ public class PlayerController implements Controllable {
 
   /** Begin dashing if possible */
   public void beginDashing() {
-    if (player.canDash()) {
-      player.setDashing(true);
-      player.setDashCounter(player.getDashLength());
-    }
+    player.setDashing(true);
+    player.setDashCounter(player.getDashLength());
+  }
+
+  /** Check if the player is allowed to dash */
+  public boolean checkCanDash(){
+    return dashingPressed && player.canDash() && (dashDirection.len() > NO_DASH_ERROR);
   }
 
   /**
@@ -137,7 +143,7 @@ public class PlayerController implements Controllable {
   }
 
   public void update() {
-    if (dashingPressed) {
+    if (checkCanDash()) {
       beginDashing();
       player.setDashDirection(dashDirection);
     }
