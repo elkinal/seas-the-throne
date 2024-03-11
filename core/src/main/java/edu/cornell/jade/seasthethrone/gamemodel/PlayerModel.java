@@ -32,6 +32,9 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   /** current animation frame */
   private int animationFrame;
 
+  /** current direction the player is facing */
+  private Direction faceDirection;
+
   /** Whether the player is dashing */
   private boolean isDashing;
 
@@ -66,6 +69,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     super(x, y);
 
     // Set constants
+    faceDirection = Direction.RIGHT;
     moveSpeed = 6f;
     dashCounter = 0;
     dashCooldownLimit = 25;
@@ -241,17 +245,13 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     float vx = getVX();
     float vy = getVY();
 
-    // Default to facing right
-    if (vx == 0 && vx == vy) {
-      return Direction.RIGHT;
-    }
-
     if (Math.abs(vx) > Math.abs(vy)) {
-      if (vx > 0) return Direction.RIGHT;
-      else return Direction.LEFT;
-    } else {
-      if (vy > 0) return Direction.UP;
-      else return Direction.DOWN;
+      if (vx > 0) faceDirection = Direction.RIGHT;
+      else faceDirection = Direction.LEFT;
+    } else if (Math.abs(vx) < Math.abs(vy)){
+      if (vy > 0) faceDirection = Direction.UP;
+      else faceDirection = Direction.DOWN;
     }
+    return faceDirection;
   }
 }
