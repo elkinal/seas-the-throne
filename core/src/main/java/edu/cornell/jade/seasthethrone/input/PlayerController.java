@@ -62,10 +62,12 @@ public class PlayerController implements Controllable {
   /**
    * Move in given direction based on offset
    *
-   * @param x a value from -1 to 1 representing the percentage of movement speed to be at in the
-   *     given direction
-   * @param y a value from -1 to 1 representing the percentage of movement speed to be at in the
-   *     given direction
+   * @param x a value from -1 to 1 representing the percentage of movement speed
+   *          to be at in the
+   *          given direction
+   * @param y a value from -1 to 1 representing the percentage of movement speed
+   *          to be at in the
+   *          given direction
    */
   public void setVelPercentages(float x, float y) {
     float mag = (float) Math.sqrt(x * x + y * y);
@@ -119,14 +121,16 @@ public class PlayerController implements Controllable {
   }
 
   /**
-   * Transforms the player and mouse positions to the same, centered coordinate system and sets this
+   * Transforms the player and mouse positions to the same, centered coordinate
+   * system and sets this
    * player's dash direction to the vector difference of those positions.
    *
    * @param mousePos the position of the mouse in screen coordinates
    */
   @Override
   public void updateDirection(Vector2 mousePos) {
-    // TODO: actually figure out when player is set to null instead of simply handling the case
+    // TODO: actually figure out when player is set to null instead of simply
+    // handling the case
     if (player == null) {
       return;
     }
