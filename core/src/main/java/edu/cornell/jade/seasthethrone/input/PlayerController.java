@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import edu.cornell.jade.seasthethrone.gamemodel.PlayerModel;
 import edu.cornell.jade.seasthethrone.util.Direction;
+import com.badlogic.gdx.math.MathUtils;
 
 public class PlayerController implements Controllable {
 
@@ -67,12 +68,16 @@ public class PlayerController implements Controllable {
    *     given direction
    */
   public void setVelPercentages(float x, float y) {
-    float mag = (x * x + y * y) / (float) Math.sqrt(2);
-    // TODO: Change this to compare with some epsilong probably
-    // this does techinically work though
-    if (mag == 0f) {
-      mag = 1;
+    float mag = (float) Math.sqrt(x * x + y * y);
+    float xNorm, yNorm;
+    if (mag < MathUtils.FLOAT_ROUNDING_ERROR) {
+      xNorm = 0;
+      yNorm = 0;
+    } else {
+      xNorm = x / mag;
+      yNorm = y / mag;
     }
+    mag = Math.min(mag, 1f);
     float moveSpeed = player.getMoveSpeed();
     if (player.isDashing()) {
       moveSpeed *= 4;
@@ -80,8 +85,8 @@ public class PlayerController implements Controllable {
       player.setVX(moveSpeed * dashDirection.x);
       player.setVY(moveSpeed * dashDirection.y);
     } else {
-      player.setVX(x * moveSpeed / mag);
-      player.setVY(y * moveSpeed / mag);
+      player.setVX(xNorm * moveSpeed * mag);
+      player.setVY(yNorm * moveSpeed * mag);
     }
   }
 

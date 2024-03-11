@@ -183,6 +183,5 @@ public class InputController {
     dashCoordCache.set(Gdx.input.getX(), Gdx.input.getY());
     viewport.unproject(dashCoordCache);
     obj.updateDirection(dashCoordCache);
-    System.out.println(dashCoordCache);
   }
 }
