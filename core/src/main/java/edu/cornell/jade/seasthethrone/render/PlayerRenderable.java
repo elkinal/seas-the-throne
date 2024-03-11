@@ -24,12 +24,18 @@ public interface PlayerRenderable extends Renderable {
   public Texture getTextureDown();
 
   /**
-   * Returns the player's texture for when they face in a horizontal direction
+   * Returns the player's texture for when they face left
    *
-   * @return the player's texture when facing in a horizontal direction
+   * @return the player's texture when facing left
    */
-  public Texture getTextureHori();
+  public Texture getTextureLeft();
 
+  /**
+   * Returns the player's texture for when they face right
+   *
+   * @return the player's texture when facing right
+   */
+  public Texture getTextureRight();
   /**
    * Returns if the spear of the player is extended and the animation should begin playing.
    *
@@ -52,6 +58,7 @@ public interface PlayerRenderable extends Renderable {
   public boolean isDashing();
 
   public default void draw(RenderingEngine renderer) {
+
     int frame = getFrameNumber();
     FilmStrip filmStrip = getFilmStrip();
     switch (direction()) {
@@ -62,8 +69,11 @@ public interface PlayerRenderable extends Renderable {
         filmStrip.setTexture(getTextureDown());
         break;
       case LEFT:
+        filmStrip.setTexture(getTextureLeft());
         break;
       case RIGHT:
+        filmStrip.setTexture(getTextureRight());
+
         break;
     }
     filmStrip.setFrame(frame);
@@ -71,6 +81,8 @@ public interface PlayerRenderable extends Renderable {
     Vector2 pos = getPosition();
     renderer.draw(filmStrip, pos.x, pos.y);
 
-    setFrameNumber((frame + 1) % getFramesInAnimation());
+//    setFrameNumber((frame + 1) % getFramesInAnimation());
+
+
   }
 }

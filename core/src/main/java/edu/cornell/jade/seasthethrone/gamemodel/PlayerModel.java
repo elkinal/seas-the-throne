@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import edu.cornell.jade.seasthethrone.model.ComplexModel;
 import edu.cornell.jade.seasthethrone.render.PlayerRenderable;
+import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.Direction;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
@@ -18,19 +19,31 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   private static int FRAMES_IN_ANIMATION = 12;
 
   /** Player texture when facing up */
-  public Texture PLAYER_TEXTURE_UP = new Texture("playerspriterunfilmstrip_up.png");
+  public Texture PLAYER_TEXTURE_UP = new Texture("playerspriterun_up_wspear.png");
 
   /** Player texture when facing down */
-  public static final Texture PLAYER_TEXTURE_DOWN = new Texture("playerspriterun_down_clean.png");
+  public static final Texture PLAYER_TEXTURE_DOWN = new Texture("playerspriterun_down_wspear.png");
 
-  /** Player texture when facing horizontally FIXME: actually add this texture */
-  public static final Texture PLAYER_TEXTURE_HORI = null;
+  /** Player texture when facing left */
+  public static final Texture PLAYER_TEXTURE_LEFT = new Texture("playerspriterun_left_wspear.png");
+
+  /** Player texture when facing right */
+  public static final Texture PLAYER_TEXTURE_RIGHT = new Texture("playerspriterun_right_wspear.png");
 
   /** FilmStrip cache object */
   public FilmStrip filmStrip;
 
   /** current animation frame */
   private int animationFrame;
+
+  /** The number of frames to skip before animating the next player frame */
+  private int frameDelay;
+
+  /**
+   * Counter for the number of frames that have been drawn to the screen
+   * This is separate from the position in the player filmstrip.
+   *  */
+  private int frameCounter;
 
   /** Whether the player is dashing */
   private boolean isDashing;
@@ -56,6 +69,9 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   /** Scaling factor for player movement */
   private float moveSpeed;
 
+  /** The direction the player is facing */
+  private Direction direction;
+
   /**
    * {@link PlayerModel} constructor using an x and y coordinate.
    *
@@ -71,7 +87,9 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     dashCooldownLimit = 25;
     dashLength = 20;
     isDashing = false;
-
+    frameCounter = 0;
+    frameDelay = 3;
+    direction = Direction.DOWN;
     // make a triangle for now
     float vertices[] = new float[6];
     vertices[0] = -0.5f;
@@ -85,6 +103,17 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     bodies.add(playerBody);
 
     filmStrip = new FilmStrip(PLAYER_TEXTURE_DOWN, 1, FRAMES_IN_ANIMATION);
+  }
+
+  @Override
+  public void draw(RenderingEngine renderer) {
+    PlayerRenderable.super.draw(renderer);
+
+    // Only move to next frame of animation every frameDelay number of frames
+    if (frameCounter % frameDelay == 0) {
+      setFrameNumber((getFrameNumber() + 1) % getFramesInAnimation());
+    }
+    frameCounter += 1;
   }
 
   public FilmStrip getFilmStrip() {
@@ -111,8 +140,12 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     return PLAYER_TEXTURE_DOWN;
   }
 
-  public Texture getTextureHori() {
-    return PLAYER_TEXTURE_HORI;
+  public Texture getTextureLeft() {
+    return PLAYER_TEXTURE_LEFT;
+  }
+
+  public Texture getTextureRight() {
+    return PLAYER_TEXTURE_RIGHT;
   }
 
   /**
@@ -241,17 +274,14 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     float vx = getVX();
     float vy = getVY();
 
-    // Default to facing right
-    if (vx == 0 && vx == vy) {
-      return Direction.RIGHT;
-    }
-
+    // Only change direction if we're moving
     if (Math.abs(vx) > Math.abs(vy)) {
-      if (vx > 0) return Direction.RIGHT;
-      else return Direction.LEFT;
-    } else {
-      if (vy > 0) return Direction.UP;
-      else return Direction.DOWN;
+      if (vx > 0) direction = Direction.RIGHT;
+      else direction = Direction.LEFT;
+    } else if (Math.abs(vx) < Math.abs(vy)) {
+      if (vy > 0) direction = Direction.UP;
+      else direction = Direction.DOWN;
     }
+    return direction;
   }
 }

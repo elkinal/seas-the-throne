@@ -99,8 +99,8 @@ public class RenderingEngine {
    * @param y the y coordinate in world coordinates to draw at
    */
   public void draw(FilmStrip filmStrip, float x, float y) {
-    float ox = filmStrip.getRegionWidth() / 2;
-    float oy = filmStrip.getRegionHeight() / 2;
+    float ox = filmStrip.getRegionWidth() / 2f;
+    float oy = filmStrip.getRegionHeight() / 2f;
 
     canvas.draw(filmStrip, Color.WHITE, oy, ox, x, y, 0, worldScale, worldScale);
   }
