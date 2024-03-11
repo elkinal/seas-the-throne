@@ -110,13 +110,16 @@ public class PlayerController implements Controllable {
 
   /** Begin dashing if possible */
   public void beginDashing() {
-    player.setDashing(true);
-    player.setDashCounter(player.getDashLength());
+    // check if dash cooldown is at 0
+    if(player.checkAndSetDashing()){
+      player.setDashCounter(player.getDashLength());
+      player.setDashDirection(dashDirection);
+    }
   }
 
   /** Check if the player is allowed to dash */
   public boolean checkCanDash(){
-    return dashingPressed && player.canDash() && (dashDirection.len() > NO_DASH_ERROR);
+    return dashingPressed && !player.isDashing() && (dashDirection.len() > NO_DASH_ERROR);
   }
 
   /**
@@ -145,17 +148,17 @@ public class PlayerController implements Controllable {
   public void update() {
     if (checkCanDash()) {
       beginDashing();
-      player.setDashDirection(dashDirection);
     }
     setVelPercentages(hoff, voff);
     orientPlayer();
 
     // Handle dashing
     if (player.isDashing()) {
+      player.updateSpear(dashDirection);
       player.decrementDashCounter();
       if (player.getDashCounter() <= 0) {
         // exit dash
-        player.setDashing(false);
+        player.stopDashing();
         player.setDashCounter(player.getDashCooldownLimit());
       }
     } else {

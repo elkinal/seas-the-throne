@@ -8,24 +8,14 @@ import edu.cornell.jade.seasthethrone.model.PolygonModel;
  */
 public class PlayerBodyModel extends PolygonModel {
 
-  /** TODO: REMOVE THIS */
-  private boolean isDashing;
-
-  public PlayerBodyModel(float[] vertices) {
-    super(vertices);
-    isDashing = false;
+  public PlayerBodyModel(float[] vertices, float x, float y) {
+    super(vertices, x, y);
   }
 
-  public boolean isDashing() {
-    return isDashing;
+  /** Create new player body at position (x,y) */
+  public PlayerBodyModel(float x, float y){
+    // Make a triangle for now
+    this(new float[]{-0.5f, -1, 0.5f, -1, 0, 1}, x, y);
   }
 
-  public void setDashing(boolean dashing) {
-    isDashing = dashing;
-  }
-
-  /** TODO: delete this */
-  public String getPointSensorName() {
-    return "NosePointSensor";
-  }
 }
