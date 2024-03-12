@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+
 import edu.cornell.jade.seasthethrone.gamemodel.PlayerModel;
 import edu.cornell.jade.seasthethrone.input.InputController;
 import edu.cornell.jade.seasthethrone.input.PlayerController;
@@ -91,6 +92,8 @@ public class GameplayController implements Screen {
 
     renderEngine.addRenderable(player);
     inputController.add(playerController);
+
+    Level level = new Level("levels/test1.json");
   }
 
   public void render(float delta) {

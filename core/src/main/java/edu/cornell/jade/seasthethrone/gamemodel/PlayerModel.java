@@ -82,7 +82,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     super(x, y);
 
     // Set constants
-    moveSpeed = 6f;
+    moveSpeed = 8f;
     dashCounter = 0;
     dashCooldownLimit = 25;
     dashLength = 20;
@@ -90,6 +90,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     frameCounter = 0;
     frameDelay = 3;
     direction = Direction.DOWN;
+
     // make a triangle for now
     float vertices[] = new float[6];
     vertices[0] = -0.5f;
