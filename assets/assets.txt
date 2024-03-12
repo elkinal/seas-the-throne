@@ -1,6 +1,7 @@
 background.jpeg
 bullet_test.png
 EBGaramond.ttf
+<<<<<<< HEAD
 hs_err_pid11140.log
 hs_err_pid16292.log
 hs_err_pid1924.log
@@ -9,6 +10,13 @@ hs_err_pid6932.log
 hs_err_pid7416.log
 levels/test1.json
 libgdx.png
+=======
+libgdx.png
+playerspritedashfilmstrip_down.png
+playerspritedashfilmstrip_left.png
+playerspritedashfilmstrip_right.png
+playerspritedashfilmstrip_up.png
+>>>>>>> a6a1ad4833613a1560c49a4f5eb64c52a582866a
 playerspriterun_down_wspear.png
 playerspriterun_left_wspear.png
 playerspriterun_right_wspear.png

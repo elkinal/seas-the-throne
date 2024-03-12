@@ -37,6 +37,33 @@ public interface PlayerRenderable extends Renderable {
    */
   public Texture getTextureRight();
   /**
+   * Returns the player's texture for when they dash up
+   *
+   * @return the player's texture when facing up
+   */
+  public Texture getTextureUpDash();
+
+  /**
+   * Returns the player's texture for when they dash down
+   *
+   * @return the player's texture when facing down
+   */
+  public Texture getTextureDownDash();
+
+  /**
+   * Returns the player's texture for when they dash left
+   *
+   * @return the player's texture when facing left
+   */
+  public Texture getTextureLeftDash();
+
+  /**
+   * Returns the player's texture for when they dash right
+   *
+   * @return the player's texture when facing right
+   */
+  public Texture getTextureRightDash();
+  /**
    * Returns if the spear of the player is extended and the animation should begin playing.
    *
    * @return if the spear animation should begin to play
@@ -63,17 +90,28 @@ public interface PlayerRenderable extends Renderable {
     FilmStrip filmStrip = getFilmStrip();
     switch (direction()) {
       case UP:
-        filmStrip.setTexture(getTextureUp());
+        if (isDashing())
+          filmStrip.setTexture(getTextureUpDash());
+        else
+          filmStrip.setTexture(getTextureUp());
         break;
       case DOWN:
-        filmStrip.setTexture(getTextureDown());
+        if (isDashing())
+          filmStrip.setTexture(getTextureDownDash());
+        else
+          filmStrip.setTexture(getTextureDown());
         break;
       case LEFT:
-        filmStrip.setTexture(getTextureLeft());
+        if (isDashing())
+          filmStrip.setTexture(getTextureLeftDash());
+        else
+          filmStrip.setTexture(getTextureLeft());
         break;
       case RIGHT:
-        filmStrip.setTexture(getTextureRight());
-
+        if (isDashing())
+          filmStrip.setTexture(getTextureRightDash());
+        else
+          filmStrip.setTexture(getTextureRight());
         break;
     }
     filmStrip.setFrame(frame);

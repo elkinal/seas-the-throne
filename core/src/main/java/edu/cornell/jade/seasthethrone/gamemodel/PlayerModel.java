@@ -17,6 +17,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   /** FIXME: stop hardcoding textures */
   /** Frame is player animation */
   private static int FRAMES_IN_ANIMATION = 12;
+  private static int FRAMES_IN_ANIMATION_DASH = 5;
 
   /** Player texture when facing up */
   public Texture PLAYER_TEXTURE_UP = new Texture("playerspriterun_up_wspear.png");
@@ -29,6 +30,18 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
 
   /** Player texture when facing right */
   public static final Texture PLAYER_TEXTURE_RIGHT = new Texture("playerspriterun_right_wspear.png");
+  /** Player texture when dashing up */
+  public Texture PLAYER_TEXTURE_UP_DASH = new Texture("playerspritedashfilmstrip_up.png");
+
+  /** Player texture when dashing down */
+  public static final Texture PLAYER_TEXTURE_DOWN_DASH = new Texture("playerspritedashfilmstrip_down.png");
+
+  /** Player texture when dashing left */
+  public static final Texture PLAYER_TEXTURE_LEFT_DASH = new Texture("playerspritedashfilmstrip_left.png");
+
+  /** Player texture when dashing right */
+  public static final Texture PLAYER_TEXTURE_RIGHT_DASH = new Texture("playerspritedashfilmstrip_right.png");
+
 
   /** FilmStrip cache object */
   public FilmStrip filmStrip;
@@ -130,7 +143,10 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   }
 
   public int getFramesInAnimation() {
-    return FRAMES_IN_ANIMATION;
+    if (isDashing)
+      return FRAMES_IN_ANIMATION_DASH;
+    else
+      return FRAMES_IN_ANIMATION;
   }
 
   public Texture getTextureUp() {
@@ -149,6 +165,18 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     return PLAYER_TEXTURE_RIGHT;
   }
 
+  public Texture getTextureUpDash(){
+    return PLAYER_TEXTURE_UP_DASH;
+  }
+  public Texture getTextureDownDash(){
+    return PLAYER_TEXTURE_DOWN_DASH;
+  }
+  public Texture getTextureLeftDash(){
+    return PLAYER_TEXTURE_LEFT_DASH;
+  }
+  public Texture getTextureRightDash(){
+    return PLAYER_TEXTURE_RIGHT_DASH;
+  }
   /**
    * Returns player's move speed.
    *
@@ -184,6 +212,12 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   public void setDashing(boolean value) {
     isDashing = value;
     getBodyModel().setDashing(value);
+    if (value){
+      frameDelay = 20;
+    }
+    else{
+      frameDelay = 3;
+    }
   }
 
   /** Returns if the player can dash */
