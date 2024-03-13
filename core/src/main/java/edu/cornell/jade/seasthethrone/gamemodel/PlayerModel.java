@@ -53,9 +53,6 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   /** The angle direction of this dash in radians */
   private Vector2 dashDirection;
 
-  /** Unique identifier for the point sensor; used in collision handling */
-  private String pointSensorName;
-
   /** Scaling factor for player movement */
   private float moveSpeed;
 
@@ -164,21 +161,6 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     dashCounter = value;
   }
 
-  /** Returns current value of dash cooldown */
-  public int getDashCounter() {
-    return dashCounter;
-  }
-
-  /** Returns dash limit */
-  public int getDashCooldownLimit() {
-    return dashCooldownLimit;
-  }
-
-  /** Decriments dash cooldown */
-  public void decrementDashCounter() {
-    dashCounter -= 1;
-  }
-
   /** Returns length of dash in frames */
   public int getDashLength() {
     return dashLength;
@@ -192,17 +174,6 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   /** Sets dash direction */
   public void setDashDirection(Vector2 dir) {
     dashDirection = dir;
-  }
-
-  /**
-   * Returns the name of the nose point sensor
-   *
-   * <p>This is used by ContactListener
-   *
-   * @return the name of the nose point sensor
-   */
-  public String getPointSensorName() {
-    return pointSensorName;
   }
 
   /** Returns the player body model */
@@ -224,6 +195,25 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   protected boolean createJoints(World world) {
     return true;
   }
+
+  /** Updates the object's physics state (NOT GAME LOGIC).
+   *
+   * Use this for dash cooldown checking/resetting.
+   * */
+  @Override
+  public void update(float delta) {
+    if (isDashing()) {
+      dashCounter -= 1;
+      if (dashCounter <= 0) {
+        // exit dash
+        stopDashing();
+        dashCounter = dashCooldownLimit;
+      }
+    } else {
+      dashCounter = Math.max(0, dashCounter - 1);
+    }
+  }
+
 
   public boolean spearExtended() {
     return isDashing();
