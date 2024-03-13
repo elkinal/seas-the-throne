@@ -25,7 +25,7 @@ public class RenderingEngine {
   /** The ratio of a pixel in a texture to a meter in the world */
   private float worldScale;
 
-  private static final Texture BACKGROUND = new Texture("background.jpeg");
+  private static Texture BACKGROUND = null;
 
   /** FIXME: stop hardcoding texture regions */
   private static final Texture FISH_TEXTURE = new Texture("bullet_test.png");
@@ -60,6 +60,8 @@ public class RenderingEngine {
   public void addRenderable(Renderable r) {
     renderables.add(r);
   }
+
+  public void setBackground(Texture bg) { BACKGROUND = bg;}
 
   /** Draw the background for the game */
   public void drawBackground() {

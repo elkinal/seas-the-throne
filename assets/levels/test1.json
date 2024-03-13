@@ -4,7 +4,7 @@
  "layers":[
         {
          "id":3,
-         "image":"..\/background.jpeg",
+         "image":"background.jpeg",
          "name":"background",
          "offsetx":-2.13163e-14,
          "offsety":-3.55271e-15,
@@ -64,6 +64,29 @@
         }, 
         {
          "draworder":"topdown",
+         "id":5,
+         "name":"player",
+         "objects":[
+                {
+                 "gid":106,
+                 "height":16,
+                 "id":16,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":16,
+                 "y":32
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
          "id":4,
          "name":"enemies",
          "objects":[
@@ -109,8 +132,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":5,
- "nextobjectid":16,
+ "nextlayerid":6,
+ "nextobjectid":17,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
