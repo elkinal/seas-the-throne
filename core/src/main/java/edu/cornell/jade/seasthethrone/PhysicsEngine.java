@@ -161,12 +161,14 @@ public class PhysicsEngine implements ContactListener {
   /** Handle collision between player body and bullet */
   public void handleCollision(PlayerBodyModel pb, BulletModel b){
     b.markRemoved(true);
-    pb.setHit(true);
-
-    // Calculate knockback direction
-    Vector2 knockbackDir = new Vector2(pb.getPosition()).sub(b.getPosition()).nor();
-    // Apply knockback force
-    pb.getBody().applyLinearImpulse(knockbackDir.scl(b.getKnockbackForce()), pb.getCentroid(), false);
+    if(!pb.isInvincible()){
+      pb.setHit(true);
+      pb.setInvincible();
+      // Calculate knockback direction
+      Vector2 knockbackDir = new Vector2(pb.getPosition()).sub(b.getPosition()).nor();
+      // Apply knockback force
+      pb.getBody().applyLinearImpulse(knockbackDir.scl(b.getKnockbackForce()), pb.getCentroid(), false);
+    }
   }
 
   @Override

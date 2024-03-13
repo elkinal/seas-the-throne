@@ -188,6 +188,16 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     dashDirection = dir;
   }
 
+  /** Returns if the player is currently invincible */
+  public boolean isInvincible() {
+    return getBodyModel().isInvincible();
+  }
+
+  /** Returns if the player is stunned (during iframes) */
+  public boolean isStunned(){
+    return getBodyModel().isStunned();
+  }
+
   /** Returns the player body model */
   public PlayerBodyModel getBodyModel() {
     return (PlayerBodyModel) bodies.get(0);
@@ -224,6 +234,8 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     } else {
       dashCounter = Math.max(0, dashCounter - 1);
     }
+
+    super.update(delta);
   }
 
 

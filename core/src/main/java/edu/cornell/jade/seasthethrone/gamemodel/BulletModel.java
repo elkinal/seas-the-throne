@@ -36,7 +36,7 @@ public class BulletModel extends SimpleModel {
     super(x, y);
     shape = new CircleShape();
     shape.setRadius(radius);
-    knockbackForce = 150f;
+    knockbackForce = 15f;
     setBodyType(BodyDef.BodyType.DynamicBody);
     setName("bullet");
   }
