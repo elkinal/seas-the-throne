@@ -989,6 +989,8 @@ public abstract class ComplexModel extends Model {
       for (Model obj : bodies) {
         obj.deactivatePhysics(world);
       }
+      world.destroyBody(body);
+      body = null;
       bodyinfo.active = false;
     }
   }
