@@ -8,7 +8,11 @@ playerspriterunfilmstrip_up.png
 libgdx.png
 spritebox_right.png
 playerspriterunfilmstrip_down_full.png
-spritebox_down.png
-EBGaramond.ttf
-spear_left_right.png
-spear_up_down.png
+hs_err_pid1612431.log
+hs_err_pid15932.log
+hs_err_pid16503.log
+hs_err_pid16646.log
+hs_err_pid25020.log
+hs_err_pid187982.log
+hs_err_pid188779.log
+hs_err_pid189247.log
