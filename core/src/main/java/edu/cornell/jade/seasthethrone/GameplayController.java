@@ -120,12 +120,15 @@ public class GameplayController implements Screen {
       gameState = GameState.OVER;
     }
 
-    draw(delta);
-    debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
     renderEngine.clear();
     for (Model obj : physicsEngine.getObjects()) {
+      assert(obj.isActive());
       if (obj instanceof Renderable r) renderEngine.addRenderable(r);
     }
+
+    draw(delta);
+    debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
+
     if (gameState == GameState.OVER) {
       if (inputController.didReset()) {
         setupGameplay();
