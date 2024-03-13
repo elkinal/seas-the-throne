@@ -20,6 +20,9 @@ public class BulletModel extends SimpleModel {
   /** Fixture to be attached to the body */
   private Fixture geometry;
 
+  /** Amount of knockback force applied to player on collision */
+  private float knockbackForce;
+
   /**
    * {@link BulletModel} constructor using an x and y coordinate & radius. NOTE: as of now, you must
    * call activatePhysics then createFixtures after constructing the BulletModel for it to be
@@ -33,8 +36,14 @@ public class BulletModel extends SimpleModel {
     super(x, y);
     shape = new CircleShape();
     shape.setRadius(radius);
+    knockbackForce = 150f;
     setBodyType(BodyDef.BodyType.DynamicBody);
     setName("bullet");
+  }
+
+  /** Returns knockback force to apply to player on collision */
+  public float getKnockbackForce() {
+    return knockbackForce;
   }
 
   /**

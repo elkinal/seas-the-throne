@@ -119,7 +119,7 @@ public class PlayerController implements Controllable {
   public void beginDashing() {
     // check if dash cooldown is at 0
     if(player.checkAndSetDashing()){
-      player.setDashCounter(player.getDashLength());
+      player.setDashCounter(player.getDashCooldownLimit());
       player.setDashDirection(dashDirection);
     }
   }

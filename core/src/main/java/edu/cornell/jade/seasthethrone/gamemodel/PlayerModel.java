@@ -137,6 +137,12 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     return isDashing;
   }
 
+
+  /** Returns the number of current health points of the player. */
+  public int getHealth(){
+    return getBodyModel().getHealth();
+  }
+
   /**
    * Sets the player to dashing, if possible
    * If not possible, will return false.
@@ -165,6 +171,12 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   public int getDashLength() {
     return dashLength;
   }
+
+  /** Returns the max cooldown time of dash */
+  public int getDashCooldownLimit(){
+    return dashCooldownLimit;
+  }
+
 
   /** Returns dash direction */
   public Vector2 getDashDirection() {
