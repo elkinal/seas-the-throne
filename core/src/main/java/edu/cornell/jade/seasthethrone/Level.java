@@ -9,13 +9,6 @@ import java.util.HashMap;
 
 
 public class Level {
-    /*
-    * Note on Tiled
-    *
-    * The position of tiles is from their bottom left corner.
-    *
-    * Origin of position coords is top-left corner, same as gameCanvas.
-    * */
 
     private PlayerModel player;
 
@@ -34,6 +27,10 @@ public class Level {
         HashMap<String, Object> levelMap = JsonHandler.jsonToMap(fileName);
         layers = (Array<HashMap<String, Object>>)levelMap.get("layers");
 
+        player = parsePlayerLayer(getLayer("player"));
+        bosses = parseBossLayer(getLayer("bosses"));
+        enemies = parseEnemyLayer(getLayer("enemies"));
+
     }
 
     /**
@@ -47,11 +44,31 @@ public class Level {
      * */
     private HashMap<String, Object> getLayer(String layerName) {
         for (HashMap<String, Object> layer : layers) {
-            if ((String) layer.get("name") == layerName) {
+            if (( (String)layer.get("name") ).equals(layerName)) {
                 return layer;
             }
         }
         throw new Error("No layer with name " + layerName);
     }
+
+    /**
+     * Extracts the position of the player from the player layer and creates a PlayerModel.
+     *
+     * @param playerLayer the JSON Tiled layer containing the player
+     *
+     * @return A PlayerModel initialized at the proper coordinates
+     * */
+    private PlayerModel parsePlayerLayer(HashMap<String, Object> playerLayer) {
+        return new PlayerModel((float)playerLayer.get("x"), (float)playerLayer.get("y"));
+    }
+    private Array<EnemyModel> parseEnemyLayer(HashMap<String, Object> objLayer) {
+        throw new UnsupportedOperationException("parseEnemyLayer not implemented");
+    }
+
+    private Array<BossModel> parseBossLayer(HashMap<String, Object> BossLayer) {
+        throw new UnsupportedOperationException("parseBossLayer not implemented");
+    }
+
+
 
 }
