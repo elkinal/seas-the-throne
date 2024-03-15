@@ -1,16 +1,6 @@
 background.jpeg
 bullet_test.png
 EBGaramond.ttf
-hs_err_pid11140.log
-hs_err_pid16124.log
-hs_err_pid16292.log
-hs_err_pid17180.log
-hs_err_pid1924.log
-hs_err_pid2252.log
-hs_err_pid4508.log
-hs_err_pid6932.log
-hs_err_pid7416.log
-hs_err_pid9152.log
 levels/test1.json
 libgdx.png
 playerspritedashfilmstrip_down.png
