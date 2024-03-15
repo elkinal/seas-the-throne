@@ -57,6 +57,9 @@ public class BulletPattern implements Iterator<BulletModel> {
 
     /**
      * Constructs a <code>Pair</code>
+     *
+     * @param base      the base bullet the family is constructed from
+     * @param timestamp the time at which the base bullet should fire
      */
     public BulletFamily(BulletModel base, int timestamp) {
       super(-timestamp);
