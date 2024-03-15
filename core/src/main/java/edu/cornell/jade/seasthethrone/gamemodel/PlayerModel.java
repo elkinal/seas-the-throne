@@ -48,6 +48,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   /** FilmStrip cache object for dash up and down */
   public FilmStrip filmStripDashUD;
   /** FilmStrip cache object for dash left and right */
+
   public FilmStrip filmStripDashLR;
   /** current animation frame */
   private int animationFrame;
@@ -135,7 +136,6 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
         setFrameNumber((getFrameNumber() + 1) % getFramesInAnimation());
       }
       dashFrameCounter += 1;
-      System.out.println(animationFrame);
     }
     else {
       if (frameCounter % frameDelay == 0) {
@@ -148,6 +148,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   public FilmStrip getFilmStrip() {
     if (isDashing) {
       if (faceDirection == Direction.DOWN || faceDirection == Direction.UP)
+
         return filmStripDashUD;
       else
         return filmStripDashLR;
