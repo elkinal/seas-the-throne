@@ -45,7 +45,11 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
 
   /** FilmStrip cache object */
   public FilmStrip filmStrip;
+  /** FilmStrip cache object for dash up and down */
+  public FilmStrip filmStripDashUD;
+  /** FilmStrip cache object for dash left and right */
 
+  public FilmStrip filmStripDashLR;
   /** current animation frame */
   private int animationFrame;
 
@@ -57,6 +61,11 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
    * This is separate from the position in the player filmstrip.
    *  */
   private int frameCounter;
+  /**
+   * Counter for the number of frames that have been drawn to the screen when dashing
+   * This is separate from the position in the player filmstrip.
+   *  */
+  private int dashFrameCounter;
 
   /** current direction the player is facing */
   private Direction faceDirection;
@@ -102,7 +111,8 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     dashCooldownLimit = 25;
     dashLength = 20;
     isDashing = false;
-    frameCounter = 0;
+    frameCounter = 1;
+    dashFrameCounter = 1;
     frameDelay = 3;
 
     PlayerBodyModel playerBody = new PlayerBodyModel(x, y);
@@ -112,6 +122,8 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     bodies.add(playerSpear);
 
     filmStrip = new FilmStrip(PLAYER_TEXTURE_DOWN, 1, FRAMES_IN_ANIMATION);
+    filmStripDashUD = new FilmStrip(PLAYER_TEXTURE_DOWN_DASH, 1, FRAMES_IN_ANIMATION_DASH);
+    filmStripDashLR = new FilmStrip(PLAYER_TEXTURE_LEFT_DASH, 1, FRAMES_IN_ANIMATION_DASH);
   }
 
   @Override
@@ -119,14 +131,30 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     PlayerRenderable.super.draw(renderer);
 
     // Only move to next frame of animation every frameDelay number of frames
-    if (frameCounter % frameDelay == 0) {
-      setFrameNumber((getFrameNumber() + 1) % getFramesInAnimation());
+    if (isDashing){
+      if (dashFrameCounter % frameDelay == 0) {
+        setFrameNumber((getFrameNumber() + 1) % getFramesInAnimation());
+      }
+      dashFrameCounter += 1;
     }
-    frameCounter += 1;
+    else {
+      if (frameCounter % frameDelay == 0) {
+        setFrameNumber((getFrameNumber() + 1) % getFramesInAnimation());
+      }
+      frameCounter += 1;
+    }
   }
 
   public FilmStrip getFilmStrip() {
-    return filmStrip;
+    if (isDashing) {
+      if (faceDirection == Direction.DOWN || faceDirection == Direction.UP)
+
+        return filmStripDashUD;
+      else
+        return filmStripDashLR;
+    }
+    else
+      return filmStrip;
   }
 
   public int getFrameNumber() {
@@ -203,11 +231,13 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
    * Sets the player to dashing, if possible
    * If not possible, will return false.
    */
-
   public boolean checkAndSetDashing() {
     if(dashCounter == 0){
       isDashing = true;
+      frameDelay = dashLength/FRAMES_IN_ANIMATION_DASH;
+      frameCounter = 1;
       getSpearModel().setSpear(true);
+      animationFrame = 0;
       return true;
     } return false;
   }
@@ -215,6 +245,9 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   /** Set dashing to false */
   public void stopDashing(){
     isDashing = false;
+    frameDelay = 3;
+    dashFrameCounter = 1;
+    animationFrame = 0;
     getSpearModel().setSpear(false);
   }
 
