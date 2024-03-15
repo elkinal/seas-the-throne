@@ -37,7 +37,7 @@
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":20,
          "id":1,
-         "name":"Tile Layer 1",
+         "name":"tiles",
          "opacity":1,
          "properties":[
                 {
@@ -93,7 +93,7 @@
  "tilesets":[
         {
          "firstgid":1,
-         "source":"..\/..\/..\/..\/Documents\/Tiled Projects\/boss-room-tileset.tsx"
+         "source":"boss-room-tileset.png"
         }],
  "tilewidth":20,
  "type":"map",

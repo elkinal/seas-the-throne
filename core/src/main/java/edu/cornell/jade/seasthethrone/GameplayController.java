@@ -11,6 +11,7 @@ import edu.cornell.jade.seasthethrone.gamemodel.PlayerModel;
 import edu.cornell.jade.seasthethrone.input.InputController;
 import edu.cornell.jade.seasthethrone.input.PlayerController;
 import edu.cornell.jade.seasthethrone.level.Level;
+import edu.cornell.jade.seasthethrone.level.Tile;
 import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
@@ -98,7 +99,14 @@ public class GameplayController implements Screen {
 
     World world = new World(new Vector2(0, 0), false);
 
+    // Load background
     renderEngine.setBackground(level.getBackground().getTexture());
+
+    // Load tiles
+    for (Tile tile : level.getTiles()) {
+      System.out.println(tile.getPosition());
+      renderEngine.addRenderable(tile);
+    }
 
     // Load player
     Vector2 playerLoc = level.getPlayerLoc();
@@ -107,7 +115,7 @@ public class GameplayController implements Screen {
     // Load bosses
 
 
-    // Load
+    // Load enemies
 
     physicsEngine = new PhysicsEngine(bounds, world, player);
     playerController = new PlayerController(bounds, player);

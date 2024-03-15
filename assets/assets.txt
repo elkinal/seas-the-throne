@@ -1,5 +1,6 @@
 arenamaprough.png
 background.jpeg
+boss-room-tileset.png
 bullet_test.png
 EBGaramond.ttf
 levels/test1.json
