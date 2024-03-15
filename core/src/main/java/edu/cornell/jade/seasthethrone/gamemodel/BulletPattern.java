@@ -34,7 +34,7 @@ public class BulletPattern implements Iterator<BulletModel> {
      * bullets array.
      *
      * @param bullets the set of bullets to be effected by the effect
-     * @param pool    an object pool to create new pairs
+     * @param pool    an object pool to create new bullet families
      */
     public void apply(Array<BulletFamily> bullets, Pool<BulletFamily> pool);
   }
@@ -44,8 +44,8 @@ public class BulletPattern implements Iterator<BulletModel> {
    */
   public static class BulletFamily extends BinaryHeap.Node {
     /**
-     * The <code>Pair</code>'s timestamp. If the bullet pattern's timer is after
-     * this timestamp, then this bullet should be spawned.
+     * The <code>BulletFamily</code>'s timestamp. If the bullet pattern's timer is
+     * after this timestamp, then this bullet should be spawned.
      */
     int timestamp;
 
@@ -56,7 +56,7 @@ public class BulletPattern implements Iterator<BulletModel> {
     Queue<Effect> effect;
 
     /**
-     * Constructs a <code>Pair</code>
+     * Constructs a <code>BulletFamily</code>
      *
      * @param base      the base bullet the family is constructed from
      * @param timestamp the time at which the base bullet should fire
@@ -79,26 +79,26 @@ public class BulletPattern implements Iterator<BulletModel> {
     }
   }
 
-  /** Object pool for allocating new pairs */
-  private Pool<BulletFamily> pairPool;
+  /** Object pool for allocating new bullet families */
+  private Pool<BulletFamily> bulletFamilyPool;
 
   /** The current time to create bullets. */
-  private int curTimer;
+  private int timer;
 
   /** The list of bullets in the pattern currently not created. */
   private BinaryHeap<BulletFamily> curBullets;
 
   /** Cache array to apply effects */
-  private Array<BulletFamily> pairCache;
+  private Array<BulletFamily> bulletFamilyCache;
 
   /**
    * Constructs a <code>BulletPattern<code>.
    */
   public BulletPattern() {
-    curTimer = 0;
+    timer = 0;
     curBullets = new BinaryHeap<>();
-    pairCache = new Array<>();
-    pairPool = new ReflectionPool<>(BulletFamily.class);
+    bulletFamilyCache = new Array<>();
+    bulletFamilyPool = new ReflectionPool<>(BulletFamily.class);
   }
 
   /**
@@ -109,7 +109,7 @@ public class BulletPattern implements Iterator<BulletModel> {
    */
   public void updateTime(int delta) {
     assert (delta > 0);
-    curTimer += delta;
+    timer += delta;
   }
 
   public BulletModel next() {
@@ -117,19 +117,19 @@ public class BulletPattern implements Iterator<BulletModel> {
   }
 
   public boolean hasNext() {
-    if (curBullets.isEmpty() || curBullets.peek().timestamp > curTimer)
+    if (curBullets.isEmpty() || curBullets.peek().timestamp > timer)
       return false;
     BulletFamily p = curBullets.peek();
     while (!p.effect.isEmpty()) {
       curBullets.pop();
 
-      pairCache.add(p);
+      bulletFamilyCache.add(p);
       Effect e = p.effect.removeFirst();
-      e.apply(pairCache, pairPool);
-      for (BulletFamily np : pairCache)
+      e.apply(bulletFamilyCache, bulletFamilyPool);
+      for (BulletFamily np : bulletFamilyCache)
         curBullets.add(np);
 
-      if (curBullets.isEmpty() || curBullets.peek().timestamp > curTimer)
+      if (curBullets.isEmpty() || curBullets.peek().timestamp > timer)
         return false;
       p = curBullets.peek();
     }
