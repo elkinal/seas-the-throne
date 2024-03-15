@@ -76,10 +76,9 @@ public class GameplayController implements Screen {
     this.level = new Level("levels/test1.json");
     DEFAULT_HEIGHT = level.DEFAULT_HEIGHT;
     DEFAULT_WIDTH = level.DEFAULT_WIDTH;
+    this.viewport = level.getViewport();
 
     bounds = new Rectangle(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-
-    this.viewport = level.getViewport();
 
     active = false;
 
@@ -100,15 +99,21 @@ public class GameplayController implements Screen {
     World world = new World(new Vector2(0, 0), false);
 
     renderEngine.setBackground(level.getBackground().getTexture());
+
+    // Load player
     Vector2 playerLoc = level.getPlayerLoc();
     PlayerModel player = new PlayerModel(playerLoc.x, playerLoc.y);
+
+    // Load bosses
+
+
+    // Load
 
     physicsEngine = new PhysicsEngine(bounds, world, player);
     playerController = new PlayerController(bounds, player);
 
     renderEngine.addRenderable(player);
     inputController.add(playerController);
-
 
   }
 
