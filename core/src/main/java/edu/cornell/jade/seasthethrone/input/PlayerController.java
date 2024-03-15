@@ -18,6 +18,9 @@ import com.badlogic.gdx.math.MathUtils;
 
 public class PlayerController implements Controllable {
 
+  /** Error value for how close the mouse is to the player for dash to not count */
+  private static final float NO_DASH_ERROR = 0.5f;
+
   /** The player */
   private PlayerModel player;
 
@@ -114,10 +117,16 @@ public class PlayerController implements Controllable {
 
   /** Begin dashing if possible */
   public void beginDashing() {
-    if (player.canDash()) {
-      player.setDashing(true);
+    // check if dash cooldown is at 0
+    if(player.checkAndSetDashing()){
       player.setDashCounter(player.getDashLength());
+      player.setDashDirection(dashDirection);
     }
+  }
+
+  /** Check if the player is allowed to dash */
+  public boolean checkCanDash(){
+    return dashingPressed && !player.isDashing() && (dashDirection.len() > NO_DASH_ERROR);
   }
 
   /**
@@ -146,19 +155,19 @@ public class PlayerController implements Controllable {
   }
 
   public void update() {
-    if (dashingPressed) {
+    if (checkCanDash()) {
       beginDashing();
-      player.setDashDirection(dashDirection);
     }
     setVelPercentages(hoff, voff);
     orientPlayer();
 
     // Handle dashing
     if (player.isDashing()) {
+      player.updateSpear(dashDirection);
       player.decrementDashCounter();
       if (player.getDashCounter() <= 0) {
         // exit dash
-        player.setDashing(false);
+        player.stopDashing();
         player.setDashCounter(player.getDashCooldownLimit());
       }
     } else {

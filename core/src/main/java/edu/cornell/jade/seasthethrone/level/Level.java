@@ -1,6 +1,8 @@
 package edu.cornell.jade.seasthethrone.level;
 
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -15,7 +17,6 @@ import java.util.Vector;
 
 
 public class Level {
-
     private final Array<HashMap<String, Object>> layers;
 
     private final Vector2 playerLoc;
@@ -28,7 +29,7 @@ public class Level {
 
     private final BackgroundImage background;
 
-    private HashMap<String, Object> tiles;
+    private Array<Tile> tiles;
 
     /** Width of the game world in Box2d units */
     public float DEFAULT_WIDTH = 64.0f;
@@ -39,16 +40,51 @@ public class Level {
     /** Ratio between the pixel in a texture and the meter in the world */
     private static final float WORLD_SCALE = 0.1f;
 
+    private final int TILE_SIZE;
+
+    /** Width of the Tiled map in tiles*/
+    private int TILED_WORLD_WIDTH;
+
+    /** Height of the Tiled map in tiles*/
+    private int TILED_WORLD_HEIGHT;
+
+    /** The array of tileSets, each tileSet being a nested list of textures representing tiles */
+    private Array<TextureRegion[][]> tileSets = new Array<>();
+
+    private Array<Integer> firstGids = new Array<>();
+
     private FitViewport viewport;
+
+    private Vector2 tempPos;
 
     public Level(String fileName) {
         this.viewport = new FitViewport(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        tempPos = new Vector2();
 
+        // Load JSON to map
         HashMap<String, Object> levelMap = JsonHandler.jsonToMap(fileName);
+        // Load in level constants
+        TILE_SIZE = Integer.parseInt((String) levelMap.get("tilewidth"));
+        TILED_WORLD_HEIGHT = Integer.parseInt((String) levelMap.get("height"));
+        TILED_WORLD_WIDTH = Integer.parseInt((String) levelMap.get("width"));
+
+        // Create tileSets
+        Array<HashMap<String, Object>> tileSetsList = (Array<HashMap<String, Object>>) levelMap.get("tilesets");
+        for (HashMap<String, Object> tileSet : tileSetsList) {
+            // For each tileSet
+            Texture thisTexture = new Texture((String) tileSet.get("source"));
+            int thisGid = Integer.parseInt((String) tileSet.get("firstgid"));
+            firstGids.add(thisGid);
+            // Split this tileSet up into textures
+             tileSets.add(new TextureRegion(thisTexture).split(TILE_SIZE, TILE_SIZE));
+        }
+
+        // Load in layers
         layers = (Array<HashMap<String, Object>>)levelMap.get("layers");
 
         background = new BackgroundImage(getLayer("background"));
         playerLoc = parsePlayerLayer(getLayer("player"));
+        tiles = parseTileLayer(getLayer("tiles"));
 //        bosses = parseBossLayer(getLayer("bosses"));
 //        enemies = parseEnemyLayer(getLayer("enemies"));
 
@@ -78,18 +114,49 @@ public class Level {
 
     public FitViewport getViewport() { return viewport; }
 
+    public Array<Tile> getTiles() { return tiles; }
+
 
     /**
      * Extracts the position of the player from the player layer and creates a PlayerModel.
      *
-     * @param playerLayer the JSON Tiled layer containing the player
+     * @param playerLayer the JSON Tiled player layer
      *
      * @return A PlayerModel initialized at the proper coordinates
      * */
     private Vector2 parsePlayerLayer(HashMap<String, Object> playerLayer) {
         float x = Float.parseFloat((String)playerLayer.get("x"));
         float y = Float.parseFloat((String)playerLayer.get("y"));
-        return new Vector2(x,y);
+        Vector2 playerPos = new Vector2(x,y);
+
+        System.out.println("player pos: " + tiledToWorldCoords(playerPos));
+        return tiledToWorldCoords(playerPos);
+    }
+
+    /**
+     * Reads a JSON Tiled tile layer into an array of Tile objects
+     *
+     * @param tileLayer the JSON Tiled tile layer
+     *
+     * @return an array of Tile objects
+     * */
+    private Array<Tile> parseTileLayer(HashMap<String, Object> tileLayer) {
+        Array<Tile> tiles = new Array<>();
+        Array<String> tileList = (Array<String>) tileLayer.get("data");
+
+        for (String s : tileList) {
+            int index = Integer.parseInt(s);
+            if (index > 0) {
+                Texture tileTexture = indexToTexture(index);
+                Vector2 pos = tiledCoordsFromIndex(index);
+                System.out.println("tiled coords: " + pos);
+                pos = tiledToWorldCoords(pos);
+                System.out.println("world coords: " + pos);
+                tiles.add(new Tile(tileTexture, pos.x, pos.y));
+            }
+
+        }
+        return tiles;
     }
 
     private Array<EnemyModel> parseEnemyLayer(HashMap<String, Object> enemyLayer) {
@@ -104,7 +171,49 @@ public class Level {
      * 20 px in Tiled is 1 meter in Box2d
      * */
     private Vector2 tiledToWorldCoords(Vector2 tiledCoords) {
-        return null;
+        float vScale = DEFAULT_HEIGHT / (TILED_WORLD_HEIGHT * TILE_SIZE);
+        float hScale = DEFAULT_WIDTH / (TILED_WORLD_WIDTH * TILE_SIZE);
+        float x = tiledCoords.x - (TILED_WORLD_WIDTH * TILE_SIZE) / 2f;
+        float y  = - (tiledCoords.y - (TILED_WORLD_HEIGHT * TILE_SIZE) / 2f);
+
+        return new Vector2(hScale * x, vScale * y);
     }
 
+    /**
+     * Takes an index from a tile in the JSON 'data' array and converts it into a TextureRegion
+     * of the corresponding tile in the tile set.
+     *
+     * @param index the index from the array
+     * @return
+     */
+    public Texture indexToTexture(int index){
+        //the tileset that the inputed texture is in
+        int tileSetIndex = tileSets.size - 1;
+        TextureRegion[][] thisTileSet = tileSets.get(tileSetIndex);
+
+        //find which tile set the tile is in
+        //index should never be > firstGids[last index]
+        while(tileSetIndex >= 0){
+            if (index > firstGids.get(tileSetIndex)) {
+                thisTileSet = tileSets.get(tileSetIndex);
+            }
+            tileSetIndex--;
+        }
+
+        //split the texture that the tile belongs to into tiles
+        int numCols = thisTileSet.length;
+
+        //return the specific tile
+        return thisTileSet[index/numCols][index%numCols].getTexture();
+    }
+
+    /**
+     * Finds the position of a tile in the world from its index in the tile layer array.
+     * */
+    public Vector2 tiledCoordsFromIndex(int index) {
+        int x = TILE_SIZE * (index % TILED_WORLD_WIDTH);
+        int y = TILE_SIZE * (index / TILED_WORLD_WIDTH);
+        tempPos.set(x,y);
+        return tempPos;
+    }
 }

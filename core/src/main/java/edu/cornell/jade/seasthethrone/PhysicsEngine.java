@@ -144,21 +144,15 @@ public class PhysicsEngine implements ContactListener {
       Model bd2 = (Model) body2.getUserData();
 
       if (bd1 instanceof PlayerBodyModel && bd2 instanceof BulletModel) {
-        PlayerBodyModel pm1 = (PlayerBodyModel) bd1;
-        if (pm1.isDashing() && pm1.getPointSensorName().equals(fd1)) {
-          bd2.markRemoved(true);
-        } else {
-          bd1.markRemoved(true);
-          contact.setEnabled(false); // Disable the collision response
-        }
+        bd1.markRemoved(true);
+        contact.setEnabled(false); // Disable the collision response
       } else if (bd2 instanceof PlayerBodyModel && bd1 instanceof BulletModel) {
-        PlayerBodyModel pm2 = (PlayerBodyModel) bd2;
-        if (pm2.isDashing() && pm2.getPointSensorName().equals(fd2)) {
-          bd1.markRemoved(true);
-        } else {
-          bd2.markRemoved(true);
-          contact.setEnabled(false); // Disable the collision response
-        }
+        bd2.markRemoved(true);
+        contact.setEnabled(false); // Disable the collision response
+      } else if (bd1 instanceof PlayerSpearModel && bd2 instanceof BulletModel){
+        bd2.markRemoved(true);
+      } else if (bd2 instanceof PlayerSpearModel && bd1 instanceof BulletModel){
+        bd1.markRemoved(true);
       }
 
     } catch (Exception e) {

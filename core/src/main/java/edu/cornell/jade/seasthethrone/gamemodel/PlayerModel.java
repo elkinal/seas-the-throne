@@ -45,8 +45,10 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
 
   /** FilmStrip cache object */
   public FilmStrip filmStrip;
-  /** FilmStrip cache object for dash */
-  public FilmStrip filmStripDash;
+  /** FilmStrip cache object for dash up and down */
+  public FilmStrip filmStripDashUD;
+  /** FilmStrip cache object for dash left and right */
+  public FilmStrip filmStripDashLR;
   /** current animation frame */
   private int animationFrame;
 
@@ -63,6 +65,10 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
    * This is separate from the position in the player filmstrip.
    *  */
   private int dashFrameCounter;
+
+  /** current direction the player is facing */
+  private Direction faceDirection;
+
 
   /** Whether the player is dashing */
   private boolean isDashing;
@@ -88,8 +94,6 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   /** Scaling factor for player movement */
   private float moveSpeed;
 
-  /** The direction the player is facing */
-  private Direction direction;
 
   /**
    * {@link PlayerModel} constructor using an x and y coordinate.
@@ -100,8 +104,8 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   public PlayerModel(float x, float y) {
     super(x, y);
 
-    // Set constants
     moveSpeed = 8f;
+    faceDirection = Direction.DOWN;
     dashCounter = 0;
     dashCooldownLimit = 25;
     dashLength = 20;
@@ -109,22 +113,16 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     frameCounter = 1;
     dashFrameCounter = 1;
     frameDelay = 3;
-    direction = Direction.DOWN;
 
-    // make a triangle for now
-    float vertices[] = new float[6];
-    vertices[0] = -0.5f;
-    vertices[1] = -1;
-    vertices[2] = 0.5f;
-    vertices[3] = -1;
-    vertices[4] = 0;
-    vertices[5] = 1;
-
-    PlayerBodyModel playerBody = new PlayerBodyModel(vertices);
+    PlayerBodyModel playerBody = new PlayerBodyModel(x, y);
     bodies.add(playerBody);
 
+    PlayerSpearModel playerSpear = new PlayerSpearModel(x, y);
+    bodies.add(playerSpear);
+
     filmStrip = new FilmStrip(PLAYER_TEXTURE_DOWN, 1, FRAMES_IN_ANIMATION);
-    filmStripDash = new FilmStrip(PLAYER_TEXTURE_DOWN_DASH, 1, FRAMES_IN_ANIMATION_DASH);
+    filmStripDashUD = new FilmStrip(PLAYER_TEXTURE_DOWN_DASH, 1, FRAMES_IN_ANIMATION_DASH);
+    filmStripDashLR = new FilmStrip(PLAYER_TEXTURE_LEFT_DASH, 1, FRAMES_IN_ANIMATION_DASH);
   }
 
   @Override
@@ -148,8 +146,12 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   }
 
   public FilmStrip getFilmStrip() {
-    if (isDashing)
-      return filmStripDash;
+    if (isDashing) {
+      if (faceDirection == Direction.DOWN || faceDirection == Direction.UP)
+        return filmStripDashUD;
+      else
+        return filmStripDashLR;
+    }
     else
       return filmStrip;
   }
@@ -225,29 +227,29 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   }
 
   /**
-   * Sets if the player is dashing
-   *
-   * @param value is the player dashing
+   * Sets the player to dashing, if possible
+   * If not possible, will return false.
    */
-  public void setDashing(boolean value) {
-    isDashing = value;
-    getBodyModel().setDashing(value);
-    if (value){
-      frameDelay = 4;
+  public boolean checkAndSetDashing() {
+    if(dashCounter == 0){
+      isDashing = true;
+      frameDelay = dashLength/FRAMES_IN_ANIMATION_DASH;
       frameCounter = 1;
-      System.out.println("dash");
-    }
-    else{
-      frameDelay = 3;
-      dashFrameCounter = 1;
-    }
-    animationFrame = 0;
+      getSpearModel().setSpear(true);
+      animationFrame = 0;
+      return true;
+    } return false;
   }
 
-  /** Returns if the player can dash */
-  public boolean canDash() {
-    return !isDashing && dashCounter == 0;
+  /** Set dashing to false */
+  public void stopDashing(){
+    isDashing = false;
+    frameDelay = 3;
+    dashFrameCounter = 1;
+    animationFrame = 0;
+    getSpearModel().setSpear(false);
   }
+
 
   /** Sets value for dash cooldown */
   public void setDashCounter(int value) {
@@ -300,24 +302,18 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     return (PlayerBodyModel) bodies.get(0);
   }
 
-  // built from multiple polygonmodels?
+  /** Returns the player spear model */
+  public PlayerSpearModel getSpearModel(){
+    return (PlayerSpearModel) bodies.get(1);
+  }
+
+  /** Update the player's spear model when dashing */
+  public void updateSpear(Vector2 dashDirection){
+    getSpearModel().updateSpear(getPosition(), dashDirection);
+  }
+
   @Override
   protected boolean createJoints(World world) {
-
-    pointSensorName = "NosePointSensor";
-
-    // Create sensor on the points of the "nose," this should be factored to a diff
-    // function later
-    Vector2 sensorCenter = new Vector2(0, 1.6f);
-    FixtureDef sensorDef = new FixtureDef();
-    sensorDef.isSensor = true;
-    PolygonShape sensorShape = new PolygonShape();
-    sensorShape.setAsBox(0.3f, 1.6f, sensorCenter, 0f);
-    sensorDef.shape = sensorShape;
-
-    Fixture sensorFixture = getBodyModel().getBody().createFixture(sensorDef);
-    sensorFixture.setUserData(getPointSensorName());
-
     return true;
   }
 
@@ -333,14 +329,13 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     float vx = getVX();
     float vy = getVY();
 
-    // Only change direction if we're moving
     if (Math.abs(vx) > Math.abs(vy)) {
-      if (vx > 0) direction = Direction.RIGHT;
-      else direction = Direction.LEFT;
-    } else if (Math.abs(vx) < Math.abs(vy)) {
-      if (vy > 0) direction = Direction.UP;
-      else direction = Direction.DOWN;
+      if (vx > 0) faceDirection = Direction.RIGHT;
+      else faceDirection = Direction.LEFT;
+    } else if (Math.abs(vx) < Math.abs(vy)){
+      if (vy > 0) faceDirection = Direction.UP;
+      else faceDirection = Direction.DOWN;
     }
-    return direction;
+    return faceDirection;
   }
 }

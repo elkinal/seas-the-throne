@@ -11,6 +11,7 @@ import edu.cornell.jade.seasthethrone.gamemodel.PlayerModel;
 import edu.cornell.jade.seasthethrone.input.InputController;
 import edu.cornell.jade.seasthethrone.input.PlayerController;
 import edu.cornell.jade.seasthethrone.level.Level;
+import edu.cornell.jade.seasthethrone.level.Tile;
 import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
@@ -20,7 +21,9 @@ import java.util.Vector;
 /**
  * The primary controller class for the game.
  *
- * <p>Delegates all of the work to other subcontrollers including input control, physics engine, and
+ * <p>
+ * Delegates all of the work to other subcontrollers including input control,
+ * physics engine, and
  * rendering engine. Contains the central update method.
  */
 public class GameplayController implements Screen {
@@ -74,10 +77,9 @@ public class GameplayController implements Screen {
     this.level = new Level("levels/test1.json");
     DEFAULT_HEIGHT = level.DEFAULT_HEIGHT;
     DEFAULT_WIDTH = level.DEFAULT_WIDTH;
+    this.viewport = level.getViewport();
 
     bounds = new Rectangle(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-
-    this.viewport = level.getViewport();
 
     active = false;
 
@@ -97,16 +99,29 @@ public class GameplayController implements Screen {
 
     World world = new World(new Vector2(0, 0), false);
 
+    // Load background
     renderEngine.setBackground(level.getBackground().getTexture());
+
+    // Load tiles
+    for (Tile tile : level.getTiles()) {
+      System.out.println(tile.getPosition());
+      renderEngine.addRenderable(tile);
+    }
+
+    // Load player
     Vector2 playerLoc = level.getPlayerLoc();
     PlayerModel player = new PlayerModel(playerLoc.x, playerLoc.y);
+
+    // Load bosses
+
+
+    // Load enemies
 
     physicsEngine = new PhysicsEngine(bounds, world, player);
     playerController = new PlayerController(bounds, player);
 
     renderEngine.addRenderable(player);
     inputController.add(playerController);
-
 
   }
 
@@ -137,12 +152,16 @@ public class GameplayController implements Screen {
       gameState = GameState.OVER;
     }
 
-    draw(delta);
-    debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
     renderEngine.clear();
     for (Model obj : physicsEngine.getObjects()) {
-      if (obj instanceof Renderable r) renderEngine.addRenderable(r);
+      assert (obj.isActive());
+      if (obj instanceof Renderable r)
+        renderEngine.addRenderable(r);
     }
+
+    draw(delta);
+    debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
+
     if (gameState == GameState.OVER) {
       if (inputController.didReset()) {
         setupGameplay();
@@ -156,15 +175,18 @@ public class GameplayController implements Screen {
     viewport.update(width, height);
   }
 
-  public void pause() {}
+  public void pause() {
+  }
 
-  public void resume() {}
+  public void resume() {
+  }
 
   public void hide() {
     active = false;
   }
 
   public void dispose() {
-    if (physicsEngine != null) physicsEngine.dispose();
+    if (physicsEngine != null)
+      physicsEngine.dispose();
   }
 }
