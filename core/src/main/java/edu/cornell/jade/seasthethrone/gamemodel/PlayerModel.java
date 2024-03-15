@@ -238,7 +238,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     isDashing = value;
     getBodyModel().setDashing(value);
     if (value){
-      frameDelay = 4;
+      frameDelay = dashLength/5;
       frameCounter = 1;
     }
     else{
