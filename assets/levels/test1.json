@@ -70,8 +70,8 @@
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
-         "x":0,
-         "y":0
+         "x":140,
+         "y":340
         }, 
         {
          "draworder":"topdown",

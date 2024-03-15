@@ -127,7 +127,10 @@ public class Level {
     private Vector2 parsePlayerLayer(HashMap<String, Object> playerLayer) {
         float x = Float.parseFloat((String)playerLayer.get("x"));
         float y = Float.parseFloat((String)playerLayer.get("y"));
-        return new Vector2(x,y);
+        Vector2 playerPos = new Vector2(x,y);
+
+        System.out.println("player pos: " + tiledToWorldCoords(playerPos));
+        return tiledToWorldCoords(playerPos);
     }
 
     /**
@@ -145,8 +148,10 @@ public class Level {
             int index = Integer.parseInt(s);
             if (index > 0) {
                 Texture tileTexture = indexToTexture(index);
-                Vector2 pos = posFromIndex(index);
-                // TODO: transform to correct coords
+                Vector2 pos = tiledCoordsFromIndex(index);
+                System.out.println("tiled coords: " + pos);
+                pos = tiledToWorldCoords(pos);
+                System.out.println("world coords: " + pos);
                 tiles.add(new Tile(tileTexture, pos.x, pos.y));
             }
 
@@ -166,7 +171,12 @@ public class Level {
      * 20 px in Tiled is 1 meter in Box2d
      * */
     private Vector2 tiledToWorldCoords(Vector2 tiledCoords) {
-        return null;
+        float vScale = DEFAULT_HEIGHT / (TILED_WORLD_HEIGHT * TILE_SIZE);
+        float hScale = DEFAULT_WIDTH / (TILED_WORLD_WIDTH * TILE_SIZE);
+        float x = tiledCoords.x - (TILED_WORLD_WIDTH * TILE_SIZE) / 2f;
+        float y  = - (tiledCoords.y - (TILED_WORLD_HEIGHT * TILE_SIZE) / 2f);
+
+        return new Vector2(hScale * x, vScale * y);
     }
 
     /**
@@ -200,7 +210,7 @@ public class Level {
     /**
      * Finds the position of a tile in the world from its index in the tile layer array.
      * */
-    public Vector2 posFromIndex(int index) {
+    public Vector2 tiledCoordsFromIndex(int index) {
         int x = TILE_SIZE * (index % TILED_WORLD_WIDTH);
         int y = TILE_SIZE * (index / TILED_WORLD_WIDTH);
         tempPos.set(x,y);
