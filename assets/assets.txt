@@ -19,3 +19,11 @@ spritebox_down.png
 spritebox_left.png
 spritebox_right.png
 spritebox_up.png
+yellowfish_east.png
+yellowfish_NE.png
+yellowfish_north.png
+yellowfish_NW.png
+yellowfish_SE.png
+yellowfish_south.png
+yellowfish_SW.png
+yellowfish_west.png
