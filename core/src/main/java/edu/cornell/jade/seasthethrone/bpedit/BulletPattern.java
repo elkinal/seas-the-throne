@@ -1,4 +1,4 @@
-package edu.cornell.jade.seasthethrone.gamemodel;
+package edu.cornell.jade.seasthethrone.bpedit;
 
 import java.util.Iterator;
 import com.badlogic.gdx.utils.BinaryHeap;
@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Queue;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.ReflectionPool;
+import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 
 /**
  * Stores a bullet pattern. This is sourse of bullets which, at a given an
@@ -33,10 +34,11 @@ public class BulletPattern implements Iterator<BulletModel> {
      * effect adds more bullets, for example, it will add more bullets to this
      * bullets array.
      *
-     * @param bullets the set of bullets to be effected by the effect
-     * @param pool    an object pool to create new bullet families
+     * @param bullets    the set of bullets to be effected by the effect
+     * @param familyPool an object pool to create new bullet families
+     * @param basePool   an object pool to create new base bullets
      */
-    public void apply(Array<BulletFamily> bullets, Pool<BulletFamily> pool);
+    public void apply(Array<BulletFamily> bullets, Pool<BulletFamily> familyPool, Pool<BulletModel> basePool);
   }
 
   /**
@@ -69,6 +71,42 @@ public class BulletPattern implements Iterator<BulletModel> {
     }
 
     /**
+     * Sets the timestamp
+     *
+     * @param timestamp the time to set
+     */
+    public void setTimestamp(int timestamp) {
+      this.timestamp = timestamp;
+    }
+
+    /**
+     * Gets the timestamp
+     *
+     * @return the family's timestamp
+     */
+    public int getTimestamp() {
+      return timestamp;
+    }
+
+    /**
+     * Sets the base
+     *
+     * @param base the base to set
+     */
+    public void setBase(BulletModel base) {
+      this.base = base;
+    }
+
+    /**
+     * Gets the base
+     *
+     * @return the base's timestamp
+     */
+    public BulletModel getBase() {
+      return base;
+    }
+
+    /**
      * Adds an effect to be applied to the <code>base</code> at after previously
      * added effects have been applied.
      *
@@ -77,10 +115,39 @@ public class BulletPattern implements Iterator<BulletModel> {
     public void addEffect(Effect e) {
       effect.addLast(e);
     }
+
+    /**
+     * Clones the bullet family, with the base also a clone with some subset of its
+     * properties the same as its parent
+     *
+     * @param familyPool the pool to obtain new bullet families from
+     * @param basePool   the pool to obtain new bullet models from
+     *
+     * @return the new bullet family
+     */
+
+    public BulletFamily mostlyClone(Pool<BulletFamily> familyPool, Pool<BulletModel> basePool) {
+      BulletFamily newFamily = familyPool.obtain();
+      for (Effect e : effect)
+        newFamily.addEffect(e);
+      newFamily.setTimestamp(timestamp);
+
+      BulletModel newBase = basePool.obtain();
+      newBase.setX(base.getX());
+      newBase.setY(base.getY());
+      newBase.setVX(base.getVX());
+      newBase.setVY(base.getVY());
+      newFamily.setBase(newBase);
+
+      return newFamily;
+    }
   }
 
   /** Object pool for allocating new bullet families */
   private Pool<BulletFamily> bulletFamilyPool;
+
+  /** Object pool for allocating new bullet families */
+  private Pool<BulletModel> bulletBasePool;
 
   /** The current time to create bullets. */
   private int timer;
@@ -99,6 +166,16 @@ public class BulletPattern implements Iterator<BulletModel> {
     curBullets = new BinaryHeap<>();
     bulletFamilyCache = new Array<>();
     bulletFamilyPool = new ReflectionPool<>(BulletFamily.class);
+    bulletBasePool = new ReflectionPool<>(BulletModel.class);
+  }
+
+  /**
+   * Adds a {@link BulletFamily} to list of uncreated bullets
+   *
+   * @param family bullet family to add
+   */
+  public void addFamily(BulletFamily family) {
+    curBullets.add(family);
   }
 
   /**
@@ -125,7 +202,7 @@ public class BulletPattern implements Iterator<BulletModel> {
 
       bulletFamilyCache.add(p);
       Effect e = p.effect.removeFirst();
-      e.apply(bulletFamilyCache, bulletFamilyPool);
+      e.apply(bulletFamilyCache, bulletFamilyPool, bulletBasePool);
       for (BulletFamily np : bulletFamilyCache)
         curBullets.add(np);
 
