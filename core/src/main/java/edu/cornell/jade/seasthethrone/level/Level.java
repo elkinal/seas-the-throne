@@ -11,9 +11,11 @@ import edu.cornell.jade.seasthethrone.model.*;
 import edu.cornell.jade.seasthethrone.util.JsonHandler;
 import com.badlogic.gdx.math.Vector2;
 
+import javax.annotation.processing.SupportedSourceVersion;
 import javax.swing.text.View;
 import java.util.HashMap;
 import java.util.Vector;
+import java.util.stream.StreamSupport;
 
 
 public class Level {
@@ -72,10 +74,12 @@ public class Level {
         Array<HashMap<String, Object>> tileSetsList = (Array<HashMap<String, Object>>) levelMap.get("tilesets");
         for (HashMap<String, Object> tileSet : tileSetsList) {
             // For each tileSet
-            Texture thisTexture = new Texture((String) tileSet.get("source"));
+            Texture thisTexture = new Texture((String) tileSet.get("image"));
             int thisGid = Integer.parseInt((String) tileSet.get("firstgid"));
             firstGids.add(thisGid);
             // Split this tileSet up into textures
+//            TextureRegion[][] a = new TextureRegion(thisTexture).split(TILE_SIZE, TILE_SIZE);
+//            System.out.println("tile height: "+a[0][0].getRegionHeight());
              tileSets.add(new TextureRegion(thisTexture).split(TILE_SIZE, TILE_SIZE));
         }
 
@@ -83,6 +87,7 @@ public class Level {
         layers = (Array<HashMap<String, Object>>)levelMap.get("layers");
 
         background = new BackgroundImage(getLayer("background"));
+
         playerLoc = parsePlayerLayer(getLayer("player"));
         tiles = parseTileLayer(getLayer("tiles"));
 //        bosses = parseBossLayer(getLayer("bosses"));
@@ -125,8 +130,10 @@ public class Level {
      * @return A PlayerModel initialized at the proper coordinates
      * */
     private Vector2 parsePlayerLayer(HashMap<String, Object> playerLayer) {
-        float x = Float.parseFloat((String)playerLayer.get("x"));
-        float y = Float.parseFloat((String)playerLayer.get("y"));
+        HashMap<Object, String> playerWrapper = ((Array<HashMap<Object, String>>) playerLayer.get("objects")).get(0);
+
+        float x = Float.parseFloat((String)playerWrapper.get("x"));
+        float y = Float.parseFloat((String)playerWrapper.get("y"));
         Vector2 playerPos = new Vector2(x,y);
 
         System.out.println("player pos: " + tiledToWorldCoords(playerPos));
@@ -144,17 +151,18 @@ public class Level {
         Array<Tile> tiles = new Array<>();
         Array<String> tileList = (Array<String>) tileLayer.get("data");
 
-        for (String s : tileList) {
-            int index = Integer.parseInt(s);
-            if (index > 0) {
-                Texture tileTexture = indexToTexture(index);
-                Vector2 pos = tiledCoordsFromIndex(index);
-                System.out.println("tiled coords: " + pos);
-                pos = tiledToWorldCoords(pos);
-                System.out.println("world coords: " + pos);
-                tiles.add(new Tile(tileTexture, pos.x, pos.y));
+        for (int row = 0; row < TILED_WORLD_HEIGHT; row++) {
+            for (int col = 0; col < TILED_WORLD_WIDTH; col++) {
+                int index = col + row * TILED_WORLD_WIDTH;
+                String s = tileList.get(index);
+                int tileSetIndex = Integer.parseInt(s) - 1;
+                if (tileSetIndex > 0) {
+                    TextureRegion tileTexture = indexToTexture(tileSetIndex);
+                    Vector2 pos = tiledCoordsFromIndex(index);
+                    pos = tiledToWorldCoords(pos);
+                    tiles.add(new Tile(tileTexture, pos.x, pos.y));
+                }
             }
-
         }
         return tiles;
     }
@@ -171,12 +179,10 @@ public class Level {
      * 20 px in Tiled is 1 meter in Box2d
      * */
     private Vector2 tiledToWorldCoords(Vector2 tiledCoords) {
-        float vScale = DEFAULT_HEIGHT / (TILED_WORLD_HEIGHT * TILE_SIZE);
-        float hScale = DEFAULT_WIDTH / (TILED_WORLD_WIDTH * TILE_SIZE);
         float x = tiledCoords.x - (TILED_WORLD_WIDTH * TILE_SIZE) / 2f;
         float y  = - (tiledCoords.y - (TILED_WORLD_HEIGHT * TILE_SIZE) / 2f);
 
-        return new Vector2(hScale * x, vScale * y);
+        return new Vector2(WORLD_SCALE * x, WORLD_SCALE * y);
     }
 
     /**
@@ -186,11 +192,10 @@ public class Level {
      * @param index the index from the array
      * @return
      */
-    public Texture indexToTexture(int index){
+    public TextureRegion indexToTexture(int index){
         //the tileset that the inputed texture is in
         int tileSetIndex = tileSets.size - 1;
         TextureRegion[][] thisTileSet = tileSets.get(tileSetIndex);
-
         //find which tile set the tile is in
         //index should never be > firstGids[last index]
         while(tileSetIndex >= 0){
@@ -204,11 +209,15 @@ public class Level {
         int numCols = thisTileSet.length;
 
         //return the specific tile
-        return thisTileSet[index/numCols][index%numCols].getTexture();
+        TextureRegion a = thisTileSet[index/numCols][index%numCols];
+        return thisTileSet[index/numCols][index%numCols];
     }
 
     /**
      * Finds the position of a tile in the world from its index in the tile layer array.
+     *
+     * NOTE: This index is NOT the same as the index of the tile in the TileSet, it is
+     * the index in the array of tile cells in the world.
      * */
     public Vector2 tiledCoordsFromIndex(int index) {
         int x = TILE_SIZE * (index % TILED_WORLD_WIDTH);

@@ -1,6 +1,6 @@
 package edu.cornell.jade.seasthethrone.level;
 
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import com.badlogic.gdx.math.Vector2;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
@@ -11,9 +11,9 @@ public class Tile implements Renderable {
     /** Position of the bottom left corner of the tile */
     private Vector2 pos;
 
-    private Texture texture;
+    private TextureRegion texture;
 
-    public Tile(Texture tex, float x, float y) {
+    public Tile(TextureRegion tex, float x, float y) {
         pos = new Vector2(x,y);
         texture = tex;
     }
@@ -24,7 +24,9 @@ public class Tile implements Renderable {
 
     public Vector2 getPosition() { return pos;}
 
-    public Texture getTexture() { return texture; }
+    public TextureRegion getTexture() { return texture; }
+
+    public void setTexture(TextureRegion tex) { texture = tex;}
 
     public int getFrameNumber() {return 0;}
 

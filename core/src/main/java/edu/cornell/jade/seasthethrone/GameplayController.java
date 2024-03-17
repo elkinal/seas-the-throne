@@ -100,11 +100,12 @@ public class GameplayController implements Screen {
     World world = new World(new Vector2(0, 0), false);
 
     // Load background
-    renderEngine.setBackground(level.getBackground().getTexture());
-
+//    renderEngine.setBackground(level.getBackground());
+    renderEngine.addRenderable(level.getBackground());
+    System.out.println("background at: " + level.getBackground().getPosition());
     // Load tiles
     for (Tile tile : level.getTiles()) {
-      System.out.println(tile.getPosition());
+      System.out.println("Tile at: " + tile.getPosition());
       renderEngine.addRenderable(tile);
     }
 
@@ -133,7 +134,7 @@ public class GameplayController implements Screen {
   }
 
   public void draw(float delta) {
-    renderEngine.drawBackground();
+//    renderEngine.drawBackground();
     renderEngine.drawRenderables();
   }
 
@@ -153,11 +154,17 @@ public class GameplayController implements Screen {
     }
 
     renderEngine.clear();
+    renderEngine.addRenderable(level.getBackground());
+    for (Tile tile : level.getTiles()) {
+      renderEngine.addRenderable(tile);
+    }
+
     for (Model obj : physicsEngine.getObjects()) {
       assert (obj.isActive());
       if (obj instanceof Renderable r)
         renderEngine.addRenderable(r);
     }
+
 
     draw(delta);
     debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
