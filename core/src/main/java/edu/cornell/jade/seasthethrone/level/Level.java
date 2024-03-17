@@ -190,7 +190,7 @@ public class Level {
             float width = Float.parseFloat((String) wallWrapper.get("width"));
             float height = Float.parseFloat((String) wallWrapper.get("height"));
 
-            Vector2 pos = tiledToWorldCoords(new Vector2(x + width/2f, y + height/2f - 2*TILE_SIZE));
+            Vector2 pos = tiledToWorldCoords(new Vector2(x + width/2f, y + height/2f - 2.8f*TILE_SIZE));
             Vector2 dims = (new Vector2(width * WORLD_SCALE, height * WORLD_SCALE));
             walls.add(new Wall(pos.x, pos.y, dims.x, dims.y));
         }

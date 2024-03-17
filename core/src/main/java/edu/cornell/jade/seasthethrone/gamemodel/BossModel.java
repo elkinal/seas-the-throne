@@ -2,7 +2,9 @@ package edu.cornell.jade.seasthethrone.gamemodel;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.model.ComplexModel;
 import edu.cornell.jade.seasthethrone.render.Renderable;
@@ -31,6 +33,7 @@ public class BossModel extends ComplexModel implements Renderable {
         frameDelay = 12;
 
         BoxModel hitbox = new BoxModel(x, y, 5f, 10f);
+        hitbox.setBodyType(BodyDef.BodyType.KinematicBody);
         bodies.add(hitbox);
     }
 
