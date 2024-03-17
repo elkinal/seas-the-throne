@@ -24,14 +24,23 @@ import com.badlogic.gdx.utils.*;
 /**
  * Composite model class to support collisions.
  *
- * <p>ComplexModel instances are built of many bodies, and are assumed to be connected by joints
- * (though this is not actually a requirement). This is the class to use for chains, ropes, levers,
- * and so on. This class does not provide Shape information, and cannot be instantiated directly.
+ * <p>
+ * ComplexModel instances are built of many bodies, and are assumed to be
+ * connected by joints
+ * (though this is not actually a requirement). This is the class to use for
+ * chains, ropes, levers,
+ * and so on. This class does not provide Shape information, and cannot be
+ * instantiated directly.
  *
- * <p>ComplexModel is a hierarchical class. It groups children as Models, not bodies. So you could
- * have a ComplexModel made up of other ComplexModels. However, it also has a root body which may or
- * may not be attached to the other bodies in the hierarchy. All of the physics methods in the class
- * apply to the root, not the body. To move the other bodies, they should either be iterated over
+ * <p>
+ * ComplexModel is a hierarchical class. It groups children as Models, not
+ * bodies. So you could
+ * have a ComplexModel made up of other ComplexModels. However, it also has a
+ * root body which may or
+ * may not be attached to the other bodies in the hierarchy. All of the physics
+ * methods in the class
+ * apply to the root, not the body. To move the other bodies, they should either
+ * be iterated over
  * directly, or attached to the root via a joint.
  */
 public abstract class ComplexModel extends Model {
@@ -48,13 +57,20 @@ public abstract class ComplexModel extends Model {
   /**
    * Returns the body type for Box2D physics
    *
-   * <p>If you want to lock a body in place (e.g. a platform) set this value to STATIC. KINEMATIC
-   * allows the object to move (and some limited collisions), but ignores external forces (e.g.
+   * <p>
+   * If you want to lock a body in place (e.g. a platform) set this value to
+   * STATIC. KINEMATIC
+   * allows the object to move (and some limited collisions), but ignores external
+   * forces (e.g.
    * gravity). DYNAMIC makes this is a full-blown physics object.
    *
-   * <p>This method returns the body type for the root object of this composite structure.
+   * <p>
+   * This method returns the body type for the root object of this composite
+   * structure.
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @return the body type for Box2D physics
@@ -66,11 +82,16 @@ public abstract class ComplexModel extends Model {
   /**
    * Returns the body type for Box2D physics
    *
-   * <p>If you want to lock a body in place (e.g. a platform) set this value to STATIC. KINEMATIC
-   * allows the object to move (and some limited collisions), but ignores external forces (e.g.
+   * <p>
+   * If you want to lock a body in place (e.g. a platform) set this value to
+   * STATIC. KINEMATIC
+   * allows the object to move (and some limited collisions), but ignores external
+   * forces (e.g.
    * gravity). DYNAMIC makes this is a full-blown physics object.
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @return the body type for Box2D physics
@@ -86,11 +107,16 @@ public abstract class ComplexModel extends Model {
   /**
    * Returns the current position for this physics body
    *
-   * <p>This method does NOT return a reference to the position vector. Changes to this vector will
-   * not affect the body. However, it returns the same vector each time its is called, and so cannot
+   * <p>
+   * This method does NOT return a reference to the position vector. Changes to
+   * this vector will
+   * not affect the body. However, it returns the same vector each time its is
+   * called, and so cannot
    * be used as an allocator.
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @return the current position for this physics body
@@ -102,9 +128,12 @@ public abstract class ComplexModel extends Model {
   /**
    * Sets the current position for this physics body
    *
-   * <p>This method does not keep a reference to the parameter.
+   * <p>
+   * This method does not keep a reference to the parameter.
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @param value the current position for this physics body
@@ -120,9 +149,12 @@ public abstract class ComplexModel extends Model {
   /**
    * Sets the current position for this physics body
    *
-   * <p>This method does not keep a reference to the parameter.
+   * <p>
+   * This method does not keep a reference to the parameter.
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @param x the x-coordinate for this physics body
@@ -140,7 +172,9 @@ public abstract class ComplexModel extends Model {
   /**
    * Returns the x-coordinate for this physics body
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @return the x-coordinate for this physics body
@@ -152,7 +186,9 @@ public abstract class ComplexModel extends Model {
   /**
    * Sets the x-coordinate for this physics body
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @param value the x-coordinate for this physics body
@@ -169,7 +205,9 @@ public abstract class ComplexModel extends Model {
   /**
    * Returns the y-coordinate for this physics body
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @return the y-coordinate for this physics body
@@ -181,7 +219,9 @@ public abstract class ComplexModel extends Model {
   /**
    * Sets the y-coordinate for this physics body
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @param value the y-coordinate for this physics body
@@ -198,9 +238,12 @@ public abstract class ComplexModel extends Model {
   /**
    * Returns the angle of rotation for this body (about the center).
    *
-   * <p>The value returned is in radians
+   * <p>
+   * The value returned is in radians
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @return the angle of rotation for this body
@@ -212,7 +255,9 @@ public abstract class ComplexModel extends Model {
   /**
    * Sets the angle of rotation for this body (about the center).
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @param value the angle of rotation for this body (in radians)
@@ -228,11 +273,16 @@ public abstract class ComplexModel extends Model {
   /**
    * Returns the linear velocity for this physics body
    *
-   * <p>This method does NOT return a reference to the velocity vector. Changes to this vector will
-   * not affect the body. However, it returns the same vector each time its is called, and so cannot
+   * <p>
+   * This method does NOT return a reference to the velocity vector. Changes to
+   * this vector will
+   * not affect the body. However, it returns the same vector each time its is
+   * called, and so cannot
    * be used as an allocator.
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @return the linear velocity for this physics body
@@ -244,9 +294,12 @@ public abstract class ComplexModel extends Model {
   /**
    * Sets the linear velocity for this physics body
    *
-   * <p>This method does not keep a reference to the parameter.
+   * <p>
+   * This method does not keep a reference to the parameter.
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @param value the linear velocity for this physics body
@@ -262,7 +315,9 @@ public abstract class ComplexModel extends Model {
   /**
    * Returns the x-velocity for this physics body
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @return the x-velocity for this physics body
@@ -274,7 +329,9 @@ public abstract class ComplexModel extends Model {
   /**
    * Sets the x-velocity for this physics body
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @param value the x-velocity for this physics body
@@ -291,7 +348,9 @@ public abstract class ComplexModel extends Model {
   /**
    * Returns the y-velocity for this physics body
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @return the y-velocity for this physics body
@@ -303,7 +362,9 @@ public abstract class ComplexModel extends Model {
   /**
    * Sets the y-velocity for this physics body
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @param value the y-velocity for this physics body
@@ -320,9 +381,12 @@ public abstract class ComplexModel extends Model {
   /**
    * Returns the angular velocity for this physics body
    *
-   * <p>The rate of change is measured in radians per step
+   * <p>
+   * The rate of change is measured in radians per step
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @return the angular velocity for this physics body
@@ -334,7 +398,9 @@ public abstract class ComplexModel extends Model {
   /**
    * Sets the angular velocity for this physics body
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @param value the angular velocity for this physics body (in radians)
@@ -350,11 +416,17 @@ public abstract class ComplexModel extends Model {
   /**
    * Returns true if the body is active
    *
-   * <p>An inactive body not participate in collision or dynamics. This state is similar to sleeping
-   * except the body will not be woken by other bodies and the body's fixtures will not be placed in
-   * the broad-phase. This means the body will not participate in collisions, ray casts, etc.
+   * <p>
+   * An inactive body not participate in collision or dynamics. This state is
+   * similar to sleeping
+   * except the body will not be woken by other bodies and the body's fixtures
+   * will not be placed in
+   * the broad-phase. This means the body will not participate in collisions, ray
+   * casts, etc.
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @return true if the body is active
@@ -366,11 +438,17 @@ public abstract class ComplexModel extends Model {
   /**
    * Sets whether the body is active
    *
-   * <p>An inactive body not participate in collision or dynamics. This state is similar to sleeping
-   * except the body will not be woken by other bodies and the body's fixtures will not be placed in
-   * the broad-phase. This means the body will not participate in collisions, ray casts, etc.
+   * <p>
+   * An inactive body not participate in collision or dynamics. This state is
+   * similar to sleeping
+   * except the body will not be woken by other bodies and the body's fixtures
+   * will not be placed in
+   * the broad-phase. This means the body will not participate in collisions, ray
+   * casts, etc.
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @param value whether the body is active
@@ -386,12 +464,18 @@ public abstract class ComplexModel extends Model {
   /**
    * Returns true if the body is awake
    *
-   * <p>An sleeping body is one that has come to rest and the physics engine has decided to stop
-   * simulating it to save CPU cycles. If a body is awake and collides with a sleeping body, then
-   * the sleeping body wakes up. Bodies will also wake up if a joint or contact attached to them is
+   * <p>
+   * An sleeping body is one that has come to rest and the physics engine has
+   * decided to stop
+   * simulating it to save CPU cycles. If a body is awake and collides with a
+   * sleeping body, then
+   * the sleeping body wakes up. Bodies will also wake up if a joint or contact
+   * attached to them is
    * destroyed. You can also wake a body manually.
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @return true if the body is awake
@@ -403,12 +487,18 @@ public abstract class ComplexModel extends Model {
   /**
    * Sets whether the body is awake
    *
-   * <p>An sleeping body is one that has come to rest and the physics engine has decided to stop
-   * simulating it to save CPU cycles. If a body is awake and collides with a sleeping body, then
-   * the sleeping body wakes up. Bodies will also wake up if a joint or contact attached to them is
+   * <p>
+   * An sleeping body is one that has come to rest and the physics engine has
+   * decided to stop
+   * simulating it to save CPU cycles. If a body is awake and collides with a
+   * sleeping body, then
+   * the sleeping body wakes up. Bodies will also wake up if a joint or contact
+   * attached to them is
    * destroyed. You can also wake a body manually.
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @param value whether the body is awake
@@ -424,12 +514,18 @@ public abstract class ComplexModel extends Model {
   /**
    * Returns false if this body should never fall asleep
    *
-   * <p>An sleeping body is one that has come to rest and the physics engine has decided to stop
-   * simulating it to save CPU cycles. If a body is awake and collides with a sleeping body, then
-   * the sleeping body wakes up. Bodies will also wake up if a joint or contact attached to them is
+   * <p>
+   * An sleeping body is one that has come to rest and the physics engine has
+   * decided to stop
+   * simulating it to save CPU cycles. If a body is awake and collides with a
+   * sleeping body, then
+   * the sleeping body wakes up. Bodies will also wake up if a joint or contact
+   * attached to them is
    * destroyed. You can also wake a body manually.
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @return false if this body should never fall asleep
@@ -441,12 +537,18 @@ public abstract class ComplexModel extends Model {
   /**
    * Sets whether the body should ever fall asleep
    *
-   * <p>An sleeping body is one that has come to rest and the physics engine has decided to stop
-   * simulating it to save CPU cycles. If a body is awake and collides with a sleeping body, then
-   * the sleeping body wakes up. Bodies will also wake up if a joint or contact attached to them is
+   * <p>
+   * An sleeping body is one that has come to rest and the physics engine has
+   * decided to stop
+   * simulating it to save CPU cycles. If a body is awake and collides with a
+   * sleeping body, then
+   * the sleeping body wakes up. Bodies will also wake up if a joint or contact
+   * attached to them is
    * destroyed. You can also wake a body manually.
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @param value whether the body should ever fall asleep
@@ -462,17 +564,27 @@ public abstract class ComplexModel extends Model {
   /**
    * Returns true if this body is a bullet
    *
-   * <p>By default, Box2D uses continuous collision detection (CCD) to prevent dynamic bodies from
-   * tunneling through static bodies. Normally CCD is not used between dynamic bodies. This is done
-   * to keep performance reasonable. In some game scenarios you need dynamic bodies to use CCD. For
-   * example, you may want to shoot a high speed bullet at a stack of dynamic bricks. Without CCD,
+   * <p>
+   * By default, Box2D uses continuous collision detection (CCD) to prevent
+   * dynamic bodies from
+   * tunneling through static bodies. Normally CCD is not used between dynamic
+   * bodies. This is done
+   * to keep performance reasonable. In some game scenarios you need dynamic
+   * bodies to use CCD. For
+   * example, you may want to shoot a high speed bullet at a stack of dynamic
+   * bricks. Without CCD,
    * the bullet might tunnel through the bricks.
    *
-   * <p>Fast moving objects in Box2D can be labeled as bullets. Bullets will perform CCD with both
-   * static and dynamic bodies. You should decide what bodies should be bullets based on your game
+   * <p>
+   * Fast moving objects in Box2D can be labeled as bullets. Bullets will perform
+   * CCD with both
+   * static and dynamic bodies. You should decide what bodies should be bullets
+   * based on your game
    * design.
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @return true if this body is a bullet
@@ -484,17 +596,27 @@ public abstract class ComplexModel extends Model {
   /**
    * Sets whether this body is a bullet
    *
-   * <p>By default, Box2D uses continuous collision detection (CCD) to prevent dynamic bodies from
-   * tunneling through static bodies. Normally CCD is not used between dynamic bodies. This is done
-   * to keep performance reasonable. In some game scenarios you need dynamic bodies to use CCD. For
-   * example, you may want to shoot a high speed bullet at a stack of dynamic bricks. Without CCD,
+   * <p>
+   * By default, Box2D uses continuous collision detection (CCD) to prevent
+   * dynamic bodies from
+   * tunneling through static bodies. Normally CCD is not used between dynamic
+   * bodies. This is done
+   * to keep performance reasonable. In some game scenarios you need dynamic
+   * bodies to use CCD. For
+   * example, you may want to shoot a high speed bullet at a stack of dynamic
+   * bricks. Without CCD,
    * the bullet might tunnel through the bricks.
    *
-   * <p>Fast moving objects in Box2D can be labeled as bullets. Bullets will perform CCD with both
-   * static and dynamic bodies. You should decide what bodies should be bullets based on your game
+   * <p>
+   * Fast moving objects in Box2D can be labeled as bullets. Bullets will perform
+   * CCD with both
+   * static and dynamic bodies. You should decide what bodies should be bullets
+   * based on your game
    * design.
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @param value whether this body is a bullet
@@ -510,9 +632,12 @@ public abstract class ComplexModel extends Model {
   /**
    * Returns true if this body be prevented from rotating
    *
-   * <p>This is very useful for characters that should remain upright.
+   * <p>
+   * This is very useful for characters that should remain upright.
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @return true if this body be prevented from rotating
@@ -524,9 +649,12 @@ public abstract class ComplexModel extends Model {
   /**
    * Sets whether this body be prevented from rotating
    *
-   * <p>This is very useful for characters that should remain upright.
+   * <p>
+   * This is very useful for characters that should remain upright.
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @param value whether this body be prevented from rotating
@@ -542,10 +670,14 @@ public abstract class ComplexModel extends Model {
   /**
    * Returns the gravity scale to apply to this body
    *
-   * <p>This allows isolated objects to float. Be careful with this, since increased gravity can
+   * <p>
+   * This allows isolated objects to float. Be careful with this, since increased
+   * gravity can
    * decrease stability.
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @return the gravity scale to apply to this body
@@ -557,10 +689,14 @@ public abstract class ComplexModel extends Model {
   /**
    * Sets the gravity scale to apply to this body
    *
-   * <p>This allows isolated objects to float. Be careful with this, since increased gravity can
+   * <p>
+   * This allows isolated objects to float. Be careful with this, since increased
+   * gravity can
    * decrease stability.
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @param value the gravity scale to apply to this body
@@ -576,15 +712,23 @@ public abstract class ComplexModel extends Model {
   /**
    * Returns the linear damping for this body.
    *
-   * <p>Linear damping is use to reduce the linear velocity. Damping is different than friction
-   * because friction only occurs with contact. Damping is not a replacement for friction and the
+   * <p>
+   * Linear damping is use to reduce the linear velocity. Damping is different
+   * than friction
+   * because friction only occurs with contact. Damping is not a replacement for
+   * friction and the
    * two effects should be used together.
    *
-   * <p>Damping parameters should be between 0 and infinity, with 0 meaning no damping, and infinity
-   * meaning full damping. Normally you will use a damping value between 0 and 0.1. Most people
+   * <p>
+   * Damping parameters should be between 0 and infinity, with 0 meaning no
+   * damping, and infinity
+   * meaning full damping. Normally you will use a damping value between 0 and
+   * 0.1. Most people
    * avoid linear damping because it makes bodies look floaty.
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @return the linear damping for this body.
@@ -596,15 +740,23 @@ public abstract class ComplexModel extends Model {
   /**
    * Sets the linear damping for this body.
    *
-   * <p>Linear damping is use to reduce the linear velocity. Damping is different than friction
-   * because friction only occurs with contact. Damping is not a replacement for friction and the
+   * <p>
+   * Linear damping is use to reduce the linear velocity. Damping is different
+   * than friction
+   * because friction only occurs with contact. Damping is not a replacement for
+   * friction and the
    * two effects should be used together.
    *
-   * <p>Damping parameters should be between 0 and infinity, with 0 meaning no damping, and infinity
-   * meaning full damping. Normally you will use a damping value between 0 and 0.1. Most people
+   * <p>
+   * Damping parameters should be between 0 and infinity, with 0 meaning no
+   * damping, and infinity
+   * meaning full damping. Normally you will use a damping value between 0 and
+   * 0.1. Most people
    * avoid linear damping because it makes bodies look floaty.
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @param value the linear damping for this body.
@@ -620,14 +772,22 @@ public abstract class ComplexModel extends Model {
   /**
    * Returns the angular damping for this body.
    *
-   * <p>Angular damping is use to reduce the angular velocity. Damping is different than friction
-   * because friction only occurs with contact. Damping is not a replacement for friction and the
+   * <p>
+   * Angular damping is use to reduce the angular velocity. Damping is different
+   * than friction
+   * because friction only occurs with contact. Damping is not a replacement for
+   * friction and the
    * two effects should be used together.
    *
-   * <p>Damping parameters should be between 0 and infinity, with 0 meaning no damping, and infinity
-   * meaning full damping. Normally you will use a damping value between 0 and 0.1.
+   * <p>
+   * Damping parameters should be between 0 and infinity, with 0 meaning no
+   * damping, and infinity
+   * meaning full damping. Normally you will use a damping value between 0 and
+   * 0.1.
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @return the angular damping for this body.
@@ -639,14 +799,22 @@ public abstract class ComplexModel extends Model {
   /**
    * Sets the angular damping for this body.
    *
-   * <p>Angular damping is use to reduce the angular velocity. Damping is different than friction
-   * because friction only occurs with contact. Damping is not a replacement for friction and the
+   * <p>
+   * Angular damping is use to reduce the angular velocity. Damping is different
+   * than friction
+   * because friction only occurs with contact. Damping is not a replacement for
+   * friction and the
    * two effects should be used together.
    *
-   * <p>Damping parameters should be between 0 and infinity, with 0 meaning no damping, and infinity
-   * meaning full damping. Normally you will use a damping value between 0 and 0.1.
+   * <p>
+   * Damping parameters should be between 0 and infinity, with 0 meaning no
+   * damping, and infinity
+   * meaning full damping. Normally you will use a damping value between 0 and
+   * 0.1.
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @param value the angular damping for this body.
@@ -663,11 +831,16 @@ public abstract class ComplexModel extends Model {
   /**
    * Sets the density of this body
    *
-   * <p>The density is typically measured in usually in kg/m^2. The density can be zero or positive.
-   * You should generally use similar densities for all your fixtures. This will improve stacking
+   * <p>
+   * The density is typically measured in usually in kg/m^2. The density can be
+   * zero or positive.
+   * You should generally use similar densities for all your fixtures. This will
+   * improve stacking
    * stability.
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @param value the density of this body
@@ -684,12 +857,18 @@ public abstract class ComplexModel extends Model {
   /**
    * Sets the friction coefficient of this body
    *
-   * <p>The friction parameter is usually set between 0 and 1, but can be any non-negative value. A
-   * friction value of 0 turns off friction and a value of 1 makes the friction strong. When the
-   * friction force is computed between two shapes, Box2D must combine the friction parameters of
+   * <p>
+   * The friction parameter is usually set between 0 and 1, but can be any
+   * non-negative value. A
+   * friction value of 0 turns off friction and a value of 1 makes the friction
+   * strong. When the
+   * friction force is computed between two shapes, Box2D must combine the
+   * friction parameters of
    * the two parent fixtures. This is done with the geometric mean.
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @param value the friction coefficient of this body
@@ -706,12 +885,18 @@ public abstract class ComplexModel extends Model {
   /**
    * Sets the restitution of this body
    *
-   * <p>Restitution is used to make objects bounce. The restitution value is usually set to be
-   * between 0 and 1. Consider dropping a ball on a table. A value of zero means the ball won't
-   * bounce. This is called an inelastic collision. A value of one means the ball's velocity will be
+   * <p>
+   * Restitution is used to make objects bounce. The restitution value is usually
+   * set to be
+   * between 0 and 1. Consider dropping a ball on a table. A value of zero means
+   * the ball won't
+   * bounce. This is called an inelastic collision. A value of one means the
+   * ball's velocity will be
    * exactly reflected. This is called a perfectly elastic collision.
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @param value the restitution of this body
@@ -728,11 +913,16 @@ public abstract class ComplexModel extends Model {
   /**
    * Sets whether this object is a sensor.
    *
-   * <p>Sometimes game logic needs to know when two entities overlap yet there should be no
-   * collision response. This is done by using sensors. A sensor is an entity that detects collision
+   * <p>
+   * Sometimes game logic needs to know when two entities overlap yet there should
+   * be no
+   * collision response. This is done by using sensors. A sensor is an entity that
+   * detects collision
    * but does not produce a response.
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @param value whether this object is a sensor.
@@ -749,15 +939,23 @@ public abstract class ComplexModel extends Model {
   /**
    * Sets the filter data for this object
    *
-   * <p>Collision filtering allows you to prevent collision between fixtures. For example, say you
-   * make a character that rides a bicycle. You want the bicycle to collide with the terrain and the
-   * character to collide with the terrain, but you don't want the character to collide with the
-   * bicycle (because they must overlap). Box2D supports such collision filtering using categories
+   * <p>
+   * Collision filtering allows you to prevent collision between fixtures. For
+   * example, say you
+   * make a character that rides a bicycle. You want the bicycle to collide with
+   * the terrain and the
+   * character to collide with the terrain, but you don't want the character to
+   * collide with the
+   * bicycle (because they must overlap). Box2D supports such collision filtering
+   * using categories
    * and groups.
    *
-   * <p>A value of null removes all collision filters.
+   * <p>
+   * A value of null removes all collision filters.
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @param value the filter data for this object
@@ -775,11 +973,16 @@ public abstract class ComplexModel extends Model {
   /**
    * Returns the center of mass of this body
    *
-   * <p>This method does NOT return a reference to the centroid position. Changes to this vector
-   * will not affect the body. However, it returns the same vector each time its is called, and so
+   * <p>
+   * This method does NOT return a reference to the centroid position. Changes to
+   * this vector
+   * will not affect the body. However, it returns the same vector each time its
+   * is called, and so
    * cannot be used as an allocator.
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @return the center of mass for this physics body
@@ -791,9 +994,12 @@ public abstract class ComplexModel extends Model {
   /**
    * Sets the center of mass for this physics body
    *
-   * <p>This method does not keep a reference to the parameter.
+   * <p>
+   * This method does not keep a reference to the parameter.
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @param value the center of mass for this physics body
@@ -808,10 +1014,14 @@ public abstract class ComplexModel extends Model {
   /**
    * Returns the rotational inertia of this body
    *
-   * <p>For static bodies, the mass and rotational inertia are set to zero. When a body has fixed
+   * <p>
+   * For static bodies, the mass and rotational inertia are set to zero. When a
+   * body has fixed
    * rotation, its rotational inertia is zero.
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @return the rotational inertia of this body
@@ -823,10 +1033,14 @@ public abstract class ComplexModel extends Model {
   /**
    * Sets the rotational inertia of this body
    *
-   * <p>For static bodies, the mass and rotational inertia are set to zero. When a body has fixed
+   * <p>
+   * For static bodies, the mass and rotational inertia are set to zero. When a
+   * body has fixed
    * rotation, its rotational inertia is zero.
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @param value the rotational inertia of this body
@@ -841,9 +1055,12 @@ public abstract class ComplexModel extends Model {
   /**
    * Returns the mass of this body
    *
-   * <p>The value is usually in kilograms.
+   * <p>
+   * The value is usually in kilograms.
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @return the mass of this body
@@ -855,9 +1072,12 @@ public abstract class ComplexModel extends Model {
   /**
    * Sets the mass of this body
    *
-   * <p>The value is usually in kilograms.
+   * <p>
+   * The value is usually in kilograms.
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    *
    * @param value the mass of this body
@@ -872,7 +1092,9 @@ public abstract class ComplexModel extends Model {
   /**
    * Resets this body to use the mass computed from the its shape and density
    *
-   * <p>This method affects the root body of this composite structure only. If you want to set the
+   * <p>
+   * This method affects the root body of this composite structure only. If you
+   * want to set the
    * value for any of the child obstacles, iterate over the children.
    */
   public void resetMass() {
@@ -886,7 +1108,9 @@ public abstract class ComplexModel extends Model {
   /**
    * Returns the Box2D body for this object.
    *
-   * <p>This method only returrns the root body in this composite structure. For more fine-grain
+   * <p>
+   * This method only returrns the root body in this composite structure. For more
+   * fine-grain
    * control, you should use the iterator methods.
    *
    * @return the Box2D body for this object.
@@ -898,7 +1122,9 @@ public abstract class ComplexModel extends Model {
   /**
    * Returns the collection of component physics objects.
    *
-   * <p>While the iterable does not allow you to modify the list, it is possible to modify the
+   * <p>
+   * While the iterable does not allow you to modify the list, it is possible to
+   * modify the
    * individual objects.
    *
    * @return the collection of component physics objects.
@@ -910,7 +1136,9 @@ public abstract class ComplexModel extends Model {
   /**
    * Returns the collection of joints for this object (may be empty).
    *
-   * <p>While the iterable does not allow you to modify the list, it is possible to modify the
+   * <p>
+   * While the iterable does not allow you to modify the list, it is possible to
+   * modify the
    * individual joints.
    *
    * @return the collection of joints for this object.
@@ -931,7 +1159,8 @@ public abstract class ComplexModel extends Model {
   /**
    * Creates a new complex physics object
    *
-   * <p>The position is the position of the root object.
+   * <p>
+   * The position is the position of the root object.
    *
    * @param x Initial x position in world coordinates
    * @param y Initial y position in world coordinates
@@ -945,11 +1174,15 @@ public abstract class ComplexModel extends Model {
   /**
    * Creates the physics Body(s) for this object, adding them to the world.
    *
-   * <p>This method invokes ActivatePhysics for the individual PhysicsObjects in the list. It also
-   * calls the internal method createJoints() to link them all together. You should override that
+   * <p>
+   * This method invokes ActivatePhysics for the individual PhysicsObjects in the
+   * list. It also
+   * calls the internal method createJoints() to link them all together. You
+   * should override that
    * method, not this one, for specific physics objects.
    *
-   * <p>NOTE: RIGHT NOW WE SET THE "MAIN" BODY TO BE THE BODY OF THE FIRST MODEL
+   * <p>
+   * NOTE: RIGHT NOW WE SET THE "MAIN" BODY TO BE THE BODY OF THE FIRST MODEL
    *
    * @param world Box2D world to store body
    * @return true if object allocation succeeded
@@ -965,7 +1198,8 @@ public abstract class ComplexModel extends Model {
     success = success && createJoints(world);
 
     // set body to the first element in bodies
-    if (bodies.size > 0) body = bodies.first().getBody();
+    if (bodies.size > 0)
+      body = bodies.first().getBody();
 
     // Clean up if we failed
     if (!success) {
@@ -975,7 +1209,8 @@ public abstract class ComplexModel extends Model {
   }
 
   /**
-   * Destroys the physics Body(s) of this object if applicable, removing them from the world.
+   * Destroys the physics Body(s) of this object if applicable, removing them from
+   * the world.
    *
    * @param world Box2D world that stores body
    */
@@ -989,6 +1224,10 @@ public abstract class ComplexModel extends Model {
       for (Model obj : bodies) {
         obj.deactivatePhysics(world);
       }
+      if (body != null) {
+        world.destroyBody(body);
+        body = null;
+      }
       bodyinfo.active = false;
     }
   }
@@ -996,7 +1235,9 @@ public abstract class ComplexModel extends Model {
   /**
    * Creates the joints for this object.
    *
-   * <p>This method is executed as part of activePhysics. This is the primary method to override for
+   * <p>
+   * This method is executed as part of activePhysics. This is the primary method
+   * to override for
    * custom physics objects.
    *
    * @param world Box2D world to store joints
@@ -1007,8 +1248,11 @@ public abstract class ComplexModel extends Model {
   /**
    * Updates the object's physics state (NOT GAME LOGIC).
    *
-   * <p>This method is called AFTER the collision resolution state. Therefore, it should not be used
-   * to process actions or any other gameplay information. Its primary purpose is to adjust changes
+   * <p>
+   * This method is called AFTER the collision resolution state. Therefore, it
+   * should not be used
+   * to process actions or any other gameplay information. Its primary purpose is
+   * to adjust changes
    * to the fixture, which have to take place after collision.
    *
    * @param delta Timing values from parent loop
@@ -1023,12 +1267,17 @@ public abstract class ComplexModel extends Model {
   /**
    * Sets the drawing scale for this physics object
    *
-   * <p>The drawing scale is the number of pixels to draw before Box2D unit. Because mass is a
-   * function of area in Box2D, we typically want the physics objects to be small. So we decouple
-   * that scale from the physics object. However, we must track the scale difference to communicate
+   * <p>
+   * The drawing scale is the number of pixels to draw before Box2D unit. Because
+   * mass is a
+   * function of area in Box2D, we typically want the physics objects to be small.
+   * So we decouple
+   * that scale from the physics object. However, we must track the scale
+   * difference to communicate
    * with the scene graph.
    *
-   * <p>We allow for the scaling factor to be non-uniform.
+   * <p>
+   * We allow for the scaling factor to be non-uniform.
    *
    * @param x the x-axis scale for this physics object
    * @param y the y-axis scale for this physics object
@@ -1039,31 +1288,4 @@ public abstract class ComplexModel extends Model {
       obj.setDrawScale(x, y);
     }
   }
-
-  //    /**
-  //     * Draws the physics object.
-  //     *
-  //     * @param canvas Drawing context
-  //     */
-  //    public void draw(GameCanvas canvas) {
-  //        // Delegate to components
-  //        for(Obstacle obj : bodies) {
-  //            obj.draw(canvas);
-  //        }
-  //    }
-  //
-  //    /**
-  //     * Draws the outline of the physics body.
-  //     *
-  //     * This method can be helpful for understanding issues with collisions.
-  //     *
-  //     * @param canvas Drawing context
-  //     */
-  //    public void drawDebug(GameCanvas canvas) {
-  //        // Delegate to components
-  //        for(Obstacle obj : bodies) {
-  //            obj.drawDebug(canvas);
-  //        }
-  //    }
-
 }

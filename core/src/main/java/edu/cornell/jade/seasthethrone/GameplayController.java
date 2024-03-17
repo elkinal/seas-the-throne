@@ -16,7 +16,9 @@ import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 /**
  * The primary controller class for the game.
  *
- * <p>Delegates all of the work to other subcontrollers including input control, physics engine, and
+ * <p>
+ * Delegates all of the work to other subcontrollers including input control,
+ * physics engine, and
  * rendering engine. Contains the central update method.
  */
 public class GameplayController implements Screen {
@@ -120,12 +122,16 @@ public class GameplayController implements Screen {
       gameState = GameState.OVER;
     }
 
-    draw(delta);
-    debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
     renderEngine.clear();
     for (Model obj : physicsEngine.getObjects()) {
-      if (obj instanceof Renderable r) renderEngine.addRenderable(r);
+      assert (obj.isActive());
+      if (obj instanceof Renderable r)
+        renderEngine.addRenderable(r);
     }
+
+    draw(delta);
+    debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
+
     if (gameState == GameState.OVER) {
       if (inputController.didReset()) {
         setupGameplay();
@@ -139,15 +145,18 @@ public class GameplayController implements Screen {
     viewport.update(width, height);
   }
 
-  public void pause() {}
+  public void pause() {
+  }
 
-  public void resume() {}
+  public void resume() {
+  }
 
   public void hide() {
     active = false;
   }
 
   public void dispose() {
-    if (physicsEngine != null) physicsEngine.dispose();
+    if (physicsEngine != null)
+      physicsEngine.dispose();
   }
 }
