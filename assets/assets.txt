@@ -1,3 +1,4 @@
+bosses/crab/crab_shoot.png
 bullet/yellowfish_east.png
 bullet/yellowfish_NE.png
 bullet/yellowfish_north.png

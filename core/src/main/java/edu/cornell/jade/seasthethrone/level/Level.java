@@ -23,15 +23,20 @@ public class Level {
 
     private final Vector2 playerLoc;
 
-    private Array<BossModel> bosses;
+    private Array<Vector2> bosses = new Array<>();
 
     private Array<EnemyModel> enemies;
 
-    private Array<Model> walls;
+    private Array<Wall> walls = new Array<>();
 
     private final BackgroundImage background;
 
-    private Array<Tile> tiles;
+    private Array<Tile> tiles = new Array<>();;
+
+    /** The array of tileSets, each tileSet being a nested list of textures representing tiles */
+    private Array<TextureRegion[][]> tileSets = new Array<>();
+
+    private Array<Integer> firstGids = new Array<>();
 
     /** Width of the game world in Box2d units */
     public float DEFAULT_WIDTH = 64.0f;
@@ -49,11 +54,6 @@ public class Level {
 
     /** Height of the Tiled map in tiles*/
     private int TILED_WORLD_HEIGHT;
-
-    /** The array of tileSets, each tileSet being a nested list of textures representing tiles */
-    private Array<TextureRegion[][]> tileSets = new Array<>();
-
-    private Array<Integer> firstGids = new Array<>();
 
     private FitViewport viewport;
 
@@ -78,8 +78,6 @@ public class Level {
             int thisGid = Integer.parseInt((String) tileSet.get("firstgid"));
             firstGids.add(thisGid);
             // Split this tileSet up into textures
-//            TextureRegion[][] a = new TextureRegion(thisTexture).split(TILE_SIZE, TILE_SIZE);
-//            System.out.println("tile height: "+a[0][0].getRegionHeight());
              tileSets.add(new TextureRegion(thisTexture).split(TILE_SIZE, TILE_SIZE));
         }
 
@@ -89,8 +87,9 @@ public class Level {
         background = new BackgroundImage(getLayer("background"));
 
         playerLoc = parsePlayerLayer(getLayer("player"));
-        tiles = parseTileLayer(getLayer("tiles"));
-//        bosses = parseBossLayer(getLayer("bosses"));
+        parseTileLayer(getLayer("tiles"));
+        parseBossLayer(getLayer("bosses"));
+        parseWallLayer(getLayer("walls"));
 //        enemies = parseEnemyLayer(getLayer("enemies"));
 
     }
@@ -121,6 +120,10 @@ public class Level {
 
     public Array<Tile> getTiles() { return tiles; }
 
+    public Array<Vector2> getBosses() {return bosses;}
+
+    public Array<Wall> getWalls() { return walls; }
+
 
     /**
      * Extracts the position of the player from the player layer and creates a PlayerModel.
@@ -136,7 +139,6 @@ public class Level {
         float y = Float.parseFloat((String)playerWrapper.get("y"));
         Vector2 playerPos = new Vector2(x,y);
 
-        System.out.println("player pos: " + tiledToWorldCoords(playerPos));
         return tiledToWorldCoords(playerPos);
     }
 
@@ -147,8 +149,7 @@ public class Level {
      *
      * @return an array of Tile objects
      * */
-    private Array<Tile> parseTileLayer(HashMap<String, Object> tileLayer) {
-        Array<Tile> tiles = new Array<>();
+    private void parseTileLayer(HashMap<String, Object> tileLayer) {
         Array<String> tileList = (Array<String>) tileLayer.get("data");
 
         for (int row = 0; row < TILED_WORLD_HEIGHT; row++) {
@@ -164,15 +165,35 @@ public class Level {
                 }
             }
         }
-        return tiles;
     }
 
     private Array<EnemyModel> parseEnemyLayer(HashMap<String, Object> enemyLayer) {
         throw new UnsupportedOperationException("parseEnemyLayer not implemented");
     }
 
-    private Array<BossModel> parseBossLayer(HashMap<String, Object> bossLayer) {
-        throw new UnsupportedOperationException("parseBossLayer not implemented");
+    private void parseBossLayer(HashMap<String, Object> bossLayer) {
+        Array<HashMap<Object, String>> bossWrapperList = (Array<HashMap<Object, String>>) bossLayer.get("objects");
+
+        for (HashMap<Object, String> bossWrapper : bossWrapperList) {
+            float x = Float.parseFloat((String) bossWrapper.get("x"));
+            float y = Float.parseFloat((String) bossWrapper.get("y"));
+            bosses.add(tiledToWorldCoords(new Vector2(x,y)));
+        }
+    }
+
+    private void parseWallLayer(HashMap<String, Object> wallLayer) {
+        Array<HashMap<Object, String>> wallWrapperList = (Array<HashMap<Object, String>>) wallLayer.get("objects");
+
+        for (HashMap<Object, String> wallWrapper : wallWrapperList) {
+            float x = Float.parseFloat((String) wallWrapper.get("x"));
+            float y = Float.parseFloat((String) wallWrapper.get("y"));
+            float width = Float.parseFloat((String) wallWrapper.get("width"));
+            float height = Float.parseFloat((String) wallWrapper.get("height"));
+
+            Vector2 pos = tiledToWorldCoords(new Vector2(x + width/2f, y + height/2f - 2*TILE_SIZE));
+            Vector2 dims = (new Vector2(width * WORLD_SCALE, height * WORLD_SCALE));
+            walls.add(new Wall(pos.x, pos.y, dims.x, dims.y));
+        }
     }
 
     /**

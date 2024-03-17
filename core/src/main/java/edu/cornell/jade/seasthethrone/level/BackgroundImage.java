@@ -23,8 +23,15 @@ public class BackgroundImage implements Renderable {
     private Array<HashMap<String, Object>> properties;
 
     public BackgroundImage(HashMap<String, Object> bgLayer) {
-        float x = Float.parseFloat((String)bgLayer.get("offsetx"));
-        float y = Float.parseFloat((String)bgLayer.get("offsety"));
+        float x;
+        float y;
+        if ((String)bgLayer.get("offsetx") == null) {
+            x = 0;
+            y = 0;
+        } else {
+            x = Float.parseFloat((String) bgLayer.get("offsetx"));
+            y = Float.parseFloat((String) bgLayer.get("offsety"));
+        }
         position = new Vector2(x, y);
         texture = new TextureRegion(new Texture("levels/"+(String)bgLayer.get("image")));
         opacity = Float.parseFloat((String)bgLayer.get("opacity"));

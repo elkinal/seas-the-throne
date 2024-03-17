@@ -3,15 +3,19 @@ package edu.cornell.jade.seasthethrone;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
+import edu.cornell.jade.seasthethrone.gamemodel.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.PlayerModel;
 import edu.cornell.jade.seasthethrone.input.InputController;
 import edu.cornell.jade.seasthethrone.input.PlayerController;
 import edu.cornell.jade.seasthethrone.level.Level;
 import edu.cornell.jade.seasthethrone.level.Tile;
+import edu.cornell.jade.seasthethrone.level.Wall;
+import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
@@ -103,26 +107,34 @@ public class GameplayController implements Screen {
     // Load background
 //    renderEngine.setBackground(level.getBackground());
     renderEngine.addRenderable(level.getBackground());
-    System.out.println("background at: " + level.getBackground().getPosition());
     // Load tiles
     for (Tile tile : level.getTiles()) {
-      System.out.println("Tile at: " + tile.getPosition());
       renderEngine.addRenderable(tile);
     }
 
     // Load player
     Vector2 playerLoc = level.getPlayerLoc();
     PlayerModel player = new PlayerModel(playerLoc.x, playerLoc.y);
-
-    // Load bosses
-
-
-    // Load enemies
+    renderEngine.addRenderable(player);
 
     physicsEngine = new PhysicsEngine(bounds, world, player);
     playerController = new PlayerController(bounds, player);
 
-    renderEngine.addRenderable(player);
+    // Load bosses
+    for (Vector2 bossLoc : level.getBosses()) {
+      BossModel boss = new BossModel(bossLoc.x, bossLoc.y);
+      boss.setBodyType(BodyDef.BodyType.StaticBody);
+      renderEngine.addRenderable(boss);
+      physicsEngine.addObject(boss);
+    }
+
+    // Load walls
+    for (Wall wall : level.getWalls()) {
+      BoxModel wallModel = new BoxModel(wall.x, wall.y, wall.width, wall.height);
+      wallModel.setBodyType(BodyDef.BodyType.StaticBody);
+      physicsEngine.addObject(wallModel);
+    }
+
     inputController.add(playerController);
 
   }
@@ -168,7 +180,7 @@ public class GameplayController implements Screen {
 
 
     draw(delta);
-    debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
+//    debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
 
     if (gameState == GameState.OVER) {
       if (inputController.didReset()) {

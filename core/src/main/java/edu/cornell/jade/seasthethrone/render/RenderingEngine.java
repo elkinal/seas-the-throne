@@ -29,9 +29,6 @@ public class RenderingEngine {
 
   private BackgroundImage BACKGROUND;
 
-  /** FIXME: stop hardcoding texture regions */
-  private static final Texture FISH_TEXTURE = new Texture("legacy/bullet_test.png");
-
   /**
    * Creates a new RenderingEngine based on the world width and world height for the camera.
    *

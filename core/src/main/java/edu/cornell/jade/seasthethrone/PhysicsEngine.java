@@ -54,6 +54,7 @@ public class PhysicsEngine implements ContactListener {
   public void spawnBulletPattern(int bulletTimer) {
     float speed = 4;
     BulletModel bullet = new BulletModel(3, 3, 0.5f);
+    bullet.setBodyType(BodyDef.BodyType.KinematicBody);
     float theta = bulletTimer * 2;
     Vector2 v_i = new Vector2((float) Math.cos(theta), (float) Math.sin(theta));
     bullet.setVX(speed * v_i.x);
