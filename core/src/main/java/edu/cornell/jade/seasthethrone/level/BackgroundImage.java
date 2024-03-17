@@ -26,7 +26,7 @@ public class BackgroundImage implements Renderable {
         float x = Float.parseFloat((String)bgLayer.get("offsetx"));
         float y = Float.parseFloat((String)bgLayer.get("offsety"));
         position = new Vector2(x, y);
-        texture = new TextureRegion(new Texture((String)bgLayer.get("image")));
+        texture = new TextureRegion(new Texture("levels/"+(String)bgLayer.get("image")));
         opacity = Float.parseFloat((String)bgLayer.get("opacity"));
 
         properties = (Array<HashMap<String, Object>>) bgLayer.get("properties");

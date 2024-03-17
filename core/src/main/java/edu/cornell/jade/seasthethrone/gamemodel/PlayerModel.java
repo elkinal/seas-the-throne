@@ -20,27 +20,27 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   private static int FRAMES_IN_ANIMATION_DASH = 5;
 
   /** Player texture when facing up */
-  public static final Texture PLAYER_TEXTURE_UP = new Texture("playerspriterun_up_wspear.png");
+  public static final Texture PLAYER_TEXTURE_UP = new Texture("player/playerspriterun_up_wspear.png");
 
   /** Player texture when facing down */
-  public static final Texture PLAYER_TEXTURE_DOWN = new Texture("playerspriterun_down_wspear.png");
+  public static final Texture PLAYER_TEXTURE_DOWN = new Texture("player/playerspriterun_down_wspear.png");
 
   /** Player texture when facing left */
-  public static final Texture PLAYER_TEXTURE_LEFT = new Texture("playerspriterun_left_wspear.png");
+  public static final Texture PLAYER_TEXTURE_LEFT = new Texture("player/playerspriterun_left_wspear.png");
 
   /** Player texture when facing right */
-  public static final Texture PLAYER_TEXTURE_RIGHT = new Texture("playerspriterun_right_wspear.png");
+  public static final Texture PLAYER_TEXTURE_RIGHT = new Texture("player/playerspriterun_right_wspear.png");
   /** Player texture when dashing up */
-  public static final Texture PLAYER_TEXTURE_UP_DASH = new Texture("playerspritedashfilmstrip_up.png");
+  public static final Texture PLAYER_TEXTURE_UP_DASH = new Texture("player/playerspritedashfilmstrip_up.png");
 
   /** Player texture when dashing down */
-  public static final Texture PLAYER_TEXTURE_DOWN_DASH = new Texture("playerspritedashfilmstrip_down.png");
+  public static final Texture PLAYER_TEXTURE_DOWN_DASH = new Texture("player/playerspritedashfilmstrip_down.png");
 
   /** Player texture when dashing left */
-  public static final Texture PLAYER_TEXTURE_LEFT_DASH = new Texture("playerspritedashfilmstrip_left.png");
+  public static final Texture PLAYER_TEXTURE_LEFT_DASH = new Texture("player/playerspritedashfilmstrip_left.png");
 
   /** Player texture when dashing right */
-  public static final Texture PLAYER_TEXTURE_RIGHT_DASH = new Texture("playerspritedashfilmstrip_right.png");
+  public static final Texture PLAYER_TEXTURE_RIGHT_DASH = new Texture("player/playerspritedashfilmstrip_right.png");
 
 
   /** FilmStrip cache object */

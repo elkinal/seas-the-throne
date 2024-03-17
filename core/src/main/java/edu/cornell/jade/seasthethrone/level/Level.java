@@ -74,7 +74,7 @@ public class Level {
         Array<HashMap<String, Object>> tileSetsList = (Array<HashMap<String, Object>>) levelMap.get("tilesets");
         for (HashMap<String, Object> tileSet : tileSetsList) {
             // For each tileSet
-            Texture thisTexture = new Texture((String) tileSet.get("image"));
+            Texture thisTexture = new Texture("levels/"+(String) tileSet.get("image"));
             int thisGid = Integer.parseInt((String) tileSet.get("firstgid"));
             firstGids.add(thisGid);
             // Split this tileSet up into textures
