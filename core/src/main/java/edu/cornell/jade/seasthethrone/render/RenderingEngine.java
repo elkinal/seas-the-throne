@@ -91,6 +91,7 @@ public class RenderingEngine {
     return viewport;
   }
 
+  //Temporary for prototype
   public void drawGameOver() {
     canvas.begin();
     canvas.drawTextCentered("Game Over!", textFont, 60f);

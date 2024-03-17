@@ -46,6 +46,9 @@ public class BulletModel extends SimpleModel implements FishRenderable {
   public static final Texture FISH_TEXTURE_SOUTH = new Texture("yellowfish_south.png");
   /** FilmStrip cache object */
   public FilmStrip filmStrip;
+  /** Amount of knockback force applied to player on collision */
+  private float knockbackForce;
+
   /**
    * {@link BulletModel} constructor using an x and y coordinate & radius. NOTE: as of now, you must
    * call activatePhysics then createFixtures after constructing the BulletModel for it to be
@@ -59,10 +62,16 @@ public class BulletModel extends SimpleModel implements FishRenderable {
     super(x, y);
     shape = new CircleShape();
     shape.setRadius(radius);
+    knockbackForce = 15f;
     setBodyType(BodyDef.BodyType.DynamicBody);
     setName("bullet");
     faceDirection = Direction.DOWN;
     filmStrip = new FilmStrip(FISH_TEXTURE_SOUTH, 1, 1);
+  }
+
+  /** Returns knockback force to apply to player on collision */
+  public float getKnockbackForce() {
+    return knockbackForce;
   }
 
   /**

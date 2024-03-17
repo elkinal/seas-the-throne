@@ -84,6 +84,9 @@ public interface PlayerRenderable extends Renderable {
    */
   public boolean isDashing();
 
+  /** Returns the number of current health points of the player. */
+  public int getHealth();
+
   public default void draw(RenderingEngine renderer) {
 
     int frame = getFrameNumber();
