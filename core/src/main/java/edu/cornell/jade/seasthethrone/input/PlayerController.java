@@ -169,7 +169,6 @@ public class PlayerController implements Controllable {
     // Handle dashing
     player.updateSpear(dashDirection);
     if (player.isDashing()) {
-      player.decrementDashCounter();
       if (player.getDashCounter() <= 0) {
         // exit dash
         player.stopDashing();

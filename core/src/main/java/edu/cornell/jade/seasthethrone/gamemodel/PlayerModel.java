@@ -260,6 +260,8 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     dashCounter = value;
   }
 
+  public int getDashCounter() { return dashCounter; }
+
   /** Returns length of dash in frames */
   public int getDashLength() {
     return dashLength;
