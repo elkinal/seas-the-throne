@@ -40,7 +40,7 @@ public class Level {
     public float DEFAULT_HEIGHT = 48.0f;
 
     /** Ratio between the pixel in a texture and the meter in the world */
-    private static final float WORLD_SCALE = 0.1f;
+    public float WORLD_SCALE = 0.15f;
 
     private final int TILE_SIZE;
 

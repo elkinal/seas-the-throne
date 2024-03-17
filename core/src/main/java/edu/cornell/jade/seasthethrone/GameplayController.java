@@ -55,7 +55,7 @@ public class GameplayController implements Screen {
   protected static float DEFAULT_HEIGHT;
 
   /** Ratio between the pixel in a texture and the meter in the world */
-  private static final float WORLD_SCALE = 0.1f;
+  private static float WORLD_SCALE;
 
   /** The Box2D world */
   protected PhysicsEngine physicsEngine;
@@ -77,6 +77,7 @@ public class GameplayController implements Screen {
     this.level = new Level("levels/test1.json");
     DEFAULT_HEIGHT = level.DEFAULT_HEIGHT;
     DEFAULT_WIDTH = level.DEFAULT_WIDTH;
+    WORLD_SCALE = level.WORLD_SCALE;
     this.viewport = level.getViewport();
 
     bounds = new Rectangle(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);

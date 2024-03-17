@@ -117,7 +117,7 @@ public interface PlayerRenderable extends Renderable {
     filmStrip.setFrame(frame);
 
     Vector2 pos = getPosition();
-    renderer.draw(filmStrip, pos.x, pos.y);
+    renderer.draw(filmStrip, pos.x, pos.y, 0.11f);
 
 //    setFrameNumber((frame + 1) % getFramesInAnimation());
 

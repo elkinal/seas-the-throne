@@ -119,6 +119,13 @@ public class RenderingEngine {
     canvas.draw(texture, Color.WHITE, ox, oy, x, y, 0, worldScale, worldScale);
   }
 
+  public void draw(FilmStrip filmStrip, float x, float y, float scale) {
+    float ox = filmStrip.getRegionWidth() / 2f;
+    float oy = filmStrip.getRegionHeight() / 2f;
+
+    canvas.draw(filmStrip, Color.WHITE, oy, ox, x, y, 0, scale, scale);
+  }
+
   public void clear() {
     renderables.clear();
   }
