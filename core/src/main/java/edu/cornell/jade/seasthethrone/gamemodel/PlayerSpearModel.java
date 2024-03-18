@@ -18,12 +18,17 @@ public class PlayerSpearModel extends BoxModel {
   /** Offset length of the spear center from the body center (when extended) */
   private static float SPEAR_OFFSET = 2.5f;
 
+  /** Maximum number of fish that can be speared */
+  private static int MAX_SPEAR_CAPACITY = 5;
+
   /** If the spear is extended (during dash) */
   private boolean spearExtended;
 
+  /** Number of fish currently speared */
+  private int numSpeared;
+
   /**
-   * The size is expressed in physics units NOT pixels. In order for drawing to work properly, you
-   * MUST set the drawScale. The drawScale converts the physics units to pixels.
+   * The size is expressed in physics units NOT pixels.
    *
    * @param x      Initial x position of the spear center
    * @param y      Initial y position of the spear center
@@ -33,6 +38,8 @@ public class PlayerSpearModel extends BoxModel {
   public PlayerSpearModel(float x, float y, float width, float height) {
     super(x, y, width, height);
     spearExtended = false;
+    setCategoryBits(PlayerModel.CATEGORY_PLAYER);
+    setMaskBits(BulletModel.CATEGORY_ENEMY_BULLET);
   }
 
   /**
@@ -66,6 +73,37 @@ public class PlayerSpearModel extends BoxModel {
   public void updateSpear(Vector2 bodyPosition, Vector2 dashDirection) {
     setPosition(bodyPosition.add(dashDirection.nor().scl(SPEAR_OFFSET)));
     setAngle(dashDirection.angleRad() + (float)Math.PI/2);
+  }
+
+  public int getNumSpeared() {
+    return numSpeared;
+  }
+
+  /**
+   * If possible, increment spear counter and return true.
+   * Otherwise, return false.
+   * */
+  public boolean incrementSpear(){
+    if(numSpeared < MAX_SPEAR_CAPACITY){
+      numSpeared += 1;
+      return true;
+    } return false;
+  }
+
+  /**
+   * Decrement spear counter.
+   * @pre spear counter is above 0
+   */
+  public void decrementSpear(){
+    numSpeared -= 1;
+  }
+
+  /**
+   * Return if the player is able to spear
+   * @pre spearExtended is false
+   * */
+  public boolean canSpear(){
+    return numSpeared == 0;
   }
 
   /** Overriding the current activatePhysics method to start the body off as inactive */

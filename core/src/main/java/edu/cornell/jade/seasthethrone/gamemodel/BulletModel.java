@@ -19,6 +19,12 @@ import edu.cornell.jade.seasthethrone.util.FilmStrip;
  */
 public class BulletModel extends SimpleModel implements FishRenderable {
 
+  /** Category bitmask for enemy bullet (for collision filtering) */
+  public static final short CATEGORY_ENEMY_BULLET = 0x0002;
+
+  /** Category bitmask for player bullet (for collision filtering) */
+  public static final short CATEGORY_PLAYER_BULLET = 0x0004;
+
   /** Shape of the bullet, modeled as a circle */
   public CircleShape shape;
 
@@ -57,6 +63,7 @@ public class BulletModel extends SimpleModel implements FishRenderable {
    * @param x The x-position for this bullet in world coordinates
    * @param y The y-position for this bullet in world coordinates
    * @param radius The radius of this bullet
+   * @param isPlayer If the bullet is shot by the player
    */
   public BulletModel(float x, float y, float radius) {
     super(x, y);

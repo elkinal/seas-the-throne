@@ -47,19 +47,37 @@ public class PhysicsEngine implements ContactListener {
   }
 
   /**
+   * Spawns a single bullet given a position and velocity
+   * @param pos   starting position of bullet
+   * @param vel   velocity of bullet
+   * @param speed speed of bullet
+   */
+  public void spawnBullet(Vector2 pos, Vector2 vel, float speed, boolean shotByPlayer){
+    BulletModel bullet = new BulletModel(pos.x, pos.y, 0.5f);
+    bullet.setVX(speed * vel.x);
+    bullet.setVY(speed * vel.y);
+    if(shotByPlayer){
+      bullet.setCategoryBits(BulletModel.CATEGORY_PLAYER_BULLET);
+      bullet.setMaskBits((short)0);
+    } else {
+      bullet.setCategoryBits(BulletModel.CATEGORY_ENEMY_BULLET);
+      bullet.setMaskBits(PlayerModel.CATEGORY_PLAYER);
+    }
+
+    addObject(bullet);
+    bullet.createFixtures();
+  }
+
+  /**
    * Spawns bullets at a set interval in a circular pattern
    *
    * @param bulletTimer value of the timer, used to set angle
    */
   public void spawnBulletPattern(int bulletTimer) {
     float speed = 4;
-    BulletModel bullet = new BulletModel(3, 3, 0.5f);
     float theta = bulletTimer * 2;
     Vector2 v_i = new Vector2((float) Math.cos(theta), (float) Math.sin(theta));
-    bullet.setVX(speed * v_i.x);
-    bullet.setVY(speed * v_i.y);
-    addObject(bullet);
-    bullet.createFixtures();
+    spawnBullet(new Vector2(3, 3), v_i, speed, false);
   }
 
   /**
@@ -148,9 +166,9 @@ public class PhysicsEngine implements ContactListener {
       } else if (bd2 instanceof PlayerBodyModel && bd1 instanceof BulletModel) {
         handleCollision((PlayerBodyModel) bd2, (BulletModel) bd1);
       } else if (bd1 instanceof PlayerSpearModel && bd2 instanceof BulletModel){
-        bd2.markRemoved(true);
+        handleCollision((PlayerSpearModel) bd1, (BulletModel) bd2);
       } else if (bd2 instanceof PlayerSpearModel && bd1 instanceof BulletModel){
-        bd1.markRemoved(true);
+        handleCollision((PlayerSpearModel) bd2, (BulletModel) bd1);
       }
 
     } catch (Exception e) {
@@ -168,6 +186,13 @@ public class PhysicsEngine implements ContactListener {
       Vector2 knockbackDir = new Vector2(pb.getPosition()).sub(b.getPosition()).nor();
       // Apply knockback force
       pb.getBody().applyLinearImpulse(knockbackDir.scl(b.getKnockbackForce()), pb.getCentroid(), false);
+    }
+  }
+
+  /** Handle collision between player spear and bullet */
+  public void handleCollision(PlayerSpearModel ps, BulletModel b){
+    if(ps.incrementSpear()){
+      b.markRemoved(true);
     }
   }
 

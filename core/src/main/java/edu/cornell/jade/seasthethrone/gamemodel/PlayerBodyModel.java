@@ -26,6 +26,8 @@ public class PlayerBodyModel extends PolygonModel {
     health = 3;
     iframeCounter = 0;
     iframeLimit = 50;
+    setCategoryBits(PlayerModel.CATEGORY_PLAYER);
+    setMaskBits(BulletModel.CATEGORY_ENEMY_BULLET);
   }
 
   /** Create new player body at position (x,y) */

@@ -14,6 +14,10 @@ import edu.cornell.jade.seasthethrone.util.FilmStrip;
  * multiple joints and bodies for flexible collision control and movement display.
  */
 public class PlayerModel extends ComplexModel implements PlayerRenderable {
+
+  /** Category bitmask for player (for collision filtering) */
+  public static final short CATEGORY_PLAYER = 0x0001;
+
   /** FIXME: stop hardcoding textures */
   /** Frame is player animation */
   private static int FRAMES_IN_ANIMATION = 12;
@@ -89,6 +93,15 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   /** The angle direction of this dash in radians */
   private Vector2 dashDirection;
 
+  /** Whether the player is shooting */
+  private boolean isShooting;
+
+  /** The time (in frames) between each bullet shot */
+  private int shootCooldownLimit;
+
+  /** Frame counter for shooting. Tracks when a subsequent bullet can be shot. */
+  private int shootCounter;
+
   /** Scaling factor for player movement */
   private float moveSpeed;
 
@@ -111,6 +124,10 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     frameCounter = 1;
     dashFrameCounter = 1;
     frameDelay = 3;
+
+    shootCooldownLimit = 20;
+    shootCounter = 0;
+    isShooting = false;
 
     PlayerBodyModel playerBody = new PlayerBodyModel(x, y);
     bodies.add(playerBody);
@@ -224,25 +241,38 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     return isDashing;
   }
 
+  /** Returns if the player can dash */
+  public boolean canDash(){
+    return !isDashing && !isShooting && !isInvincible() && getSpearModel().canSpear() && dashCounter == 0;
+  }
+
+  /** Returns if the player can be set to shooting */
+  public boolean canShoot(){
+    return !isDashing && !isShooting && !isInvincible() && !getSpearModel().canSpear();
+  }
+
+  /**
+   * Returns if the player can shoot one bullet.
+   * @pre isShooting is true.
+   *  */
+  public boolean canShootBullet(){
+    return !getSpearModel().canSpear();
+  }
+
 
   /** Returns the number of current health points of the player. */
   public int getHealth(){
     return getBodyModel().getHealth();
   }
 
-  /**
-   * Sets the player to dashing, if possible
-   * If not possible, will return false.
-   */
-  public boolean checkAndSetDashing() {
-    if(dashCounter == 0){
-      isDashing = true;
-      frameDelay = dashLength/FRAMES_IN_ANIMATION_DASH;
-      frameCounter = 1;
-      getSpearModel().setSpear(true);
-      animationFrame = 0;
-      return true;
-    } return false;
+  /** Sets the player to dashing */
+  public void startDashing() {
+    isDashing = true;
+    frameDelay = dashLength/FRAMES_IN_ANIMATION_DASH;
+    frameCounter = 1;
+    getSpearModel().setSpear(true);
+    animationFrame = 0;
+    setDashCounter(dashCooldownLimit);
   }
 
   /** Set dashing to false */
@@ -281,6 +311,43 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   /** Sets dash direction */
   public void setDashDirection(Vector2 dir) {
     dashDirection = dir;
+  }
+
+  /** Returns if the player is currently shooting */
+  public boolean isShooting() {
+    return isShooting;
+  }
+
+  /** Sets value for shoot counter to the cooldown limit */
+  public void setShootCounter() {
+    shootCounter = shootCooldownLimit;
+  }
+
+  public int getShootCounter() {
+    return shootCounter;
+  }
+
+  public void decrementShootCounter(){
+    shootCounter -= 1;
+  }
+
+  /** Decrease fish counter. If the counter is sets to 0, stop shooting */
+  public void decrementFishCount(){
+    getSpearModel().decrementSpear();
+    if(getSpearModel().getNumSpeared() <= 0){
+      isShooting = false;
+    }
+  }
+
+  /** Sets the player to shooting */
+  public void startShooting() {
+    isShooting = true;
+    shootCounter = 0;
+  }
+
+  /** Sets the player to not shooting */
+  public void stopShooting(){
+    isShooting = false;
   }
 
   /** Returns if the player is currently invincible */

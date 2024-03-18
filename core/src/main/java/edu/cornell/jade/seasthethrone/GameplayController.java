@@ -120,7 +120,7 @@ public class GameplayController implements Screen {
     // Load enemies
 
     physicsEngine = new PhysicsEngine(bounds, world, player);
-    playerController = new PlayerController(bounds, player);
+    playerController = new PlayerController(physicsEngine, player);
 
     renderEngine.addRenderable(player);
     inputController.add(playerController);
