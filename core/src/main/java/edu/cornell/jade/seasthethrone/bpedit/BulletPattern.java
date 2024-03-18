@@ -189,6 +189,15 @@ public class BulletPattern implements Iterator<BulletModel> {
     timer += delta;
   }
 
+  /**
+   * Returns if the there is possibly another bullet which can be created
+   *
+   * @return if another bullet could possibly be created
+   */
+  public boolean doneCreating() {
+    return curBullets.isEmpty();
+  }
+
   public BulletModel next() {
     return curBullets.pop().base;
   }
