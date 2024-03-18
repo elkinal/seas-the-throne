@@ -76,7 +76,6 @@ public class RenderingEngine {
     canvas.clear();
     canvas.begin();
     canvas.getSpriteBatch().setProjectionMatrix(getViewport().getCamera().combined);
-//    System.out.println("num of renderables: "+renderables.size);
     for (Renderable r : renderables) {
       r.draw(this);
     }

@@ -21,7 +21,7 @@ import java.util.stream.StreamSupport;
 public class Level {
     private final Array<HashMap<String, Object>> layers;
 
-    private final Vector2 playerLoc;
+    private Vector2 playerLoc;
 
     private Array<Vector2> bosses = new Array<>();
 
@@ -29,9 +29,9 @@ public class Level {
 
     private Array<Wall> walls = new Array<>();
 
-    private final BackgroundImage background;
+    private BackgroundImage background;
 
-    private Array<Tile> tiles = new Array<>();;
+    private Array<Tile> tiles = new Array<>();
 
     /** The array of tileSets, each tileSet being a nested list of textures representing tiles */
     private Array<TextureRegion[][]> tileSets = new Array<>();
@@ -47,6 +47,7 @@ public class Level {
     /** Ratio between the pixel in a texture and the meter in the world */
     public float WORLD_SCALE = 0.15f;
 
+    /** Side length of a square tile in pixels */
     private final int TILE_SIZE;
 
     /** Width of the Tiled map in tiles*/
@@ -86,7 +87,7 @@ public class Level {
 
         background = new BackgroundImage(getLayer("background"));
 
-        playerLoc = parsePlayerLayer(getLayer("player"));
+        parsePlayerLayer(getLayer("player"));
         parseTileLayer(getLayer("tiles"));
         parseBossLayer(getLayer("bosses"));
         parseWallLayer(getLayer("walls"));
@@ -126,28 +127,24 @@ public class Level {
 
 
     /**
-     * Extracts the position of the player from the player layer and creates a PlayerModel.
+     * Extracts the position of the player from the player layer.
      *
      * @param playerLayer the JSON Tiled player layer
-     *
-     * @return A PlayerModel initialized at the proper coordinates
      * */
-    private Vector2 parsePlayerLayer(HashMap<String, Object> playerLayer) {
+    private void parsePlayerLayer(HashMap<String, Object> playerLayer) {
         HashMap<Object, String> playerWrapper = ((Array<HashMap<Object, String>>) playerLayer.get("objects")).get(0);
 
         float x = Float.parseFloat((String)playerWrapper.get("x"));
         float y = Float.parseFloat((String)playerWrapper.get("y"));
         Vector2 playerPos = new Vector2(x,y);
 
-        return tiledToWorldCoords(playerPos);
+        playerLoc = tiledToWorldCoords(playerPos);
     }
 
     /**
      * Reads a JSON Tiled tile layer into an array of Tile objects
      *
      * @param tileLayer the JSON Tiled tile layer
-     *
-     * @return an array of Tile objects
      * */
     private void parseTileLayer(HashMap<String, Object> tileLayer) {
         Array<String> tileList = (Array<String>) tileLayer.get("data");
@@ -171,6 +168,11 @@ public class Level {
         throw new UnsupportedOperationException("parseEnemyLayer not implemented");
     }
 
+    /**
+     * Extracts boss locations from a JSON boss layer
+     *
+     * @param bossLayer JSON object layer containing bosses
+     * */
     private void parseBossLayer(HashMap<String, Object> bossLayer) {
         Array<HashMap<Object, String>> bossWrapperList = (Array<HashMap<Object, String>>) bossLayer.get("objects");
 
@@ -181,6 +183,11 @@ public class Level {
         }
     }
 
+    /**
+     * Extracts wall objects from JSON wall layer
+     *
+     * @param wallLayer JSON object layer containing walls
+     * */
     private void parseWallLayer(HashMap<String, Object> wallLayer) {
         Array<HashMap<Object, String>> wallWrapperList = (Array<HashMap<Object, String>>) wallLayer.get("objects");
 
@@ -190,14 +197,18 @@ public class Level {
             float width = Float.parseFloat((String) wallWrapper.get("width"));
             float height = Float.parseFloat((String) wallWrapper.get("height"));
 
-            Vector2 pos = tiledToWorldCoords(new Vector2(x + width/2f, y + height/2f - 2.8f*TILE_SIZE));
+            Vector2 pos = tiledToWorldCoords(new Vector2(x + width/2f, y + height/2f - 2f*TILE_SIZE));
             Vector2 dims = (new Vector2(width * WORLD_SCALE, height * WORLD_SCALE));
             walls.add(new Wall(pos.x, pos.y, dims.x, dims.y));
         }
     }
 
     /**
-     * 20 px in Tiled is 1 meter in Box2d
+     * Converts Tiled coordinates to physics world coordinates based on WORLD_SCALE
+     *
+     * @param tiledCoords vector position in Tiled coordinates
+     *
+     * @return the vector position in physics world coordinates
      * */
     private Vector2 tiledToWorldCoords(Vector2 tiledCoords) {
         float x = tiledCoords.x - (TILED_WORLD_WIDTH * TILE_SIZE) / 2f;

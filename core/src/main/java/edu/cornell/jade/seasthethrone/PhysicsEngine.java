@@ -56,7 +56,7 @@ public class PhysicsEngine implements ContactListener {
    */
   public void spawnBulletPattern(int bulletTimer) {
     for (BossModel boss : bosses) {
-      float speed = 4;
+      float speed = 6;
       Vector2 bossPos = boss.getPosition();
       float theta = bulletTimer * 0.01f;
       Vector2 v_i = new Vector2((float) Math.cos(theta), (float) Math.sin(theta));
@@ -86,7 +86,7 @@ public class PhysicsEngine implements ContactListener {
    * @param delta Number of seconds since last animation frame
    */
   public void update(float delta) {
-    if (bulletTimer % 30 == 0) {
+    if (bulletTimer % 20 == 0) {
       spawnBulletPattern(bulletTimer);
     }
     bulletTimer += 1;
