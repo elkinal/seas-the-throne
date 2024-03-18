@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import edu.cornell.jade.seasthethrone.gamemodel.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.PlayerModel;
+import edu.cornell.jade.seasthethrone.input.BossController;
 import edu.cornell.jade.seasthethrone.input.InputController;
 import edu.cornell.jade.seasthethrone.input.PlayerController;
 import edu.cornell.jade.seasthethrone.level.Level;
@@ -20,6 +21,7 @@ import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 
+import javax.swing.plaf.basic.BasicPopupMenuSeparatorUI;
 import java.util.Vector;
 
 /**
@@ -49,6 +51,7 @@ public class GameplayController implements Screen {
   /** Sub-controller for handling updating physics engine based on input */
   PlayerController playerController;
 
+  BossController bossController;
   /** Rendering Engine */
   RenderingEngine renderEngine;
 
@@ -121,12 +124,12 @@ public class GameplayController implements Screen {
     playerController = new PlayerController(bounds, player);
 
     // Load bosses
-    for (Vector2 bossLoc : level.getBosses()) {
-      BossModel boss = new BossModel(bossLoc.x, bossLoc.y);
-      boss.setBodyType(BodyDef.BodyType.StaticBody);
-      renderEngine.addRenderable(boss);
-      physicsEngine.addObject(boss);
-    }
+    Vector2 bossLoc = level.getBosses().get(0);
+    BossModel boss = new BossModel(bossLoc.x, bossLoc.y);
+    boss.setBodyType(BodyDef.BodyType.StaticBody);
+    renderEngine.addRenderable(boss);
+    physicsEngine.addObject(boss);
+    bossController = new BossController(boss);
 
     // Load walls
     for (Wall wall : level.getWalls()) {
@@ -159,6 +162,7 @@ public class GameplayController implements Screen {
     // when player is null
     if (gameState != GameState.OVER) {
       playerController.update();
+      bossController.update();
       physicsEngine.update(delta);
     }
 
@@ -180,7 +184,7 @@ public class GameplayController implements Screen {
 
 
     draw(delta);
-//    debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
+    debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
 
     if (gameState == GameState.OVER) {
       if (inputController.didReset()) {

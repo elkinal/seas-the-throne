@@ -58,14 +58,22 @@ public class PhysicsEngine implements ContactListener {
     for (BossModel boss : bosses) {
       float speed = 4;
       Vector2 bossPos = boss.getPosition();
-      BulletModel bullet = new BulletModel(bossPos.x, bossPos.y + 2, 0.5f);
-      bullet.setBodyType(BodyDef.BodyType.KinematicBody);
       float theta = bulletTimer * 0.01f;
       Vector2 v_i = new Vector2((float) Math.cos(theta), (float) Math.sin(theta));
-      bullet.setVX(speed * v_i.x);
-      bullet.setVY(speed * v_i.y);
-      addObject(bullet);
-      bullet.createFixtures();
+
+      BulletModel bullet1 = new BulletModel(bossPos.x, bossPos.y + 2, 0.5f);
+      bullet1.setBodyType(BodyDef.BodyType.KinematicBody);
+      bullet1.setVX(speed * v_i.x);
+      bullet1.setVY(speed * v_i.y);
+      addObject(bullet1);
+      bullet1.createFixtures();
+
+      BulletModel bullet2 = new BulletModel(bossPos.x, bossPos.y + 2, 0.5f);
+      bullet2.setBodyType(BodyDef.BodyType.KinematicBody);
+      bullet2.setVX(-speed * v_i.x);
+      bullet2.setVY(-speed * v_i.y);
+      addObject(bullet2);
+      bullet2.createFixtures();
     }
   }
 
@@ -157,8 +165,10 @@ public class PhysicsEngine implements ContactListener {
       Model bd2 = (Model) body2.getUserData();
 
       if (bd1 instanceof PlayerBodyModel && bd2 instanceof BulletModel) {
+        System.out.println("player hit");
         handleCollision((PlayerBodyModel) bd1, (BulletModel) bd2);
       } else if (bd2 instanceof PlayerBodyModel && bd1 instanceof BulletModel) {
+        System.out.println("player hit");
         handleCollision((PlayerBodyModel) bd2, (BulletModel) bd1);
       } else if (bd1 instanceof PlayerSpearModel && bd2 instanceof BulletModel){
         bd2.markRemoved(true);
