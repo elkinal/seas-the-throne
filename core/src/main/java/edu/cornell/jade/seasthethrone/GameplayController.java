@@ -95,6 +95,7 @@ public class GameplayController implements Screen {
     this.renderEngine = new RenderingEngine(DEFAULT_WIDTH, DEFAULT_HEIGHT, viewport, WORLD_SCALE);
 
     setupGameplay();
+
   }
 
   public void show() {
@@ -139,7 +140,6 @@ public class GameplayController implements Screen {
     }
 
     inputController.add(playerController);
-
   }
 
   public void render(float delta) {
@@ -164,6 +164,9 @@ public class GameplayController implements Screen {
       playerController.update();
       bossController.update();
       physicsEngine.update(delta);
+
+      // Update camera
+      updateCamera();
     }
 
     if (!playerController.isAlive()) {
@@ -182,9 +185,8 @@ public class GameplayController implements Screen {
         renderEngine.addRenderable(r);
     }
 
-
     draw(delta);
-    debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
+//    debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
 
     if (gameState == GameState.OVER) {
       if (inputController.didReset()) {
@@ -198,6 +200,19 @@ public class GameplayController implements Screen {
   public void resize(int width, int height) {
     viewport.update(width, height);
     renderEngine.getGameCanvas().resize();
+  }
+
+  /** Updates the camera position to keep the player centered on the screen */
+  private void updateCamera() {
+    Vector2 playerPos = playerController.getLocation();
+    Vector2 cameraPos = viewport.unproject(new Vector2(viewport.getCamera().position.x, viewport.getCamera().position.y));
+    Vector2 diff = playerPos.sub(cameraPos).sub(DEFAULT_WIDTH/2, -DEFAULT_HEIGHT/2);
+
+    viewport.getCamera().translate(diff.x, diff.y, 0);
+//    if (diff.len() > 15f){
+//      float CAMERA_SPEED = 0.01f;
+//      viewport.getCamera().translate(CAMERA_SPEED* diff.x,CAMERA_SPEED* diff.y, 0);
+//    }
   }
 
   public void pause() {

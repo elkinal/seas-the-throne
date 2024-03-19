@@ -22,23 +22,12 @@ public class BackgroundImage implements Renderable {
 
     private Array<HashMap<String, Object>> properties;
 
-    public BackgroundImage(HashMap<String, Object> bgLayer) {
-        float x;
-        float y;
-        if ((String)bgLayer.get("offsetx") == null) {
-            x = 0;
-            y = 0;
-        } else {
-            x = Float.parseFloat((String) bgLayer.get("offsetx"));
-            y = Float.parseFloat((String) bgLayer.get("offsety"));
-        }
-        position = new Vector2(x, y);
-        texture = new TextureRegion(new Texture("levels/"+(String)bgLayer.get("image")));
-        opacity = Float.parseFloat((String)bgLayer.get("opacity"));
+    public BackgroundImage(Vector2 pos, int width, int height, TextureRegion texture) {
 
-        properties = (Array<HashMap<String, Object>>) bgLayer.get("properties");
-        height = Integer.parseInt((String)getProperty("height").get("value"));
-        width = Integer.parseInt((String)getProperty("width").get("value"));
+        position = pos;
+        this.texture = texture;
+        this.height = height;
+        this.width = width;
     }
 
     public void draw(RenderingEngine renderer) {
