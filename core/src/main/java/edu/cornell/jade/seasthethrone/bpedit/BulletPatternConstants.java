@@ -1,9 +1,11 @@
 package edu.cornell.jade.seasthethrone.bpedit;
 
-import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import com.badlogic.gdx.math.MathUtils;
 import edu.cornell.jade.seasthethrone.bpedit.BulletPattern.BulletFamily;
 import edu.cornell.jade.seasthethrone.bpedit.BulletPattern.Effect;
+import com.badlogic.gdx.utils.Pool;
+import com.badlogic.gdx.utils.Array;
+import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 
 /**
  * A Temperary class to keep track of hard coded bullet patterns
@@ -11,26 +13,36 @@ import edu.cornell.jade.seasthethrone.bpedit.BulletPattern.Effect;
 
 public class BulletPatternConstants {
   /** A Spiral bullet pattern */
-  static BulletPattern RING;
+  public static BulletPattern RING;
 
   static {
+    class Delay implements Effect {
+      public void apply(Array<BulletFamily> bullets, Pool<BulletFamily> familyPool, Pool<BulletModel> basePool) {
+        int numBullets = bullets.size;
+        for (int i = 0; i < numBullets; i++) {
+          BulletFamily b = bullets.get(i).clone(familyPool);
+          b.timestamp = b.timestamp + 120;
+          b.addEffect(new Delay());
+          bullets.add(b);
+        }
+      }
+    }
+
     RING = new BulletPattern();
     Effect ring = (bullets, familyPool, basePool) -> {
-      for (BulletFamily b : bullets) {
+      int numBullets = bullets.size;
+      for (int k = 0; k < numBullets; k++) {
+        BulletFamily orig = bullets.get(k);
         for (int i = 0; i < 10; i++) {
-          float theta = MathUtils.PI / i;
-          BulletFamily clone = b.mostlyClone(familyPool, basePool);
-          float vx = b.getBase().getVX(), vy = b.getBase().getVY();
-          float mag = (float) Math.sqrt(vx * vx + vy * vy);
-          clone.getBase().setVX(mag * MathUtils.cos(theta));
-          clone.getBase().setVY(mag * MathUtils.sin(theta));
+          float theta = i * 2f * MathUtils.PI / 10;
+          BulletFamily clone = orig.clone(familyPool);
+          clone.rotate(theta, 0, 0);
+          bullets.add(clone);
         }
       }
     };
-    BulletModel bullet = new BulletModel(3, 3, 0.5f);
-    bullet.setVX(4 * 0);
-    bullet.setVY(4 * 1);
-    BulletFamily f1 = new BulletFamily(bullet, 1);
+    BulletFamily f1 = new BulletFamily(2f, 0f, 1f, 0f, 0.5f, 1);
+    f1.addEffect(new Delay());
     f1.addEffect(ring);
     RING.addFamily(f1);
   }

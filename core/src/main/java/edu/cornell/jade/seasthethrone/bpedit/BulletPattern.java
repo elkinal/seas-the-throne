@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.Queue;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.ReflectionPool;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
+import com.badlogic.gdx.math.MathUtils;
 
 /**
  * Stores a bullet pattern. This is sourse of bullets which, at a given an
@@ -49,19 +50,21 @@ public class BulletPattern {
      * The <code>BulletFamily</code>'s timestamp. If the bullet pattern's timer is
      * after this timestamp, then this bullet should be spawned.
      */
-    int timestamp;
+    protected int timestamp;
 
     /** The base bullet model x coordinate */
-    float bx;
+    protected float bx;
     /** The base bullet model y coordinate */
-    float by;
+    protected float by;
     /** The base bullet model velocity x component */
-    float bvx;
+    protected float bvx;
     /** The base bullet model velocity y component */
-    float bvy;
+    protected float bvy;
+    /** The radius of the constructed bullet */
+    protected float radius;
 
     /** An ordered list of effects to be applied to the base bullet. */
-    Queue<Effect> effect;
+    protected Queue<Effect> effect;
 
     /**
      * Constructs a <code>BulletFamily</code>
@@ -70,17 +73,49 @@ public class BulletPattern {
      * @param by        the y coordinate of the base bullet
      * @param bvx       the x component of the velocity vector of the base bullet
      * @param bvy       the y component of the velocity vector of the base bullet
+     * @param radius    the raidus of the constructed bullet
      * @param timestamp the time at which the base bullet should fire
      */
-    public BulletFamily(float bx, float by, float bvx, float bvy, int timestamp) {
+    public BulletFamily(float bx, float by, float bvx, float bvy, float radius, int timestamp) {
       super(-timestamp);
       this.timestamp = timestamp;
       this.bx = bx;
       this.by = by;
       this.bvx = bvx;
       this.bvy = bvy;
+      this.radius = radius;
 
       this.effect = new Queue<Effect>();
+    }
+
+    /** A zero argument constructor for use with a reflection rool */
+    public BulletFamily() {
+      super(0);
+    }
+
+    /**
+     * Constructs a <code>BulletFamily</code> using a pool for allocation.
+     *
+     * @param bx        the x coordinate of the base bullet
+     * @param by        the y coordinate of the base bullet
+     * @param bvx       the x component of the velocity vector of the base bullet
+     * @param bvy       the y component of the velocity vector of the base bullet
+     * @param radius    the raidus of the constructed bullet
+     * @param timestamp the time at which the base bullet should fire
+     */
+    public static BulletFamily construct(float bx, float by, float bvx, float bvy, float radius, int timestamp,
+        Pool<BulletFamily> pool) {
+      BulletFamily res = pool.obtain();
+      res.timestamp = timestamp;
+      res.bx = bx;
+      res.by = by;
+      res.bvx = bvx;
+      res.bvy = bvy;
+      res.radius = radius;
+
+      res.effect = new Queue<Effect>();
+
+      return res;
     }
 
     @Override
@@ -97,6 +132,26 @@ public class BulletPattern {
     public void translate(float x, float y) {
       this.bx += x;
       this.by += y;
+    }
+
+    /**
+     * Rotate a base bullet around a specified point counter clockwise.
+     *
+     * @param angle the angle in radians to rotate the point counter clockwise
+     * @param x     x coordinate of point to rotate around
+     * @param y     y coordinate of point to rotate around
+     */
+    public void rotate(float angle, float x, float y) {
+      float ox = this.bx - x;
+      float oy = this.by - y;
+      float cos = MathUtils.cos(angle);
+      float sin = MathUtils.sin(angle);
+      this.bx = ox * cos - oy * sin + x;
+      this.by = ox * sin + oy * cos + y;
+      float ovx = this.bvx;
+      float ovy = this.bvy;
+      this.bvx = ovx * cos - ovy * sin;
+      this.bvy = ovx * sin + ovy * cos;
     }
 
     /**
@@ -128,21 +183,14 @@ public class BulletPattern {
      */
 
     public BulletFamily clone(Pool<BulletFamily> familyPool) {
-      BulletFamily newFamily = familyPool.obtain();
-      newFamily.bx = bx;
-      newFamily.by = by;
-      newFamily.bvx = bvx;
-      newFamily.bvy = bvy;
-      newFamily.timestamp = timestamp;
+      BulletFamily newFamily = BulletFamily.construct(bx, by, bvx, bvy, radius, timestamp, familyPool);
       for (Effect e : effect)
         newFamily.addEffect(e);
       return newFamily;
     }
 
     public BulletModel realizeBase(Pool<BulletModel> modelPool) {
-      BulletModel m = modelPool.obtain();
-      m.setX(bx);
-      m.setY(by);
+      BulletModel m = BulletModel.construct(bx, by, radius, modelPool);
       m.setVX(bvx);
       m.setVY(bvy);
       return m;
@@ -214,13 +262,15 @@ public class BulletPattern {
       return false;
     BulletFamily p = curBullets.peek();
     while (!p.effect.isEmpty()) {
-      curBullets.pop();
-
-      bulletFamilyCache.add(p);
+      BulletFamily clone = p.clone(bulletFamilyPool);
+      clone.effect.removeFirst();
+      bulletFamilyCache.add(clone);
       Effect e = p.effect.removeFirst();
       e.apply(bulletFamilyCache, bulletFamilyPool, bulletBasePool);
-      for (BulletFamily np : bulletFamilyCache)
+      for (BulletFamily np : bulletFamilyCache) {
         curBullets.add(np);
+      }
+      bulletFamilyCache.clear();
 
       if (curBullets.isEmpty() || curBullets.peek().timestamp > timer)
         return false;

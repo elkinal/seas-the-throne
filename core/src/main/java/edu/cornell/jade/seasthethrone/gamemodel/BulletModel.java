@@ -4,6 +4,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import edu.cornell.jade.seasthethrone.model.SimpleModel;
+import com.badlogic.gdx.utils.Pool;
 
 /**
  * Model for the game bullet objects. This class extends {@link SimpleModel} to be represented as a
@@ -35,6 +36,29 @@ public class BulletModel extends SimpleModel {
     shape.setRadius(radius);
     setBodyType(BodyDef.BodyType.DynamicBody);
     setName("bullet");
+  }
+
+  /**
+   * {@link BulletModel} constructor using no arguments for compatability with pooling. NOTE: as of now, you must
+   * call activatePhysics then createFixtures after constructing the BulletModel for it to be
+   * properly created.
+   */
+  public BulletModel() {
+    super(0, 0);
+    shape = new CircleShape();
+    shape.setRadius(0);
+    setBodyType(BodyDef.BodyType.DynamicBody);
+    setName("bullet");
+  }
+
+  public static BulletModel construct(float x, float y, float radius, Pool<BulletModel> pool) {
+    BulletModel res = pool.obtain();
+    res.setX(x);
+    res.setY(y);
+    res.shape.setRadius(radius);
+    res.setBodyType(BodyDef.BodyType.DynamicBody);
+    res.setName("bullet");
+    return res;
   }
 
   /**

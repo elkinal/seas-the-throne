@@ -26,6 +26,7 @@ public class BulletController {
   public BulletController(PhysicsEngine physicsEngine) {
     patterns = new PooledList<>();
     bulletTimer = 0;
+    this.physicsEngine = physicsEngine;
   }
 
   /**

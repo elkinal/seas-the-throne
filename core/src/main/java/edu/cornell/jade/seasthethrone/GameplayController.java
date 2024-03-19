@@ -10,6 +10,7 @@ import edu.cornell.jade.seasthethrone.gamemodel.PlayerModel;
 import edu.cornell.jade.seasthethrone.input.InputController;
 import edu.cornell.jade.seasthethrone.input.PlayerController;
 import edu.cornell.jade.seasthethrone.bpedit.BulletController;
+import edu.cornell.jade.seasthethrone.bpedit.BulletPatternConstants;
 import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
@@ -94,9 +95,11 @@ public class GameplayController implements Screen {
     PlayerModel player = new PlayerModel(0, 0);
     physicsEngine = new PhysicsEngine(bounds, world, player);
     playerController = new PlayerController(bounds, player);
+    bulletController = new BulletController(physicsEngine);
 
     renderEngine.addRenderable(player);
     inputController.add(playerController);
+    bulletController.addPattern(BulletPatternConstants.RING);
   }
 
   public void render(float delta) {
@@ -114,6 +117,7 @@ public class GameplayController implements Screen {
   public void update(float delta) {
     viewport.apply();
     inputController.update();
+    bulletController.update();
 
     // Right now just errors if you try to update playerController or physicsEngine
     // when player is null
