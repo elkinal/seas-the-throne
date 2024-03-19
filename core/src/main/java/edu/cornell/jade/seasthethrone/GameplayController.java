@@ -99,7 +99,6 @@ public class GameplayController implements Screen {
 
     renderEngine.addRenderable(player);
     inputController.add(playerController);
-    bulletController.addPattern(BulletPatternConstants.RING);
   }
 
   public void render(float delta) {

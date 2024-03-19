@@ -252,11 +252,24 @@ public class BulletPattern {
     return curBullets.isEmpty();
   }
 
+  /**
+   * Returns a bullet created by the bullet pattern. Requires a bullet to exist to
+   * be obtained.
+   *
+   * @return a bullet in the current pattern if one exists at the current
+   *         timestamp.
+   */
   public BulletModel next() {
+    assert hasNext();
     BulletFamily f = curBullets.pop();
     return f.realizeBase(bulletBasePool);
   }
 
+  /**
+   * Returns if there is a bullet to return at the current timestamp.
+   *
+   * @return if ther eis a bullet to return at the current timestamp.
+   */
   public boolean hasNext() {
     if (curBullets.isEmpty() || curBullets.peek().timestamp > timer)
       return false;

@@ -8,7 +8,9 @@ import com.badlogic.gdx.utils.Array;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 
 /**
- * A Temperary class to keep track of hard coded bullet patterns
+ * A temperary class to keep track of hard coded bullet patterns. This servers
+ * as an example of creating patterns and effects, but should not be used in
+ * production.
  */
 
 public class BulletPatternConstants {
