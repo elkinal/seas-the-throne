@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import edu.cornell.jade.seasthethrone.gamemodel.PlayerModel;
 import edu.cornell.jade.seasthethrone.input.InputController;
 import edu.cornell.jade.seasthethrone.input.PlayerController;
+import edu.cornell.jade.seasthethrone.bpedit.BulletController;
 import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
@@ -42,6 +43,9 @@ public class GameplayController implements Screen {
 
   /** Rendering Engine */
   RenderingEngine renderEngine;
+
+  /** Controller for keeping track of bullet patterns */
+  protected BulletController bulletController;
 
   /** Width of the game world in Box2d units */
   protected static final float DEFAULT_WIDTH = 64.0f;

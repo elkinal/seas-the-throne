@@ -23,7 +23,7 @@ import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
  * By default, the <code>BulletPattern</code>'s internal timer is set to
  * <code>0</code>.
  */
-public class BulletPattern implements Iterator<BulletModel> {
+public class BulletPattern {
   /**
    * An effect on a bullet model. This describes a mapping from one set of bullets
    * to another set of bullets.
@@ -51,8 +51,14 @@ public class BulletPattern implements Iterator<BulletModel> {
      */
     int timestamp;
 
-    /** The base bullet model before any effects are applied. */
-    BulletModel base;
+    /** The base bullet model x coordinate */
+    float bx;
+    /** The base bullet model y coordinate */
+    float by;
+    /** The base bullet model velocity x component */
+    float bvx;
+    /** The base bullet model velocity y component */
+    float bvy;
 
     /** An ordered list of effects to be applied to the base bullet. */
     Queue<Effect> effect;
@@ -60,23 +66,37 @@ public class BulletPattern implements Iterator<BulletModel> {
     /**
      * Constructs a <code>BulletFamily</code>
      *
-     * @param base      the base bullet the family is constructed from
+     * @param bx        the x coordinate of the base bullet
+     * @param by        the y coordinate of the base bullet
+     * @param bvx       the x component of the velocity vector of the base bullet
+     * @param bvy       the y component of the velocity vector of the base bullet
      * @param timestamp the time at which the base bullet should fire
      */
-    public BulletFamily(BulletModel base, int timestamp) {
+    public BulletFamily(float bx, float by, float bvx, float bvy, int timestamp) {
       super(-timestamp);
       this.timestamp = timestamp;
-      this.base = base;
+      this.bx = bx;
+      this.by = by;
+      this.bvx = bvx;
+      this.bvy = bvy;
+
       this.effect = new Queue<Effect>();
     }
 
+    @Override
+    public float getValue() {
+      return -timestamp;
+    }
+
     /**
-     * Sets the timestamp
+     * Translates the base bullet pattern by some x and y
      *
-     * @param timestamp the time to set
+     * @param x x amount to translate by
+     * @param y y amount to translate by
      */
-    public void setTimestamp(int timestamp) {
-      this.timestamp = timestamp;
+    public void translate(float x, float y) {
+      this.bx += x;
+      this.by += y;
     }
 
     /**
@@ -86,24 +106,6 @@ public class BulletPattern implements Iterator<BulletModel> {
      */
     public int getTimestamp() {
       return timestamp;
-    }
-
-    /**
-     * Sets the base
-     *
-     * @param base the base to set
-     */
-    public void setBase(BulletModel base) {
-      this.base = base;
-    }
-
-    /**
-     * Gets the base
-     *
-     * @return the base's timestamp
-     */
-    public BulletModel getBase() {
-      return base;
     }
 
     /**
@@ -121,25 +123,29 @@ public class BulletPattern implements Iterator<BulletModel> {
      * properties the same as its parent
      *
      * @param familyPool the pool to obtain new bullet families from
-     * @param basePool   the pool to obtain new bullet models from
      *
      * @return the new bullet family
      */
 
-    public BulletFamily mostlyClone(Pool<BulletFamily> familyPool, Pool<BulletModel> basePool) {
+    public BulletFamily clone(Pool<BulletFamily> familyPool) {
       BulletFamily newFamily = familyPool.obtain();
+      newFamily.bx = bx;
+      newFamily.by = by;
+      newFamily.bvx = bvx;
+      newFamily.bvy = bvy;
+      newFamily.timestamp = timestamp;
       for (Effect e : effect)
         newFamily.addEffect(e);
-      newFamily.setTimestamp(timestamp);
-
-      BulletModel newBase = basePool.obtain();
-      newBase.setX(base.getX());
-      newBase.setY(base.getY());
-      newBase.setVX(base.getVX());
-      newBase.setVY(base.getVY());
-      newFamily.setBase(newBase);
-
       return newFamily;
+    }
+
+    public BulletModel realizeBase(Pool<BulletModel> modelPool) {
+      BulletModel m = modelPool.obtain();
+      m.setX(bx);
+      m.setY(by);
+      m.setVX(bvx);
+      m.setVY(bvy);
+      return m;
     }
   }
 
@@ -199,7 +205,8 @@ public class BulletPattern implements Iterator<BulletModel> {
   }
 
   public BulletModel next() {
-    return curBullets.pop().base;
+    BulletFamily f = curBullets.pop();
+    return f.realizeBase(bulletBasePool);
   }
 
   public boolean hasNext() {

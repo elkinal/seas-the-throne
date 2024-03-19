@@ -19,13 +19,9 @@ public class PhysicsEngine implements ContactListener {
   /** The boundary of the world */
   private Rectangle bounds;
 
-  /** Timer for spawning bullets */
-  private int bulletTimer;
-
   public PhysicsEngine(Rectangle bounds, World world, PlayerModel player) {
     this.world = world;
     this.bounds = new Rectangle(bounds);
-    this.bulletTimer = 0;
     world.setContactListener(this);
     addObject(player);
   }
@@ -47,22 +43,6 @@ public class PhysicsEngine implements ContactListener {
   }
 
   /**
-   * Spawns bullets at a set interval in a circular pattern
-   *
-   * @param bulletTimer value of the timer, used to set angle
-   */
-  public void spawnBulletPattern(int bulletTimer) {
-    float speed = 4;
-    BulletModel bullet = new BulletModel(3, 3, 0.5f);
-    float theta = bulletTimer * 2;
-    Vector2 v_i = new Vector2((float) Math.cos(theta), (float) Math.sin(theta));
-    bullet.setVX(speed * v_i.x);
-    bullet.setVY(speed * v_i.y);
-    addObject(bullet);
-    bullet.createFixtures();
-  }
-
-  /**
    * The core gameplay loop of this world.
    *
    * <p>This method is called after input is read, but before collisions are resolved. The very last
@@ -71,11 +51,6 @@ public class PhysicsEngine implements ContactListener {
    * @param delta Number of seconds since last animation frame
    */
   public void update(float delta) {
-    if (bulletTimer % 60 == 0) {
-      spawnBulletPattern(bulletTimer);
-    }
-    bulletTimer += 1;
-
     // turn the physics engine crank
     world.step(delta, 8, 4);
 
@@ -100,7 +75,7 @@ public class PhysicsEngine implements ContactListener {
    *
    * @param obj The object to add
    */
-  protected void addObject(Model obj) {
+  public void addObject(Model obj) {
     assert inBounds(obj) : "Object is not in bounds";
     objects.add(obj);
     obj.activatePhysics(world);
