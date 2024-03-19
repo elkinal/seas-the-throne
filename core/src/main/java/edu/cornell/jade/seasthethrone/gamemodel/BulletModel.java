@@ -69,7 +69,7 @@ public class BulletModel extends SimpleModel implements FishRenderable {
     super(x, y);
     shape = new CircleShape();
     shape.setRadius(radius);
-    knockbackForce = 15f;
+    knockbackForce = 20f;
     setBodyType(BodyDef.BodyType.DynamicBody);
     setName("bullet");
     faceDirection = Direction.DOWN;

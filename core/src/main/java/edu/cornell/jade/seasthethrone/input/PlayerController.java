@@ -190,26 +190,10 @@ public class PlayerController implements Controllable {
     setVelPercentages(hoff, voff);
     orientPlayer();
 
-    // Handle dashing
     player.updateSpear(dashDirection);
-    if (player.isDashing()) {
-      if (player.getDashCounter() <= 0) {
-        // exit dash
-        player.stopDashing();
-        //player.setDashCounter(player.getDashCooldownLimit());
-      }
-    } else {
-      player.setDashCounter(Math.max(0, player.getDashCounter() - 1));
-    }
 
-    if (player.isShooting()){
-      if (player.getShootCounter() <= 0){
-        if(player.canShootBullet()) {
-          shoot();
-        }
-      } else{
-        player.decrementShootCounter();
-      }
+    if(player.canShootBullet()) {
+      shoot();
     }
 
     dashingPressed = false;

@@ -382,7 +382,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
 
   /** Updates the object's physics state (NOT GAME LOGIC).
    *
-   * Use this for dash cooldown checking/resetting.
+   * Use this for cooldown checking/resetting.
    * */
   @Override
   public void update(float delta) {
@@ -395,6 +395,10 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
       }
     } else {
       dashCounter = Math.max(0, dashCounter - 1);
+    }
+
+    if (isShooting()){
+      shootCounter -= 1;
     }
 
     super.update(delta);
@@ -410,6 +414,9 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   }
 
   public Direction direction() {
+    // Don't update direction when stunned
+    if(isStunned()) return faceDirection;
+
     float vx = getVX();
     float vy = getVY();
 
