@@ -20,6 +20,8 @@ public class PlayerBodyModel extends PolygonModel {
   /** Frame counter for iframes */
   private int iframeCounter;
 
+  PlayerShadowModel shadow;
+
   public PlayerBodyModel(float[] vertices, float x, float y) {
     super(vertices, x, y);
     isHit = false;
@@ -33,6 +35,9 @@ public class PlayerBodyModel extends PolygonModel {
     // Make a triangle for now
     this(new float[]{-0.5f, -1, 0.5f, -1, 0, 1}, x, y);
   }
+
+  public void setShadow(PlayerShadowModel shadow) { this.shadow = shadow; }
+  public PlayerShadowModel getShadow() {return shadow;}
 
   /** Returns if the player body was hit */
   public boolean isHit() {

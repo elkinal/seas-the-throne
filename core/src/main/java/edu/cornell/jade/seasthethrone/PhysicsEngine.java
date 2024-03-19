@@ -174,6 +174,8 @@ public class PhysicsEngine implements ContactListener {
       } else if (bd2 instanceof PlayerSpearModel && bd1 instanceof BulletModel){
         bd1.markRemoved(true);
       }
+      else if (bd1 instanceof PlayerShadowModel && bd2 instanceof BulletModel){}
+      else if (bd2 instanceof PlayerShadowModel && bd1 instanceof BulletModel){}
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -187,10 +189,13 @@ public class PhysicsEngine implements ContactListener {
       pb.setHit(true);
       pb.setInvincible();
       // Calculate knockback direction
-      Vector2 knockbackDir = new Vector2(pb.getPosition()).sub(b.getPosition()).nor();
+//      Vector2 knockbackDir = new Vector2(pb.getPosition()).sub(b.getPosition()).nor();
       // Apply knockback force
-      pb.getBody().applyLinearImpulse(knockbackDir.scl(b.getKnockbackForce()), pb.getCentroid(), false);
+//      pb.getBody().applyLinearImpulse(knockbackDir.scl(b.getKnockbackForce()), pb.getCentroid(), false);
     }
+  }
+
+  public void handleCollision(PlayerShadowModel pb, BulletModel b) {
   }
 
   @Override
