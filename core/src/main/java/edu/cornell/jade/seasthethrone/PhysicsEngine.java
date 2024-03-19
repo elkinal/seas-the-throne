@@ -28,7 +28,6 @@ public class PhysicsEngine implements ContactListener {
   public PhysicsEngine(Rectangle bounds, World world, PlayerModel player) {
     this.world = world;
     this.bounds = new Rectangle(bounds);
-    this.bulletTimer = 0;
     world.setContactListener(this);
     addObject(player);
   }
@@ -118,7 +117,7 @@ public class PhysicsEngine implements ContactListener {
    *
    * @param obj The object to add
    */
-  protected void addObject(Model obj) {
+  public void addObject(Model obj) {
     assert inBounds(obj) : "Object is not in bounds";
     objects.add(obj);
     obj.activatePhysics(world);

@@ -5,6 +5,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import edu.cornell.jade.seasthethrone.model.SimpleModel;
+import com.badlogic.gdx.utils.Pool;
 import edu.cornell.jade.seasthethrone.render.FishRenderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.Direction;
@@ -72,6 +73,29 @@ public class BulletModel extends SimpleModel implements FishRenderable {
   /** Returns knockback force to apply to player on collision */
   public float getKnockbackForce() {
     return knockbackForce;
+  }
+
+  /**
+   * {@link BulletModel} constructor using no arguments for compatability with pooling. NOTE: as of now, you must
+   * call activatePhysics then createFixtures after constructing the BulletModel for it to be
+   * properly created.
+   */
+  public BulletModel() {
+    super(0, 0);
+    shape = new CircleShape();
+    shape.setRadius(0);
+    setBodyType(BodyDef.BodyType.DynamicBody);
+    setName("bullet");
+  }
+
+  public static BulletModel construct(float x, float y, float radius, Pool<BulletModel> pool) {
+    BulletModel res = pool.obtain();
+    res.setX(x);
+    res.setY(y);
+    res.shape.setRadius(radius);
+    res.setBodyType(BodyDef.BodyType.DynamicBody);
+    res.setName("bullet");
+    return res;
   }
 
   /**
