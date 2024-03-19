@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import edu.cornell.jade.seasthethrone.model.ComplexModel;
 import edu.cornell.jade.seasthethrone.render.PlayerRenderable;
+import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.Direction;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
@@ -16,24 +17,59 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   /** FIXME: stop hardcoding textures */
   /** Frame is player animation */
   private static int FRAMES_IN_ANIMATION = 12;
+  private static int FRAMES_IN_ANIMATION_DASH = 5;
 
   /** Player texture when facing up */
-  public Texture PLAYER_TEXTURE_UP = new Texture("playerspriterunfilmstrip_up.png");
+  public static final Texture PLAYER_TEXTURE_UP = new Texture("playerspriterun_up_wspear.png");
 
   /** Player texture when facing down */
-  public static final Texture PLAYER_TEXTURE_DOWN = new Texture("playerspriterun_down_clean.png");
+  public static final Texture PLAYER_TEXTURE_DOWN = new Texture("playerspriterun_down_wspear.png");
 
-  /** Player texture when facing horizontally FIXME: actually add this texture */
-  public static final Texture PLAYER_TEXTURE_HORI = null;
+  /** Player texture when facing left */
+  public static final Texture PLAYER_TEXTURE_LEFT = new Texture("playerspriterun_left_wspear.png");
+
+  /** Player texture when facing right */
+  public static final Texture PLAYER_TEXTURE_RIGHT = new Texture("playerspriterun_right_wspear.png");
+  /** Player texture when dashing up */
+  public static final Texture PLAYER_TEXTURE_UP_DASH = new Texture("playerspritedashfilmstrip_up.png");
+
+  /** Player texture when dashing down */
+  public static final Texture PLAYER_TEXTURE_DOWN_DASH = new Texture("playerspritedashfilmstrip_down.png");
+
+  /** Player texture when dashing left */
+  public static final Texture PLAYER_TEXTURE_LEFT_DASH = new Texture("playerspritedashfilmstrip_left.png");
+
+  /** Player texture when dashing right */
+  public static final Texture PLAYER_TEXTURE_RIGHT_DASH = new Texture("playerspritedashfilmstrip_right.png");
+
 
   /** FilmStrip cache object */
   public FilmStrip filmStrip;
+  /** FilmStrip cache object for dash up and down */
+  public FilmStrip filmStripDashUD;
+  /** FilmStrip cache object for dash left and right */
 
+  public FilmStrip filmStripDashLR;
   /** current animation frame */
   private int animationFrame;
 
+  /** The number of frames to skip before animating the next player frame */
+  private int frameDelay;
+
+  /**
+   * Counter for the number of frames that have been drawn to the screen
+   * This is separate from the position in the player filmstrip.
+   *  */
+  private int frameCounter;
+  /**
+   * Counter for the number of frames that have been drawn to the screen when dashing
+   * This is separate from the position in the player filmstrip.
+   *  */
+  private int dashFrameCounter;
+
   /** current direction the player is facing */
   private Direction faceDirection;
+
 
   /** Whether the player is dashing */
   private boolean isDashing;
@@ -53,11 +89,9 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   /** The angle direction of this dash in radians */
   private Vector2 dashDirection;
 
-  /** Unique identifier for the point sensor; used in collision handling */
-  private String pointSensorName;
-
   /** Scaling factor for player movement */
   private float moveSpeed;
+
 
   /**
    * {@link PlayerModel} constructor using an x and y coordinate.
@@ -68,13 +102,15 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   public PlayerModel(float x, float y) {
     super(x, y);
 
-    // Set constants
-    faceDirection = Direction.RIGHT;
-    moveSpeed = 6f;
+    moveSpeed = 8f;
+    faceDirection = Direction.DOWN;
     dashCounter = 0;
     dashCooldownLimit = 25;
     dashLength = 20;
     isDashing = false;
+    frameCounter = 1;
+    dashFrameCounter = 1;
+    frameDelay = 3;
 
     PlayerBodyModel playerBody = new PlayerBodyModel(x, y);
     bodies.add(playerBody);
@@ -83,10 +119,39 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     bodies.add(playerSpear);
 
     filmStrip = new FilmStrip(PLAYER_TEXTURE_DOWN, 1, FRAMES_IN_ANIMATION);
+    filmStripDashUD = new FilmStrip(PLAYER_TEXTURE_DOWN_DASH, 1, FRAMES_IN_ANIMATION_DASH);
+    filmStripDashLR = new FilmStrip(PLAYER_TEXTURE_LEFT_DASH, 1, FRAMES_IN_ANIMATION_DASH);
+  }
+
+  @Override
+  public void draw(RenderingEngine renderer) {
+    PlayerRenderable.super.draw(renderer);
+
+    // Only move to next frame of animation every frameDelay number of frames
+    if (isDashing){
+      if (dashFrameCounter % frameDelay == 0) {
+        setFrameNumber((getFrameNumber() + 1) % getFramesInAnimation());
+      }
+      dashFrameCounter += 1;
+    }
+    else {
+      if (frameCounter % frameDelay == 0) {
+        setFrameNumber((getFrameNumber() + 1) % getFramesInAnimation());
+      }
+      frameCounter += 1;
+    }
   }
 
   public FilmStrip getFilmStrip() {
-    return filmStrip;
+    if (isDashing) {
+      if (faceDirection == Direction.DOWN || faceDirection == Direction.UP)
+
+        return filmStripDashUD;
+      else
+        return filmStripDashLR;
+    }
+    else
+      return filmStrip;
   }
 
   public int getFrameNumber() {
@@ -98,7 +163,10 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   }
 
   public int getFramesInAnimation() {
-    return FRAMES_IN_ANIMATION;
+    if (isDashing)
+      return FRAMES_IN_ANIMATION_DASH;
+    else
+      return FRAMES_IN_ANIMATION;
   }
 
   public Texture getTextureUp() {
@@ -109,10 +177,26 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     return PLAYER_TEXTURE_DOWN;
   }
 
-  public Texture getTextureHori() {
-    return PLAYER_TEXTURE_HORI;
+  public Texture getTextureLeft() {
+    return PLAYER_TEXTURE_LEFT;
   }
 
+  public Texture getTextureRight() {
+    return PLAYER_TEXTURE_RIGHT;
+  }
+
+  public Texture getTextureUpDash(){
+    return PLAYER_TEXTURE_UP_DASH;
+  }
+  public Texture getTextureDownDash(){
+    return PLAYER_TEXTURE_DOWN_DASH;
+  }
+  public Texture getTextureLeftDash(){
+    return PLAYER_TEXTURE_LEFT_DASH;
+  }
+  public Texture getTextureRightDash(){
+    return PLAYER_TEXTURE_RIGHT_DASH;
+  }
   /**
    * Returns player's move speed.
    *
@@ -140,6 +224,12 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     return isDashing;
   }
 
+
+  /** Returns the number of current health points of the player. */
+  public int getHealth(){
+    return getBodyModel().getHealth();
+  }
+
   /**
    * Sets the player to dashing, if possible
    * If not possible, will return false.
@@ -147,7 +237,10 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   public boolean checkAndSetDashing() {
     if(dashCounter == 0){
       isDashing = true;
+      frameDelay = dashLength/FRAMES_IN_ANIMATION_DASH;
+      frameCounter = 1;
       getSpearModel().setSpear(true);
+      animationFrame = 0;
       return true;
     } return false;
   }
@@ -155,6 +248,9 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   /** Set dashing to false */
   public void stopDashing(){
     isDashing = false;
+    frameDelay = 3;
+    dashFrameCounter = 1;
+    animationFrame = 0;
     getSpearModel().setSpear(false);
   }
 
@@ -164,25 +260,18 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     dashCounter = value;
   }
 
-  /** Returns current value of dash cooldown */
-  public int getDashCounter() {
-    return dashCounter;
-  }
-
-  /** Returns dash limit */
-  public int getDashCooldownLimit() {
-    return dashCooldownLimit;
-  }
-
-  /** Decriments dash cooldown */
-  public void decrementDashCounter() {
-    dashCounter -= 1;
-  }
+  public int getDashCounter() { return dashCounter; }
 
   /** Returns length of dash in frames */
   public int getDashLength() {
     return dashLength;
   }
+
+  /** Returns the max cooldown time of dash */
+  public int getDashCooldownLimit(){
+    return dashCooldownLimit;
+  }
+
 
   /** Returns dash direction */
   public Vector2 getDashDirection() {
@@ -194,15 +283,14 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     dashDirection = dir;
   }
 
-  /**
-   * Returns the name of the nose point sensor
-   *
-   * <p>This is used by ContactListener
-   *
-   * @return the name of the nose point sensor
-   */
-  public String getPointSensorName() {
-    return pointSensorName;
+  /** Returns if the player is currently invincible */
+  public boolean isInvincible() {
+    return getBodyModel().isInvincible();
+  }
+
+  /** Returns if the player is stunned (during iframes) */
+  public boolean isStunned(){
+    return getBodyModel().isStunned();
   }
 
   /** Returns the player body model */
@@ -224,6 +312,27 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   protected boolean createJoints(World world) {
     return true;
   }
+
+  /** Updates the object's physics state (NOT GAME LOGIC).
+   *
+   * Use this for dash cooldown checking/resetting.
+   * */
+  @Override
+  public void update(float delta) {
+    if (isDashing()) {
+      dashCounter -= 1;
+      if (dashCounter <= 0) {
+        // exit dash
+        stopDashing();
+        dashCounter = dashCooldownLimit;
+      }
+    } else {
+      dashCounter = Math.max(0, dashCounter - 1);
+    }
+
+    super.update(delta);
+  }
+
 
   public boolean spearExtended() {
     return isDashing();

@@ -84,7 +84,10 @@ public class PlayerController implements Controllable {
     }
     mag = Math.min(mag, 1f);
     float moveSpeed = player.getMoveSpeed();
-    if (player.isDashing()) {
+
+    // Player should not move while stunned (first part of iframes)
+    if (player.isStunned()) {}
+    else if (player.isDashing()) {
       moveSpeed *= 4;
       Vector2 dashDirection = normalize(player.getDashDirection());
       player.setVX(moveSpeed * dashDirection.x);
@@ -119,14 +122,15 @@ public class PlayerController implements Controllable {
   public void beginDashing() {
     // check if dash cooldown is at 0
     if(player.checkAndSetDashing()){
-      player.setDashCounter(player.getDashLength());
+      player.setDashCounter(player.getDashCooldownLimit());
       player.setDashDirection(dashDirection);
     }
   }
 
   /** Check if the player is allowed to dash */
   public boolean checkCanDash(){
-    return dashingPressed && !player.isDashing() && (dashDirection.len() > NO_DASH_ERROR);
+    return dashingPressed && !player.isDashing() && (dashDirection.len() > NO_DASH_ERROR)
+            && !player.isInvincible();
   }
 
   /**
@@ -156,15 +160,15 @@ public class PlayerController implements Controllable {
 
   public void update() {
     if (checkCanDash()) {
+      //TODO: what happens if you get hit while dashing? (during iframes)
       beginDashing();
     }
     setVelPercentages(hoff, voff);
     orientPlayer();
 
     // Handle dashing
+    player.updateSpear(dashDirection);
     if (player.isDashing()) {
-      player.updateSpear(dashDirection);
-      player.decrementDashCounter();
       if (player.getDashCounter() <= 0) {
         // exit dash
         player.stopDashing();
@@ -172,6 +176,8 @@ public class PlayerController implements Controllable {
       }
     } else {
       player.setDashCounter(Math.max(0, player.getDashCounter() - 1));
+      player.updateSpear(dashDirection);
+
     }
 
     dashingPressed = false;

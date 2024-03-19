@@ -4,9 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import edu.cornell.jade.seasthethrone.level.BackgroundImage;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
 public class RenderingEngine {
@@ -25,7 +27,7 @@ public class RenderingEngine {
   /** The ratio of a pixel in a texture to a meter in the world */
   private float worldScale;
 
-  private static final Texture BACKGROUND = new Texture("background.jpeg");
+  private BackgroundImage BACKGROUND;
 
   /** FIXME: stop hardcoding texture regions */
   private static final Texture FISH_TEXTURE = new Texture("bullet_test.png");
@@ -61,18 +63,23 @@ public class RenderingEngine {
     renderables.add(r);
   }
 
+  public void setBackground(BackgroundImage bg) { BACKGROUND = bg;}
+
   /** Draw the background for the game */
   public void drawBackground() {
     canvas.clear();
     canvas.begin();
-    canvas.draw(BACKGROUND, Color.WHITE, 0, 0, 0, 0, 0, 4f, 4f);
+    canvas.draw(BACKGROUND.getTexture(), Color.WHITE, BACKGROUND.getPosition().x, BACKGROUND.getPosition().y,
+            0, 0, 0, 4f, 4f);
     canvas.end();
   }
 
   /** Draws all the renderable objects in the list to be rendered */
   public void drawRenderables() {
+    canvas.clear();
     canvas.begin();
     canvas.getSpriteBatch().setProjectionMatrix(getViewport().getCamera().combined);
+//    System.out.println("num of renderables: "+renderables.size);
     for (Renderable r : renderables) {
       r.draw(this);
     }
@@ -84,6 +91,7 @@ public class RenderingEngine {
     return viewport;
   }
 
+  //Temporary for prototype
   public void drawGameOver() {
     canvas.begin();
     canvas.drawTextCentered("Game Over!", textFont, 60f);
@@ -99,10 +107,24 @@ public class RenderingEngine {
    * @param y the y coordinate in world coordinates to draw at
    */
   public void draw(FilmStrip filmStrip, float x, float y) {
-    float ox = filmStrip.getRegionWidth() / 2;
-    float oy = filmStrip.getRegionHeight() / 2;
+    float ox = filmStrip.getRegionWidth() / 2f;
+    float oy = filmStrip.getRegionHeight() / 2f;
 
     canvas.draw(filmStrip, Color.WHITE, oy, ox, x, y, 0, worldScale, worldScale);
+  }
+
+  public void draw(TextureRegion texture, float x, float y) {
+    float ox = texture.getRegionWidth() / 2f;
+    float oy = texture.getRegionHeight() / 2f;
+
+    canvas.draw(texture, Color.WHITE, ox, oy, x, y, 0, worldScale, worldScale);
+  }
+
+  public void draw(FilmStrip filmStrip, float x, float y, float scale) {
+    float ox = filmStrip.getRegionWidth() / 2f;
+    float oy = filmStrip.getRegionHeight() / 2f;
+
+    canvas.draw(filmStrip, Color.WHITE, oy, ox, x, y, 0, scale, scale);
   }
 
   public void clear() {
