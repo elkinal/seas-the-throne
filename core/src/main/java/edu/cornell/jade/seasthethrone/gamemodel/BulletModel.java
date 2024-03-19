@@ -30,21 +30,21 @@ public class BulletModel extends SimpleModel implements FishRenderable {
   private Direction faceDirection;
 
   /** Bullet texture when facing north */
-  public static final Texture FISH_TEXTURE_NORTH = new Texture("yellowfish_north.png");
+  public static final Texture FISH_TEXTURE_NORTH = new Texture("bullet/yellowfish_north.png");
   /** Bullet texture when facing northeast */
-  public static final Texture FISH_TEXTURE_NE = new Texture("yellowfish_NE.png");
+  public static final Texture FISH_TEXTURE_NE = new Texture("bullet/yellowfish_NE.png");
   /** Bullet texture when facing northwest */
-  public static final Texture FISH_TEXTURE_NW = new Texture("yellowfish_NW.png");
+  public static final Texture FISH_TEXTURE_NW = new Texture("bullet/yellowfish_NW.png");
   /** Bullet texture when facing east */
-  public static final Texture FISH_TEXTURE_EAST = new Texture("yellowfish_east.png");
+  public static final Texture FISH_TEXTURE_EAST = new Texture("bullet/yellowfish_east.png");
   /** Bullet texture when facing west */
-  public static final Texture FISH_TEXTURE_WEST = new Texture("yellowfish_west.png");
+  public static final Texture FISH_TEXTURE_WEST = new Texture("bullet/yellowfish_west.png");
   /** Bullet texture when facing southwest */
-  public static final Texture FISH_TEXTURE_SW = new Texture("yellowfish_SW.png");
+  public static final Texture FISH_TEXTURE_SW = new Texture("bullet/yellowfish_SW.png");
   /** Bullet texture when facing southeast */
-  public static final Texture FISH_TEXTURE_SE = new Texture("yellowfish_SE.png");
+  public static final Texture FISH_TEXTURE_SE = new Texture("bullet/yellowfish_SE.png");
   /** Bullet texture when facing south */
-  public static final Texture FISH_TEXTURE_SOUTH = new Texture("yellowfish_south.png");
+  public static final Texture FISH_TEXTURE_SOUTH = new Texture("bullet/yellowfish_south.png");
   /** FilmStrip cache object */
   public FilmStrip filmStrip;
   /** Amount of knockback force applied to player on collision */

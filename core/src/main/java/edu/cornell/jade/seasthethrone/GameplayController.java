@@ -3,20 +3,26 @@ package edu.cornell.jade.seasthethrone;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
+import edu.cornell.jade.seasthethrone.gamemodel.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.PlayerModel;
+import edu.cornell.jade.seasthethrone.input.BossController;
 import edu.cornell.jade.seasthethrone.input.InputController;
 import edu.cornell.jade.seasthethrone.input.PlayerController;
 import edu.cornell.jade.seasthethrone.bpedit.BulletController;
 import edu.cornell.jade.seasthethrone.level.Level;
 import edu.cornell.jade.seasthethrone.level.Tile;
+import edu.cornell.jade.seasthethrone.level.Wall;
+import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 
+import javax.swing.plaf.basic.BasicPopupMenuSeparatorUI;
 import java.util.Vector;
 
 /**
@@ -46,6 +52,7 @@ public class GameplayController implements Screen {
   /** Sub-controller for handling updating physics engine based on input */
   PlayerController playerController;
 
+  BossController bossController;
   /** Rendering Engine */
   RenderingEngine renderEngine;
 
@@ -92,6 +99,7 @@ public class GameplayController implements Screen {
     this.renderEngine = new RenderingEngine(DEFAULT_WIDTH, DEFAULT_HEIGHT, viewport, WORLD_SCALE);
 
     setupGameplay();
+
   }
 
   public void show() {
@@ -107,29 +115,36 @@ public class GameplayController implements Screen {
     // Load background
 //    renderEngine.setBackground(level.getBackground());
     renderEngine.addRenderable(level.getBackground());
-    System.out.println("background at: " + level.getBackground().getPosition());
     // Load tiles
     for (Tile tile : level.getTiles()) {
-      System.out.println("Tile at: " + tile.getPosition());
       renderEngine.addRenderable(tile);
     }
 
     // Load player
     Vector2 playerLoc = level.getPlayerLoc();
     PlayerModel player = new PlayerModel(playerLoc.x, playerLoc.y);
-
-    // Load bosses
-
-
-    // Load enemies
+    renderEngine.addRenderable(player);
 
     physicsEngine = new PhysicsEngine(bounds, world, player);
     playerController = new PlayerController(bounds, player);
     bulletController = new BulletController(physicsEngine);
 
-    renderEngine.addRenderable(player);
-    inputController.add(playerController);
+    // Load bosses
+    Vector2 bossLoc = level.getBosses().get(0);
+    BossModel boss = new BossModel(bossLoc.x, bossLoc.y);
+    boss.setBodyType(BodyDef.BodyType.StaticBody);
+    renderEngine.addRenderable(boss);
+    physicsEngine.addObject(boss);
+    bossController = new BossController(boss);
 
+    // Load walls
+    for (Wall wall : level.getWalls()) {
+      BoxModel wallModel = new BoxModel(wall.x, wall.y, wall.width, wall.height);
+      wallModel.setBodyType(BodyDef.BodyType.StaticBody);
+      physicsEngine.addObject(wallModel);
+    }
+
+    inputController.add(playerController);
   }
 
   public void render(float delta) {
@@ -153,7 +168,11 @@ public class GameplayController implements Screen {
     // when player is null
     if (gameState != GameState.OVER) {
       playerController.update();
+      bossController.update();
       physicsEngine.update(delta);
+
+      // Update camera
+      updateCamera();
     }
 
     if (!playerController.isAlive()) {
@@ -172,9 +191,8 @@ public class GameplayController implements Screen {
         renderEngine.addRenderable(r);
     }
 
-
     draw(delta);
-    debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
+//    debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
 
     if (gameState == GameState.OVER) {
       if (inputController.didReset()) {
@@ -187,6 +205,20 @@ public class GameplayController implements Screen {
 
   public void resize(int width, int height) {
     viewport.update(width, height);
+    renderEngine.getGameCanvas().resize();
+  }
+
+  /** Updates the camera position to keep the player centered on the screen */
+  private void updateCamera() {
+    Vector2 playerPos = playerController.getLocation();
+    Vector2 cameraPos = viewport.unproject(new Vector2(viewport.getCamera().position.x, viewport.getCamera().position.y));
+    Vector2 diff = playerPos.sub(cameraPos).sub(DEFAULT_WIDTH/2, -DEFAULT_HEIGHT/2);
+
+    viewport.getCamera().translate(diff.x, diff.y, 0);
+//    if (diff.len() > 15f){
+//      float CAMERA_SPEED = 0.01f;
+//      viewport.getCamera().translate(CAMERA_SPEED* diff.x,CAMERA_SPEED* diff.y, 0);
+//    }
   }
 
   public void pause() {

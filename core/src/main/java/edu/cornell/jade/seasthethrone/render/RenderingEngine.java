@@ -29,9 +29,6 @@ public class RenderingEngine {
 
   private BackgroundImage BACKGROUND;
 
-  /** FIXME: stop hardcoding texture regions */
-  private static final Texture FISH_TEXTURE = new Texture("bullet_test.png");
-
   /**
    * Creates a new RenderingEngine based on the world width and world height for the camera.
    *
@@ -79,7 +76,6 @@ public class RenderingEngine {
     canvas.clear();
     canvas.begin();
     canvas.getSpriteBatch().setProjectionMatrix(getViewport().getCamera().combined);
-//    System.out.println("num of renderables: "+renderables.size);
     for (Renderable r : renderables) {
       r.draw(this);
     }

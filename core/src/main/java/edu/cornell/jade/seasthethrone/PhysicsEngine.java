@@ -3,6 +3,7 @@ package edu.cornell.jade.seasthethrone;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.Array;
 import edu.cornell.jade.seasthethrone.gamemodel.*;
 import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.util.PooledList;
@@ -18,6 +19,11 @@ public class PhysicsEngine implements ContactListener {
 
   /** The boundary of the world */
   private Rectangle bounds;
+
+  /** Timer for spawning bullets */
+  private int bulletTimer;
+
+  private Array<BossModel> bosses = new Array<>();
 
   public PhysicsEngine(Rectangle bounds, World world, PlayerModel player) {
     this.world = world;
@@ -43,6 +49,34 @@ public class PhysicsEngine implements ContactListener {
   }
 
   /**
+   * Spawns bullets at a set interval in a circular pattern
+   *
+   * @param bulletTimer value of the timer, used to set angle
+   */
+  public void spawnBulletPattern(int bulletTimer) {
+    for (BossModel boss : bosses) {
+      float speed = 6;
+      Vector2 bossPos = boss.getPosition();
+      float theta = bulletTimer * 0.01f;
+      Vector2 v_i = new Vector2((float) Math.cos(theta), (float) Math.sin(theta));
+
+      BulletModel bullet1 = new BulletModel(bossPos.x, bossPos.y + 2, 0.5f);
+      bullet1.setBodyType(BodyDef.BodyType.KinematicBody);
+      bullet1.setVX(speed * v_i.x);
+      bullet1.setVY(speed * v_i.y);
+      addObject(bullet1);
+      bullet1.createFixtures();
+
+      BulletModel bullet2 = new BulletModel(bossPos.x, bossPos.y + 2, 0.5f);
+      bullet2.setBodyType(BodyDef.BodyType.KinematicBody);
+      bullet2.setVX(-speed * v_i.x);
+      bullet2.setVY(-speed * v_i.y);
+      addObject(bullet2);
+      bullet2.createFixtures();
+    }
+  }
+
+  /**
    * The core gameplay loop of this world.
    *
    * <p>This method is called after input is read, but before collisions are resolved. The very last
@@ -51,6 +85,11 @@ public class PhysicsEngine implements ContactListener {
    * @param delta Number of seconds since last animation frame
    */
   public void update(float delta) {
+    if (bulletTimer % 20 == 0) {
+      spawnBulletPattern(bulletTimer);
+    }
+    bulletTimer += 1;
+
     // turn the physics engine crank
     world.step(delta, 8, 4);
 
@@ -63,6 +102,9 @@ public class PhysicsEngine implements ContactListener {
       Model obj = entry.getValue();
       if (obj.isRemoved()) {
         obj.deactivatePhysics(world);
+        if (obj instanceof BossModel) {
+          bosses.removeValue((BossModel)obj, true);
+        }
         entry.remove();
       } else {
         obj.update(delta);
@@ -79,6 +121,9 @@ public class PhysicsEngine implements ContactListener {
     assert inBounds(obj) : "Object is not in bounds";
     objects.add(obj);
     obj.activatePhysics(world);
+    if (obj instanceof BossModel) {
+      bosses.add((BossModel)obj);
+    }
   }
 
   /**
@@ -119,8 +164,10 @@ public class PhysicsEngine implements ContactListener {
       Model bd2 = (Model) body2.getUserData();
 
       if (bd1 instanceof PlayerBodyModel && bd2 instanceof BulletModel) {
+        System.out.println("player hit");
         handleCollision((PlayerBodyModel) bd1, (BulletModel) bd2);
       } else if (bd2 instanceof PlayerBodyModel && bd1 instanceof BulletModel) {
+        System.out.println("player hit");
         handleCollision((PlayerBodyModel) bd2, (BulletModel) bd1);
       } else if (bd1 instanceof PlayerSpearModel && bd2 instanceof BulletModel){
         bd2.markRemoved(true);
