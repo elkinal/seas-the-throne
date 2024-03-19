@@ -21,8 +21,9 @@ public class BulletPatternConstants {
         int numBullets = bullets.size;
         for (int i = 0; i < numBullets; i++) {
           BulletFamily b = bullets.get(i).clone(familyPool);
-          b.timestamp = b.timestamp + 120;
-          b.addEffect(new Delay());
+          b.timestamp = b.timestamp + 60;
+          b.effect.addFirst(new Delay());
+          b.rotate(1, 0, 0);
           bullets.add(b);
         }
       }

@@ -29,3 +29,4 @@ spritebox_down.png
 spritebox_left.png
 spritebox_right.png
 spritebox_up.png
+hs_err_pid52459.log
