@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import edu.cornell.jade.seasthethrone.gamemodel.PlayerModel;
 import edu.cornell.jade.seasthethrone.input.InputController;
 import edu.cornell.jade.seasthethrone.input.PlayerController;
+import edu.cornell.jade.seasthethrone.bpedit.BulletController;
 import edu.cornell.jade.seasthethrone.level.Level;
 import edu.cornell.jade.seasthethrone.level.Tile;
 import edu.cornell.jade.seasthethrone.model.Model;
@@ -47,6 +48,9 @@ public class GameplayController implements Screen {
 
   /** Rendering Engine */
   RenderingEngine renderEngine;
+
+  /** Controller for keeping track of bullet patterns */
+  protected BulletController bulletController;
 
   /** Width of the game world in Box2d units */
   protected static float DEFAULT_WIDTH;
@@ -121,6 +125,7 @@ public class GameplayController implements Screen {
 
     physicsEngine = new PhysicsEngine(bounds, world, player);
     playerController = new PlayerController(bounds, player);
+    bulletController = new BulletController(physicsEngine);
 
     renderEngine.addRenderable(player);
     inputController.add(playerController);
@@ -142,6 +147,7 @@ public class GameplayController implements Screen {
   public void update(float delta) {
     viewport.apply();
     inputController.update();
+    bulletController.update();
 
     // Right now just errors if you try to update playerController or physicsEngine
     // when player is null
