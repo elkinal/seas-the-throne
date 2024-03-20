@@ -195,7 +195,7 @@ public class PhysicsEngine implements ContactListener {
     }
   }
 
-  public void handleCollision(PlayerShadowModel pb, BulletModel b) {
+  public void handleCollision( ObstacleModel obs, BulletModel b) {
   }
 
   @Override

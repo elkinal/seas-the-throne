@@ -9,12 +9,14 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import edu.cornell.jade.seasthethrone.gamemodel.BossModel;
+import edu.cornell.jade.seasthethrone.gamemodel.ObstacleModel;
 import edu.cornell.jade.seasthethrone.gamemodel.PlayerModel;
 import edu.cornell.jade.seasthethrone.input.BossController;
 import edu.cornell.jade.seasthethrone.input.InputController;
 import edu.cornell.jade.seasthethrone.input.PlayerController;
 import edu.cornell.jade.seasthethrone.bpedit.BulletController;
 import edu.cornell.jade.seasthethrone.level.Level;
+import edu.cornell.jade.seasthethrone.level.Obstacle;
 import edu.cornell.jade.seasthethrone.level.Tile;
 import edu.cornell.jade.seasthethrone.level.Wall;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
@@ -139,13 +141,20 @@ public class GameplayController implements Screen {
 
     // Load walls
     for (Wall wall : level.getWalls()) {
-      BoxModel wallModel = new BoxModel(wall.x, wall.y, wall.width, wall.height);
-      wallModel.setBodyType(BodyDef.BodyType.StaticBody);
-      physicsEngine.addObject(wallModel);
+//      ObstacleModel wallModel = new ObstacleModel(wall);
+//      physicsEngine.addObject(wallModel);
+
+      BoxModel model = new BoxModel(wall.x, wall.y, wall.width, wall.height);
+      model.setBodyType(BodyDef.BodyType.StaticBody);
+      physicsEngine.addObject(model);
+
+//      ObstacleModel model = new ObstacleModel(wall.x, wall.y, wall.width, wall.height);
+//      model.setSensor(true);
+//      physicsEngine.addObject(model);
     }
 
     inputController.add(playerController);
-  }
+}
 
   public void render(float delta) {
     if (active) {
