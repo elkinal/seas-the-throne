@@ -10,8 +10,8 @@
 
 package edu.cornell.jade.seasthethrone.input;
 
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.gamemodel.PlayerModel;
 import edu.cornell.jade.seasthethrone.util.Direction;
 import com.badlogic.gdx.math.MathUtils;
@@ -24,6 +24,9 @@ public class PlayerController implements Controllable {
   /** The player */
   private PlayerModel player;
 
+  /** Need access to the world to add bullets */
+  private PhysicsEngine physicsEngine;
+
   /** Horizontal offset, -1 to 1 */
   float hoff;
 
@@ -33,11 +36,15 @@ public class PlayerController implements Controllable {
   /** If dashing pressed in since last update */
   boolean dashingPressed;
 
+  /** If shooting pressed in since last update */
+  boolean shootingPressed;
+
   /** The vector direction of the player for dashing */
   Vector2 dashDirection;
 
   /** Constructs PlayerController */
-  public PlayerController(Rectangle bounds, PlayerModel player) {
+  public PlayerController(PhysicsEngine physicsEngine, PlayerModel player) {
+    this.physicsEngine = physicsEngine;
     this.player = player;
   }
 
@@ -60,6 +67,10 @@ public class PlayerController implements Controllable {
 
   public void pressPrimary() {
     dashingPressed = true;
+  }
+
+  public void pressSecondary() {
+    shootingPressed = true;
   }
 
   /**
@@ -118,19 +129,33 @@ public class PlayerController implements Controllable {
     }
   }
 
-  /** Begin dashing if possible */
-  public void beginDashing() {
-    // check if dash cooldown is at 0
-    if(player.checkAndSetDashing()){
-      player.setDashCounter(player.getDashCooldownLimit());
-      player.setDashDirection(dashDirection);
-    }
+  /** Shoot a single bullet */
+  public void shoot(){
+    Vector2 playerPos = player.getPosition();
+    //TODO: stop hardcoding the offset
+    Vector2 startPos = playerPos.add(dashDirection.nor().scl(1.5f));
+    physicsEngine.spawnBullet(startPos, dashDirection.nor(), 16, true);
+
+    player.setShootCounter();
+    player.decrementFishCount();
   }
 
-  /** Check if the player is allowed to dash */
-  public boolean checkCanDash(){
-    return dashingPressed && !player.isDashing() && (dashDirection.len() > NO_DASH_ERROR)
-            && !player.isInvincible();
+  /** Begin dashing */
+  public void beginDashing() {
+    player.startDashing();
+    player.setDashDirection(dashDirection);
+  }
+
+  /** Begin shooting */
+  public void beginShooting(){
+    player.startShooting();
+  }
+
+  /**
+   * Set the player to spearing or shooting,
+   * depending on which is applicable.
+   */
+  public void spearOrShoot(){
   }
 
   /**
@@ -159,28 +184,23 @@ public class PlayerController implements Controllable {
   }
 
   public void update() {
-    if (checkCanDash()) {
+    if (dashingPressed && player.canDash() && (dashDirection.len() > NO_DASH_ERROR)){
       //TODO: what happens if you get hit while dashing? (during iframes)
       beginDashing();
+    } else if(shootingPressed && player.canShoot()){
+      beginShooting();
     }
     setVelPercentages(hoff, voff);
     orientPlayer();
 
-    // Handle dashing
     player.updateSpear(dashDirection);
-    if (player.isDashing()) {
-      if (player.getDashCounter() <= 0) {
-        // exit dash
-        player.stopDashing();
-        player.setDashCounter(player.getDashCooldownLimit());
-      }
-    } else {
-      player.setDashCounter(Math.max(0, player.getDashCounter() - 1));
-      player.updateSpear(dashDirection);
 
+    if(player.canShootBullet()) {
+      shoot();
     }
 
     dashingPressed = false;
+    shootingPressed = false;
   }
 
   /** Returns the norm of a Vector2 */
