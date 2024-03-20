@@ -70,24 +70,38 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   /** current direction the player is facing */
   private Direction faceDirection;
 
+  /**
+   * Frame counter for between dashing/shooting. Tracks how long until the player can
+   * dash/shoot again.
+   */
+  private int cooldownCounter;
+
+  /** The time limit (in frames) between dashes/shooting */
+  private int cooldownLimit;
+
 
   /** Whether the player is dashing */
   private boolean isDashing;
 
   /**
-   * Frame counter for dashing. Tracks how long the player has been dashing for and how long until
-   * they can dash again.
+   * Frame counter for dashing. Tracks how long the player has been dashing for.
    */
   private int dashCounter;
-
-  /** The time limit (in frames) between dashes */
-  private int dashCooldownLimit;
 
   /** The number of frames a dash lasts */
   private int dashLength;
 
   /** The angle direction of this dash in radians */
   private Vector2 dashDirection;
+
+  /** Whether the player is shooting */
+  private boolean isShooting;
+
+  /** The time (in frames) between each bullet shot */
+  private int shootCooldownLimit;
+
+  /** Frame counter for shooting. Tracks when a subsequent bullet can be shot. */
+  private int shootCounter;
 
   /** Scaling factor for player movement */
   private float moveSpeed;
@@ -102,15 +116,21 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   public PlayerModel(float x, float y) {
     super(x, y);
 
+    cooldownCounter = 0;
+    cooldownLimit = 30;
+
     moveSpeed = 8f;
     faceDirection = Direction.DOWN;
     dashCounter = 0;
-    dashCooldownLimit = 25;
     dashLength = 20;
     isDashing = false;
     frameCounter = 1;
     dashFrameCounter = 1;
     frameDelay = 3;
+
+    shootCooldownLimit = 20;
+    shootCounter = 0;
+    isShooting = false;
 
     PlayerBodyModel playerBody = new PlayerBodyModel(x, y);
     bodies.add(playerBody);
@@ -224,25 +244,36 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     return isDashing;
   }
 
+  /** Returns if the player can dash */
+  public boolean canDash(){
+    return !isDashing && !isShooting && !isInvincible() && cooldownCounter == 0;
+  }
+
+  /** Returns if the player can be set to shooting */
+  public boolean canShoot(){
+    return !isDashing && !isShooting && !isInvincible()
+            && cooldownCounter == 0 && getSpearModel().getNumSpeared() > 0 ;
+  }
+
+  /** Returns if the player can shoot one bullet. */
+  public boolean canShootBullet(){
+    return isShooting() && shootCounter == 0 && getSpearModel().getNumSpeared() > 0;
+  }
+
 
   /** Returns the number of current health points of the player. */
   public int getHealth(){
     return getBodyModel().getHealth();
   }
 
-  /**
-   * Sets the player to dashing, if possible
-   * If not possible, will return false.
-   */
-  public boolean checkAndSetDashing() {
-    if(dashCounter == 0){
-      isDashing = true;
-      frameDelay = dashLength/FRAMES_IN_ANIMATION_DASH;
-      frameCounter = 1;
-      getSpearModel().setSpear(true);
-      animationFrame = 0;
-      return true;
-    } return false;
+  /** Sets the player to dashing */
+  public void startDashing() {
+    isDashing = true;
+    frameDelay = dashLength/FRAMES_IN_ANIMATION_DASH;
+    frameCounter = 1;
+    getSpearModel().setSpear(true);
+    animationFrame = 0;
+    dashCounter = dashLength;
   }
 
   /** Set dashing to false */
@@ -255,24 +286,6 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   }
 
 
-  /** Sets value for dash cooldown */
-  public void setDashCounter(int value) {
-    dashCounter = value;
-  }
-
-  public int getDashCounter() { return dashCounter; }
-
-  /** Returns length of dash in frames */
-  public int getDashLength() {
-    return dashLength;
-  }
-
-  /** Returns the max cooldown time of dash */
-  public int getDashCooldownLimit(){
-    return dashCooldownLimit;
-  }
-
-
   /** Returns dash direction */
   public Vector2 getDashDirection() {
     return dashDirection;
@@ -281,6 +294,36 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   /** Sets dash direction */
   public void setDashDirection(Vector2 dir) {
     dashDirection = dir;
+  }
+
+  /** Returns if the player is currently shooting */
+  public boolean isShooting() {
+    return isShooting;
+  }
+
+  /** Sets value for shoot counter to the cooldown limit */
+  public void setShootCounter() {
+    shootCounter = shootCooldownLimit;
+  }
+
+  /** Decrease fish counter. If the counter is sets to 0, stop shooting */
+  public void decrementFishCount(){
+    getSpearModel().decrementSpear();
+    if(getSpearModel().getNumSpeared() <= 0){
+      stopShooting();
+    }
+  }
+
+  /** Sets the player to shooting */
+  public void startShooting() {
+    isShooting = true;
+    shootCounter = 0;
+  }
+
+  /** Sets the player to not shooting */
+  public void stopShooting(){
+    isShooting = false;
+    cooldownCounter = cooldownLimit;
   }
 
   /** Returns if the player is currently invincible */
@@ -315,7 +358,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
 
   /** Updates the object's physics state (NOT GAME LOGIC).
    *
-   * Use this for dash cooldown checking/resetting.
+   * Use this for cooldown checking/resetting.
    * */
   @Override
   public void update(float delta) {
@@ -324,11 +367,17 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
       if (dashCounter <= 0) {
         // exit dash
         stopDashing();
-        dashCounter = dashCooldownLimit;
+        cooldownCounter = cooldownLimit;
       }
-    } else {
-      dashCounter = Math.max(0, dashCounter - 1);
     }
+    else if (isShooting()){
+      shootCounter = Math.max(0, shootCounter-1);
+    }
+    else {
+      cooldownCounter = Math.max(0, cooldownCounter-1);
+    }
+
+
 
     super.update(delta);
   }
@@ -343,6 +392,9 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   }
 
   public Direction direction() {
+    // Don't update direction when stunned
+    if(isStunned()) return faceDirection;
+
     float vx = getVX();
     float vy = getVY();
 

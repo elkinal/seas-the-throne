@@ -1,4 +1,4 @@
-package edu.cornell.jade.seasthethrone;
+package edu.cornell.jade.seasthethrone.physics;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -49,6 +49,22 @@ public class PhysicsEngine implements ContactListener {
   }
 
   /**
+   * Spawns a single bullet given a position and velocity
+   * 
+   * @param pos   starting position of bullet
+   * @param vel   velocity of bullet
+   * @param speed speed of bullet
+   */
+  public void spawnBullet(Vector2 pos, Vector2 vel, float speed, boolean shotByPlayer) {
+    BulletModel bullet = new BulletModel(pos.x, pos.y, 0.5f, shotByPlayer);
+    bullet.setVX(speed * vel.x);
+    bullet.setVY(speed * vel.y);
+
+    addObject(bullet);
+    bullet.createFixtures();
+  }
+
+  /**
    * Spawns bullets at a set interval in a circular pattern
    *
    * @param bulletTimer value of the timer, used to set angle
@@ -60,26 +76,17 @@ public class PhysicsEngine implements ContactListener {
       float theta = bulletTimer * 0.01f;
       Vector2 v_i = new Vector2((float) Math.cos(theta), (float) Math.sin(theta));
 
-      BulletModel bullet1 = new BulletModel(bossPos.x, bossPos.y + 2, 0.5f);
-      bullet1.setBodyType(BodyDef.BodyType.KinematicBody);
-      bullet1.setVX(speed * v_i.x);
-      bullet1.setVY(speed * v_i.y);
-      addObject(bullet1);
-      bullet1.createFixtures();
-
-      BulletModel bullet2 = new BulletModel(bossPos.x, bossPos.y + 2, 0.5f);
-      bullet2.setBodyType(BodyDef.BodyType.KinematicBody);
-      bullet2.setVX(-speed * v_i.x);
-      bullet2.setVY(-speed * v_i.y);
-      addObject(bullet2);
-      bullet2.createFixtures();
+      spawnBullet(bossPos.add(0, 2), v_i, speed, false);
+      spawnBullet(bossPos.add(0, 2), v_i, -speed, false);
     }
   }
 
   /**
    * The core gameplay loop of this world.
    *
-   * <p>This method is called after input is read, but before collisions are resolved. The very last
+   * <p>
+   * This method is called after input is read, but before collisions are
+   * resolved. The very last
    * thing that it should do is apply forces to the appropriate objects.
    *
    * @param delta Number of seconds since last animation frame
@@ -103,7 +110,7 @@ public class PhysicsEngine implements ContactListener {
       if (obj.isRemoved()) {
         obj.deactivatePhysics(world);
         if (obj instanceof BossModel) {
-          bosses.removeValue((BossModel)obj, true);
+          bosses.removeValue((BossModel) obj, true);
         }
         entry.remove();
       } else {
@@ -122,14 +129,15 @@ public class PhysicsEngine implements ContactListener {
     objects.add(obj);
     obj.activatePhysics(world);
     if (obj instanceof BossModel) {
-      bosses.add((BossModel)obj);
+      bosses.add((BossModel) obj);
     }
   }
 
   /**
    * Returns true if the object is in bounds.
    *
-   * <p>This assertion is useful for debugging the physics.
+   * <p>
+   * This assertion is useful for debugging the physics.
    *
    * @param obj The object to check.
    * @return true if the object is in bounds.
@@ -143,7 +151,9 @@ public class PhysicsEngine implements ContactListener {
   /**
    * Callback method for the start of a collision
    *
-   * <p>This method is called when we first get a collision between two objects. We use this method
+   * <p>
+   * This method is called when we first get a collision between two objects. We
+   * use this method
    * to test if it is the "right" kind of collision.
    *
    * @param contact The two bodies that collided
@@ -169,10 +179,10 @@ public class PhysicsEngine implements ContactListener {
       } else if (bd2 instanceof PlayerBodyModel && bd1 instanceof BulletModel) {
         System.out.println("player hit");
         handleCollision((PlayerBodyModel) bd2, (BulletModel) bd1);
-      } else if (bd1 instanceof PlayerSpearModel && bd2 instanceof BulletModel){
-        bd2.markRemoved(true);
-      } else if (bd2 instanceof PlayerSpearModel && bd1 instanceof BulletModel){
-        bd1.markRemoved(true);
+      } else if (bd1 instanceof PlayerSpearModel && bd2 instanceof BulletModel) {
+        handleCollision((PlayerSpearModel) bd1, (BulletModel) bd2);
+      } else if (bd2 instanceof PlayerSpearModel && bd1 instanceof BulletModel) {
+        handleCollision((PlayerSpearModel) bd2, (BulletModel) bd1);
       }
 
     } catch (Exception e) {
@@ -181,9 +191,9 @@ public class PhysicsEngine implements ContactListener {
   }
 
   /** Handle collision between player body and bullet */
-  public void handleCollision(PlayerBodyModel pb, BulletModel b){
+  public void handleCollision(PlayerBodyModel pb, BulletModel b) {
     b.markRemoved(true);
-    if(!pb.isInvincible()){
+    if (!pb.isInvincible()) {
       pb.setHit(true);
       pb.setInvincible();
       // Calculate knockback direction
@@ -193,12 +203,22 @@ public class PhysicsEngine implements ContactListener {
     }
   }
 
-  @Override
-  public void endContact(Contact contact) {}
+  /** Handle collision between player spear and bullet */
+  public void handleCollision(PlayerSpearModel ps, BulletModel b) {
+    if (ps.incrementSpear()) {
+      b.markRemoved(true);
+    }
+  }
 
   @Override
-  public void preSolve(Contact contact, Manifold oldManifold) {}
+  public void endContact(Contact contact) {
+  }
 
   @Override
-  public void postSolve(Contact contact, ContactImpulse impulse) {}
+  public void preSolve(Contact contact, Manifold oldManifold) {
+  }
+
+  @Override
+  public void postSolve(Contact contact, ContactImpulse impulse) {
+  }
 }

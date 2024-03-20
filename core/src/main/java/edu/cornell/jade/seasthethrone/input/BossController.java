@@ -109,6 +109,9 @@ public class BossController implements Controllable {
     public void pressPrimary() {}
 
     @Override
+    public void pressSecondary() {}
+
+    @Override
     public void updateDirection(Vector2 mouseDir) {}
 
     @Override

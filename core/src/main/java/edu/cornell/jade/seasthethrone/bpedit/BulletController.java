@@ -1,7 +1,7 @@
 package edu.cornell.jade.seasthethrone.bpedit;
 
 import edu.cornell.jade.seasthethrone.util.PooledList;
-import edu.cornell.jade.seasthethrone.PhysicsEngine;
+import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 
 /**

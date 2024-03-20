@@ -495,6 +495,14 @@ public abstract class Model {
   }
 
   /// FixtureDef Methods
+  public void setCategoryBits(short category){
+    fixture.filter.categoryBits = category;
+  }
+
+  public void setMaskBits(short mask){
+    fixture.filter.maskBits = mask;
+  }
+
   /**
    * Returns the density of this body
    *

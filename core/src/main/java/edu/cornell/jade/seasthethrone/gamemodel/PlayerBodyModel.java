@@ -1,6 +1,8 @@
 package edu.cornell.jade.seasthethrone.gamemodel;
 
+import com.badlogic.gdx.math.Vector2;
 import edu.cornell.jade.seasthethrone.model.PolygonModel;
+import edu.cornell.jade.seasthethrone.physics.CollisionMask;
 
 /**
  * Model for the player body. This class extends {@link PlayerModel} for a flexible frame. The
@@ -20,12 +22,21 @@ public class PlayerBodyModel extends PolygonModel {
   /** Frame counter for iframes */
   private int iframeCounter;
 
+  /** Frame time of the knockback duration */
+  private int knockbackTimer;
+
+  /** Frame time of the stun duration (including knockback) */
+  private int stunTimer;
+
   public PlayerBodyModel(float[] vertices, float x, float y) {
     super(vertices, x, y);
     isHit = false;
     health = 3;
     iframeCounter = 0;
-    iframeLimit = 50;
+    iframeLimit = 70;
+    knockbackTimer = iframeLimit/10;
+    stunTimer = knockbackTimer * 3;
+    CollisionMask.setCategoryMaskBits(this);
   }
 
   /** Create new player body at position (x,y) */
@@ -62,7 +73,7 @@ public class PlayerBodyModel extends PolygonModel {
 
   /** Returns if the player is stunned (during iframes) */
   public boolean isStunned(){
-    return iframeCounter > iframeLimit/5*4;
+    return iframeCounter+stunTimer > iframeLimit;
   }
 
   /** Sets the player invincible according to the iframe limit */
@@ -74,6 +85,10 @@ public class PlayerBodyModel extends PolygonModel {
   public void update(float delta){
     if (isInvincible()){
       iframeCounter -= 1;
+    }
+    // stop knockback
+    if (iframeCounter == iframeLimit-knockbackTimer){
+      setLinearVelocity(new Vector2(0, 0));
     }
   }
 }

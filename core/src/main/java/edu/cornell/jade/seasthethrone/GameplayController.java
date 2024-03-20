@@ -19,11 +19,9 @@ import edu.cornell.jade.seasthethrone.level.Tile;
 import edu.cornell.jade.seasthethrone.level.Wall;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.model.Model;
+import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
-
-import javax.swing.plaf.basic.BasicPopupMenuSeparatorUI;
-import java.util.Vector;
 
 /**
  * The primary controller class for the game.
@@ -113,7 +111,7 @@ public class GameplayController implements Screen {
     World world = new World(new Vector2(0, 0), false);
 
     // Load background
-//    renderEngine.setBackground(level.getBackground());
+    // renderEngine.setBackground(level.getBackground());
     renderEngine.addRenderable(level.getBackground());
     // Load tiles
     for (Tile tile : level.getTiles()) {
@@ -126,7 +124,7 @@ public class GameplayController implements Screen {
     renderEngine.addRenderable(player);
 
     physicsEngine = new PhysicsEngine(bounds, world, player);
-    playerController = new PlayerController(bounds, player);
+    playerController = new PlayerController(physicsEngine, player);
     bulletController = new BulletController(physicsEngine);
 
     // Load bosses
@@ -155,7 +153,7 @@ public class GameplayController implements Screen {
   }
 
   public void draw(float delta) {
-//    renderEngine.drawBackground();
+    // renderEngine.drawBackground();
     renderEngine.drawRenderables();
   }
 
@@ -192,7 +190,8 @@ public class GameplayController implements Screen {
     }
 
     draw(delta);
-//    debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
+    // debugRenderer.render(physicsEngine.getWorld(),
+    // renderEngine.getViewport().getCamera().combined);
 
     if (gameState == GameState.OVER) {
       if (inputController.didReset()) {
@@ -211,14 +210,15 @@ public class GameplayController implements Screen {
   /** Updates the camera position to keep the player centered on the screen */
   private void updateCamera() {
     Vector2 playerPos = playerController.getLocation();
-    Vector2 cameraPos = viewport.unproject(new Vector2(viewport.getCamera().position.x, viewport.getCamera().position.y));
-    Vector2 diff = playerPos.sub(cameraPos).sub(DEFAULT_WIDTH/2, -DEFAULT_HEIGHT/2);
+    Vector2 cameraPos = viewport
+        .unproject(new Vector2(viewport.getCamera().position.x, viewport.getCamera().position.y));
+    Vector2 diff = playerPos.sub(cameraPos).sub(DEFAULT_WIDTH / 2, -DEFAULT_HEIGHT / 2);
 
     viewport.getCamera().translate(diff.x, diff.y, 0);
-//    if (diff.len() > 15f){
-//      float CAMERA_SPEED = 0.01f;
-//      viewport.getCamera().translate(CAMERA_SPEED* diff.x,CAMERA_SPEED* diff.y, 0);
-//    }
+    // if (diff.len() > 15f){
+    // float CAMERA_SPEED = 0.01f;
+    // viewport.getCamera().translate(CAMERA_SPEED* diff.x,CAMERA_SPEED* diff.y, 0);
+    // }
   }
 
   public void pause() {
