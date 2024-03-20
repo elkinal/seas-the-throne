@@ -19,11 +19,9 @@ import edu.cornell.jade.seasthethrone.level.Tile;
 import edu.cornell.jade.seasthethrone.level.Wall;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.model.Model;
+import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
-
-import javax.swing.plaf.basic.BasicPopupMenuSeparatorUI;
-import java.util.Vector;
 
 /**
  * The primary controller class for the game.

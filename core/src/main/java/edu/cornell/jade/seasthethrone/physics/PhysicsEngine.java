@@ -1,4 +1,4 @@
-package edu.cornell.jade.seasthethrone;
+package edu.cornell.jade.seasthethrone.physics;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -56,16 +56,9 @@ public class PhysicsEngine implements ContactListener {
    * @param speed speed of bullet
    */
   public void spawnBullet(Vector2 pos, Vector2 vel, float speed, boolean shotByPlayer) {
-    BulletModel bullet = new BulletModel(pos.x, pos.y, 0.5f);
+    BulletModel bullet = new BulletModel(pos.x, pos.y, 0.5f, shotByPlayer);
     bullet.setVX(speed * vel.x);
     bullet.setVY(speed * vel.y);
-    if (shotByPlayer) {
-      bullet.setCategoryBits(BulletModel.CATEGORY_PLAYER_BULLET);
-      bullet.setMaskBits((short) 0);
-    } else {
-      bullet.setCategoryBits(BulletModel.CATEGORY_ENEMY_BULLET);
-      bullet.setMaskBits(PlayerModel.CATEGORY_PLAYER);
-    }
 
     addObject(bullet);
     bullet.createFixtures();

@@ -2,6 +2,7 @@ package edu.cornell.jade.seasthethrone.gamemodel;
 
 import com.badlogic.gdx.math.Vector2;
 import edu.cornell.jade.seasthethrone.model.PolygonModel;
+import edu.cornell.jade.seasthethrone.physics.CollisionMask;
 
 /**
  * Model for the player body. This class extends {@link PlayerModel} for a flexible frame. The
@@ -35,8 +36,7 @@ public class PlayerBodyModel extends PolygonModel {
     iframeLimit = 70;
     knockbackTimer = iframeLimit/10;
     stunTimer = knockbackTimer * 3;
-    setCategoryBits(PlayerModel.CATEGORY_PLAYER);
-    setMaskBits(BulletModel.CATEGORY_ENEMY_BULLET);
+    CollisionMask.setCategoryMaskBits(this);
   }
 
   /** Create new player body at position (x,y) */

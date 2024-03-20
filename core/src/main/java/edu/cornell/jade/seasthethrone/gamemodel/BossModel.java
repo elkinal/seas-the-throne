@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.model.ComplexModel;
+import edu.cornell.jade.seasthethrone.physics.CollisionMask;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
@@ -45,6 +46,8 @@ public class BossModel extends ComplexModel implements Renderable {
         BoxModel hitbox = new BoxModel(x, y, 5f, 10f);
         hitbox.setBodyType(BodyDef.BodyType.KinematicBody);
         bodies.add(hitbox);
+
+        CollisionMask.setCategoryMaskBits(this);
     }
 
     protected boolean createJoints(World world) {

@@ -3,6 +3,7 @@ package edu.cornell.jade.seasthethrone.gamemodel;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
+import edu.cornell.jade.seasthethrone.physics.CollisionMask;
 
 /**
  * Model for the player spear. When the spear is extended, it will have an active hitbox that will
@@ -38,8 +39,7 @@ public class PlayerSpearModel extends BoxModel {
   public PlayerSpearModel(float x, float y, float width, float height) {
     super(x, y, width, height);
     spearExtended = false;
-    setCategoryBits(PlayerModel.CATEGORY_PLAYER);
-    setMaskBits(BulletModel.CATEGORY_ENEMY_BULLET);
+    CollisionMask.setCategoryMaskBits(this);
   }
 
   /**

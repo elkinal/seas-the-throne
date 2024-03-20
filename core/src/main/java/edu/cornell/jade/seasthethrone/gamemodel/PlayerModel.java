@@ -14,10 +14,6 @@ import edu.cornell.jade.seasthethrone.util.FilmStrip;
  * multiple joints and bodies for flexible collision control and movement display.
  */
 public class PlayerModel extends ComplexModel implements PlayerRenderable {
-
-  /** Category bitmask for player (for collision filtering) */
-  public static final short CATEGORY_PLAYER = 0x0001;
-
   /** FIXME: stop hardcoding textures */
   /** Frame is player animation */
   private static int FRAMES_IN_ANIMATION = 12;
