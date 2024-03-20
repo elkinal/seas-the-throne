@@ -107,7 +107,6 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   /** Scaling factor for player movement */
   private float moveSpeed;
 
-
   /**
    * {@link PlayerModel} constructor using an x and y coordinate.
    *
@@ -222,6 +221,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   public Texture getTextureRightDash(){
     return PLAYER_TEXTURE_RIGHT_DASH;
   }
+
   /**
    * Returns player's move speed.
    *

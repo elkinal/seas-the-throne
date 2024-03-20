@@ -17,6 +17,7 @@ legacy/spritebox_right.png
 legacy/spritebox_up.png
 levels/arenamaprough.png
 levels/boss-room-tileset.png
+levels/demonstatuepink.png
 levels/test1.json
 libgdx.png
 player/playerspritedashfilmstrip_down.png

@@ -30,6 +30,8 @@ public class Level {
 
     private final Array<Wall> walls = new Array<>();
 
+    private final Array<Obstacle> obstacles = new Array<>();
+
     private BackgroundImage background;
 
     private final Array<Tile> tiles = new Array<>();
@@ -92,6 +94,7 @@ public class Level {
         parseTileLayer(getLayer("tiles"));
         parseBossLayer(getLayer("bosses"));
         parseWallLayer(getLayer("walls"));
+        parseObstacleLayer(getLayer("obstacles"));
 //        enemies = parseEnemyLayer(getLayer("enemies"));
 
     }
@@ -125,6 +128,8 @@ public class Level {
     public Array<Vector2> getBosses() {return bosses;}
 
     public Array<Wall> getWalls() { return walls; }
+
+    public Array<Obstacle> getObstacles() { return obstacles; }
 
 
     private void parseBackgroundLayer(HashMap<String, Object> bgLayer) {
@@ -222,6 +227,27 @@ public class Level {
             Vector2 pos = tiledToWorldCoords(new Vector2(x + width/2f, y + height/2f));
             Vector2 dims = (new Vector2(width * WORLD_SCALE, height * WORLD_SCALE));
             walls.add(new Wall(pos.x, pos.y, dims.x, dims.y));
+        }
+    }
+
+    /**
+     * Extracts obstacle objects from JSON obstacles layer
+     *
+     * @param obstacleLayer JSON object layer containing obstacles
+     * */
+    private void parseObstacleLayer(HashMap<String, Object> obstacleLayer) {
+        Array<HashMap<Object, String>> obsWrapperList = (Array<HashMap<Object, String>>) obstacleLayer.get("objects");
+
+        for (HashMap<Object, String> obsWrapper : obsWrapperList) {
+            float x = Float.parseFloat((String) obsWrapper.get("x"));
+            float y = Float.parseFloat((String) obsWrapper.get("y"));
+            float width = Float.parseFloat((String) obsWrapper.get("width"));
+            float height = Float.parseFloat((String) obsWrapper.get("height"));
+            TextureRegion texture = new TextureRegion(new Texture(obsWrapper.get("name")));
+
+            Vector2 pos = tiledToWorldCoords(new Vector2(x + width/2f, y + height/2f));
+            Vector2 dims = (new Vector2(width * WORLD_SCALE, height * WORLD_SCALE));
+            obstacles.add(new Obstacle(pos.x, pos.y, dims.x, dims.y, texture));
         }
     }
 

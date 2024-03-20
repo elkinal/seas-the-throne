@@ -145,10 +145,15 @@ public class GameplayController implements Screen {
       BoxModel model = new BoxModel(wall.x, wall.y, wall.width, wall.height);
       model.setBodyType(BodyDef.BodyType.StaticBody);
       physicsEngine.addObject(model);
+    }
 
-//      ObstacleModel model = new ObstacleModel(wall.x, wall.y, wall.width, wall.height);
-//      model.setSensor(true);
-//      physicsEngine.addObject(model);
+    for (Obstacle obs : level.getObstacles()) {
+//      BoxModel model = new BoxModel(obs.x, obs.y, obs.width, obs.height);
+      ObstacleModel model = new ObstacleModel(obs);
+      model.setBodyType(BodyDef.BodyType.StaticBody);
+      renderEngine.addRenderable(model);
+      physicsEngine.addObject(model);
+      System.out.println(model.isAwake());
     }
 
     inputController.add(playerController);
