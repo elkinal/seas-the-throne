@@ -5,11 +5,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
+import com.badlogic.gdx.utils.viewport.*;
 import edu.cornell.jade.seasthethrone.gamemodel.*;
 import edu.cornell.jade.seasthethrone.model.*;
 import edu.cornell.jade.seasthethrone.util.JsonHandler;
 import com.badlogic.gdx.math.Vector2;
+import jdk.jshell.spi.ExecutionControlProvider;
 
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.swing.text.View;
@@ -21,17 +22,23 @@ import java.util.stream.StreamSupport;
 public class Level {
     private final Array<HashMap<String, Object>> layers;
 
-    private final Vector2 playerLoc;
+    private Vector2 playerLoc;
 
-    private Array<BossModel> bosses;
+    private final Array<Vector2> bosses = new Array<>();
 
-    private Array<EnemyModel> enemies;
+    private final Array<EnemyModel> enemies = new Array<>();
 
-    private Array<Model> walls;
+    private final Array<Wall> walls = new Array<>();
 
-    private final BackgroundImage background;
+    private BackgroundImage background;
 
-    private Array<Tile> tiles;
+    private final Array<Tile> tiles = new Array<>();
+
+    /** The array of tileSets, each tileSet being a nested list of textures representing tiles */
+    private final Array<TextureRegion[][]> tileSets = new Array<>();
+
+    /** The tile IDs of the first tile in each tileSet */
+    private final Array<Integer> firstGids = new Array<>();
 
     /** Width of the game world in Box2d units */
     public float DEFAULT_WIDTH = 64.0f;
@@ -42,18 +49,14 @@ public class Level {
     /** Ratio between the pixel in a texture and the meter in the world */
     public float WORLD_SCALE = 0.15f;
 
+    /** Side length of a square tile in pixels */
     private final int TILE_SIZE;
 
     /** Width of the Tiled map in tiles*/
-    private int TILED_WORLD_WIDTH;
+    private final int TILED_WORLD_WIDTH;
 
     /** Height of the Tiled map in tiles*/
-    private int TILED_WORLD_HEIGHT;
-
-    /** The array of tileSets, each tileSet being a nested list of textures representing tiles */
-    private Array<TextureRegion[][]> tileSets = new Array<>();
-
-    private Array<Integer> firstGids = new Array<>();
+    private final int TILED_WORLD_HEIGHT;
 
     private FitViewport viewport;
 
@@ -66,31 +69,29 @@ public class Level {
         // Load JSON to map
         HashMap<String, Object> levelMap = JsonHandler.jsonToMap(fileName);
         // Load in level constants
-        TILE_SIZE = Integer.parseInt((String) levelMap.get("tilewidth"));
-        TILED_WORLD_HEIGHT = Integer.parseInt((String) levelMap.get("height"));
-        TILED_WORLD_WIDTH = Integer.parseInt((String) levelMap.get("width"));
+        TILE_SIZE = getIntField(levelMap, "tilewidth");
+        TILED_WORLD_HEIGHT = getIntField(levelMap, "height");
+        TILED_WORLD_WIDTH = getIntField(levelMap, "width");
 
         // Create tileSets
         Array<HashMap<String, Object>> tileSetsList = (Array<HashMap<String, Object>>) levelMap.get("tilesets");
         for (HashMap<String, Object> tileSet : tileSetsList) {
             // For each tileSet
             Texture thisTexture = new Texture((String) tileSet.get("image"));
-            int thisGid = Integer.parseInt((String) tileSet.get("firstgid"));
+            int thisGid = getIntField(tileSet, "firstgid");
             firstGids.add(thisGid);
             // Split this tileSet up into textures
-//            TextureRegion[][] a = new TextureRegion(thisTexture).split(TILE_SIZE, TILE_SIZE);
-//            System.out.println("tile height: "+a[0][0].getRegionHeight());
              tileSets.add(new TextureRegion(thisTexture).split(TILE_SIZE, TILE_SIZE));
         }
 
         // Load in layers
         layers = (Array<HashMap<String, Object>>)levelMap.get("layers");
 
-        background = new BackgroundImage(getLayer("background"));
-
-        playerLoc = parsePlayerLayer(getLayer("player"));
-        tiles = parseTileLayer(getLayer("tiles"));
-//        bosses = parseBossLayer(getLayer("bosses"));
+        parseBackgroundLayer(getLayer("background"));
+        parsePlayerLayer(getLayer("player"));
+        parseTileLayer(getLayer("tiles"));
+        parseBossLayer(getLayer("bosses"));
+        parseWallLayer(getLayer("walls"));
 //        enemies = parseEnemyLayer(getLayer("enemies"));
 
     }
@@ -121,34 +122,53 @@ public class Level {
 
     public Array<Tile> getTiles() { return tiles; }
 
+    public Array<Vector2> getBosses() {return bosses;}
+
+    public Array<Wall> getWalls() { return walls; }
+
+
+    private void parseBackgroundLayer(HashMap<String, Object> bgLayer) {
+        Array<HashMap<String, Object>> properties = getArrayField(bgLayer, "properties");
+        int width = Integer.parseInt((String) getProperty(properties, "width"));
+        int height = Integer.parseInt((String) getProperty(properties, "height"));
+        TextureRegion texture = new TextureRegion(new Texture(getStringField(bgLayer, "image")));
+
+        float x,y;
+        if ((String)bgLayer.get("offsetx") == null) {
+            x = width/2f;
+            y = height/2f;
+        } else {
+            x = getFloatField(bgLayer, "offsetx") + width/2f;
+            y = getFloatField(bgLayer, "offsety") + height/2f;
+        }
+
+        Vector2 pos = tiledToWorldCoords(new Vector2(x,y));
+
+        System.out.println("bg: "+pos+" "+width+" "+height);
+        background = new BackgroundImage(pos, (int)(width*WORLD_SCALE), (int)(height*WORLD_SCALE), texture);
+    }
 
     /**
-     * Extracts the position of the player from the player layer and creates a PlayerModel.
+     * Extracts the position of the player from the player layer.
      *
      * @param playerLayer the JSON Tiled player layer
-     *
-     * @return A PlayerModel initialized at the proper coordinates
      * */
-    private Vector2 parsePlayerLayer(HashMap<String, Object> playerLayer) {
-        HashMap<Object, String> playerWrapper = ((Array<HashMap<Object, String>>) playerLayer.get("objects")).get(0);
+    private void parsePlayerLayer(HashMap<String, Object> playerLayer) {
+        HashMap<String, Object> playerWrapper = ((Array<HashMap<String, Object>>) playerLayer.get("objects")).get(0);
 
-        float x = Float.parseFloat((String)playerWrapper.get("x"));
-        float y = Float.parseFloat((String)playerWrapper.get("y"));
+        float x = getFloatField(playerWrapper, "x");
+        float y = getFloatField(playerWrapper, "y");
         Vector2 playerPos = new Vector2(x,y);
 
-        System.out.println("player pos: " + tiledToWorldCoords(playerPos));
-        return tiledToWorldCoords(playerPos);
+        playerLoc = tiledToWorldCoords(playerPos);
     }
 
     /**
      * Reads a JSON Tiled tile layer into an array of Tile objects
      *
      * @param tileLayer the JSON Tiled tile layer
-     *
-     * @return an array of Tile objects
      * */
-    private Array<Tile> parseTileLayer(HashMap<String, Object> tileLayer) {
-        Array<Tile> tiles = new Array<>();
+    private void parseTileLayer(HashMap<String, Object> tileLayer) {
         Array<String> tileList = (Array<String>) tileLayer.get("data");
 
         for (int row = 0; row < TILED_WORLD_HEIGHT; row++) {
@@ -164,19 +184,55 @@ public class Level {
                 }
             }
         }
-        return tiles;
     }
 
     private Array<EnemyModel> parseEnemyLayer(HashMap<String, Object> enemyLayer) {
         throw new UnsupportedOperationException("parseEnemyLayer not implemented");
     }
 
-    private Array<BossModel> parseBossLayer(HashMap<String, Object> bossLayer) {
-        throw new UnsupportedOperationException("parseBossLayer not implemented");
+    /**
+     * Extracts boss locations from a JSON boss layer
+     *
+     * @param bossLayer JSON object layer containing bosses
+     * */
+    private void parseBossLayer(HashMap<String, Object> bossLayer) {
+        Array<HashMap<Object, String>> bossWrapperList = (Array<HashMap<Object, String>>) bossLayer.get("objects");
+
+        for (HashMap<Object, String> bossWrapper : bossWrapperList) {
+            float x = Float.parseFloat((String) bossWrapper.get("x"));
+            float y = Float.parseFloat((String) bossWrapper.get("y"));
+            bosses.add(tiledToWorldCoords(new Vector2(x,y)));
+        }
     }
 
     /**
-     * 20 px in Tiled is 1 meter in Box2d
+     * Extracts wall objects from JSON wall layer
+     *
+     * @param wallLayer JSON object layer containing walls
+     * */
+    private void parseWallLayer(HashMap<String, Object> wallLayer) {
+        Array<HashMap<Object, String>> wallWrapperList = (Array<HashMap<Object, String>>) wallLayer.get("objects");
+
+        for (HashMap<Object, String> wallWrapper : wallWrapperList) {
+            float x = Float.parseFloat((String) wallWrapper.get("x"));
+            float y = Float.parseFloat((String) wallWrapper.get("y"));
+            float width = Float.parseFloat((String) wallWrapper.get("width"));
+            float height = Float.parseFloat((String) wallWrapper.get("height"));
+
+            Vector2 pos = tiledToWorldCoords(new Vector2(x + width/2f, y + height/2f));
+            Vector2 dims = (new Vector2(width * WORLD_SCALE, height * WORLD_SCALE));
+            walls.add(new Wall(pos.x, pos.y, dims.x, dims.y));
+        }
+    }
+
+    /**
+     * Converts Tiled coordinates to physics world coordinates based on WORLD_SCALE.
+     *
+     * Aligns the center of the Tiled world with the origin in the physics world
+     *
+     * @param tiledCoords vector position in Tiled coordinates
+     *
+     * @return the vector position in physics world coordinates
      * */
     private Vector2 tiledToWorldCoords(Vector2 tiledCoords) {
         float x = tiledCoords.x - (TILED_WORLD_WIDTH * TILE_SIZE) / 2f;
@@ -220,9 +276,90 @@ public class Level {
      * the index in the array of tile cells in the world.
      * */
     public Vector2 tiledCoordsFromIndex(int index) {
-        int x = TILE_SIZE * (index % TILED_WORLD_WIDTH);
-        int y = TILE_SIZE * (index / TILED_WORLD_WIDTH);
+        int x = TILE_SIZE * (index % TILED_WORLD_WIDTH) + TILE_SIZE/2;
+        int y = TILE_SIZE * (index / TILED_WORLD_WIDTH) + TILE_SIZE/2;
         tempPos.set(x,y);
         return tempPos;
+    }
+
+    /**
+     * Finds the specified field in the specified map and returns its value. Assumes the value is an integer.
+     *
+     * @param map the JSON map containing the desired field
+     * @param fieldName the name of the field in the map
+     *
+     * @return the integer value stored at the given field
+     *
+     * @throws Exception if no field with fieldName is found in the map
+     * */
+    public Integer getIntField(HashMap<String, Object> map, String fieldName) {
+        try {
+            return Integer.parseInt((String) map.get(fieldName));
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Finds the specified field in the specified map and returns its value. Assumes the value is a float.
+     *
+     * @param map the JSON map containing the desired field
+     * @param fieldName the name of the field in the map
+     *
+     * @return the integer value stored at the given field
+     *
+     * @throws Exception if no field with fieldName is found in the map
+     * */
+    public float getFloatField(HashMap<String, Object> map, String fieldName) {
+        try {
+            return Float.parseFloat((String) map.get(fieldName));
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Finds the specified field in the specified map and returns its value. Assumes the value is a string.
+     *
+     * @param map the JSON map containing the desired field
+     * @param fieldName the name of the field in the map
+     *
+     * @return the integer value stored at the given field
+     *
+     * @throws Exception if no field with fieldName is found in the map
+     * */
+    public String getStringField(HashMap<String, Object> map, String fieldName) {
+        try {
+            return (String) map.get(fieldName);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Finds the specified field in the specified map and returns its value. Assumes the value is an array.
+     *
+     * @param map the JSON map containing the desired field
+     * @param fieldName the name of the field in the map
+     *
+     * @return the integer value stored at the given field
+     *
+     * @throws Exception if no field with fieldName is found in the map
+     * */
+    public Array<HashMap<String, Object>> getArrayField(HashMap<String, Object> map, String fieldName) {
+        try {
+            return (Array<HashMap<String, Object>>) map.get(fieldName);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public Object getProperty(Array<HashMap<String, Object>> properties, String propName) {
+        for (HashMap<String, Object> prop : properties) {
+            if (( (String)prop.get("name") ).equals(propName)) {
+                return prop.get("value");
+            }
+        }
+        throw new Error("No layer with name " + propName);
     }
 }

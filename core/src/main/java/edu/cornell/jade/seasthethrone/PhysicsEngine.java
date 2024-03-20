@@ -3,6 +3,7 @@ package edu.cornell.jade.seasthethrone;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.Array;
 import edu.cornell.jade.seasthethrone.gamemodel.*;
 import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.util.PooledList;
@@ -22,10 +23,11 @@ public class PhysicsEngine implements ContactListener {
   /** Timer for spawning bullets */
   private int bulletTimer;
 
+  private Array<BossModel> bosses = new Array<>();
+
   public PhysicsEngine(Rectangle bounds, World world, PlayerModel player) {
     this.world = world;
     this.bounds = new Rectangle(bounds);
-    this.bulletTimer = 0;
     world.setContactListener(this);
     addObject(player);
   }
@@ -48,17 +50,18 @@ public class PhysicsEngine implements ContactListener {
 
   /**
    * Spawns a single bullet given a position and velocity
+   * 
    * @param pos   starting position of bullet
    * @param vel   velocity of bullet
    * @param speed speed of bullet
    */
-  public void spawnBullet(Vector2 pos, Vector2 vel, float speed, boolean shotByPlayer){
+  public void spawnBullet(Vector2 pos, Vector2 vel, float speed, boolean shotByPlayer) {
     BulletModel bullet = new BulletModel(pos.x, pos.y, 0.5f);
     bullet.setVX(speed * vel.x);
     bullet.setVY(speed * vel.y);
-    if(shotByPlayer){
+    if (shotByPlayer) {
       bullet.setCategoryBits(BulletModel.CATEGORY_PLAYER_BULLET);
-      bullet.setMaskBits((short)0);
+      bullet.setMaskBits((short) 0);
     } else {
       bullet.setCategoryBits(BulletModel.CATEGORY_ENEMY_BULLET);
       bullet.setMaskBits(PlayerModel.CATEGORY_PLAYER);
@@ -74,22 +77,29 @@ public class PhysicsEngine implements ContactListener {
    * @param bulletTimer value of the timer, used to set angle
    */
   public void spawnBulletPattern(int bulletTimer) {
-    float speed = 4;
-    float theta = bulletTimer * 2;
-    Vector2 v_i = new Vector2((float) Math.cos(theta), (float) Math.sin(theta));
-    spawnBullet(new Vector2(3, 3), v_i, speed, false);
+    for (BossModel boss : bosses) {
+      float speed = 6;
+      Vector2 bossPos = boss.getPosition();
+      float theta = bulletTimer * 0.01f;
+      Vector2 v_i = new Vector2((float) Math.cos(theta), (float) Math.sin(theta));
+
+      spawnBullet(bossPos.add(0, 2), v_i, speed, false);
+      spawnBullet(bossPos.add(0, 2), v_i, -speed, false);
+    }
   }
 
   /**
    * The core gameplay loop of this world.
    *
-   * <p>This method is called after input is read, but before collisions are resolved. The very last
+   * <p>
+   * This method is called after input is read, but before collisions are
+   * resolved. The very last
    * thing that it should do is apply forces to the appropriate objects.
    *
    * @param delta Number of seconds since last animation frame
    */
   public void update(float delta) {
-    if (bulletTimer % 60 == 0) {
+    if (bulletTimer % 20 == 0) {
       spawnBulletPattern(bulletTimer);
     }
     bulletTimer += 1;
@@ -106,6 +116,9 @@ public class PhysicsEngine implements ContactListener {
       Model obj = entry.getValue();
       if (obj.isRemoved()) {
         obj.deactivatePhysics(world);
+        if (obj instanceof BossModel) {
+          bosses.removeValue((BossModel) obj, true);
+        }
         entry.remove();
       } else {
         obj.update(delta);
@@ -118,16 +131,20 @@ public class PhysicsEngine implements ContactListener {
    *
    * @param obj The object to add
    */
-  protected void addObject(Model obj) {
+  public void addObject(Model obj) {
     assert inBounds(obj) : "Object is not in bounds";
     objects.add(obj);
     obj.activatePhysics(world);
+    if (obj instanceof BossModel) {
+      bosses.add((BossModel) obj);
+    }
   }
 
   /**
    * Returns true if the object is in bounds.
    *
-   * <p>This assertion is useful for debugging the physics.
+   * <p>
+   * This assertion is useful for debugging the physics.
    *
    * @param obj The object to check.
    * @return true if the object is in bounds.
@@ -141,7 +158,9 @@ public class PhysicsEngine implements ContactListener {
   /**
    * Callback method for the start of a collision
    *
-   * <p>This method is called when we first get a collision between two objects. We use this method
+   * <p>
+   * This method is called when we first get a collision between two objects. We
+   * use this method
    * to test if it is the "right" kind of collision.
    *
    * @param contact The two bodies that collided
@@ -162,12 +181,14 @@ public class PhysicsEngine implements ContactListener {
       Model bd2 = (Model) body2.getUserData();
 
       if (bd1 instanceof PlayerBodyModel && bd2 instanceof BulletModel) {
+        System.out.println("player hit");
         handleCollision((PlayerBodyModel) bd1, (BulletModel) bd2);
       } else if (bd2 instanceof PlayerBodyModel && bd1 instanceof BulletModel) {
+        System.out.println("player hit");
         handleCollision((PlayerBodyModel) bd2, (BulletModel) bd1);
-      } else if (bd1 instanceof PlayerSpearModel && bd2 instanceof BulletModel){
+      } else if (bd1 instanceof PlayerSpearModel && bd2 instanceof BulletModel) {
         handleCollision((PlayerSpearModel) bd1, (BulletModel) bd2);
-      } else if (bd2 instanceof PlayerSpearModel && bd1 instanceof BulletModel){
+      } else if (bd2 instanceof PlayerSpearModel && bd1 instanceof BulletModel) {
         handleCollision((PlayerSpearModel) bd2, (BulletModel) bd1);
       }
 
@@ -177,9 +198,9 @@ public class PhysicsEngine implements ContactListener {
   }
 
   /** Handle collision between player body and bullet */
-  public void handleCollision(PlayerBodyModel pb, BulletModel b){
+  public void handleCollision(PlayerBodyModel pb, BulletModel b) {
     b.markRemoved(true);
-    if(!pb.isInvincible()){
+    if (!pb.isInvincible()) {
       pb.setHit(true);
       pb.setInvincible();
       // Calculate knockback direction
@@ -190,18 +211,21 @@ public class PhysicsEngine implements ContactListener {
   }
 
   /** Handle collision between player spear and bullet */
-  public void handleCollision(PlayerSpearModel ps, BulletModel b){
-    if(ps.incrementSpear()){
+  public void handleCollision(PlayerSpearModel ps, BulletModel b) {
+    if (ps.incrementSpear()) {
       b.markRemoved(true);
     }
   }
 
   @Override
-  public void endContact(Contact contact) {}
+  public void endContact(Contact contact) {
+  }
 
   @Override
-  public void preSolve(Contact contact, Manifold oldManifold) {}
+  public void preSolve(Contact contact, Manifold oldManifold) {
+  }
 
   @Override
-  public void postSolve(Contact contact, ContactImpulse impulse) {}
+  public void postSolve(Contact contact, ContactImpulse impulse) {
+  }
 }

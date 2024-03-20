@@ -5,6 +5,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import edu.cornell.jade.seasthethrone.model.SimpleModel;
+import com.badlogic.gdx.utils.Pool;
 import edu.cornell.jade.seasthethrone.render.FishRenderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.Direction;
@@ -35,21 +36,21 @@ public class BulletModel extends SimpleModel implements FishRenderable {
   private Direction faceDirection;
 
   /** Bullet texture when facing north */
-  public static final Texture FISH_TEXTURE_NORTH = new Texture("yellowfish_north.png");
+  public static final Texture FISH_TEXTURE_NORTH = new Texture("bullet/yellowfish_north.png");
   /** Bullet texture when facing northeast */
-  public static final Texture FISH_TEXTURE_NE = new Texture("yellowfish_NE.png");
+  public static final Texture FISH_TEXTURE_NE = new Texture("bullet/yellowfish_NE.png");
   /** Bullet texture when facing northwest */
-  public static final Texture FISH_TEXTURE_NW = new Texture("yellowfish_NW.png");
+  public static final Texture FISH_TEXTURE_NW = new Texture("bullet/yellowfish_NW.png");
   /** Bullet texture when facing east */
-  public static final Texture FISH_TEXTURE_EAST = new Texture("yellowfish_east.png");
+  public static final Texture FISH_TEXTURE_EAST = new Texture("bullet/yellowfish_east.png");
   /** Bullet texture when facing west */
-  public static final Texture FISH_TEXTURE_WEST = new Texture("yellowfish_west.png");
+  public static final Texture FISH_TEXTURE_WEST = new Texture("bullet/yellowfish_west.png");
   /** Bullet texture when facing southwest */
-  public static final Texture FISH_TEXTURE_SW = new Texture("yellowfish_SW.png");
+  public static final Texture FISH_TEXTURE_SW = new Texture("bullet/yellowfish_SW.png");
   /** Bullet texture when facing southeast */
-  public static final Texture FISH_TEXTURE_SE = new Texture("yellowfish_SE.png");
+  public static final Texture FISH_TEXTURE_SE = new Texture("bullet/yellowfish_SE.png");
   /** Bullet texture when facing south */
-  public static final Texture FISH_TEXTURE_SOUTH = new Texture("yellowfish_south.png");
+  public static final Texture FISH_TEXTURE_SOUTH = new Texture("bullet/yellowfish_south.png");
   /** FilmStrip cache object */
   public FilmStrip filmStrip;
   /** Amount of knockback force applied to player on collision */
@@ -79,6 +80,29 @@ public class BulletModel extends SimpleModel implements FishRenderable {
   /** Returns knockback force to apply to player on collision */
   public float getKnockbackForce() {
     return knockbackForce;
+  }
+
+  /**
+   * {@link BulletModel} constructor using no arguments for compatability with pooling. NOTE: as of now, you must
+   * call activatePhysics then createFixtures after constructing the BulletModel for it to be
+   * properly created.
+   */
+  public BulletModel() {
+    super(0, 0);
+    shape = new CircleShape();
+    shape.setRadius(0);
+    setBodyType(BodyDef.BodyType.DynamicBody);
+    setName("bullet");
+  }
+
+  public static BulletModel construct(float x, float y, float radius, Pool<BulletModel> pool) {
+    BulletModel res = pool.obtain();
+    res.setX(x);
+    res.setY(y);
+    res.shape.setRadius(radius);
+    res.setBodyType(BodyDef.BodyType.DynamicBody);
+    res.setName("bullet");
+    return res;
   }
 
   /**
