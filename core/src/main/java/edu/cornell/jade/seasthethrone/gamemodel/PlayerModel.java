@@ -74,18 +74,23 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   /** current direction the player is facing */
   private Direction faceDirection;
 
+  /**
+   * Frame counter for between dashing/shooting. Tracks how long until the player can
+   * dash/shoot again.
+   */
+  private int cooldownCounter;
+
+  /** The time limit (in frames) between dashes/shooting */
+  private int cooldownLimit;
+
 
   /** Whether the player is dashing */
   private boolean isDashing;
 
   /**
-   * Frame counter for dashing. Tracks how long the player has been dashing for and how long until
-   * they can dash again.
+   * Frame counter for dashing. Tracks how long the player has been dashing for.
    */
   private int dashCounter;
-
-  /** The time limit (in frames) between dashes */
-  private int dashCooldownLimit;
 
   /** The number of frames a dash lasts */
   private int dashLength;
@@ -115,10 +120,12 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   public PlayerModel(float x, float y) {
     super(x, y);
 
+    cooldownCounter = 0;
+    cooldownLimit = 30;
+
     moveSpeed = 8f;
     faceDirection = Direction.DOWN;
     dashCounter = 0;
-    dashCooldownLimit = 25;
     dashLength = 20;
     isDashing = false;
     frameCounter = 1;
@@ -243,20 +250,18 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
 
   /** Returns if the player can dash */
   public boolean canDash(){
-    return !isDashing && !isShooting && !isInvincible() && getSpearModel().canSpear() && dashCounter == 0;
+    return !isDashing && !isShooting && !isInvincible() && cooldownCounter == 0;
   }
 
   /** Returns if the player can be set to shooting */
   public boolean canShoot(){
-    return !isDashing && !isShooting && !isInvincible() && !getSpearModel().canSpear();
+    return !isDashing && !isShooting && !isInvincible()
+            && cooldownCounter == 0 && getSpearModel().getNumSpeared() > 0 ;
   }
 
-  /**
-   * Returns if the player can shoot one bullet.
-   * @pre isShooting is true.
-   *  */
+  /** Returns if the player can shoot one bullet. */
   public boolean canShootBullet(){
-    return !getSpearModel().canSpear();
+    return isShooting() && shootCounter == 0 && getSpearModel().getNumSpeared() > 0;
   }
 
 
@@ -272,7 +277,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     frameCounter = 1;
     getSpearModel().setSpear(true);
     animationFrame = 0;
-    setDashCounter(dashCooldownLimit);
+    dashCounter = dashLength;
   }
 
   /** Set dashing to false */
@@ -282,24 +287,6 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     dashFrameCounter = 1;
     animationFrame = 0;
     getSpearModel().setSpear(false);
-  }
-
-
-  /** Sets value for dash cooldown */
-  public void setDashCounter(int value) {
-    dashCounter = value;
-  }
-
-  public int getDashCounter() { return dashCounter; }
-
-  /** Returns length of dash in frames */
-  public int getDashLength() {
-    return dashLength;
-  }
-
-  /** Returns the max cooldown time of dash */
-  public int getDashCooldownLimit(){
-    return dashCooldownLimit;
   }
 
 
@@ -323,19 +310,11 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     shootCounter = shootCooldownLimit;
   }
 
-  public int getShootCounter() {
-    return shootCounter;
-  }
-
-  public void decrementShootCounter(){
-    shootCounter -= 1;
-  }
-
   /** Decrease fish counter. If the counter is sets to 0, stop shooting */
   public void decrementFishCount(){
     getSpearModel().decrementSpear();
     if(getSpearModel().getNumSpeared() <= 0){
-      isShooting = false;
+      stopShooting();
     }
   }
 
@@ -348,6 +327,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   /** Sets the player to not shooting */
   public void stopShooting(){
     isShooting = false;
+    cooldownCounter = cooldownLimit;
   }
 
   /** Returns if the player is currently invincible */
@@ -391,15 +371,17 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
       if (dashCounter <= 0) {
         // exit dash
         stopDashing();
-        dashCounter = dashCooldownLimit;
+        cooldownCounter = cooldownLimit;
       }
-    } else {
-      dashCounter = Math.max(0, dashCounter - 1);
+    }
+    else if (isShooting()){
+      shootCounter = Math.max(0, shootCounter-1);
+    }
+    else {
+      cooldownCounter = Math.max(0, cooldownCounter-1);
     }
 
-    if (isShooting()){
-      shootCounter -= 1;
-    }
+
 
     super.update(delta);
   }

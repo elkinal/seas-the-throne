@@ -37,6 +37,9 @@ public class PlayerController implements Controllable {
   /** If dashing pressed in since last update */
   boolean dashingPressed;
 
+  /** If shooting pressed in since last update */
+  boolean shootingPressed;
+
   /** The vector direction of the player for dashing */
   Vector2 dashDirection;
 
@@ -65,6 +68,10 @@ public class PlayerController implements Controllable {
 
   public void pressPrimary() {
     dashingPressed = true;
+  }
+
+  public void pressSecondary() {
+    shootingPressed = true;
   }
 
   /**
@@ -128,7 +135,7 @@ public class PlayerController implements Controllable {
     Vector2 playerPos = player.getPosition();
     //TODO: stop hardcoding the offset
     Vector2 startPos = playerPos.add(dashDirection.nor().scl(1.5f));
-    physicsEngine.spawnBullet(startPos, dashDirection.nor(), 8, true);
+    physicsEngine.spawnBullet(startPos, dashDirection.nor(), 16, true);
 
     player.setShootCounter();
     player.decrementFishCount();
@@ -150,12 +157,6 @@ public class PlayerController implements Controllable {
    * depending on which is applicable.
    */
   public void spearOrShoot(){
-    if(player.canDash() && (dashDirection.len() > NO_DASH_ERROR)){
-      //TODO: what happens if you get hit while dashing? (during iframes)
-      beginDashing();
-    } else if(player.canShoot()){
-      beginShooting();
-    }
   }
 
   /**
@@ -184,8 +185,11 @@ public class PlayerController implements Controllable {
   }
 
   public void update() {
-    if (dashingPressed) {
-      spearOrShoot();
+    if (dashingPressed && player.canDash() && (dashDirection.len() > NO_DASH_ERROR)){
+      //TODO: what happens if you get hit while dashing? (during iframes)
+      beginDashing();
+    } else if(shootingPressed && player.canShoot()){
+      beginShooting();
     }
     setVelPercentages(hoff, voff);
     orientPlayer();
@@ -197,6 +201,7 @@ public class PlayerController implements Controllable {
     }
 
     dashingPressed = false;
+    shootingPressed = false;
   }
 
   /** Returns the norm of a Vector2 */

@@ -98,13 +98,13 @@ public class PlayerSpearModel extends BoxModel {
     numSpeared -= 1;
   }
 
-  /**
-   * Return if the player is able to spear
-   * @pre spearExtended is false
-   * */
-  public boolean canSpear(){
-    return numSpeared == 0;
-  }
+//  /**
+//   * Return if the player is able to spear
+//   * @pre spearExtended is false
+//   * */
+//  public boolean canSpear(){
+//    return numSpeared == 0;
+//  }
 
   /** Overriding the current activatePhysics method to start the body off as inactive */
   @Override
