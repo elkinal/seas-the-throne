@@ -411,11 +411,12 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   }
 
   public Direction direction() {
-    // Don't update direction when stunned
-    if(isStunned()) return faceDirection;
+    return faceDirection;
+  }
 
-    float vx = getVX();
-    float vy = getVY();
+  public void setDirection(Vector2 moveDirection){
+    float vx = moveDirection.x;
+    float vy = moveDirection.y;
 
     if (Math.abs(vx) > Math.abs(vy)) {
       if (vx > 0) faceDirection = Direction.RIGHT;
@@ -424,6 +425,6 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
       if (vy > 0) faceDirection = Direction.UP;
       else faceDirection = Direction.DOWN;
     }
-    return faceDirection;
   }
+
 }
