@@ -42,6 +42,9 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   /** Player texture when dashing right */
   public static final Texture PLAYER_TEXTURE_RIGHT_DASH = new Texture("player/playerspritedashfilmstrip_right.png");
 
+  /** Player texture for the das indicator*/
+  private static final Texture DASH_INDICATOR_TEXTURE = new Texture("player/dash_indicator.png");
+
 
   /** FilmStrip cache object */
   public FilmStrip filmStrip;
@@ -135,7 +138,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     PlayerBodyModel playerBody = new PlayerBodyModel(x, y);
     bodies.add(playerBody);
 
-    PlayerSpearModel playerSpear = new PlayerSpearModel(x, y);
+    PlayerSpearModel playerSpear = new PlayerSpearModel(x, y, DASH_INDICATOR_TEXTURE);
     bodies.add(playerSpear);
 
     filmStrip = new FilmStrip(PLAYER_TEXTURE_DOWN, 1, FRAMES_IN_ANIMATION);

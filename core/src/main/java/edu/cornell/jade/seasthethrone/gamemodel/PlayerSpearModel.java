@@ -33,7 +33,7 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
   /** Number of fish currently speared */
   private int numSpeared;
 
-  private static final Texture SPEAR_TEXTURE = new Texture("player/dash_indicator.png");
+  private static TextureRegion SPEAR_TEXTURE_REGION;
 
 
   /**
@@ -44,17 +44,18 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
    * @param width  spear width in physics units
    * @param height spear width in physics units
    */
-  public PlayerSpearModel(float x, float y, float width, float height) {
+  public PlayerSpearModel(float x, float y, float width, float height, Texture texture) {
     super(x, y, width, height);
     spearExtended = false;
+    SPEAR_TEXTURE_REGION = new TextureRegion(texture);
     CollisionMask.setCategoryMaskBits(this);
   }
 
   /**
    * Create new player body at position (x,y)
    */
-  public PlayerSpearModel(float x, float y) {
-    this(x, y, SPEAR_WIDTH, SPEAR_LENGTH);
+  public PlayerSpearModel(float x, float y, Texture texture) {
+    this(x, y, SPEAR_WIDTH, SPEAR_LENGTH, texture);
   }
 
   /** Check if spear is extended */
@@ -134,8 +135,7 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
 
   @Override
   public void draw(RenderingEngine renderer) {
-    TextureRegion region = new TextureRegion(SPEAR_TEXTURE);
-    renderer.draw(region, getX(), getY());
+    renderer.draw(SPEAR_TEXTURE_REGION, getX(), getY());
   }
 
   @Override
