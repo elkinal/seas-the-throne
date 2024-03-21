@@ -7,7 +7,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.*;
 
 import edu.cornell.jade.seasthethrone.gamemodel.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.ObstacleModel;
@@ -81,7 +81,7 @@ public class GameplayController implements Screen {
   protected Rectangle bounds;
 
   /** Viewport maintaining relation between screen and world coordinates */
-  private FitViewport viewport;
+  private ExtendViewport viewport;
 
   protected boolean active;
 
@@ -158,11 +158,10 @@ public class GameplayController implements Screen {
 
     for (Obstacle obs : level.getObstacles()) {
 //      BoxModel model = new BoxModel(obs.x, obs.y, obs.width, obs.height);
-      ObstacleModel model = new ObstacleModel(obs);
+      ObstacleModel model = new ObstacleModel(obs, WORLD_SCALE);
       model.setBodyType(BodyDef.BodyType.StaticBody);
       renderEngine.addRenderable(model);
       physicsEngine.addObject(model);
-      System.out.println(model.isAwake());
     }
 
     inputController.add(playerController);
@@ -194,6 +193,7 @@ public class GameplayController implements Screen {
 
       // Update camera
       updateCamera();
+
     }
 
     if (!playerController.isAlive()) {
@@ -218,7 +218,7 @@ public class GameplayController implements Screen {
     for (Model r : objectCache) { renderEngine.addRenderable((Renderable) r); }
 
     draw(delta);
-    debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
+//    debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
 
     if (gameState == GameState.OVER) {
       if (inputController.didReset()) {
@@ -239,9 +239,12 @@ public class GameplayController implements Screen {
     Vector2 playerPos = playerController.getLocation();
     Vector2 cameraPos = viewport
         .unproject(new Vector2(viewport.getCamera().position.x, viewport.getCamera().position.y));
-    Vector2 diff = playerPos.sub(cameraPos).sub(DEFAULT_WIDTH / 2, -DEFAULT_HEIGHT / 2);
 
+    Vector2 worldDims = new Vector2(viewport.getWorldWidth(),  viewport.getWorldHeight());
+
+    Vector2 diff = playerPos.sub(cameraPos).sub( worldDims.x / 2, -worldDims.y / 2);
     viewport.getCamera().translate(diff.x, diff.y, 0);
+
     // if (diff.len() > 15f){
     // float CAMERA_SPEED = 0.01f;
     // viewport.getCamera().translate(CAMERA_SPEED* diff.x,CAMERA_SPEED* diff.y, 0);

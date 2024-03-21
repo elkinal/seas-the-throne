@@ -16,12 +16,13 @@ import edu.cornell.jade.seasthethrone.util.FilmStrip;
 public class ObstacleModel extends ComplexModel implements Renderable {
     private TextureRegion texture;
 
-    private float WORLD_SCALE = 0.15f;
+    private float WORLD_SCALE;
 
-    public ObstacleModel(Obstacle obs) {
+    public ObstacleModel(Obstacle obs, float scale) {
         // TODO: extend for generic model, not just BoxModel
         super(obs.x, obs.y);
         this.texture = obs.texture;
+        this.WORLD_SCALE = scale;
         BoxModel hitbox = new BoxModel(obs.x, obs.y, obs.width, obs.height);
         hitbox.setBodyType(BodyDef.BodyType.StaticBody);
         bodies.add(hitbox);
