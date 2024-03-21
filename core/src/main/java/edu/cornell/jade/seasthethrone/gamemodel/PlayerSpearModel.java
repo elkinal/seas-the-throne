@@ -39,7 +39,6 @@ public class PlayerSpearModel extends BoxModel {
   public PlayerSpearModel(float x, float y, float width, float height) {
     super(x, y, width, height);
     spearExtended = false;
-    CollisionMask.setCategoryMaskBits(this);
   }
 
   /**

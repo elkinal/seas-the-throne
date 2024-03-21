@@ -49,6 +49,8 @@ public class BulletModel extends SimpleModel implements FishRenderable {
   public FilmStrip filmStrip;
   /** Amount of knockback force applied to player on collision */
   private float knockbackForce;
+  /** If the bullet was shot by the player */
+  private boolean shotByPlayer;
 
   /**
    * {@link BulletModel} constructor using an x and y coordinate & radius. NOTE: as of now, you must
@@ -65,19 +67,20 @@ public class BulletModel extends SimpleModel implements FishRenderable {
     shape = new CircleShape();
     shape.setRadius(radius);
     knockbackForce = 20f;
-    setBodyType(BodyDef.BodyType.DynamicBody);
     setName("bullet");
     faceDirection = Direction.DOWN;
     filmStrip = new FilmStrip(FISH_TEXTURE_SOUTH, 1, 1);
 
     setBodyType(BodyDef.BodyType.KinematicBody);
-    CollisionMask.setCategoryMaskBits(this, shotByPlayer);
+    this.shotByPlayer = shotByPlayer;
   }
 
   /** Returns knockback force to apply to player on collision */
   public float getKnockbackForce() {
     return knockbackForce;
   }
+
+  public boolean isShotByPlayer() { return shotByPlayer; }
 
   /**
    * {@link BulletModel} constructor using no arguments for compatability with pooling. NOTE: as of now, you must
@@ -88,7 +91,6 @@ public class BulletModel extends SimpleModel implements FishRenderable {
     super(0, 0);
     shape = new CircleShape();
     shape.setRadius(0);
-    setBodyType(BodyDef.BodyType.DynamicBody);
     setName("bullet");
   }
 
@@ -97,7 +99,7 @@ public class BulletModel extends SimpleModel implements FishRenderable {
     res.setX(x);
     res.setY(y);
     res.shape.setRadius(radius);
-    res.setBodyType(BodyDef.BodyType.DynamicBody);
+    res.setBodyType(BodyDef.BodyType.KinematicBody);
     res.setName("bullet");
     return res;
   }
