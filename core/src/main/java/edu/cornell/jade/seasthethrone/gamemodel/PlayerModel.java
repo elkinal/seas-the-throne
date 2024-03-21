@@ -160,6 +160,8 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
       }
       frameCounter += 1;
     }
+
+    getSpearModel().draw(renderer);
   }
 
   public FilmStrip getFilmStrip() {

@@ -1,15 +1,20 @@
 package edu.cornell.jade.seasthethrone.gamemodel;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.physics.CollisionMask;
+import edu.cornell.jade.seasthethrone.render.Renderable;
+import edu.cornell.jade.seasthethrone.render.RenderingEngine;
+import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
 /**
  * Model for the player spear. When the spear is extended, it will have an active hitbox that will
  * allow the spear to pierce through enemies.
  */
-public class PlayerSpearModel extends BoxModel {
+public class PlayerSpearModel extends BoxModel implements Renderable {
   /** Width of spear */
   private static float SPEAR_WIDTH = 0.5f;
 
@@ -27,6 +32,9 @@ public class PlayerSpearModel extends BoxModel {
 
   /** Number of fish currently speared */
   private int numSpeared;
+
+  private static final Texture SPEAR_TEXTURE = new Texture("player/dash_indicator.png");
+
 
   /**
    * The size is expressed in physics units NOT pixels.
@@ -122,5 +130,31 @@ public class PlayerSpearModel extends BoxModel {
 
     bodyinfo.active = false;
     return false;
+  }
+
+  @Override
+  public void draw(RenderingEngine renderer) {
+    TextureRegion region = new TextureRegion(SPEAR_TEXTURE);
+    renderer.draw(region, getX(), getY());
+  }
+
+  @Override
+  public int getFrameNumber() {
+    return 0;
+  }
+
+  @Override
+  public void setFrameNumber(int frameNumber) {
+
+  }
+
+  @Override
+  public FilmStrip getFilmStrip() {
+    return null;
+  }
+
+  @Override
+  public int getFramesInAnimation() {
+    return 0;
   }
 }
