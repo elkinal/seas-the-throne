@@ -88,6 +88,9 @@ public class GameplayController implements Screen {
   /** Temporary cache to sort physics renderables */
   private Array<Model> objectCache = new Array<>();
 
+  /** Comparator to sort Models by height */
+  private heightComparator comp = new heightComparator();
+
   protected GameplayController() {
     gameState = GameState.PLAY;
 
@@ -210,7 +213,7 @@ public class GameplayController implements Screen {
       if (obj instanceof Renderable r)
         objectCache.add((Model) r);
     }
-//    objectCache.sort(Comparator.comparing());
+    objectCache.sort(comp);
 
     for (Model r : objectCache) { renderEngine.addRenderable((Renderable) r); }
 
@@ -259,4 +262,18 @@ public class GameplayController implements Screen {
     if (physicsEngine != null)
       physicsEngine.dispose();
   }
+
+  /**
+   * Compares Models based on height in the world
+   * */
+  class heightComparator implements Comparator<Model> {
+    @Override
+    public int compare(Model o1, Model o2) {
+      float diff = o2.getBody().getPosition().y - o1.getBody().getPosition().y;
+      if (diff > 0) {return 1;}
+      else if (diff < 0) {return -1;}
+      return 0;
+    }
+  }
+
 }
