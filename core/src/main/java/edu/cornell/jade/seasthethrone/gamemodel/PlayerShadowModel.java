@@ -4,9 +4,11 @@ import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.physics.CollisionMask;
 
 public class PlayerShadowModel extends BoxModel {
-    public PlayerShadowModel(float width, float height) {
-        super(width, height);
-    }
+    /** Width of shadow */
+    private static float SHADOW_WIDTH = 1.0f;
 
-    public PlayerShadowModel(float x, float y, float width, float height) { super(x, y, width, height); }
+    /** Length of shadow */
+    private static float SHADOW_LENGTH = 0.3f;
+
+    public PlayerShadowModel(float x, float y) { super(x, y, SHADOW_WIDTH, SHADOW_LENGTH); }
 }
