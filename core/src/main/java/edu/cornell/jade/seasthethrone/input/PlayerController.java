@@ -42,10 +42,14 @@ public class PlayerController implements Controllable {
   /** The vector direction of the player for dashing */
   Vector2 dashDirection;
 
+  /** The vector direction the player is moving */
+  Vector2 moveDirection;
+
   /** Constructs PlayerController */
   public PlayerController(PhysicsEngine physicsEngine, PlayerModel player) {
     this.physicsEngine = physicsEngine;
     this.player = player;
+    moveDirection = new Vector2();
   }
 
   /**
@@ -101,12 +105,11 @@ public class PlayerController implements Controllable {
     else if (player.isDashing()) {
       moveSpeed *= 4;
       Vector2 dashDirection = normalize(player.getDashDirection());
-      player.setVX(moveSpeed * dashDirection.x);
-      player.setVY(moveSpeed * dashDirection.y);
+      moveDirection.set(moveSpeed * dashDirection.x, moveSpeed * dashDirection.y);
     } else {
-      player.setVX(xNorm * moveSpeed * mag);
-      player.setVY(yNorm * moveSpeed * mag);
+      moveDirection.set(xNorm * moveSpeed * mag, yNorm * moveSpeed * mag);
     }
+    player.setLinearVelocity(moveDirection);
   }
 
   /** Orients the player model based on their primary direction of movement */
@@ -191,6 +194,7 @@ public class PlayerController implements Controllable {
       beginShooting();
     }
     setVelPercentages(hoff, voff);
+    player.setDirection(moveDirection);
     orientPlayer();
 
     player.updateSpear(dashDirection);
