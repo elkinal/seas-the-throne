@@ -605,24 +605,26 @@ public class GameCanvas {
    * <p>Unless otherwise transformed by the global transform (@see begin(Affine2)), the texture will
    * be unscaled. The bottom left of the texture will be positioned at the given coordinates.
    *
-   * @param region The texture to draw
-   * @param tint The color tint
-   * @param ox The x-coordinate of texture origin (in pixels)
-   * @param oy The y-coordinate of texture origin (in pixels)
-   * @param x The x-coordinate of the texture origin (on screen)
-   * @param y The y-coordinate of the texture origin (on screen)
-   * @param width The texture width
-   * @param height The texture height
+   * @param region   The texture to draw
+   * @param tint     The color tint
+   * @param ox       The x-coordinate of texture origin (in pixels)
+   * @param oy       The y-coordinate of texture origin (in pixels)
+   * @param x        The x-coordinate of the texture origin (on screen)
+   * @param y        The y-coordinate of the texture origin (on screen)
+   * @param width    The texture width
+   * @param height   The texture height
+   * @param scale
+   * @param rotation
    */
   public void draw(
-      TextureRegion region,
-      Color tint,
-      float ox,
-      float oy,
-      float x,
-      float y,
-      float width,
-      float height) {
+          TextureRegion region,
+          Color tint,
+          float ox,
+          float oy,
+          float x,
+          float y,
+          float width,
+          float height, float scale, float rotation) {
     if (active != DrawPass.STANDARD) {
       Gdx.app.error(
           "GameCanvas", "Cannot draw without active begin()", new IllegalStateException());

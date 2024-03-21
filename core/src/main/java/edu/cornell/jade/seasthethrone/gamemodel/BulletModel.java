@@ -29,22 +29,9 @@ public class BulletModel extends SimpleModel implements FishRenderable {
   /** Direction bullet is facing*/
   private Direction faceDirection;
 
-  /** Bullet texture when facing north */
-  public static final Texture FISH_TEXTURE_NORTH = new Texture("bullet/yellowfish_north.png");
-  /** Bullet texture when facing northeast */
-  public static final Texture FISH_TEXTURE_NE = new Texture("bullet/yellowfish_NE.png");
-  /** Bullet texture when facing northwest */
-  public static final Texture FISH_TEXTURE_NW = new Texture("bullet/yellowfish_NW.png");
-  /** Bullet texture when facing east */
-  public static final Texture FISH_TEXTURE_EAST = new Texture("bullet/yellowfish_east.png");
-  /** Bullet texture when facing west */
-  public static final Texture FISH_TEXTURE_WEST = new Texture("bullet/yellowfish_west.png");
-  /** Bullet texture when facing southwest */
-  public static final Texture FISH_TEXTURE_SW = new Texture("bullet/yellowfish_SW.png");
-  /** Bullet texture when facing southeast */
-  public static final Texture FISH_TEXTURE_SE = new Texture("bullet/yellowfish_SE.png");
-  /** Bullet texture when facing south */
-  public static final Texture FISH_TEXTURE_SOUTH = new Texture("bullet/yellowfish_south.png");
+
+  /** Bullet texture */
+  public static final Texture FISH_TEXTURE = new Texture("bullet/yellowfish_east.png");
   /** FilmStrip cache object */
   public FilmStrip filmStrip;
   /** Amount of knockback force applied to player on collision */
@@ -68,7 +55,7 @@ public class BulletModel extends SimpleModel implements FishRenderable {
     setBodyType(BodyDef.BodyType.DynamicBody);
     setName("bullet");
     faceDirection = Direction.DOWN;
-    filmStrip = new FilmStrip(FISH_TEXTURE_SOUTH, 1, 1);
+    filmStrip = new FilmStrip(FISH_TEXTURE, 1, 1);
 
     setBodyType(BodyDef.BodyType.KinematicBody);
     CollisionMask.setCategoryMaskBits(this, shotByPlayer);
@@ -157,89 +144,19 @@ public class BulletModel extends SimpleModel implements FishRenderable {
     return 0;
   }
 
-  @Override
-  public Texture getTextureNorth() {
-    return FISH_TEXTURE_NORTH;
-  }
-
-  @Override
-  public Texture getTextureNorthEast() {
-    return FISH_TEXTURE_NE;
-  }
-
-  @Override
-  public Texture getTextureNorthWest() {
-    return FISH_TEXTURE_NW;
-  }
-
-  @Override
-  public Texture getTextureWest() {
-    return FISH_TEXTURE_WEST;
-  }
-
-  @Override
-  public Texture getTextureEast() {
-    return FISH_TEXTURE_EAST;
-  }
-
-  @Override
-  public Texture getTextureSouthEast() {
-    return FISH_TEXTURE_SE;
-  }
-
-  @Override
-  public Texture getTextureSouthWest() {
-    return FISH_TEXTURE_SW;
-  }
-
-  @Override
-  public Texture getTextureSouth() {
-    return FISH_TEXTURE_SOUTH;
-  }
-
-  @Override
-  public Direction direction() {
+  public float angle(){
     float vx = getVX();
     float vy = getVY();
-
-    if (Math.abs(vx) > Math.abs(vy)) {
-      boolean notDiagonalX = 0.52 * Math.abs(vx) > Math.abs(vy);
-      if (vx > 0) {
-        if (notDiagonalX)
-          faceDirection = Direction.RIGHT;
-        else if (vy>0)
-          faceDirection = Direction.NE;
-        else
-          faceDirection = Direction.SE;
-      }
-      else {
-        if (notDiagonalX)
-          faceDirection = Direction.LEFT;
-        else if (vy>0)
-          faceDirection = Direction.NW;
-        else
-          faceDirection = Direction.SW;
-      }
-    } else if (Math.abs(vx) < Math.abs(vy)){
-      boolean notDiagonalY = 0.52 * Math.abs(vy) > Math.abs(vx);
-      if (vy > 0) {
-        if (notDiagonalY)
-          faceDirection = Direction.UP;
-        else if (vx>0)
-          faceDirection = Direction.NE;
-        else
-          faceDirection = Direction.NW;
-      }
-      else {
-        if (notDiagonalY)
-          faceDirection = Direction.DOWN;
-        else if (vx>0)
-          faceDirection = Direction.SE;
-        else
-          faceDirection = Direction.SW;
-      }
+    if (vx == 0){
+      if (vy>0)
+        return (float) (0.5*Math.PI);
+      else
+        return (float) (-0.5*Math.PI);
     }
-    return faceDirection;
+    else if (vx > 0)
+      return (float) Math.atan(vy/vx);
+    else
+      return (float) Math.atan(vy/vx) + (float) (Math.PI);
   }
 
 }
