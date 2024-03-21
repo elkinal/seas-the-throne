@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import edu.cornell.jade.seasthethrone.gamemodel.BossModel;
@@ -24,6 +25,8 @@ import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
+
+import java.util.Comparator;
 
 /**
  * The primary controller class for the game.
@@ -81,6 +84,9 @@ public class GameplayController implements Screen {
   private FitViewport viewport;
 
   protected boolean active;
+
+  /** Temporary cache to sort physics renderables */
+  private Array<Model> objectCache = new Array<>();
 
   protected GameplayController() {
     gameState = GameState.PLAY;
@@ -197,11 +203,16 @@ public class GameplayController implements Screen {
       renderEngine.addRenderable(tile);
     }
 
+    // Add physics objects to rendering engine in height-sorted order
+    objectCache.clear();
     for (Model obj : physicsEngine.getObjects()) {
       assert (obj.isActive());
       if (obj instanceof Renderable r)
-        renderEngine.addRenderable(r);
+        objectCache.add((Model) r);
     }
+//    objectCache.sort(Comparator.comparing());
+
+    for (Model r : objectCache) { renderEngine.addRenderable((Renderable) r); }
 
     draw(delta);
     debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
