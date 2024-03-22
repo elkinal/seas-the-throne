@@ -103,8 +103,8 @@ public class PlayerController implements Controllable {
     mag = Math.min(mag, 1f);
     float moveSpeed = player.getMoveSpeed();
 
-    // Player should not move while stunned (first part of iframes)
-    if (player.isStunned()) {}
+    // Player should not move while knocked back (first part of iframes)
+    if (player.isKnockedBack()) { return; }
     else if (player.isDashing()) {
       moveSpeed *= 4;
       moveDirection.set(moveSpeed * dashDirection.x, moveSpeed * dashDirection.y);

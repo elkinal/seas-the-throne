@@ -50,7 +50,7 @@ public class BulletModel extends SimpleModel implements FishRenderable {
     super(x, y);
     shape = new CircleShape();
     shape.setRadius(radius);
-    knockbackForce = 20f;
+    knockbackForce = 30f;
     setName("bullet");
     faceDirection = Direction.DOWN;
     filmStrip = new FilmStrip(FISH_TEXTURE, 1, 1);

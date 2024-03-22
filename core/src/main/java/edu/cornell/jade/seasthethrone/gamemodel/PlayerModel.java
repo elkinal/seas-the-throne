@@ -336,9 +336,9 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     return getBodyModel().isInvincible();
   }
 
-  /** Returns if the player is stunned (during iframes) */
-  public boolean isStunned(){
-    return getBodyModel().isStunned();
+  /** Returns if the player is knocked back (during iframes) */
+  public boolean isKnockedBack(){
+    return getBodyModel().isKnockedBack();
   }
 
   /** Returns the player body model */

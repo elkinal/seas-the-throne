@@ -202,7 +202,7 @@ public class PhysicsEngine implements ContactListener {
       pb.setHit(true);
       pb.setInvincible();
       // Calculate knockback direction
-      Vector2 knockbackDir = new Vector2(pb.getPosition()).sub(b.getPosition()).nor();
+      Vector2 knockbackDir = pb.getPosition().sub(b.getPosition()).nor();
       // Apply knockback force
       pb.getBody().setLinearVelocity(0, 0);
       pb.getBody().applyLinearImpulse(knockbackDir.scl(b.getKnockbackForce()), pb.getCentroid(), false);
