@@ -28,7 +28,7 @@ public class CollisionMask {
 
 
     /** Set the category and mask bits for a given model */
-    public static void setCategoryMaskBits(Model model){
+    public static void setCategoryMaskBits(Model model, boolean shotByPlayer){
         // If player
         if (model instanceof PlayerBodyModel || model instanceof PlayerSpearModel){
             model.setCategoryBits(CATEGORY_PLAYER);
@@ -39,22 +39,25 @@ public class CollisionMask {
             model.setCategoryBits(CATEGORY_PLAYER_SHADOW);
             model.setMaskBits(CATEGORY_OBSTACLE);
         }
-        // If bullet
+        // If player bullet
+        else if (model instanceof BulletModel && shotByPlayer) {
+            model.setCategoryBits(CATEGORY_PLAYER_BULLET);
+            model.setMaskBits(CATEGORY_BOSS);
+        }
+        // If enemy bullet
         else if (model instanceof BulletModel){
-            if (((BulletModel)model).isShotByPlayer()){
-                // If player bullet
-                model.setCategoryBits(CATEGORY_PLAYER_BULLET);
-                model.setMaskBits(CATEGORY_BOSS);
-            } else {
-                // If enemy bullet
-                model.setCategoryBits(CATEGORY_ENEMY_BULLET);
-                model.setMaskBits(CATEGORY_PLAYER);
-            }
+            model.setCategoryBits(CATEGORY_ENEMY_BULLET);
+            model.setMaskBits(CATEGORY_PLAYER);
         }
         // If boss
         else if (model instanceof BossModel) {
             model.setCategoryBits(CATEGORY_BOSS);
             model.setMaskBits((short) (CATEGORY_PLAYER | CATEGORY_PLAYER_BULLET));
         }
+    }
+
+    /** Set the category and mask bits for a given model */
+    public static void setCategoryMaskBits(Model model){
+        setCategoryMaskBits(model, false);
     }
 }

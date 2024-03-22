@@ -56,9 +56,12 @@ public class PhysicsEngine implements ContactListener {
    * @param speed speed of bullet
    */
   public void spawnBullet(Vector2 pos, Vector2 vel, float speed, boolean shotByPlayer) {
-    BulletModel bullet = new BulletModel(pos.x, pos.y, 0.5f, shotByPlayer);
+    BulletModel bullet = new BulletModel(pos.x, pos.y, 0.5f);
     bullet.setVX(speed * vel.x);
     bullet.setVY(speed * vel.y);
+    if (shotByPlayer){
+      CollisionMask.setCategoryMaskBits(bullet, true);
+    }
 
     addObject(bullet);
     bullet.createFixtures();

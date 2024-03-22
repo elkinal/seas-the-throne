@@ -198,7 +198,6 @@ public class PlayerController implements Controllable {
       beginShooting();
     }
 
-    System.out.println(dashDirection);
     setVelPercentages(hoff, voff);
     player.setDirection(moveDirection);
     orientPlayer();
