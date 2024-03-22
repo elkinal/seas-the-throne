@@ -3,6 +3,7 @@ package edu.cornell.jade.seasthethrone.gamemodel;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import edu.cornell.jade.seasthethrone.model.ComplexModel;
 import edu.cornell.jade.seasthethrone.render.PlayerRenderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
@@ -109,7 +110,6 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   /** Scaling factor for player movement */
   private float moveSpeed;
 
-
   /**
    * {@link PlayerModel} constructor using an x and y coordinate.
    *
@@ -136,10 +136,14 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     isShooting = false;
 
     PlayerBodyModel playerBody = new PlayerBodyModel(x, y);
+    playerBody.setSensor(true);
     bodies.add(playerBody);
 
     PlayerSpearModel playerSpear = new PlayerSpearModel(x, y, DASH_INDICATOR_TEXTURE);
     bodies.add(playerSpear);
+
+    PlayerShadowModel playerShadow = new PlayerShadowModel(x, y-1.6f, 1f, 0.5f);
+    bodies.add(playerShadow);
 
     filmStrip = new FilmStrip(PLAYER_TEXTURE_DOWN, 1, FRAMES_IN_ANIMATION);
     filmStripDashUD = new FilmStrip(PLAYER_TEXTURE_DOWN_DASH, 1, FRAMES_IN_ANIMATION_DASH);
@@ -222,6 +226,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   public Texture getTextureRightDash(){
     return PLAYER_TEXTURE_RIGHT_DASH;
   }
+
   /**
    * Returns player's move speed.
    *
@@ -351,6 +356,11 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     return (PlayerSpearModel) bodies.get(1);
   }
 
+  /** Returns the player shadow model */
+  public PlayerShadowModel getShadowModel(){
+    return (PlayerShadowModel) bodies.get(2);
+  }
+
   /** Update the player's spear model when dashing */
   public void updateSpear(Vector2 dashDirection){
     getSpearModel().updateSpear(getPosition(), dashDirection);
@@ -358,6 +368,15 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
 
   @Override
   protected boolean createJoints(World world) {
+    RevoluteJointDef jointDef = new RevoluteJointDef();
+    Body bodyA = getBodyModel().getBody();
+    Body bodyB = getShadowModel().getBody();
+    jointDef.initialize(bodyA, bodyB, bodyA.getWorldCenter());
+    jointDef.collideConnected = false;
+
+    Joint joint = world.createJoint(jointDef);
+    joints.add(joint);
+
     return true;
   }
 
@@ -397,11 +416,12 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   }
 
   public Direction direction() {
-    // Don't update direction when stunned
-    if(isStunned()) return faceDirection;
+    return faceDirection;
+  }
 
-    float vx = getVX();
-    float vy = getVY();
+  public void setDirection(Vector2 moveDirection){
+    float vx = moveDirection.x;
+    float vy = moveDirection.y;
 
     if (Math.abs(vx) > Math.abs(vy)) {
       if (vx > 0) faceDirection = Direction.RIGHT;
@@ -410,6 +430,6 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
       if (vy > 0) faceDirection = Direction.UP;
       else faceDirection = Direction.DOWN;
     }
-    return faceDirection;
   }
+
 }
