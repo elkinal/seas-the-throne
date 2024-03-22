@@ -1,15 +1,20 @@
 package edu.cornell.jade.seasthethrone.gamemodel;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.physics.CollisionMask;
+import edu.cornell.jade.seasthethrone.render.Renderable;
+import edu.cornell.jade.seasthethrone.render.RenderingEngine;
+import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
 /**
  * Model for the player spear. When the spear is extended, it will have an active hitbox that will
  * allow the spear to pierce through enemies.
  */
-public class PlayerSpearModel extends BoxModel {
+public class PlayerSpearModel extends BoxModel implements Renderable {
   /** Width of spear */
   private static float SPEAR_WIDTH = 0.5f;
 
@@ -28,6 +33,9 @@ public class PlayerSpearModel extends BoxModel {
   /** Number of fish currently speared */
   private int numSpeared;
 
+  private static TextureRegion SPEAR_TEXTURE_REGION;
+
+
   /**
    * The size is expressed in physics units NOT pixels.
    *
@@ -36,17 +44,20 @@ public class PlayerSpearModel extends BoxModel {
    * @param width  spear width in physics units
    * @param height spear width in physics units
    */
-  public PlayerSpearModel(float x, float y, float width, float height) {
+  public PlayerSpearModel(float x, float y, float width, float height, Texture texture) {
     super(x, y, width, height);
     spearExtended = false;
+
+    SPEAR_TEXTURE_REGION = new TextureRegion(texture);
     CollisionMask.setCategoryMaskBits(this);
+
   }
 
   /**
    * Create new player body at position (x,y)
    */
-  public PlayerSpearModel(float x, float y) {
-    this(x, y, SPEAR_WIDTH, SPEAR_LENGTH);
+  public PlayerSpearModel(float x, float y, Texture texture) {
+    this(x, y, SPEAR_WIDTH, SPEAR_LENGTH, texture);
   }
 
   /** Check if spear is extended */
@@ -122,5 +133,30 @@ public class PlayerSpearModel extends BoxModel {
 
     bodyinfo.active = false;
     return false;
+  }
+
+  @Override
+  public void draw(RenderingEngine renderer) {
+    renderer.draw(SPEAR_TEXTURE_REGION, getX(), getY());
+  }
+
+  @Override
+  public int getFrameNumber() {
+    return 0;
+  }
+
+  @Override
+  public void setFrameNumber(int frameNumber) {
+
+  }
+
+  @Override
+  public FilmStrip getFilmStrip() {
+    return null;
+  }
+
+  @Override
+  public int getFramesInAnimation() {
+    return 0;
   }
 }

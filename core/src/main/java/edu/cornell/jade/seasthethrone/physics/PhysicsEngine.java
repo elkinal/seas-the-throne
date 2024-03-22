@@ -191,6 +191,8 @@ public class PhysicsEngine implements ContactListener {
       } else if (bd2 instanceof PlayerSpearModel && bd1 instanceof BulletModel) {
         handleCollision((PlayerSpearModel) bd2, (BulletModel) bd1);
       }
+      else if (bd1 instanceof PlayerShadowModel && bd2 instanceof BulletModel){}
+      else if (bd2 instanceof PlayerShadowModel && bd1 instanceof BulletModel){}
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -206,19 +208,21 @@ public class PhysicsEngine implements ContactListener {
       // Calculate knockback direction
       Vector2 knockbackDir = new Vector2(pb.getPosition()).sub(b.getPosition()).nor();
       // Apply knockback force
+      pb.getBody().setLinearVelocity(0, 0);
       pb.getBody().applyLinearImpulse(knockbackDir.scl(b.getKnockbackForce()), pb.getCentroid(), false);
     }
   }
 
+  public void handleCollision( ObstacleModel obs, BulletModel b) {
+  }
+
+  @Override
+  public void endContact(Contact contact) {}
   /** Handle collision between player spear and bullet */
   public void handleCollision(PlayerSpearModel ps, BulletModel b) {
     if (ps.incrementSpear()) {
       b.markRemoved(true);
     }
-  }
-
-  @Override
-  public void endContact(Contact contact) {
   }
 
   @Override
