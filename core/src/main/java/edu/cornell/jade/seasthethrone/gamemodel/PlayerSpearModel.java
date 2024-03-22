@@ -47,8 +47,10 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
   public PlayerSpearModel(float x, float y, float width, float height, Texture texture) {
     super(x, y, width, height);
     spearExtended = false;
+
     SPEAR_TEXTURE_REGION = new TextureRegion(texture);
     CollisionMask.setCategoryMaskBits(this);
+
   }
 
   /**

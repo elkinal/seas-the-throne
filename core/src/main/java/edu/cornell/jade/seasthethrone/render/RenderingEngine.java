@@ -15,6 +15,9 @@ public class RenderingEngine {
   /** The Renderable objects for rendering */
   private Array<Renderable> renderables;
 
+  /** Layers of renderables to be rendered in order */
+  private Array<Array<Renderable>> renderLayers;
+
   /** Game Viewport */
   private Viewport viewport;
 
@@ -37,6 +40,7 @@ public class RenderingEngine {
    */
   public RenderingEngine(float worldWidth, float worldHeight, Viewport viewport, float worldScale) {
     renderables = new Array<>();
+    renderLayers = new Array<>();
     canvas = new GameCanvas();
 
     /** LOADING IN FONT, might be better to have an AssetDirectory later */
@@ -58,6 +62,9 @@ public class RenderingEngine {
    */
   public void addRenderable(Renderable r) {
     renderables.add(r);
+
+
+
   }
 
   public void setBackground(BackgroundImage bg) { BACKGROUND = bg;}
@@ -81,6 +88,20 @@ public class RenderingEngine {
     }
     canvas.end();
   }
+
+  public void drawRenderLayers() {
+    canvas.clear();
+    canvas.begin();
+    canvas.getSpriteBatch().setProjectionMatrix(getViewport().getCamera().combined);
+    for (Array<Renderable> rArr : renderLayers) {
+      for (Renderable r : rArr) {
+        r.draw(this);
+      }
+    }
+    canvas.end();
+  }
+
+  public void setNumLayers(int n) { renderLayers.ensureCapacity(n); }
 
   /** Gets the viewport of the render engine */
   public Viewport getViewport() {
