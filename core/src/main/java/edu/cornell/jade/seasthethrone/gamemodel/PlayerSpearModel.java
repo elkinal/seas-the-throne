@@ -84,14 +84,10 @@ public class PlayerSpearModel extends BoxModel {
   }
 
   /**
-   * If possible, increment spear counter and return true.
-   * Otherwise, return false.
+   * If possible, increment spear counter
    * */
-  public boolean incrementSpear(){
-    if(numSpeared < MAX_SPEAR_CAPACITY){
-      numSpeared += 1;
-      return true;
-    } return false;
+  public void incrementSpear(){
+    numSpeared = Math.min(numSpeared+1, MAX_SPEAR_CAPACITY);
   }
 
   /**

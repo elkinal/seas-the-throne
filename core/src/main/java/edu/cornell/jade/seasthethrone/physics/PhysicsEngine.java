@@ -212,14 +212,14 @@ public class PhysicsEngine implements ContactListener {
   public void handleCollision( ObstacleModel obs, BulletModel b) {
   }
 
-  @Override
-  public void endContact(Contact contact) {}
   /** Handle collision between player spear and bullet */
   public void handleCollision(PlayerSpearModel ps, BulletModel b) {
-    if (ps.incrementSpear()) {
-      b.markRemoved(true);
-    }
+    ps.incrementSpear();
+    b.markRemoved(true);
   }
+
+  @Override
+  public void endContact(Contact contact) {}
 
   @Override
   public void preSolve(Contact contact, Manifold oldManifold) {
