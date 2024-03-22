@@ -28,6 +28,9 @@ public class PlayerSpearModel extends BoxModel {
   /** Number of fish currently speared */
   private int numSpeared;
 
+  /** Cache for the direction the spear is facing */
+  private Vector2 directionCache;
+
   /**
    * The size is expressed in physics units NOT pixels.
    *
@@ -39,6 +42,7 @@ public class PlayerSpearModel extends BoxModel {
   public PlayerSpearModel(float x, float y, float width, float height) {
     super(x, y, width, height);
     spearExtended = false;
+    directionCache = new Vector2();
   }
 
   /**
@@ -70,8 +74,9 @@ public class PlayerSpearModel extends BoxModel {
    * @param dashDirection Vector representing the direction of the dash
    * */
   public void updateSpear(Vector2 bodyPosition, Vector2 dashDirection) {
-    setPosition(bodyPosition.add(dashDirection.nor().scl(SPEAR_OFFSET)));
-    setAngle(dashDirection.angleRad() + (float)Math.PI/2);
+    directionCache.set(dashDirection);
+    setPosition(bodyPosition.add(directionCache.scl(SPEAR_OFFSET)));
+    setAngle(directionCache.angleRad() + (float)Math.PI/2);
   }
 
   public int getNumSpeared() {

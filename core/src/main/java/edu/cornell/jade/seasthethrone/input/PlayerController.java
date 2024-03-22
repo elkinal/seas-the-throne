@@ -19,7 +19,7 @@ import com.badlogic.gdx.math.MathUtils;
 public class PlayerController implements Controllable {
 
   /** Error value for how close the mouse is to the player for dash to not count */
-  private static final float NO_DASH_ERROR = 0.5f;
+  private static final float NO_DASH_ERROR = 0.4f;
 
   /** The player */
   private PlayerModel player;
@@ -39,7 +39,8 @@ public class PlayerController implements Controllable {
   /** If shooting pressed in since last update */
   boolean shootingPressed;
 
-  /** The vector direction of the player for dashing */
+  /** The vector direction of the player for dashing
+   *  NOTE: this vector will always be normalized, and nonzero */
   Vector2 dashDirection;
 
   /** The vector direction the player is moving */
@@ -49,6 +50,8 @@ public class PlayerController implements Controllable {
   public PlayerController(PhysicsEngine physicsEngine, PlayerModel player) {
     this.physicsEngine = physicsEngine;
     this.player = player;
+    //start dash indicator down
+    dashDirection = new Vector2(0, -1);
     moveDirection = new Vector2();
   }
 
@@ -104,7 +107,6 @@ public class PlayerController implements Controllable {
     if (player.isStunned()) {}
     else if (player.isDashing()) {
       moveSpeed *= 4;
-      Vector2 dashDirection = normalize(player.getDashDirection());
       moveDirection.set(moveSpeed * dashDirection.x, moveSpeed * dashDirection.y);
     } else {
       moveDirection.set(xNorm * moveSpeed * mag, yNorm * moveSpeed * mag);
@@ -136,8 +138,8 @@ public class PlayerController implements Controllable {
   public void shoot(){
     Vector2 playerPos = player.getPosition();
     //TODO: stop hardcoding the offset
-    Vector2 startPos = playerPos.add(dashDirection.nor().scl(1.5f));
-    physicsEngine.spawnBullet(startPos, dashDirection.nor(), 16, true);
+    Vector2 startPos = playerPos.add(dashDirection.x * 1.5f, dashDirection.y * 1.5f);
+    physicsEngine.spawnBullet(startPos, dashDirection, 16, true);
 
     player.setShootCounter();
     player.decrementFishCount();
@@ -176,9 +178,11 @@ public class PlayerController implements Controllable {
       return;
     }
 
-    Vector2 playerPos = player.getPosition();
+    Vector2 diff = mousePos.sub(player.getPosition());
 
-    dashDirection = mousePos.sub(playerPos);
+    if (diff.len2() > NO_DASH_ERROR){
+      dashDirection.set(diff.nor());
+    }
   }
 
   @Override
@@ -187,12 +191,14 @@ public class PlayerController implements Controllable {
   }
 
   public void update() {
-    if (dashingPressed && player.canDash() && (dashDirection.len() > NO_DASH_ERROR)){
+    if (dashingPressed && player.canDash()){
       //TODO: what happens if you get hit while dashing? (during iframes)
       beginDashing();
     } else if(shootingPressed && player.canShoot()){
       beginShooting();
     }
+
+    System.out.println(dashDirection);
     setVelPercentages(hoff, voff);
     player.setDirection(moveDirection);
     orientPlayer();
@@ -205,11 +211,5 @@ public class PlayerController implements Controllable {
 
     dashingPressed = false;
     shootingPressed = false;
-  }
-
-  /** Returns the norm of a Vector2 */
-  public Vector2 normalize(Vector2 v) {
-    float magnitude = (float) Math.sqrt(Math.pow(v.x, 2) + Math.pow(v.y, 2));
-    return new Vector2(v.x / magnitude, v.y / magnitude);
   }
 }

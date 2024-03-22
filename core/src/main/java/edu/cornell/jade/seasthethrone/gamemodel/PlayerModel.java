@@ -396,8 +396,6 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
       cooldownCounter = Math.max(0, cooldownCounter-1);
     }
 
-
-
     super.update(delta);
   }
 
