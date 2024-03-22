@@ -7,18 +7,15 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.*;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import edu.cornell.jade.seasthethrone.gamemodel.BossModel;
-import edu.cornell.jade.seasthethrone.gamemodel.ObstacleModel;
 import edu.cornell.jade.seasthethrone.gamemodel.PlayerModel;
 import edu.cornell.jade.seasthethrone.input.BossController;
 import edu.cornell.jade.seasthethrone.input.InputController;
 import edu.cornell.jade.seasthethrone.input.PlayerController;
 import edu.cornell.jade.seasthethrone.bpedit.BulletController;
 import edu.cornell.jade.seasthethrone.level.Level;
-import edu.cornell.jade.seasthethrone.level.Obstacle;
 import edu.cornell.jade.seasthethrone.level.Tile;
 import edu.cornell.jade.seasthethrone.level.Wall;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
@@ -26,8 +23,6 @@ import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
-
-import java.util.Comparator;
 
 /**
  * The primary controller class for the game.
@@ -82,15 +77,9 @@ public class GameplayController implements Screen {
   protected Rectangle bounds;
 
   /** Viewport maintaining relation between screen and world coordinates */
-  private ExtendViewport viewport;
+  private FitViewport viewport;
 
   protected boolean active;
-
-  /** Temporary cache to sort physics renderables */
-  private Array<Model> objectCache = new Array<>();
-
-  /** Comparator to sort Models by height */
-  private heightComparator comp = new heightComparator();
 
   protected GameplayController() {
     gameState = GameState.PLAY;
@@ -175,24 +164,13 @@ public class GameplayController implements Screen {
 
     // Load walls
     for (Wall wall : level.getWalls()) {
-//      ObstacleModel wallModel = new ObstacleModel(wall);
-//      physicsEngine.addObject(wallModel);
-
-      BoxModel model = new BoxModel(wall.x, wall.y, wall.width, wall.height);
-      model.setBodyType(BodyDef.BodyType.StaticBody);
-      physicsEngine.addObject(model);
-    }
-
-    for (Obstacle obs : level.getObstacles()) {
-//      BoxModel model = new BoxModel(obs.x, obs.y, obs.width, obs.height);
-      ObstacleModel model = new ObstacleModel(obs, WORLD_SCALE);
-      model.setBodyType(BodyDef.BodyType.StaticBody);
-      renderEngine.addRenderable(model);
-      physicsEngine.addObject(model);
+      BoxModel wallModel = new BoxModel(wall.x, wall.y, wall.width, wall.height);
+      wallModel.setBodyType(BodyDef.BodyType.StaticBody);
+      physicsEngine.addObject(wallModel);
     }
 
     inputController.add(playerController);
-}
+  }
 
   public void render(float delta) {
     if (active) {
@@ -220,7 +198,6 @@ public class GameplayController implements Screen {
 
       // Update camera
       updateCamera();
-
     }
 
     if (!playerController.isAlive()) {
@@ -233,19 +210,15 @@ public class GameplayController implements Screen {
       renderEngine.addRenderable(tile);
     }
 
-    // Add physics objects to rendering engine in height-sorted order
-    objectCache.clear();
     for (Model obj : physicsEngine.getObjects()) {
       assert (obj.isActive());
       if (obj instanceof Renderable r)
-        objectCache.add((Model) r);
+        renderEngine.addRenderable(r);
     }
-    objectCache.sort(comp);
-
-    for (Model r : objectCache) { renderEngine.addRenderable((Renderable) r); }
 
     draw(delta);
-    debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
+    // debugRenderer.render(physicsEngine.getWorld(),
+    // renderEngine.getViewport().getCamera().combined);
 
     if (gameState == GameState.OVER) {
       if (inputController.didReset()) {
@@ -266,12 +239,9 @@ public class GameplayController implements Screen {
     Vector2 playerPos = playerController.getLocation();
     Vector2 cameraPos = viewport
         .unproject(new Vector2(viewport.getCamera().position.x, viewport.getCamera().position.y));
+    Vector2 diff = playerPos.sub(cameraPos).sub(DEFAULT_WIDTH / 2, -DEFAULT_HEIGHT / 2);
 
-    Vector2 worldDims = new Vector2(viewport.getWorldWidth(),  viewport.getWorldHeight());
-
-    Vector2 diff = playerPos.sub(cameraPos).sub( worldDims.x / 2, -worldDims.y / 2);
     viewport.getCamera().translate(diff.x, diff.y, 0);
-
     // if (diff.len() > 15f){
     // float CAMERA_SPEED = 0.01f;
     // viewport.getCamera().translate(CAMERA_SPEED* diff.x,CAMERA_SPEED* diff.y, 0);
@@ -292,18 +262,4 @@ public class GameplayController implements Screen {
     if (physicsEngine != null)
       physicsEngine.dispose();
   }
-
-  /**
-   * Compares Models based on height in the world
-   * */
-  class heightComparator implements Comparator<Model> {
-    @Override
-    public int compare(Model o1, Model o2) {
-      float diff = o2.getBody().getPosition().y - o1.getBody().getPosition().y;
-      if (diff > 0) {return 1;}
-      else if (diff < 0) {return -1;}
-      return 0;
-    }
-  }
-
 }

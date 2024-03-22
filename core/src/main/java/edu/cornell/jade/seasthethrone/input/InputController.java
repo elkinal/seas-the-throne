@@ -140,10 +140,6 @@ public class InputController {
     if (xbox.getRightTrigger() > 0.6f) {
       obj.pressPrimary();
     }
-    // dashing
-    if (xbox.getLeftTrigger() > 0.6f) {
-      obj.pressSecondary();
-    }
 
     resetPressed = xbox.getY();
 

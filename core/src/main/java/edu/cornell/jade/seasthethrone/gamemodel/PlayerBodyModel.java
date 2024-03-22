@@ -34,8 +34,9 @@ public class PlayerBodyModel extends PolygonModel {
     health = 3;
     iframeCounter = 0;
     iframeLimit = 70;
-    knockbackTimer = iframeLimit/7;
+    knockbackTimer = iframeLimit/10;
     stunTimer = knockbackTimer * 3;
+    CollisionMask.setCategoryMaskBits(this);
   }
 
   /** Create new player body at position (x,y) */

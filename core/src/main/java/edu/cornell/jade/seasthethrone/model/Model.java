@@ -2,7 +2,6 @@ package edu.cornell.jade.seasthethrone.model;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import edu.cornell.jade.seasthethrone.physics.CollisionMask;
 
 public abstract class Model {
 
@@ -914,9 +913,6 @@ public abstract class Model {
 
     // Set the default drawing scale
     drawScale = new Vector2(1, 1);
-
-    // set category and mask bits for collisions
-    CollisionMask.setCategoryMaskBits(this);
   }
 
   /// Abstract Methods

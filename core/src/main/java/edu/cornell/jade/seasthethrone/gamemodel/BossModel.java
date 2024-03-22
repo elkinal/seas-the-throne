@@ -29,8 +29,6 @@ public class BossModel extends ComplexModel implements Renderable {
     /** The current position in the filmstrip */
     private int animationFrame;
 
-    private float scale;
-
     /**
      * {@link BossModel} constructor using an x and y coordinate.
      *
@@ -61,15 +59,13 @@ public class BossModel extends ComplexModel implements Renderable {
         FilmStrip filmStrip = getFilmStrip();
         filmStrip.setFrame(frame);
         Vector2 pos = getPosition();
-        renderer.draw(filmStrip, pos.x, pos.y, scale);
+        renderer.draw(filmStrip, pos.x, pos.y, 0.16f);
 
         if (frameCounter % frameDelay == 0) {
             setFrameNumber((getFrameNumber() + 1) % getFramesInAnimation());
         }
         frameCounter +=1 ;
     }
-
-    public void setScale(float s) { scale = s; }
 
     public int getFrameNumber() {
         return animationFrame;
