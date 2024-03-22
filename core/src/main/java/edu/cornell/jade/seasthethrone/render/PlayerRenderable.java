@@ -86,6 +86,8 @@ public interface PlayerRenderable extends Renderable {
 
   /** Returns the number of current health points of the player. */
   public int getHealth();
+  /** Returns whether the player is hit */
+  public boolean healthReduced();
 
   public default void draw(RenderingEngine renderer) {
 
@@ -118,9 +120,9 @@ public interface PlayerRenderable extends Renderable {
         break;
     }
     filmStrip.setFrame(frame);
-
+    boolean healthReduced = healthReduced();
     Vector2 pos = getPosition();
-    renderer.draw(filmStrip, pos.x, pos.y, 0.12f);
+    renderer.draw(filmStrip, pos.x, pos.y, 0.12f, healthReduced);
 
 //    setFrameNumber((frame + 1) % getFramesInAnimation());
 
