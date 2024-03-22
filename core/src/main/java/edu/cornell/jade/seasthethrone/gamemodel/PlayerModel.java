@@ -139,7 +139,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     PlayerSpearModel playerSpear = new PlayerSpearModel(x, y);
     bodies.add(playerSpear);
 
-    PlayerShadowModel playerShadow = new PlayerShadowModel(x, y-1.2f, 1f, 0.3f);
+    PlayerShadowModel playerShadow = new PlayerShadowModel(x, y-1.6f, 1f, 0.5f);
     bodies.add(playerShadow);
 
     filmStrip = new FilmStrip(PLAYER_TEXTURE_DOWN, 1, FRAMES_IN_ANIMATION);
