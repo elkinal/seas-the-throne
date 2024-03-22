@@ -33,7 +33,7 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
   /** Number of fish currently speared */
   private int numSpeared;
 
-  private static TextureRegion SPEAR_TEXTURE_REGION;
+  private final TextureRegion SPEAR_TEXTURE_REGION;
 
 
   /**
