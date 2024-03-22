@@ -1,15 +1,19 @@
 package edu.cornell.jade.seasthethrone;
 
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.*;
 
 import edu.cornell.jade.seasthethrone.gamemodel.BossModel;
+import edu.cornell.jade.seasthethrone.gamemodel.MenuButton;
 import edu.cornell.jade.seasthethrone.gamemodel.ObstacleModel;
 import edu.cornell.jade.seasthethrone.gamemodel.PlayerModel;
 import edu.cornell.jade.seasthethrone.input.BossController;
@@ -26,6 +30,7 @@ import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 
+import java.awt.*;
 import java.util.Comparator;
 
 /**
@@ -91,6 +96,8 @@ public class GameplayController implements Screen {
   /** Comparator to sort Models by height */
   private heightComparator comp = new heightComparator();
 
+  private Stage stage;
+
   protected GameplayController() {
     gameState = GameState.PLAY;
 
@@ -99,6 +106,7 @@ public class GameplayController implements Screen {
     DEFAULT_WIDTH = level.DEFAULT_WIDTH;
     WORLD_SCALE = level.WORLD_SCALE;
     this.viewport = level.getViewport();
+    stage = new Stage(viewport);
 
     bounds = new Rectangle(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 
@@ -164,6 +172,19 @@ public class GameplayController implements Screen {
       physicsEngine.addObject(model);
     }
 
+    // Load pause menu items
+    MenuButton pauseButton = new MenuButton(new Texture("pause_menu/pausebutton.png"));
+    renderEngine.addRenderable(pauseButton); //hmmm????
+//    physicsEngine.addObject(pauseButton); // deleteme
+    System.out.println(viewport.getCamera().viewportWidth);
+
+    pauseButton.setPosition(player.getX(), player.getY());
+    stage.addActor(pauseButton);
+
+//    myActor = new MenuButton(textureRegion);
+
+
+
     inputController.add(playerController);
 }
 
@@ -172,6 +193,9 @@ public class GameplayController implements Screen {
       update(delta);
     }
     // draw(delta);
+    stage.act(delta);
+    stage.draw();
+
   }
 
   public void draw(float delta) {
@@ -232,6 +256,7 @@ public class GameplayController implements Screen {
   public void resize(int width, int height) {
     viewport.update(width, height);
     renderEngine.getGameCanvas().resize();
+    stage.getViewport().update(width, height);
   }
 
   /** Updates the camera position to keep the player centered on the screen */
@@ -264,6 +289,7 @@ public class GameplayController implements Screen {
   public void dispose() {
     if (physicsEngine != null)
       physicsEngine.dispose();
+    stage.dispose();
   }
 
   /**
