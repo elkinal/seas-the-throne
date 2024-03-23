@@ -296,7 +296,7 @@ public class GameplayController implements Screen {
   public void dispose() {
     if (physicsEngine != null)
       physicsEngine.dispose();
-    stage.dispose();
+//    stage.dispose();
   }
 
   /**
