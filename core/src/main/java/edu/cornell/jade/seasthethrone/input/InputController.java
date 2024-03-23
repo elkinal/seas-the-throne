@@ -212,19 +212,16 @@ public class InputController {
    */
   private void readMouse(Controllable obj) {
 
-    float x = Gdx.input.getX();
-    float y = Gdx.input.getY();
+    Vector2 mousePos = new Vector2(Gdx.input.getX(), Gdx.input.getY());
 
-    dashCoordCache.set(x, y);
+    dashCoordCache.set(mousePos.x, mousePos.y);
 
     viewport.unproject(dashCoordCache);
     obj.updateDirection(dashCoordCache);
 
-    // menu item click detection
-    Vector2 clickPos = new Vector2(x, y);
-
+    // Detecting when pause button is clicked
     for (MenuButton button : buttons) {
-      if (isBoxClicked(button, viewport.unproject(clickPos)) && Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+      if (isBoxClicked(button, viewport.unproject(mousePos)) && Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
         System.out.println("PAUSE ACTIVATED");
       }
 
