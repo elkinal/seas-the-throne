@@ -235,6 +235,8 @@ public class InputController {
   }
 
   private boolean isBoxClicked(MenuButton model, Vector2 clickPos) {
+//    System.out.println(clickPos);
+//    System.out.println(model.getBoundingBox());
     return model.getBoundingBox().contains(clickPos);
   }
 

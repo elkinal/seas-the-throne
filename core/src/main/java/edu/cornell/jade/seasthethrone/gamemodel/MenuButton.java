@@ -75,7 +75,10 @@ public class MenuButton extends BoxModel implements Renderable {
     }
 
     public Rectangle getBoundingBox() {
-        return new Rectangle(getX(), getY(), getWidth(), getHeight());
+        float x = getX() - getWidth() / 2;
+        float y = getY() - getHeight() / 2;
+
+        return new Rectangle(x, y, getWidth(), getHeight());
     }
 
 }
