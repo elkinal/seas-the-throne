@@ -33,6 +33,7 @@ public class BackgroundImage implements Renderable {
     public void draw(RenderingEngine renderer) {
         renderer.draw(getTexture(), getPosition().x, getPosition().y);
     }
+
     public Vector2 getPosition() { return position;}
 
     public void setPosition(Vector2 pos) { position = pos;}
