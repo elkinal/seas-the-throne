@@ -184,6 +184,7 @@ public class GameplayController implements Screen {
 
     renderEngine.addRenderable(pauseButton);
     physicsEngine.addObject(pauseButton);
+    inputController.addButton(pauseButton);
 
     inputController.add(playerController);
 }

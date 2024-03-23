@@ -16,8 +16,14 @@ package edu.cornell.jade.seasthethrone.input;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import edu.cornell.jade.seasthethrone.gamemodel.MenuButton;
+import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.util.Controllers;
 import edu.cornell.jade.seasthethrone.util.XBoxController;
 import java.util.*;
@@ -35,6 +41,8 @@ public class InputController {
 
   /** Whether the reset button was pressed. */
   protected boolean resetPressed;
+
+  protected ArrayList<MenuButton> buttons = new ArrayList<>();
 
   /**
    * Cache vector to return containing the dash coordinates of the previous read
@@ -203,8 +211,36 @@ public class InputController {
    * @param obj Controller for the player
    */
   private void readMouse(Controllable obj) {
-    dashCoordCache.set(Gdx.input.getX(), Gdx.input.getY());
+
+    float x = Gdx.input.getX();
+    float y = Gdx.input.getY();
+
+    dashCoordCache.set(x, y);
+
     viewport.unproject(dashCoordCache);
     obj.updateDirection(dashCoordCache);
+
+    // menu item click detection
+    Vector2 clickPos = new Vector2(x, y);
+
+    for (MenuButton button : buttons) {
+      if (isBoxClicked(button, viewport.unproject(clickPos)) && Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+        System.out.println("PAUSE ACTIVATED");
+      }
+
+    }
   }
+
+
+
+  public void addButton(MenuButton button) {
+    buttons.add(button);
+  }
+
+  private boolean isBoxClicked(MenuButton model, Vector2 clickPos) {
+    return model.getBoundingBox().contains(clickPos);
+  }
+
+
+
 }
