@@ -10,14 +10,19 @@ import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
-public class MenuButton extends Actor implements Renderable {
+public class MenuButton extends BoxModel implements Renderable {
 
     private final TextureRegion PAUSE_BUTTON_TEXTURE_REGION;
 
-    public MenuButton(Texture texture) {
+    public MenuButton(float x, float y, float width, float height, Texture texture) {
+
+        super(x, y, width, height);
         PAUSE_BUTTON_TEXTURE_REGION = new TextureRegion(texture);
-        setWidth(PAUSE_BUTTON_TEXTURE_REGION.getRegionWidth());
-        setHeight(PAUSE_BUTTON_TEXTURE_REGION.getRegionHeight());
+//        setWidth(PAUSE_BUTTON_TEXTURE_REGION.getRegionWidth());
+//        setHeight(PAUSE_BUTTON_TEXTURE_REGION.getRegionHeight());
+
+//        setWidth(100);
+//        setHeight(100);
     }
 
     @Override
@@ -28,7 +33,6 @@ public class MenuButton extends Actor implements Renderable {
     @Override
     public void draw(RenderingEngine renderer) {
         renderer.draw(PAUSE_BUTTON_TEXTURE_REGION, getX(), getY());
-        System.out.println("bruh");
     }
 
     @Override

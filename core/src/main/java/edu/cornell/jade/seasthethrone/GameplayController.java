@@ -1,8 +1,11 @@
 package edu.cornell.jade.seasthethrone;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -173,15 +176,23 @@ public class GameplayController implements Screen {
     }
 
     // Load pause menu items
-    MenuButton pauseButton = new MenuButton(new Texture("pause_menu/pausebutton.png"));
+    Vector2 newLoc = viewport.unproject(new Vector2(10, 10));
+    System.out.println("newloc: " + newLoc);
+    MenuButton pauseButton = new MenuButton(newLoc.x, newLoc.y, 5, 5, new Texture("pause_menu/pausebutton.png"));
+
+
     renderEngine.addRenderable(pauseButton); //hmmm????
-//    physicsEngine.addObject(pauseButton); // deleteme
+    physicsEngine.addObject(pauseButton); // deleteme
+
     System.out.println(viewport.getCamera().viewportWidth);
 
     pauseButton.setPosition(player.getX(), player.getY());
-    stage.addActor(pauseButton);
+//    stage.addActor(pauseButton);
 
+//    System.out.println(viewport.toScreenCoordinates(player.getPosition(), new Matrix4().idt()));
+//    viewport.toScreenCoordinates(viewport.project(playerLoc), new Matrix4().idt());
 //    myActor = new MenuButton(textureRegion);
+//    System.out.println(viewport.unproject(new Vector2(0, 0)));
 
 
 
@@ -193,14 +204,17 @@ public class GameplayController implements Screen {
       update(delta);
     }
     // draw(delta);
-    stage.act(delta);
-    stage.draw();
 
   }
 
   public void draw(float delta) {
     // renderEngine.drawBackground();
+    Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
+    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     renderEngine.drawRenderables();
+    stage.act(delta);
+    stage.draw();
+
   }
 
   public void update(float delta) {
@@ -256,7 +270,7 @@ public class GameplayController implements Screen {
   public void resize(int width, int height) {
     viewport.update(width, height);
     renderEngine.getGameCanvas().resize();
-    stage.getViewport().update(width, height);
+//    stage.getViewport().update(width, height);
   }
 
   /** Updates the camera position to keep the player centered on the screen */
