@@ -133,6 +133,7 @@ public class GameplayController implements Screen {
             .setTextureDownDash(new Texture("player/playerspritedashfilmstrip_down.png"))
             .setTextureLeftDash(new Texture("player/playerspritedashfilmstrip_left.png"))
             .setTextureRightDash(new Texture("player/playerspritedashfilmstrip_right.png"))
+            .setDashIndicatorTexture(new Texture("player/dash_indicator.png"))
             .setFramesInAnimation(12)
             .setFramesInAnimationDash(5)
             .setFrameDelay(3)

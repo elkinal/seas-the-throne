@@ -42,6 +42,8 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable{
   /** Player texture when dashing right */
   public static Texture PLAYER_TEXTURE_RIGHT_DASH;
 
+  public Texture dashIndicatorTexture;
+
 
   /** FilmStrip cache object */
   public FilmStrip filmStrip;
@@ -140,6 +142,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable{
     PLAYER_TEXTURE_DOWN_DASH = builder.PLAYER_TEXTURE_DOWN_DASH;
     PLAYER_TEXTURE_LEFT_DASH = builder.PLAYER_TEXTURE_LEFT_DASH;
     PLAYER_TEXTURE_RIGHT_DASH = builder.PLAYER_TEXTURE_RIGHT_DASH;
+    dashIndicatorTexture = builder.dashIndicatorTexture;
 
     shootCooldownLimit = builder.shootCooldownLimit;
     shootCounter = 0;
@@ -149,7 +152,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable{
     bodies.add(playerBody);
     healthCache = playerBody.getHealth();
 
-    PlayerSpearModel playerSpear = new PlayerSpearModel(builder.x, builder.y);
+    PlayerSpearModel playerSpear = new PlayerSpearModel(builder.x, builder.y, dashIndicatorTexture);
     bodies.add(playerSpear);
 
     filmStrip = new FilmStrip(PLAYER_TEXTURE_DOWN, 1, FRAMES_IN_ANIMATION);
@@ -464,6 +467,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable{
 
     /** Player texture when dashing right */
     private Texture PLAYER_TEXTURE_RIGHT_DASH;
+    private Texture dashIndicatorTexture;
 
     /** The number of frames to skip before animating the next player frame */
     private int frameDelay;
@@ -531,6 +535,10 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable{
     }
     public Builder setTextureRightDash(Texture texture){
       PLAYER_TEXTURE_RIGHT_DASH = texture;
+      return this;
+    }
+    public Builder setDashIndicatorTexture(Texture texture){
+      dashIndicatorTexture = texture;
       return this;
     }
     public Builder setFrameDelay(int frameDelay){
