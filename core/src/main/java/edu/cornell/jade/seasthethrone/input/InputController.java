@@ -126,26 +126,29 @@ public class InputController {
    * @param obj Controller for the player
    */
   private void readController(Controllable obj) {
-    float hoff = 0;
-    float voff = 0;
 
-    hoff = xbox.getLeftX();
-    voff = -xbox.getLeftY();
+    //dash/shoot indicator
+    float hind = xbox.getRightX();
+    float vind = -xbox.getRightY();
 
     Vector2 location = obj.getLocation();
-    dashCoordCache.set(location.x + hoff, location.y + voff);
+    dashCoordCache.set(location.x + hind, location.y + vind);
     obj.updateDirection(dashCoordCache);
 
     // dashing
     if (xbox.getRightTrigger() > 0.6f) {
       obj.pressPrimary();
     }
-    // dashing
+    // shooting
     if (xbox.getLeftTrigger() > 0.6f) {
       obj.pressSecondary();
     }
 
     resetPressed = xbox.getY();
+
+    //movement
+    float hoff = xbox.getLeftX();
+    float voff = -xbox.getLeftY();
 
     obj.moveHorizontal(hoff);
     obj.moveVertical(voff);

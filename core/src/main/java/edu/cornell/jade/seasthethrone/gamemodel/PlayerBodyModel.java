@@ -23,10 +23,7 @@ public class PlayerBodyModel extends PolygonModel {
   private int iframeCounter;
 
   /** Frame time of the knockback duration */
-  private int knockbackTimer;
-
-  /** Frame time of the stun duration (including knockback) */
-  private int stunTimer;
+  private int knockbackTime;
 
   public PlayerBodyModel(float[] vertices, float x, float y) {
     super(vertices, x, y);
@@ -34,8 +31,7 @@ public class PlayerBodyModel extends PolygonModel {
     health = 3;
     iframeCounter = 0;
     iframeLimit = 70;
-    knockbackTimer = iframeLimit/7;
-    stunTimer = knockbackTimer * 3;
+    knockbackTime = iframeLimit/10;
   }
 
   /** Create new player body at position (x,y) */
@@ -71,8 +67,8 @@ public class PlayerBodyModel extends PolygonModel {
   }
 
   /** Returns if the player is stunned (during iframes) */
-  public boolean isStunned(){
-    return iframeCounter+stunTimer > iframeLimit;
+  public boolean isKnockedBack(){
+    return iframeCounter+knockbackTime > iframeLimit;
   }
 
   /** Sets the player invincible according to the iframe limit */
@@ -84,10 +80,6 @@ public class PlayerBodyModel extends PolygonModel {
   public void update(float delta){
     if (isInvincible()){
       iframeCounter -= 1;
-    }
-    // stop knockback
-    if (iframeCounter == iframeLimit-knockbackTimer){
-      setLinearVelocity(new Vector2(0, 0));
     }
   }
 }

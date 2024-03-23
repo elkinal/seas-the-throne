@@ -36,8 +36,6 @@ public class BulletModel extends SimpleModel implements FishRenderable {
   public FilmStrip filmStrip;
   /** Amount of knockback force applied to player on collision */
   private float knockbackForce;
-  /** If the bullet was shot by the player */
-  private boolean shotByPlayer;
 
   /**
    * {@link BulletModel} constructor using an x and y coordinate & radius. NOTE: as of now, you must
@@ -47,27 +45,23 @@ public class BulletModel extends SimpleModel implements FishRenderable {
    * @param x The x-position for this bullet in world coordinates
    * @param y The y-position for this bullet in world coordinates
    * @param radius The radius of this bullet
-   * @param shotByPlayer If the bullet is shot by the player
    */
-  public BulletModel(float x, float y, float radius, boolean shotByPlayer) {
+  public BulletModel(float x, float y, float radius) {
     super(x, y);
     shape = new CircleShape();
     shape.setRadius(radius);
-    knockbackForce = 20f;
+    knockbackForce = 30f;
     setName("bullet");
     faceDirection = Direction.DOWN;
     filmStrip = new FilmStrip(FISH_TEXTURE, 1, 1);
 
     setBodyType(BodyDef.BodyType.KinematicBody);
-    this.shotByPlayer = shotByPlayer;
   }
 
   /** Returns knockback force to apply to player on collision */
   public float getKnockbackForce() {
     return knockbackForce;
   }
-
-  public boolean isShotByPlayer() { return shotByPlayer; }
 
   /**
    * {@link BulletModel} constructor using no arguments for compatability with pooling. NOTE: as of now, you must

@@ -56,9 +56,12 @@ public class PhysicsEngine implements ContactListener {
    * @param speed speed of bullet
    */
   public void spawnBullet(Vector2 pos, Vector2 vel, float speed, boolean shotByPlayer) {
-    BulletModel bullet = new BulletModel(pos.x, pos.y, 0.5f, shotByPlayer);
+    BulletModel bullet = new BulletModel(pos.x, pos.y, 0.5f);
     bullet.setVX(speed * vel.x);
     bullet.setVY(speed * vel.y);
+    if (shotByPlayer){
+      CollisionMask.setCategoryMaskBits(bullet, true);
+    }
 
     addObject(bullet);
     bullet.createFixtures();
@@ -199,7 +202,7 @@ public class PhysicsEngine implements ContactListener {
       pb.setHit(true);
       pb.setInvincible();
       // Calculate knockback direction
-      Vector2 knockbackDir = new Vector2(pb.getPosition()).sub(b.getPosition()).nor();
+      Vector2 knockbackDir = pb.getPosition().sub(b.getPosition()).nor();
       // Apply knockback force
       pb.getBody().setLinearVelocity(0, 0);
       pb.getBody().applyLinearImpulse(knockbackDir.scl(b.getKnockbackForce()), pb.getCentroid(), false);
@@ -209,14 +212,14 @@ public class PhysicsEngine implements ContactListener {
   public void handleCollision( ObstacleModel obs, BulletModel b) {
   }
 
-  @Override
-  public void endContact(Contact contact) {}
   /** Handle collision between player spear and bullet */
   public void handleCollision(PlayerSpearModel ps, BulletModel b) {
-    if (ps.incrementSpear()) {
-      b.markRemoved(true);
-    }
+    ps.incrementSpear();
+    b.markRemoved(true);
   }
+
+  @Override
+  public void endContact(Contact contact) {}
 
   @Override
   public void preSolve(Contact contact, Manifold oldManifold) {

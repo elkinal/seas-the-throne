@@ -11,7 +11,8 @@ import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
 /**
- * Model for the player spear. When the spear is extended, it will have an active hitbox that will
+ * Model for the player spear. When the spear is extended, it will have an
+ * active hitbox that will
  * allow the spear to pierce through enemies.
  */
 public class PlayerSpearModel extends BoxModel implements Renderable {
@@ -33,8 +34,10 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
   /** Number of fish currently speared */
   private int numSpeared;
 
-  private final TextureRegion SPEAR_TEXTURE_REGION;
+  /** Cache for the direction the spear is facing */
+  private Vector2 directionCache;
 
+  private final TextureRegion SPEAR_TEXTURE_REGION;
 
   /**
    * The size is expressed in physics units NOT pixels.
@@ -47,10 +50,8 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
   public PlayerSpearModel(float x, float y, float width, float height, Texture texture) {
     super(x, y, width, height);
     spearExtended = false;
-
+    directionCache = new Vector2();
     SPEAR_TEXTURE_REGION = new TextureRegion(texture);
-    CollisionMask.setCategoryMaskBits(this);
-
   }
 
   /**
@@ -65,12 +66,13 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
     return spearExtended;
   }
 
-  /** Extend or retract spear, activating or deactivating
+  /**
+   * Extend or retract spear, activating or deactivating
    * the spear hitbox
    *
    * @param value If the spear should be extended
    */
-   public void setSpear(boolean value){
+  public void setSpear(boolean value) {
     setActive(value);
     spearExtended = value;
   }
@@ -80,10 +82,11 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
    *
    * @param bodyPosition  Vector representing the position of the player's body
    * @param dashDirection Vector representing the direction of the dash
-   * */
+   */
   public void updateSpear(Vector2 bodyPosition, Vector2 dashDirection) {
-    setPosition(bodyPosition.add(dashDirection.nor().scl(SPEAR_OFFSET)));
-    setAngle(dashDirection.angleRad() + (float)Math.PI/2);
+    directionCache.set(dashDirection);
+    setPosition(bodyPosition.add(directionCache.scl(SPEAR_OFFSET)));
+    setAngle(directionCache.angleRad() + (float) Math.PI / 2);
   }
 
   public int getNumSpeared() {
@@ -91,33 +94,33 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
   }
 
   /**
-   * If possible, increment spear counter and return true.
-   * Otherwise, return false.
-   * */
-  public boolean incrementSpear(){
-    if(numSpeared < MAX_SPEAR_CAPACITY){
-      numSpeared += 1;
-      return true;
-    } return false;
+   * If possible, increment spear counter
+   */
+  public void incrementSpear() {
+    numSpeared = Math.min(numSpeared + 1, MAX_SPEAR_CAPACITY);
   }
 
   /**
    * Decrement spear counter.
+   * 
    * @pre spear counter is above 0
    */
-  public void decrementSpear(){
+  public void decrementSpear() {
     numSpeared -= 1;
   }
 
-//  /**
-//   * Return if the player is able to spear
-//   * @pre spearExtended is false
-//   * */
-//  public boolean canSpear(){
-//    return numSpeared == 0;
-//  }
+  // /**
+  // * Return if the player is able to spear
+  // * @pre spearExtended is false
+  // * */
+  // public boolean canSpear(){
+  // return numSpeared == 0;
+  // }
 
-  /** Overriding the current activatePhysics method to start the body off as inactive */
+  /**
+   * Overriding the current activatePhysics method to start the body off as
+   * inactive
+   */
   @Override
   public boolean activatePhysics(World world) {
     // Make a body, if possible
