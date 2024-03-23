@@ -224,19 +224,18 @@ public class InputController {
       if (isBoxClicked(button, viewport.unproject(mousePos)) && Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
         System.out.println("PAUSE ACTIVATED");
       }
-
     }
   }
 
 
 
+  /** Adds a button to the listener */
   public void addButton(MenuButton button) {
     buttons.add(button);
   }
 
+  /** Returns if a button has been clicked */
   private boolean isBoxClicked(MenuButton model, Vector2 clickPos) {
-//    System.out.println(clickPos);
-//    System.out.println(model.getBoundingBox());
     return model.getBoundingBox().contains(clickPos);
   }
 

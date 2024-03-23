@@ -178,8 +178,8 @@ public class GameplayController implements Screen {
       physicsEngine.addObject(model);
     }
 
-    // Load pause menu items
-    pauseButton = new MenuButton(0, 0, 3, 3, pauseButtonTexture);
+    // Load pause menu button
+    pauseButton = new MenuButton(0, 0, 3, 3, -46, 45, pauseButtonTexture);
     pauseButton.updatePosition(viewport);
 
     renderEngine.addRenderable(pauseButton);
@@ -187,6 +187,11 @@ public class GameplayController implements Screen {
     inputController.addButton(pauseButton);
 
     inputController.add(playerController);
+
+
+    // Load pause menu dashboard
+
+
 }
 
   public void render(float delta) {

@@ -21,21 +21,30 @@ import edu.cornell.jade.seasthethrone.util.FilmStrip;
 public class MenuButton extends BoxModel implements Renderable {
 
     private final TextureRegion PAUSE_BUTTON_TEXTURE_REGION;
+    private boolean display;
 
-    public MenuButton(float x, float y, float width, float height, Texture texture) {
+    private final float offsetX;
+    private final float offsetY;
 
+    public MenuButton(float x, float y, float width, float height, float offsetX, float offsetY, Texture texture) {
         super(x, y, width, height);
         PAUSE_BUTTON_TEXTURE_REGION = new TextureRegion(texture);
+
         setActive(false);
+        display = true;
+
+        this.offsetX = offsetX;
+        this.offsetY = offsetY;
     }
 
+    /** Updates the button's position on the game canvas */
     public void updatePosition(Viewport viewport) {
 
         // magic numbers represent offset from the edges of the screen.
         // they depend on the size of the graphics object.
 
-        float newX = Gdx.graphics.getWidth() - 46;
-        float newY = 45;
+        float newX = Gdx.graphics.getWidth() + offsetX;
+        float newY = offsetY;
 
         Vector2 newLoc = viewport.unproject(new Vector2(newX, newY));
 
@@ -51,7 +60,8 @@ public class MenuButton extends BoxModel implements Renderable {
 
     @Override
     public void draw(RenderingEngine renderer) {
-        renderer.draw(PAUSE_BUTTON_TEXTURE_REGION, getX(), getY());
+        if (display)
+            renderer.draw(PAUSE_BUTTON_TEXTURE_REGION, getX(), getY());
     }
 
     @Override
@@ -74,6 +84,18 @@ public class MenuButton extends BoxModel implements Renderable {
         return 0;
     }
 
+
+    /** Hides the button */
+    public void show() {
+        display = true;
+    }
+
+    /** Shows the button */
+    public void hide() {
+        display = false;
+    }
+
+    /** Returns a rectangle covering the button's outline */
     public Rectangle getBoundingBox() {
         float x = getX() - getWidth() / 2;
         float y = getY() - getHeight() / 2;
