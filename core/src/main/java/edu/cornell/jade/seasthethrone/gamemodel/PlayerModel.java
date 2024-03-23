@@ -11,8 +11,10 @@ import edu.cornell.jade.seasthethrone.util.Direction;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
 /**
- * Model for the main player object of the game. This class extends {@link ComplexModel} to support
- * multiple joints and bodies for flexible collision control and movement display.
+ * Model for the main player object of the game. This class extends
+ * {@link ComplexModel} to support
+ * multiple joints and bodies for flexible collision control and movement
+ * display.
  */
 public class PlayerModel extends ComplexModel implements PlayerRenderable {
   /** FIXME: stop hardcoding textures */
@@ -43,6 +45,8 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   /** Player texture when dashing right */
   public static final Texture PLAYER_TEXTURE_RIGHT_DASH = new Texture("player/playerspritedashfilmstrip_right.png");
 
+  /** Player texture for the das indicator */
+  private static final Texture DASH_INDICATOR_TEXTURE = new Texture("player/dash_indicator.png");
 
   /** FilmStrip cache object */
   public FilmStrip filmStrip;
@@ -60,26 +64,27 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   /**
    * Counter for the number of frames that have been drawn to the screen
    * This is separate from the position in the player filmstrip.
-   *  */
+   */
   private int frameCounter;
   /**
-   * Counter for the number of frames that have been drawn to the screen when dashing
+   * Counter for the number of frames that have been drawn to the screen when
+   * dashing
    * This is separate from the position in the player filmstrip.
-   *  */
+   */
   private int dashFrameCounter;
 
   /** current direction the player is facing */
   private Direction faceDirection;
 
   /**
-   * Frame counter for between dashing/shooting. Tracks how long until the player can
+   * Frame counter for between dashing/shooting. Tracks how long until the player
+   * can
    * dash/shoot again.
    */
   private int cooldownCounter;
 
   /** The time limit (in frames) between dashes/shooting */
   private int cooldownLimit;
-
 
   /** Whether the player is dashing */
   private boolean isDashing;
@@ -136,10 +141,10 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     playerBody.setSensor(true);
     bodies.add(playerBody);
 
-    PlayerSpearModel playerSpear = new PlayerSpearModel(x, y);
+    PlayerSpearModel playerSpear = new PlayerSpearModel(x, y, DASH_INDICATOR_TEXTURE);
     bodies.add(playerSpear);
 
-    PlayerShadowModel playerShadow = new PlayerShadowModel(x, y-1.2f);
+    PlayerShadowModel playerShadow = new PlayerShadowModel(x, y - 1.6f);
     bodies.add(playerShadow);
 
     filmStrip = new FilmStrip(PLAYER_TEXTURE_DOWN, 1, FRAMES_IN_ANIMATION);
@@ -152,18 +157,19 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     PlayerRenderable.super.draw(renderer);
 
     // Only move to next frame of animation every frameDelay number of frames
-    if (isDashing){
+    if (isDashing) {
       if (dashFrameCounter % frameDelay == 0) {
         setFrameNumber((getFrameNumber() + 1) % getFramesInAnimation());
       }
       dashFrameCounter += 1;
-    }
-    else {
+    } else {
       if (frameCounter % frameDelay == 0) {
         setFrameNumber((getFrameNumber() + 1) % getFramesInAnimation());
       }
       frameCounter += 1;
     }
+
+    getSpearModel().draw(renderer);
   }
 
   public FilmStrip getFilmStrip() {
@@ -173,8 +179,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
         return filmStripDashUD;
       else
         return filmStripDashLR;
-    }
-    else
+    } else
       return filmStrip;
   }
 
@@ -209,16 +214,19 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     return PLAYER_TEXTURE_RIGHT;
   }
 
-  public Texture getTextureUpDash(){
+  public Texture getTextureUpDash() {
     return PLAYER_TEXTURE_UP_DASH;
   }
-  public Texture getTextureDownDash(){
+
+  public Texture getTextureDownDash() {
     return PLAYER_TEXTURE_DOWN_DASH;
   }
-  public Texture getTextureLeftDash(){
+
+  public Texture getTextureLeftDash() {
     return PLAYER_TEXTURE_LEFT_DASH;
   }
-  public Texture getTextureRightDash(){
+
+  public Texture getTextureRightDash() {
     return PLAYER_TEXTURE_RIGHT_DASH;
   }
 
@@ -250,31 +258,30 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   }
 
   /** Returns if the player can dash */
-  public boolean canDash(){
+  public boolean canDash() {
     return !isDashing && !isShooting && !isInvincible() && cooldownCounter == 0;
   }
 
   /** Returns if the player can be set to shooting */
-  public boolean canShoot(){
+  public boolean canShoot() {
     return !isDashing && !isShooting && !isInvincible()
-            && cooldownCounter == 0 && getSpearModel().getNumSpeared() > 0 ;
+        && cooldownCounter == 0 && getSpearModel().getNumSpeared() > 0;
   }
 
   /** Returns if the player can shoot one bullet. */
-  public boolean canShootBullet(){
+  public boolean canShootBullet() {
     return isShooting() && shootCounter == 0 && getSpearModel().getNumSpeared() > 0;
   }
 
-
   /** Returns the number of current health points of the player. */
-  public int getHealth(){
+  public int getHealth() {
     return getBodyModel().getHealth();
   }
 
   /** Sets the player to dashing */
   public void startDashing() {
     isDashing = true;
-    frameDelay = dashLength/FRAMES_IN_ANIMATION_DASH;
+    frameDelay = dashLength / FRAMES_IN_ANIMATION_DASH;
     frameCounter = 1;
     getSpearModel().setSpear(true);
     animationFrame = 0;
@@ -282,14 +289,13 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   }
 
   /** Set dashing to false */
-  public void stopDashing(){
+  public void stopDashing() {
     isDashing = false;
     frameDelay = 3;
     dashFrameCounter = 1;
     animationFrame = 0;
     getSpearModel().setSpear(false);
   }
-
 
   /** Returns dash direction */
   public Vector2 getDashDirection() {
@@ -312,9 +318,9 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   }
 
   /** Decrease fish counter. If the counter is sets to 0, stop shooting */
-  public void decrementFishCount(){
+  public void decrementFishCount() {
     getSpearModel().decrementSpear();
-    if(getSpearModel().getNumSpeared() <= 0){
+    if (getSpearModel().getNumSpeared() <= 0) {
       stopShooting();
     }
   }
@@ -326,7 +332,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   }
 
   /** Sets the player to not shooting */
-  public void stopShooting(){
+  public void stopShooting() {
     isShooting = false;
     cooldownCounter = cooldownLimit;
   }
@@ -337,7 +343,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   }
 
   /** Returns if the player is knocked back (during iframes) */
-  public boolean isKnockedBack(){
+  public boolean isKnockedBack() {
     return getBodyModel().isKnockedBack();
   }
 
@@ -347,17 +353,17 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   }
 
   /** Returns the player spear model */
-  public PlayerSpearModel getSpearModel(){
+  public PlayerSpearModel getSpearModel() {
     return (PlayerSpearModel) bodies.get(1);
   }
 
   /** Returns the player shadow model */
-  public PlayerShadowModel getShadowModel(){
+  public PlayerShadowModel getShadowModel() {
     return (PlayerShadowModel) bodies.get(2);
   }
 
   /** Update the player's spear model when dashing */
-  public void updateSpear(Vector2 dashDirection){
+  public void updateSpear(Vector2 dashDirection) {
     getSpearModel().updateSpear(getPosition(), dashDirection);
   }
 
@@ -375,10 +381,11 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     return true;
   }
 
-  /** Updates the object's physics state (NOT GAME LOGIC).
+  /**
+   * Updates the object's physics state (NOT GAME LOGIC).
    *
    * Use this for cooldown checking/resetting.
-   * */
+   */
   @Override
   public void update(float delta) {
     if (isDashing()) {
@@ -388,17 +395,14 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
         stopDashing();
         cooldownCounter = cooldownLimit;
       }
-    }
-    else if (isShooting()){
-      shootCounter = Math.max(0, shootCounter-1);
-    }
-    else {
-      cooldownCounter = Math.max(0, cooldownCounter-1);
+    } else if (isShooting()) {
+      shootCounter = Math.max(0, shootCounter - 1);
+    } else {
+      cooldownCounter = Math.max(0, cooldownCounter - 1);
     }
 
     super.update(delta);
   }
-
 
   public boolean spearExtended() {
     return isDashing();
@@ -412,16 +416,20 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     return faceDirection;
   }
 
-  public void setDirection(Vector2 moveDirection){
+  public void setDirection(Vector2 moveDirection) {
     float vx = moveDirection.x;
     float vy = moveDirection.y;
 
     if (Math.abs(vx) > Math.abs(vy)) {
-      if (vx > 0) faceDirection = Direction.RIGHT;
-      else faceDirection = Direction.LEFT;
-    } else if (Math.abs(vx) < Math.abs(vy)){
-      if (vy > 0) faceDirection = Direction.UP;
-      else faceDirection = Direction.DOWN;
+      if (vx > 0)
+        faceDirection = Direction.RIGHT;
+      else
+        faceDirection = Direction.LEFT;
+    } else if (Math.abs(vx) < Math.abs(vy)) {
+      if (vy > 0)
+        faceDirection = Direction.UP;
+      else
+        faceDirection = Direction.DOWN;
     }
   }
 

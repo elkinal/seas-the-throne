@@ -8,7 +8,7 @@ public class PlayerShadowModel extends BoxModel {
     private static float SHADOW_WIDTH = 1.0f;
 
     /** Length of shadow */
-    private static float SHADOW_LENGTH = 0.3f;
+    private static float SHADOW_LENGTH = 0.5f;
 
     public PlayerShadowModel(float x, float y) { super(x, y, SHADOW_WIDTH, SHADOW_LENGTH); }
 }

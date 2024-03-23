@@ -4,7 +4,7 @@
  "layers":[
         {
          "id":6,
-         "image":"levels/arenamaprough.png",
+         "image":"levels\/arenamaprough.png",
          "name":"background",
          "opacity":1,
          "properties":[
@@ -328,8 +328,8 @@
                  "type":"",
                  "visible":true,
                  "width":20,
-                 "x":302.667,
-                 "y":203.333
+                 "x":300,
+                 "y":320
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -358,7 +358,7 @@
         {
          "columns":18,
          "firstgid":1,
-         "image":"levels/boss-room-tileset.png",
+         "image":"levels\/boss-room-tileset.png",
          "imageheight":360,
          "imagewidth":360,
          "margin":0,

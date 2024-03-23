@@ -1,15 +1,21 @@
 package edu.cornell.jade.seasthethrone.gamemodel;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.physics.CollisionMask;
+import edu.cornell.jade.seasthethrone.render.Renderable;
+import edu.cornell.jade.seasthethrone.render.RenderingEngine;
+import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
 /**
- * Model for the player spear. When the spear is extended, it will have an active hitbox that will
+ * Model for the player spear. When the spear is extended, it will have an
+ * active hitbox that will
  * allow the spear to pierce through enemies.
  */
-public class PlayerSpearModel extends BoxModel {
+public class PlayerSpearModel extends BoxModel implements Renderable {
   /** Width of spear */
   private static float SPEAR_WIDTH = 0.5f;
 
@@ -31,6 +37,8 @@ public class PlayerSpearModel extends BoxModel {
   /** Cache for the direction the spear is facing */
   private Vector2 directionCache;
 
+  private final TextureRegion SPEAR_TEXTURE_REGION;
+
   /**
    * The size is expressed in physics units NOT pixels.
    *
@@ -39,17 +47,18 @@ public class PlayerSpearModel extends BoxModel {
    * @param width  spear width in physics units
    * @param height spear width in physics units
    */
-  public PlayerSpearModel(float x, float y, float width, float height) {
+  public PlayerSpearModel(float x, float y, float width, float height, Texture texture) {
     super(x, y, width, height);
     spearExtended = false;
     directionCache = new Vector2();
+    SPEAR_TEXTURE_REGION = new TextureRegion(texture);
   }
 
   /**
    * Create new player body at position (x,y)
    */
-  public PlayerSpearModel(float x, float y) {
-    this(x, y, SPEAR_WIDTH, SPEAR_LENGTH);
+  public PlayerSpearModel(float x, float y, Texture texture) {
+    this(x, y, SPEAR_WIDTH, SPEAR_LENGTH, texture);
   }
 
   /** Check if spear is extended */
@@ -57,12 +66,13 @@ public class PlayerSpearModel extends BoxModel {
     return spearExtended;
   }
 
-  /** Extend or retract spear, activating or deactivating
+  /**
+   * Extend or retract spear, activating or deactivating
    * the spear hitbox
    *
    * @param value If the spear should be extended
    */
-   public void setSpear(boolean value){
+  public void setSpear(boolean value) {
     setActive(value);
     spearExtended = value;
   }
@@ -72,11 +82,11 @@ public class PlayerSpearModel extends BoxModel {
    *
    * @param bodyPosition  Vector representing the position of the player's body
    * @param dashDirection Vector representing the direction of the dash
-   * */
+   */
   public void updateSpear(Vector2 bodyPosition, Vector2 dashDirection) {
     directionCache.set(dashDirection);
     setPosition(bodyPosition.add(directionCache.scl(SPEAR_OFFSET)));
-    setAngle(directionCache.angleRad() + (float)Math.PI/2);
+    setAngle(directionCache.angleRad() + (float) Math.PI / 2);
   }
 
   public int getNumSpeared() {
@@ -85,28 +95,32 @@ public class PlayerSpearModel extends BoxModel {
 
   /**
    * If possible, increment spear counter
-   * */
-  public void incrementSpear(){
-    numSpeared = Math.min(numSpeared+1, MAX_SPEAR_CAPACITY);
+   */
+  public void incrementSpear() {
+    numSpeared = Math.min(numSpeared + 1, MAX_SPEAR_CAPACITY);
   }
 
   /**
    * Decrement spear counter.
+   * 
    * @pre spear counter is above 0
    */
-  public void decrementSpear(){
+  public void decrementSpear() {
     numSpeared -= 1;
   }
 
-//  /**
-//   * Return if the player is able to spear
-//   * @pre spearExtended is false
-//   * */
-//  public boolean canSpear(){
-//    return numSpeared == 0;
-//  }
+  // /**
+  // * Return if the player is able to spear
+  // * @pre spearExtended is false
+  // * */
+  // public boolean canSpear(){
+  // return numSpeared == 0;
+  // }
 
-  /** Overriding the current activatePhysics method to start the body off as inactive */
+  /**
+   * Overriding the current activatePhysics method to start the body off as
+   * inactive
+   */
   @Override
   public boolean activatePhysics(World world) {
     // Make a body, if possible
@@ -122,5 +136,30 @@ public class PlayerSpearModel extends BoxModel {
 
     bodyinfo.active = false;
     return false;
+  }
+
+  @Override
+  public void draw(RenderingEngine renderer) {
+    renderer.draw(SPEAR_TEXTURE_REGION, getX(), getY());
+  }
+
+  @Override
+  public int getFrameNumber() {
+    return 0;
+  }
+
+  @Override
+  public void setFrameNumber(int frameNumber) {
+
+  }
+
+  @Override
+  public FilmStrip getFilmStrip() {
+    return null;
+  }
+
+  @Override
+  public int getFramesInAnimation() {
+    return 0;
   }
 }

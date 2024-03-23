@@ -21,6 +21,7 @@ levels/boss-room-tileset.png
 levels/demonstatuepink.png
 levels/arenamaprough.png
 player/playerspritedashfilmstrip_right.png
+player/dash_indicator.png
 player/playerspritedashfilmstrip_up.png
 player/playerspriterun_up_wspear.png
 player/playerspriterun_right_wspear.png

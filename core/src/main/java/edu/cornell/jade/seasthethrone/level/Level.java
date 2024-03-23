@@ -4,7 +4,7 @@ package edu.cornell.jade.seasthethrone.level;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.*;
 import edu.cornell.jade.seasthethrone.gamemodel.*;
 import edu.cornell.jade.seasthethrone.model.*;
@@ -14,6 +14,7 @@ import jdk.jshell.spi.ExecutionControlProvider;
 
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.swing.text.View;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.Vector;
 import java.util.stream.StreamSupport;
@@ -60,12 +61,12 @@ public class Level {
     /** Height of the Tiled map in tiles*/
     private final int TILED_WORLD_HEIGHT;
 
-    private FitViewport viewport;
+    private ExtendViewport viewport;
 
     private Vector2 tempPos;
 
     public Level(String fileName) {
-        this.viewport = new FitViewport(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        this.viewport = new ExtendViewport(DEFAULT_WIDTH, DEFAULT_HEIGHT);
         tempPos = new Vector2();
 
         // Load JSON to map
@@ -121,7 +122,7 @@ public class Level {
 
     public Vector2 getPlayerLoc() { return playerLoc; }
 
-    public FitViewport getViewport() { return viewport; }
+    public ExtendViewport getViewport() { return viewport; }
 
     public Array<Tile> getTiles() { return tiles; }
 
