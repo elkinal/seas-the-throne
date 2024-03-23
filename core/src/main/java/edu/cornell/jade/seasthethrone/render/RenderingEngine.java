@@ -143,17 +143,10 @@ public class RenderingEngine {
     canvas.draw(texture, Color.WHITE, ox, oy, x, y, 0, worldScale, worldScale);
   }
 
-  public void draw(FilmStrip filmStrip, float x, float y, float scale, boolean isHit) {
-    float ox = filmStrip.getRegionWidth() / 2f;
-    float oy = filmStrip.getRegionHeight() / 2f;
-    if (isHit)
-      canvas.draw(filmStrip, Color.RED, oy, ox, x, y, 0, scale, scale);
-    else
-      canvas.draw(filmStrip, Color.WHITE, oy, ox, x, y, 0, scale, scale);
-  }
   public void draw(FilmStrip filmStrip, float x, float y, float scale) {
     float ox = filmStrip.getRegionWidth() / 2f;
     float oy = filmStrip.getRegionHeight() / 2f;
+
     canvas.draw(filmStrip, Color.WHITE, oy, ox, x, y, 0, scale, scale);
   }
 

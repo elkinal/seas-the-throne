@@ -17,6 +17,7 @@ import edu.cornell.jade.seasthethrone.util.FilmStrip;
  * single body (with circular shape). This is subject to change later as we design bullets with more
  * complex shapes.
  *
+ * <p>TODO: make this implement Fish Renderable
  */
 public class BulletModel extends SimpleModel implements FishRenderable {
   /** Shape of the bullet, modeled as a circle */
@@ -25,10 +26,12 @@ public class BulletModel extends SimpleModel implements FishRenderable {
   /** Fixture to be attached to the body */
   private Fixture geometry;
 
+  /** Direction bullet is facing*/
+  private Direction faceDirection;
 
 
   /** Bullet texture */
-  public static Texture FISH_TEXTURE;
+  public static final Texture FISH_TEXTURE = new Texture("bullet/yellowfish_east.png");
   /** FilmStrip cache object */
   public FilmStrip filmStrip;
   /** Amount of knockback force applied to player on collision */
@@ -41,20 +44,22 @@ public class BulletModel extends SimpleModel implements FishRenderable {
    * call activatePhysics then createFixtures after constructing the BulletModel for it to be
    * properly created.
    *
-   * @param builder the builder for BulletModel
+   * @param x The x-position for this bullet in world coordinates
+   * @param y The y-position for this bullet in world coordinates
+   * @param radius The radius of this bullet
+   * @param shotByPlayer If the bullet is shot by the player
    */
-  public BulletModel(Builder builder) {
-    super(builder.x, builder.y);
+  public BulletModel(float x, float y, float radius, boolean shotByPlayer) {
+    super(x, y);
     shape = new CircleShape();
-    shape.setRadius(builder.radius);
+    shape.setRadius(radius);
     knockbackForce = 20f;
     setName("bullet");
-    FISH_TEXTURE = builder.FISH_TEXTURE;
+    faceDirection = Direction.DOWN;
     filmStrip = new FilmStrip(FISH_TEXTURE, 1, 1);
 
     setBodyType(BodyDef.BodyType.KinematicBody);
-    CollisionMask.setCategoryMaskBits(this, builder.shotByPlayer);
-
+    this.shotByPlayer = shotByPlayer;
   }
 
   /** Returns knockback force to apply to player on collision */
@@ -154,48 +159,6 @@ public class BulletModel extends SimpleModel implements FishRenderable {
       return (float) Math.atan(vy/vx);
     else
       return (float) Math.atan(vy/vx) + (float) (Math.PI);
-  }
-  public static class Builder{
-    /**bullet x position */
-    private float x;
-    /**bullet y position */
-    private float y;
-    /** Texture for bullet*/
-    private Texture FISH_TEXTURE;
-    /** Radius of shape of bullet */
-    private float radius;
-    /** Whether the bullet has been shot by player */
-    private boolean shotByPlayer;
-    public static Builder newInstance()
-    {
-      return new Builder();
-    }
-
-    private Builder() {}
-
-    public Builder setFishTexture(Texture texture){
-      FISH_TEXTURE = texture;
-      return this;
-    }
-    public Builder setRadius(float radius){
-      this.radius = radius;
-      return this;
-    }
-    public Builder setX(float x){
-      this.x = x;
-      return this;
-    }
-    public Builder setY(float y){
-      this.y = y;
-      return this;
-    }
-    public Builder setShotByPlayer (boolean shotByPlayer){
-      this.shotByPlayer = shotByPlayer;
-      return this;
-    }
-    public BulletModel build(){
-      return new BulletModel(this);
-    }
   }
 
 }

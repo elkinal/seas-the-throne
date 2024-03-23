@@ -15,9 +15,10 @@ import edu.cornell.jade.seasthethrone.util.FilmStrip;
 public class BossModel extends ComplexModel implements Renderable {
 
     /** Number of frames in boss animation TODO: stop hardcoding animation */
-    private static int FRAMES_IN_ANIMATION;
+    private static int FRAMES_IN_ANIMATION = 4;
 
-    private Texture CRAB_SHOOTING;
+    //TODO: stop hardcoding textures
+    private Texture CRAB_SHOOTING = new Texture("bosses/crab/crab_shoot.png");
     public FilmStrip filmStrip;
 
     /** The number of frames since this boss was inititalized */
@@ -34,17 +35,18 @@ public class BossModel extends ComplexModel implements Renderable {
     /**
      * {@link BossModel} constructor using an x and y coordinate.
      *
-     * @param builder builder for BossModel
+     * @param x The x-position for this boss in world coordinates
+     * @param y The y-position for this boss in world coordinates
      */
-    public BossModel(Builder builder) {
-        super(builder.x, builder.y);
-        FRAMES_IN_ANIMATION = builder.FRAMES_IN_ANIMATION;
-        CRAB_SHOOTING = builder.CRAB_SHOOTING;
+    public BossModel(float x, float y) {
+        super(x, y);
+
         this.filmStrip = new FilmStrip(CRAB_SHOOTING, 1, FRAMES_IN_ANIMATION);
         frameCounter = 1;
-        frameDelay = builder.frameDelay;
+        frameDelay = 12;
+        scale = 0.16f;
 
-        BoxModel hitbox = new BoxModel(builder.x, builder.y, 5f, 10f);
+        BoxModel hitbox = new BoxModel(x, y, 5f, 10f);
         hitbox.setBodyType(BodyDef.BodyType.KinematicBody);
         bodies.add(hitbox);
 
@@ -85,49 +87,5 @@ public class BossModel extends ComplexModel implements Renderable {
 
     public int getFramesInAnimation() {
         return FRAMES_IN_ANIMATION;
-    }
-    public static class Builder{
-        /**boss x position */
-        private float x;
-        /**boss y position */
-        private float y;
-
-        /** Number of frames in boss animation */
-        private int FRAMES_IN_ANIMATION;
-
-        private Texture CRAB_SHOOTING;
-
-        /** The number of frames between animation updates */
-        private int frameDelay;
-
-        public static Builder newInstance()
-        {
-            return new Builder();
-        }
-
-        private Builder() {}
-        public Builder setX(float x){
-            this.x = x;
-            return this;
-        }
-        public Builder setY(float y){
-            this.y = y;
-            return this;
-        }
-        public Builder setFramesInAnimation(int frames){
-            FRAMES_IN_ANIMATION = frames;
-            return this;
-        }
-        public Builder setCrabShooting(Texture texture){
-            CRAB_SHOOTING = texture;
-            return this;
-        }
-        public Builder setFrameDelay(int frameDelay){
-            this.frameDelay = frameDelay;
-            return this;
-        }
-        public BossModel build(){
-            return new BossModel(this);
-        }
     }
 }

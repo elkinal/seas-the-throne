@@ -1,7 +1,6 @@
 package edu.cornell.jade.seasthethrone;
 
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -131,43 +130,17 @@ public class GameplayController implements Screen {
     }
 
     // Load player
-    //TODO: make this information not hardcoded, get it from JSON instead
     Vector2 playerLoc = level.getPlayerLoc();
-    PlayerModel player = PlayerModel.Builder.newInstance()
-            .setX(playerLoc.x)
-            .setY(playerLoc.y)
-            .setTextureUp(new Texture("player/playerspriterun_up_wspear.png"))
-            .setTextureDown(new Texture("player/playerspriterun_down_wspear.png"))
-            .setTextureLeft(new Texture("player/playerspriterun_left_wspear.png"))
-            .setTextureRight(new Texture("player/playerspriterun_right_wspear.png"))
-            .setTextureUpDash(new Texture("player/playerspritedashfilmstrip_up.png"))
-            .setTextureDownDash(new Texture("player/playerspritedashfilmstrip_down.png"))
-            .setTextureLeftDash(new Texture("player/playerspritedashfilmstrip_left.png"))
-            .setTextureRightDash(new Texture("player/playerspritedashfilmstrip_right.png"))
-            .setFramesInAnimation(12)
-            .setFramesInAnimationDash(5)
-            .setFrameDelay(3)
-            .setDashLength(20)
-            .setMoveSpeed(8f)
-            .setCooldownLimit(30)
-            .setShootCooldownLimit(20)
-            .build();
+    PlayerModel player = new PlayerModel(playerLoc.x, playerLoc.y);
     renderEngine.addRenderable(player);
 
     physicsEngine = new PhysicsEngine(bounds, world, player);
     playerController = new PlayerController(physicsEngine, player);
     bulletController = new BulletController(physicsEngine);
 
-    // Load
-    //TODO: stop hardcoding textures and animations
+    // Load bosses
     Vector2 bossLoc = level.getBosses().get(0);
-    BossModel boss = BossModel.Builder.newInstance()
-            .setX(bossLoc.x)
-            .setY(bossLoc.y)
-            .setCrabShooting(new Texture("bosses/crab/crab_shoot.png"))
-            .setFrameDelay(12)
-            .setFramesInAnimation(4)
-            .build();
+    BossModel boss = new BossModel(bossLoc.x, bossLoc.y);
     boss.setBodyType(BodyDef.BodyType.StaticBody);
     renderEngine.addRenderable(boss);
     physicsEngine.addObject(boss);
