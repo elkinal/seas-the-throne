@@ -153,9 +153,9 @@ public class GameplayController implements Screen {
     BossModel boss = BossModel.Builder.newInstance()
             .setX(bossLoc.x)
             .setY(bossLoc.y)
-            .setCrabShooting(new Texture("bosses/crab/crab_shoot.png"))
+            .setFrameSize(110)
+            .setShootAnimation(new Texture("bosses/crab/crab_shoot.png"))
             .setFrameDelay(12)
-            .setFramesInAnimation(4)
             .build();
     boss.setBodyType(BodyDef.BodyType.StaticBody);
     renderEngine.addRenderable(boss);

@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Array;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.model.ComplexModel;
 import edu.cornell.jade.seasthethrone.physics.CollisionMask;
@@ -15,9 +14,13 @@ import edu.cornell.jade.seasthethrone.util.FilmStrip;
 public class BossModel extends ComplexModel implements Renderable {
 
     /** Number of frames in boss animation TODO: stop hardcoding animation */
-    private static int FRAMES_IN_ANIMATION;
+    private int frameSize;
 
-    private Texture CRAB_SHOOTING;
+    private FilmStrip shootAnimation;
+    private FilmStrip idleAnimation;
+    private FilmStrip moveAnimation;
+    private FilmStrip getHitAnimation;
+    private FilmStrip dieAnimation;
     public FilmStrip filmStrip;
 
     /** The number of frames since this boss was inititalized */
@@ -36,9 +39,13 @@ public class BossModel extends ComplexModel implements Renderable {
      */
     public BossModel(Builder builder) {
         super(builder.x, builder.y);
-        FRAMES_IN_ANIMATION = builder.FRAMES_IN_ANIMATION;
-        CRAB_SHOOTING = builder.CRAB_SHOOTING;
-        this.filmStrip = new FilmStrip(CRAB_SHOOTING, 1, FRAMES_IN_ANIMATION);
+        frameSize = builder.frameSize;
+        shootAnimation = builder.shootAnimation;
+        idleAnimation = builder.idleAnimation;
+        moveAnimation = builder.moveAnimation;
+        getHitAnimation = builder.getHitAnimation;
+        dieAnimation = builder.dieAnimation;
+        this.filmStrip = shootAnimation;
         frameCounter = 1;
         frameDelay = builder.frameDelay;
 
@@ -80,7 +87,7 @@ public class BossModel extends ComplexModel implements Renderable {
     }
 
     public int getFramesInAnimation() {
-        return FRAMES_IN_ANIMATION;
+        return filmStrip.getSize();
     }
     public static class Builder{
         /**boss x position */
@@ -89,9 +96,13 @@ public class BossModel extends ComplexModel implements Renderable {
         private float y;
 
         /** Number of frames in boss animation */
-        private int FRAMES_IN_ANIMATION;
+        private int frameSize;
 
-        private Texture CRAB_SHOOTING;
+        private FilmStrip shootAnimation;
+        private FilmStrip idleAnimation;
+        private FilmStrip moveAnimation;
+        private FilmStrip getHitAnimation;
+        private FilmStrip dieAnimation;
 
         /** The number of frames between animation updates */
         private int frameDelay;
@@ -110,12 +121,33 @@ public class BossModel extends ComplexModel implements Renderable {
             this.y = y;
             return this;
         }
-        public Builder setFramesInAnimation(int frames){
-            FRAMES_IN_ANIMATION = frames;
+        public Builder setFrameSize(int frameSize){
+            this.frameSize = frameSize;
             return this;
         }
-        public Builder setCrabShooting(Texture texture){
-            CRAB_SHOOTING = texture;
+        public Builder setShootAnimation(Texture texture){
+            int width = texture.getWidth();
+            shootAnimation = new FilmStrip(texture, 1, width/frameSize);;
+            return this;
+        }
+        public Builder setIdleAnimation(Texture texture){
+            int width = texture.getWidth();
+            idleAnimation = new FilmStrip(texture, 1, width/frameSize);;
+            return this;
+        }
+        public Builder setGetHitAnimation(Texture texture){
+            int width = texture.getWidth();
+            getHitAnimation = new FilmStrip(texture, 1, width/frameSize);;
+            return this;
+        }
+        public Builder setMoveAnimation(Texture texture){
+            int width = texture.getWidth();
+            moveAnimation = new FilmStrip(texture, 1, width/frameSize);;
+            return this;
+        }
+        public Builder setDieAnimation(Texture texture){
+            int width = texture.getWidth();
+            dieAnimation = new FilmStrip(texture, 1, width/frameSize);;
             return this;
         }
         public Builder setFrameDelay(int frameDelay){
