@@ -1,9 +1,12 @@
 package edu.cornell.jade.seasthethrone.gamemodel;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.physics.CollisionMask;
 import edu.cornell.jade.seasthethrone.render.Renderable;
@@ -18,11 +21,22 @@ public class MenuButton extends BoxModel implements Renderable {
 
         super(x, y, width, height);
         PAUSE_BUTTON_TEXTURE_REGION = new TextureRegion(texture);
-//        setWidth(PAUSE_BUTTON_TEXTURE_REGION.getRegionWidth());
-//        setHeight(PAUSE_BUTTON_TEXTURE_REGION.getRegionHeight());
+        setActive(false);
+    }
 
-//        setWidth(100);
-//        setHeight(100);
+    public void updatePosition(Viewport viewport) {
+
+        // magic numbers represent offset from the edges of the screen.
+        // they depend on the size of the graphics object.
+
+        float newX = Gdx.graphics.getWidth() - 46;
+        float newY = 45;
+
+        Vector2 newLoc = viewport.unproject(new Vector2(newX, newY));
+
+        setX(newLoc.x);
+        setY(newLoc.y);
+
     }
 
     @Override

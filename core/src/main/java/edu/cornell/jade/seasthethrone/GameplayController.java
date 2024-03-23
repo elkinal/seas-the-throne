@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
@@ -100,6 +101,8 @@ public class GameplayController implements Screen {
   private heightComparator comp = new heightComparator();
 
   private Stage stage;
+  private MenuButton pauseButton;
+  private final Texture pauseButtonTexture = new Texture("pause_menu/pausebutton.png");
 
   protected GameplayController() {
     gameState = GameState.PLAY;
@@ -176,25 +179,11 @@ public class GameplayController implements Screen {
     }
 
     // Load pause menu items
-    Vector2 newLoc = viewport.unproject(new Vector2(10, 10));
-    System.out.println("newloc: " + newLoc);
-    MenuButton pauseButton = new MenuButton(newLoc.x, newLoc.y, 5, 5, new Texture("pause_menu/pausebutton.png"));
+    pauseButton = new MenuButton(0, 0, 3, 3, pauseButtonTexture);
+    pauseButton.updatePosition(viewport);
 
-
-    renderEngine.addRenderable(pauseButton); //hmmm????
-    physicsEngine.addObject(pauseButton); // deleteme
-
-    System.out.println(viewport.getCamera().viewportWidth);
-
-    pauseButton.setPosition(player.getX(), player.getY());
-//    stage.addActor(pauseButton);
-
-//    System.out.println(viewport.toScreenCoordinates(player.getPosition(), new Matrix4().idt()));
-//    viewport.toScreenCoordinates(viewport.project(playerLoc), new Matrix4().idt());
-//    myActor = new MenuButton(textureRegion);
-//    System.out.println(viewport.unproject(new Vector2(0, 0)));
-
-
+    renderEngine.addRenderable(pauseButton);
+    physicsEngine.addObject(pauseButton);
 
     inputController.add(playerController);
 }
@@ -212,8 +201,12 @@ public class GameplayController implements Screen {
     Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     renderEngine.drawRenderables();
+
     stage.act(delta);
     stage.draw();
+
+    pauseButton.updatePosition(viewport);
+
 
   }
 
