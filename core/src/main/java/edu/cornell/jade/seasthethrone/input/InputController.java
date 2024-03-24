@@ -197,7 +197,7 @@ public class InputController {
       obj.pressSecondary();
     }
     if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
-      pause();
+      unPause();
     }
     obj.moveHorizontal(hoff);
     obj.moveVertical(voff);
@@ -227,7 +227,6 @@ public class InputController {
     // Detecting when pause button is clicked
     for (MenuButton button : buttons) {
       if (isBoxClicked(button, viewport.unproject(mousePos)) && Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-        System.out.println("PAUSE ACTIVATED");
         pause();
       }
     }
@@ -245,8 +244,16 @@ public class InputController {
     return model.getBoundingBox().contains(clickPos);
   }
 
+  private boolean isPaused() {
+    return GameplayController.paused;
+  }
+
   private void pause() {
     GameplayController.paused = true;
+  }
+
+  private void unPause() {
+    GameplayController.paused = false;
   }
 
 

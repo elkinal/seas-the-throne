@@ -106,6 +106,11 @@ public class MenuButton extends BoxModel implements Renderable {
         display = false;
     }
 
+    /** Sets the visibility of the button */
+    public void display(boolean display) {
+        this.display = display;
+    }
+
     /** Returns a rectangle covering the button's outline */
     public Rectangle getBoundingBox() {
         return boundingBox;

@@ -187,7 +187,10 @@ public class GameplayController implements Screen {
     inputController.addButton(pauseButton);
 
     // Load pause menu dashboard
-//w
+    pauseMenu = new MenuButton(0, 0, 1, 1, -viewport.getScreenWidth()/2, viewport.getScreenHeight()/2, pauseMenuTexture);
+    pauseMenu.updatePosition(viewport);
+    renderEngine.addRenderable(pauseMenu);
+    physicsEngine.addObject(pauseMenu);
 
 
 }
@@ -210,7 +213,8 @@ public class GameplayController implements Screen {
     stage.draw();
 
     pauseButton.updatePosition(viewport);
-//    pauseMenu.updatePosition(viewport);
+    pauseMenu.updatePosition(viewport);
+    pauseMenu.display(paused);
 
   }
 
