@@ -504,6 +504,11 @@ public abstract class Model {
     fixture.filter.maskBits = mask;
   }
 
+  public short getCategoryBits(){ return fixture.filter.categoryBits; }
+
+  public short getMaskBits(){ return fixture.filter.maskBits; }
+
+
   /**
    * Returns the density of this body
    *

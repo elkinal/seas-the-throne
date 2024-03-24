@@ -2,15 +2,13 @@ package edu.cornell.jade.seasthethrone.gamemodel.boss;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.World;
-import edu.cornell.jade.seasthethrone.model.BoxModel;
-import edu.cornell.jade.seasthethrone.model.ComplexModel;
+import edu.cornell.jade.seasthethrone.model.PolygonModel;
 import edu.cornell.jade.seasthethrone.physics.CollisionMask;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
-public abstract class BossModel extends ComplexModel implements Renderable {
+public abstract class BossModel extends PolygonModel implements Renderable {
 
     protected FilmStrip filmStrip;
 
@@ -25,14 +23,18 @@ public abstract class BossModel extends ComplexModel implements Renderable {
 
     protected float scale;
 
+    /** Number of health points the boss has */
+    protected int health;
+
     /**
      * {@link BossModel} constructor using an x and y coordinate.
      *
      * @param x The x-position for this boss in world coordinates
      * @param y The y-position for this boss in world coordinates
      */
-    public BossModel(float x, float y) {
-        super(x, y);
+    public BossModel(float[] points, float x, float y) {
+        super(points, x, y);
+        setBodyType(BodyDef.BodyType.StaticBody);
     }
 
     public void draw(RenderingEngine renderer) {
@@ -46,6 +48,16 @@ public abstract class BossModel extends ComplexModel implements Renderable {
             setFrameNumber((getFrameNumber() + 1) % getFramesInAnimation());
         }
         frameCounter +=1 ;
+    }
+
+    /** Get remaining health points of the boss */
+    public int getHealth() {
+        return health;
+    }
+
+    /** Reduce boss HP by a specified amount */
+    public void decrementHealth(int damage){
+        health = Math.max(0, health-damage);
     }
 
     public void setScale(float s) { scale = s; }

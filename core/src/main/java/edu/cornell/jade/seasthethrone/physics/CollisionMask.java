@@ -1,5 +1,6 @@
 package edu.cornell.jade.seasthethrone.physics;
 
+import com.badlogic.gdx.physics.box2d.Filter;
 import edu.cornell.jade.seasthethrone.gamemodel.*;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerBodyModel;
@@ -27,7 +28,7 @@ public class CollisionMask {
     /** Category bitmask for player bullet */
     private static final short CATEGORY_PLAYER_BULLET = 0x0010;
 
-    /** Category bitmask for boss  */
+    /** Category bitmask for boss */
     private static final short CATEGORY_BOSS = 0x0020;
 
 
@@ -36,7 +37,7 @@ public class CollisionMask {
         // If player
         if (model instanceof PlayerBodyModel || model instanceof PlayerSpearModel){
             model.setCategoryBits(CATEGORY_PLAYER);
-            model.setMaskBits((short) (CATEGORY_ENEMY_BULLET | CATEGORY_BOSS));
+            model.setMaskBits((short) (CATEGORY_ENEMY_BULLET | CATEGORY_BOSS ));
         }
         // If player shadow
         else if (model instanceof PlayerShadowModel){

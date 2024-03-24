@@ -133,6 +133,7 @@ public class GameplayController implements Screen {
     // Load player
     Vector2 playerLoc = level.getPlayerLoc();
     PlayerModel player = new PlayerModel(playerLoc.x, playerLoc.y);
+    System.out.println(player.getBodyModel().getCategoryBits() + " " + player.getBodyModel().getMaskBits());
     renderEngine.addRenderable(player);
 
     physicsEngine = new PhysicsEngine(bounds, world, player);
@@ -141,8 +142,10 @@ public class GameplayController implements Screen {
 
     // Load bosses
     Vector2 bossLoc = level.getBosses().get(0);
-    BossModel crabBoss = new CrabBossModel(bossLoc.x, bossLoc.y);
-    crabBoss.setBodyType(BodyDef.BodyType.StaticBody);
+    //TODO: load these points in from somewhere else
+    float[] bossVertices = {-4, -7, -4, 7, 4, 7, 4, -7};
+    BossModel crabBoss = new CrabBossModel(bossVertices, bossLoc.x, bossLoc.y);
+    System.out.println(crabBoss.getCategoryBits() + " " + crabBoss.getMaskBits());
     renderEngine.addRenderable(crabBoss);
     physicsEngine.addObject(crabBoss);
     bossController = new BossController(crabBoss);

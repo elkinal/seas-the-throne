@@ -138,7 +138,6 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     isShooting = false;
 
     PlayerBodyModel playerBody = new PlayerBodyModel(x, y);
-    playerBody.setSensor(true);
     bodies.add(playerBody);
 
     PlayerSpearModel playerSpear = new PlayerSpearModel(x, y, DASH_INDICATOR_TEXTURE);
