@@ -9,9 +9,10 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.*;
 
-import edu.cornell.jade.seasthethrone.gamemodel.BossModel;
+import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.ObstacleModel;
-import edu.cornell.jade.seasthethrone.gamemodel.PlayerModel;
+import edu.cornell.jade.seasthethrone.gamemodel.boss.CrabBossModel;
+import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.input.BossController;
 import edu.cornell.jade.seasthethrone.input.InputController;
 import edu.cornell.jade.seasthethrone.input.PlayerController;
@@ -140,11 +141,11 @@ public class GameplayController implements Screen {
 
     // Load bosses
     Vector2 bossLoc = level.getBosses().get(0);
-    BossModel boss = new BossModel(bossLoc.x, bossLoc.y);
-    boss.setBodyType(BodyDef.BodyType.StaticBody);
-    renderEngine.addRenderable(boss);
-    physicsEngine.addObject(boss);
-    bossController = new BossController(boss);
+    BossModel crabBoss = new CrabBossModel(bossLoc.x, bossLoc.y);
+    crabBoss.setBodyType(BodyDef.BodyType.StaticBody);
+    renderEngine.addRenderable(crabBoss);
+    physicsEngine.addObject(crabBoss);
+    bossController = new BossController(crabBoss);
 
     // Load walls
     for (Wall wall : level.getWalls()) {

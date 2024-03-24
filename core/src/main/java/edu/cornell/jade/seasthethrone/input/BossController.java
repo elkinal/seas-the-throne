@@ -1,9 +1,9 @@
 package edu.cornell.jade.seasthethrone.input;
 
 import java.util.Random;
-import com.badlogic.gdx.math.Vector;
+
 import com.badlogic.gdx.math.Vector2;
-import edu.cornell.jade.seasthethrone.gamemodel.BossModel;
+import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 
 public class BossController implements Controllable {
     /** The boss this controller controls */

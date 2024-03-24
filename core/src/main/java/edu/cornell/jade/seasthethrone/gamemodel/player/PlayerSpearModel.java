@@ -1,4 +1,4 @@
-package edu.cornell.jade.seasthethrone.gamemodel;
+package edu.cornell.jade.seasthethrone.gamemodel.player;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -17,7 +17,7 @@ import edu.cornell.jade.seasthethrone.util.FilmStrip;
  */
 public class PlayerSpearModel extends BoxModel implements Renderable {
   /** Width of spear */
-  private static float SPEAR_WIDTH = 0.5f;
+  private static float SPEAR_WIDTH = 0.8f;
 
   /** Length of spear */
   private static float SPEAR_LENGTH = 3.2f;

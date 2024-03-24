@@ -1,4 +1,4 @@
-package edu.cornell.jade.seasthethrone.gamemodel;
+package edu.cornell.jade.seasthethrone.gamemodel.player;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;

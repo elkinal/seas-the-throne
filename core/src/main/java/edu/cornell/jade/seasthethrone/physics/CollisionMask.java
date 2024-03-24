@@ -1,6 +1,10 @@
 package edu.cornell.jade.seasthethrone.physics;
 
 import edu.cornell.jade.seasthethrone.gamemodel.*;
+import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
+import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerBodyModel;
+import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerShadowModel;
+import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerSpearModel;
 import edu.cornell.jade.seasthethrone.model.Model;
 
 /**

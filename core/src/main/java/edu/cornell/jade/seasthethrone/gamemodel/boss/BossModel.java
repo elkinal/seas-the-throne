@@ -1,10 +1,8 @@
-package edu.cornell.jade.seasthethrone.gamemodel;
+package edu.cornell.jade.seasthethrone.gamemodel.boss;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Array;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.model.ComplexModel;
 import edu.cornell.jade.seasthethrone.physics.CollisionMask;
@@ -12,25 +10,20 @@ import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
-public class BossModel extends ComplexModel implements Renderable {
+public abstract class BossModel extends ComplexModel implements Renderable {
 
-    /** Number of frames in boss animation TODO: stop hardcoding animation */
-    private static int FRAMES_IN_ANIMATION = 4;
-
-    //TODO: stop hardcoding textures
-    private Texture CRAB_SHOOTING = new Texture("bosses/crab/crab_shoot.png");
-    public FilmStrip filmStrip;
+    protected FilmStrip filmStrip;
 
     /** The number of frames since this boss was inititalized */
-    private int frameCounter;
+    protected int frameCounter;
 
     /** The number of frames between animation updates */
-    private int frameDelay;
+    protected int frameDelay;
 
     /** The current position in the filmstrip */
-    private int animationFrame;
+    protected int animationFrame;
 
-    private float scale;
+    protected float scale;
 
     /**
      * {@link BossModel} constructor using an x and y coordinate.
@@ -40,23 +33,7 @@ public class BossModel extends ComplexModel implements Renderable {
      */
     public BossModel(float x, float y) {
         super(x, y);
-
-        this.filmStrip = new FilmStrip(CRAB_SHOOTING, 1, FRAMES_IN_ANIMATION);
-        frameCounter = 1;
-        frameDelay = 12;
-        scale = 0.16f;
-
-        BoxModel hitbox = new BoxModel(x, y, 5f, 10f);
-        hitbox.setBodyType(BodyDef.BodyType.KinematicBody);
-        bodies.add(hitbox);
-
-        CollisionMask.setCategoryMaskBits(this);
     }
-
-    protected boolean createJoints(World world) {
-        return true;
-    }
-
 
     public void draw(RenderingEngine renderer) {
         int frame = getFrameNumber();
@@ -85,7 +62,4 @@ public class BossModel extends ComplexModel implements Renderable {
         return filmStrip;
     }
 
-    public int getFramesInAnimation() {
-        return FRAMES_IN_ANIMATION;
-    }
 }
