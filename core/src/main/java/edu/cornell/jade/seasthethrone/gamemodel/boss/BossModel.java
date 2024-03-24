@@ -22,8 +22,11 @@ public abstract class BossModel extends PolygonModel implements Renderable {
 
     protected float scale;
 
-    /** Amount of knockback force applied to player on collision */
-    private float knockbackForce;
+    /** Amount of knockback force applied to player on body collision */
+    private float bodyKnockbackForce;
+
+    /** Amount of knockback force applied to player on spear collision */
+    private float spearKnockbackForce;
 
     /** Number of health points the boss has */
     protected int health;
@@ -37,7 +40,8 @@ public abstract class BossModel extends PolygonModel implements Renderable {
     public BossModel(float[] points, float x, float y) {
         super(points, x, y);
         setBodyType(BodyDef.BodyType.StaticBody);
-        knockbackForce = 70f;
+        bodyKnockbackForce = 70f;
+        spearKnockbackForce = 130f;
     }
 
     public void draw(RenderingEngine renderer) {
@@ -52,16 +56,21 @@ public abstract class BossModel extends PolygonModel implements Renderable {
         }
         frameCounter +=1 ;
     }
-    public float getKnockbackForce() { return knockbackForce; }
+    public float getBodyKnockbackForce() { return bodyKnockbackForce; }
+    public float getSpearKnockbackForce() { return spearKnockbackForce; }
 
     /** Get remaining health points of the boss */
     public int getHealth() {
         return health;
     }
 
-    /** Reduce boss HP by a specified amount */
+    /** Reduce boss HP by a specified amount
+     *  If the boss dies, mark boss as removed */
     public void decrementHealth(int damage){
-        health = Math.max(0, health-damage);
+        health-= damage;
+        if(health <= 0){
+            markRemoved(true);
+        }
     }
 
     public void setScale(float s) { scale = s; }

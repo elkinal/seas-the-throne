@@ -28,6 +28,8 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
   /** Maximum number of fish that can be speared */
   private static int MAX_SPEAR_CAPACITY = 5;
 
+  private PlayerBodyModel mainBody;
+
   /** If the spear is extended (during dash) */
   private boolean spearExtended;
 
@@ -38,6 +40,9 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
   private Vector2 directionCache;
 
   private final TextureRegion SPEAR_TEXTURE_REGION;
+
+  /** Amount of damage the spear inflicts */
+  private int damage;
 
   /**
    * The size is expressed in physics units NOT pixels.
@@ -52,19 +57,27 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
     spearExtended = false;
     directionCache = new Vector2();
     SPEAR_TEXTURE_REGION = new TextureRegion(texture);
+    damage = 20;
   }
 
   /**
    * Create new player body at position (x,y)
    */
-  public PlayerSpearModel(float x, float y, Texture texture) {
+  public PlayerSpearModel(float x, float y, Texture texture, PlayerBodyModel mainBody) {
     this(x, y, SPEAR_WIDTH, SPEAR_LENGTH, texture);
+    this.mainBody = mainBody;
   }
 
   /** Check if spear is extended */
   public boolean isSpearExtended() {
     return spearExtended;
   }
+
+  /** Returns the spear damage number */
+  public int getDamage() { return damage; }
+
+  /** Returns main body attached to the spear */
+  public PlayerBodyModel getMainBody() { return mainBody; }
 
   /**
    * Extend or retract spear, activating or deactivating

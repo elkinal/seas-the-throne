@@ -140,7 +140,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     PlayerBodyModel playerBody = new PlayerBodyModel(x, y);
     bodies.add(playerBody);
 
-    PlayerSpearModel playerSpear = new PlayerSpearModel(x, y, DASH_INDICATOR_TEXTURE);
+    PlayerSpearModel playerSpear = new PlayerSpearModel(x, y, DASH_INDICATOR_TEXTURE, playerBody);
     bodies.add(playerSpear);
 
     PlayerShadowModel playerShadow = new PlayerShadowModel(x, y - 1.6f);

@@ -251,7 +251,7 @@ public class PhysicsEngine implements ContactListener {
     if (!pb.isInvincible()) {
       pb.setHit(true);
       pb.setInvincible();
-      applyKnockback(pb, b.getPosition(), b.getKnockbackForce());
+      applyKnockback(pb, b.getPosition(), b.getBodyKnockbackForce());
       playerBossCollision = Optional.empty();
     } else{
       if (playerBossCollision.isEmpty()) { playerBossCollision = Optional.of(c); }
@@ -261,7 +261,22 @@ public class PhysicsEngine implements ContactListener {
 
   /** Handle collision between player spear and boss */
   public void handleCollision(PlayerSpearModel ps, BossModel b) {
-    System.out.println("aaaaa");
+    b.decrementHealth(ps.getDamage());
+    ps.getMainBody().setKnockbackTime(15);
+    applyKnockback(ps.getMainBody(), b.getPosition(), b.getSpearKnockbackForce());
+    removeAllBullets();
+  }
+
+  /** Remove all bullets from the screen */
+  public void removeAllBullets(){
+    Iterator<PooledList<Model>.Entry> iterator = objects.entryIterator();
+    while (iterator.hasNext()) {
+      PooledList<Model>.Entry entry = iterator.next();
+      Model obj = entry.getValue();
+      if(obj instanceof BulletModel){
+        obj.markRemoved(true);
+      }
+    }
   }
 
   public void handleCollision( ObstacleModel obs, BulletModel b) {

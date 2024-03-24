@@ -67,18 +67,22 @@ public class PlayerBodyModel extends PolygonModel {
 
   /** Returns if the player is stunned (during iframes) */
   public boolean isKnockedBack(){
-    return iframeCounter+knockbackTime > iframeLimit;
+    return knockbackTime > 0;
   }
 
   /** Sets the player invincible according to the iframe limit */
   public void setInvincible(){
     iframeCounter  = iframeLimit;
+    knockbackTime = iframeLimit/10;
   }
+
+  public void setKnockbackTime(int time) { knockbackTime = time; }
 
   @Override
   public void update(float delta){
     if (isInvincible()){
       iframeCounter -= 1;
     }
+    knockbackTime = Math.max(0, knockbackTime-1);
   }
 }

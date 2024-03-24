@@ -44,7 +44,9 @@ public class GameplayController implements Screen {
     /** While we are playing the game */
     PLAY,
     /** Game over */
-    OVER
+    OVER,
+    /** Game win */
+    WIN,
   }
 
   private GameState gameState;
@@ -202,6 +204,8 @@ public class GameplayController implements Screen {
 
     if (!playerController.isAlive()) {
       gameState = GameState.OVER;
+    } else if (!bossController.isAlive()) {
+      gameState = GameState.WIN;
     }
 
     renderEngine.clear();
@@ -224,11 +228,11 @@ public class GameplayController implements Screen {
     draw(delta);
     debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
 
-    if (gameState == GameState.OVER) {
+    if (gameState == GameState.OVER || gameState == GameState.WIN) {
       if (inputController.didReset()) {
         setupGameplay();
       } else {
-        renderEngine.drawGameOver();
+        renderEngine.drawGameState(gameState);
       }
     }
   }

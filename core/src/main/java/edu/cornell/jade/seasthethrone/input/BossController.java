@@ -39,6 +39,10 @@ public class BossController implements Controllable {
         currStateDuration = 0;
     }
 
+    public boolean isAlive() {
+        return boss.isActive();
+    }
+
     /** Called every tick. Checks to update state every 10 ticks */
     public void update() {
         ticks++;
