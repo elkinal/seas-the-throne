@@ -15,10 +15,13 @@ import edu.cornell.jade.seasthethrone.util.FilmStrip;
 public class BossModel extends ComplexModel implements Renderable {
 
     /** Number of frames in boss animation TODO: stop hardcoding animation */
-    private static int FRAMES_IN_ANIMATION = 4;
+    private int frameSize;
 
-    //TODO: stop hardcoding textures
-    private Texture CRAB_SHOOTING = new Texture("bosses/crab/crab_shoot.png");
+    private FilmStrip shootAnimation;
+    private FilmStrip idleAnimation;
+    private FilmStrip moveAnimation;
+    private FilmStrip getHitAnimation;
+    private FilmStrip dieAnimation;
     public FilmStrip filmStrip;
 
     /** The number of frames since this boss was inititalized */
@@ -35,18 +38,21 @@ public class BossModel extends ComplexModel implements Renderable {
     /**
      * {@link BossModel} constructor using an x and y coordinate.
      *
-     * @param x The x-position for this boss in world coordinates
-     * @param y The y-position for this boss in world coordinates
+     * @param builder builder for BossModel
      */
-    public BossModel(float x, float y) {
-        super(x, y);
-
-        this.filmStrip = new FilmStrip(CRAB_SHOOTING, 1, FRAMES_IN_ANIMATION);
+    public BossModel(Builder builder) {
+        super(builder.x, builder.y);
+        frameSize = builder.frameSize;
+        shootAnimation = builder.shootAnimation;
+        idleAnimation = builder.idleAnimation;
+        moveAnimation = builder.moveAnimation;
+        getHitAnimation = builder.getHitAnimation;
+        dieAnimation = builder.dieAnimation;
+        this.filmStrip = shootAnimation;
         frameCounter = 1;
-        frameDelay = 12;
-        scale = 0.16f;
+        frameDelay = builder.frameDelay;
 
-        BoxModel hitbox = new BoxModel(x, y, 5f, 10f);
+        BoxModel hitbox = new BoxModel(builder.x, builder.y, 5f, 10f);
         hitbox.setBodyType(BodyDef.BodyType.KinematicBody);
         bodies.add(hitbox);
 
@@ -63,7 +69,7 @@ public class BossModel extends ComplexModel implements Renderable {
         FilmStrip filmStrip = getFilmStrip();
         filmStrip.setFrame(frame);
         Vector2 pos = getPosition();
-        renderer.draw(filmStrip, pos.x, pos.y, scale);
+        renderer.draw(filmStrip, pos.x, pos.y, 0.16f);
 
         if (frameCounter % frameDelay == 0) {
             setFrameNumber((getFrameNumber() + 1) % getFramesInAnimation());
@@ -86,6 +92,75 @@ public class BossModel extends ComplexModel implements Renderable {
     }
 
     public int getFramesInAnimation() {
-        return FRAMES_IN_ANIMATION;
+        return filmStrip.getSize();
+    }
+    public static class Builder{
+        /**boss x position */
+        private float x;
+        /**boss y position */
+        private float y;
+
+        /** Number of frames in boss animation */
+        private int frameSize;
+
+        private FilmStrip shootAnimation;
+        private FilmStrip idleAnimation;
+        private FilmStrip moveAnimation;
+        private FilmStrip getHitAnimation;
+        private FilmStrip dieAnimation;
+
+        /** The number of frames between animation updates */
+        private int frameDelay;
+
+        public static Builder newInstance()
+        {
+            return new Builder();
+        }
+
+        private Builder() {}
+        public Builder setX(float x){
+            this.x = x;
+            return this;
+        }
+        public Builder setY(float y){
+            this.y = y;
+            return this;
+        }
+        public Builder setFrameSize(int frameSize){
+            this.frameSize = frameSize;
+            return this;
+        }
+        public Builder setShootAnimation(Texture texture){
+            int width = texture.getWidth();
+            shootAnimation = new FilmStrip(texture, 1, width/frameSize);;
+            return this;
+        }
+        public Builder setIdleAnimation(Texture texture){
+            int width = texture.getWidth();
+            idleAnimation = new FilmStrip(texture, 1, width/frameSize);;
+            return this;
+        }
+        public Builder setGetHitAnimation(Texture texture){
+            int width = texture.getWidth();
+            getHitAnimation = new FilmStrip(texture, 1, width/frameSize);;
+            return this;
+        }
+        public Builder setMoveAnimation(Texture texture){
+            int width = texture.getWidth();
+            moveAnimation = new FilmStrip(texture, 1, width/frameSize);;
+            return this;
+        }
+        public Builder setDieAnimation(Texture texture){
+            int width = texture.getWidth();
+            dieAnimation = new FilmStrip(texture, 1, width/frameSize);;
+            return this;
+        }
+        public Builder setFrameDelay(int frameDelay){
+            this.frameDelay = frameDelay;
+            return this;
+        }
+        public BossModel build(){
+            return new BossModel(this);
+        }
     }
 }
