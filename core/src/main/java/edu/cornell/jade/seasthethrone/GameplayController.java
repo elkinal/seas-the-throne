@@ -4,11 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
@@ -34,7 +31,6 @@ import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 
-import java.awt.*;
 import java.util.Comparator;
 
 /**
@@ -102,7 +98,10 @@ public class GameplayController implements Screen {
 
   private Stage stage;
   private MenuButton pauseButton;
+  private MenuButton pauseMenu;
   private final Texture pauseButtonTexture = new Texture("pause_menu/pausebutton.png");
+  private final Texture pauseMenuTexture = new Texture("pause_menu/pausescreendisplay.png");
+  public static boolean paused = false;
 
   protected GameplayController() {
     gameState = GameState.PLAY;
@@ -178,18 +177,17 @@ public class GameplayController implements Screen {
       physicsEngine.addObject(model);
     }
 
+    inputController.add(playerController);
+
     // Load pause menu button
     pauseButton = new MenuButton(0, 0, 3, 3, -46, 45, pauseButtonTexture);
     pauseButton.updatePosition(viewport);
-
     renderEngine.addRenderable(pauseButton);
     physicsEngine.addObject(pauseButton);
     inputController.addButton(pauseButton);
 
-    inputController.add(playerController);
-
-
     // Load pause menu dashboard
+//w
 
 
 }
@@ -212,7 +210,7 @@ public class GameplayController implements Screen {
     stage.draw();
 
     pauseButton.updatePosition(viewport);
-
+//    pauseMenu.updatePosition(viewport);
 
   }
 
@@ -223,14 +221,13 @@ public class GameplayController implements Screen {
 
     // Right now just errors if you try to update playerController or physicsEngine
     // when player is null
-    if (gameState != GameState.OVER) {
+    if (gameState != GameState.OVER && !paused) {
       playerController.update();
       bossController.update();
       physicsEngine.update(delta);
 
       // Update camera
       updateCamera();
-
     }
 
     if (!playerController.isAlive()) {
@@ -269,7 +266,6 @@ public class GameplayController implements Screen {
   public void resize(int width, int height) {
     viewport.update(width, height);
     renderEngine.getGameCanvas().resize();
-//    stage.getViewport().update(width, height);
   }
 
   /** Updates the camera position to keep the player centered on the screen */
@@ -290,6 +286,11 @@ public class GameplayController implements Screen {
   }
 
   public void pause() {
+    paused = true;
+  }
+
+  public void unPause() {
+    paused = false;
   }
 
   public void resume() {
@@ -302,7 +303,12 @@ public class GameplayController implements Screen {
   public void dispose() {
     if (physicsEngine != null)
       physicsEngine.dispose();
-//    stage.dispose();
+    stage.dispose();
+  }
+
+  /** Returns true if the game is paused */
+  public boolean isPaused() {
+    return paused;
   }
 
   /**

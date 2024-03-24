@@ -21,6 +21,7 @@ levels/demonstatuepink.png
 levels/test1.json
 libgdx.png
 pause_menu/pausebutton.png
+pause_menu/pausescreendisplay.png
 player/dash_indicator.png
 player/playerspritedashfilmstrip_down.png
 player/playerspritedashfilmstrip_left.png

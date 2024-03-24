@@ -22,6 +22,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import edu.cornell.jade.seasthethrone.GameplayController;
 import edu.cornell.jade.seasthethrone.gamemodel.MenuButton;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.util.Controllers;
@@ -42,7 +43,7 @@ public class InputController {
   /** Whether the reset button was pressed. */
   protected boolean resetPressed;
 
-  protected ArrayList<MenuButton> buttons = new ArrayList<>();
+  protected ArrayList<MenuButton> buttons;
 
   /**
    * Cache vector to return containing the dash coordinates of the previous read
@@ -93,6 +94,7 @@ public class InputController {
     this.players = new ArrayList<>();
     this.viewport = screenToWorld;
     this.dashCoordCache = new Vector2();
+    this.buttons = new ArrayList<>();
 
     // initializing the xbox controller
     if (Controllers.get().getControllers().size > 0) {
@@ -194,6 +196,9 @@ public class InputController {
     if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
       obj.pressSecondary();
     }
+    if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+      pause();
+    }
     obj.moveHorizontal(hoff);
     obj.moveVertical(voff);
   }
@@ -223,6 +228,7 @@ public class InputController {
     for (MenuButton button : buttons) {
       if (isBoxClicked(button, viewport.unproject(mousePos)) && Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
         System.out.println("PAUSE ACTIVATED");
+        pause();
       }
     }
   }
@@ -237,6 +243,10 @@ public class InputController {
   /** Returns if a button has been clicked */
   private boolean isBoxClicked(MenuButton model, Vector2 clickPos) {
     return model.getBoundingBox().contains(clickPos);
+  }
+
+  private void pause() {
+    GameplayController.paused = true;
   }
 
 
