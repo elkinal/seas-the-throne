@@ -9,7 +9,6 @@ import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
 public abstract class BossModel extends PolygonModel implements Renderable {
-
     protected FilmStrip filmStrip;
 
     /** The number of frames since this boss was inititalized */
@@ -23,6 +22,9 @@ public abstract class BossModel extends PolygonModel implements Renderable {
 
     protected float scale;
 
+    /** Amount of knockback force applied to player on collision */
+    private float knockbackForce;
+
     /** Number of health points the boss has */
     protected int health;
 
@@ -35,6 +37,7 @@ public abstract class BossModel extends PolygonModel implements Renderable {
     public BossModel(float[] points, float x, float y) {
         super(points, x, y);
         setBodyType(BodyDef.BodyType.StaticBody);
+        knockbackForce = 70f;
     }
 
     public void draw(RenderingEngine renderer) {
@@ -49,6 +52,7 @@ public abstract class BossModel extends PolygonModel implements Renderable {
         }
         frameCounter +=1 ;
     }
+    public float getKnockbackForce() { return knockbackForce; }
 
     /** Get remaining health points of the boss */
     public int getHealth() {
