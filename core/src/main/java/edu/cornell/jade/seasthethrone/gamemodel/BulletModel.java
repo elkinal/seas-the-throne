@@ -26,12 +26,9 @@ public class BulletModel extends SimpleModel implements FishRenderable {
   /** Fixture to be attached to the body */
   private Fixture geometry;
 
-  /** Direction bullet is facing*/
-  private Direction faceDirection;
-
 
   /** Bullet texture */
-  public static final Texture FISH_TEXTURE = new Texture("bullet/yellowfish_east.png");
+  public Texture fishTexture;
   /** FilmStrip cache object */
   public FilmStrip filmStrip;
   /** Amount of knockback force applied to player on collision */
@@ -42,20 +39,29 @@ public class BulletModel extends SimpleModel implements FishRenderable {
    * call activatePhysics then createFixtures after constructing the BulletModel for it to be
    * properly created.
    *
-   * @param x The x-position for this bullet in world coordinates
-   * @param y The y-position for this bullet in world coordinates
-   * @param radius The radius of this bullet
+   * @param builder The builder for BulletModel
    */
-  public BulletModel(float x, float y, float radius) {
-    super(x, y);
+  public BulletModel(Builder builder) {
+//    super(x, y);
+//    shape = new CircleShape();
+//    shape.setRadius(radius);
+//    knockbackForce = 30f;
+//    setName("bullet");
+//    faceDirection = Direction.DOWN;
+//    filmStrip = new FilmStrip(FISH_TEXTURE, 1, 1);
+//
+//    setBodyType(BodyDef.BodyType.KinematicBody);
+    super(builder.x, builder.y);
     shape = new CircleShape();
-    shape.setRadius(radius);
-    knockbackForce = 30f;
+    shape.setRadius(builder.radius);
+    knockbackForce = 20f;
+    setBodyType(BodyDef.BodyType.DynamicBody);
     setName("bullet");
-    faceDirection = Direction.DOWN;
-    filmStrip = new FilmStrip(FISH_TEXTURE, 1, 1);
+    fishTexture = builder.FISH_TEXTURE;
+    filmStrip = new FilmStrip(fishTexture, 1, 1);
 
     setBodyType(BodyDef.BodyType.KinematicBody);
+    CollisionMask.setCategoryMaskBits(this, builder.shotByPlayer);
   }
 
   /** Returns knockback force to apply to player on collision */
@@ -154,5 +160,46 @@ public class BulletModel extends SimpleModel implements FishRenderable {
     else
       return (float) Math.atan(vy/vx) + (float) (Math.PI);
   }
+  public static class Builder{
+    /**bullet x position */
+    private float x;
+    /**bullet y position */
+    private float y;
+    /** Texture for bullet*/
+    private Texture FISH_TEXTURE;
+    /** Radius of shape of bullet */
+    private float radius;
+    /** Whether the bullet has been shot by player */
+    private boolean shotByPlayer;
+    public static Builder newInstance()
+    {
+      return new Builder();
+    }
 
+    private Builder() {}
+
+    public Builder setFishTexture(Texture texture){
+      FISH_TEXTURE = texture;
+      return this;
+    }
+    public Builder setRadius(float radius){
+      this.radius = radius;
+      return this;
+    }
+    public Builder setX(float x){
+      this.x = x;
+      return this;
+    }
+    public Builder setY(float y){
+      this.y = y;
+      return this;
+    }
+    public Builder setShotByPlayer (boolean shotByPlayer){
+      this.shotByPlayer = shotByPlayer;
+      return this;
+    }
+    public BulletModel build(){
+      return new BulletModel(this);
+    }
+  }
 }
