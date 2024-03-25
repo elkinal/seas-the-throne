@@ -70,7 +70,7 @@ public class GameplayController implements Screen {
   protected static float DEFAULT_HEIGHT;
 
   /** Ratio between the pixel in a texture and the meter in the world */
-  private static float WORLD_SCALE;
+  protected float WORLD_SCALE;
 
   /** The Box2D world */
   protected PhysicsEngine physicsEngine;
