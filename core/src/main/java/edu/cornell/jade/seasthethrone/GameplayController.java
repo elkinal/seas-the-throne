@@ -14,7 +14,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.*;
 
 import edu.cornell.jade.seasthethrone.gamemodel.BossModel;
-import edu.cornell.jade.seasthethrone.gamemodel.MenuButton;
+import edu.cornell.jade.seasthethrone.Dashboard.DashboardButton;
 import edu.cornell.jade.seasthethrone.gamemodel.ObstacleModel;
 import edu.cornell.jade.seasthethrone.gamemodel.PlayerModel;
 import edu.cornell.jade.seasthethrone.input.BossController;
@@ -97,8 +97,8 @@ public class GameplayController implements Screen {
   private heightComparator comp = new heightComparator();
 
   private Stage stage;
-  private MenuButton pauseButton;
-  private MenuButton pauseMenu;
+  private DashboardButton pauseButton;
+  private DashboardButton pauseMenu;
   private final Texture pauseButtonTexture = new Texture("pause_menu/pausebutton.png");
   private final Texture pauseMenuTexture = new Texture("pause_menu/pausescreendisplay.png");
   public static boolean paused = false;
@@ -180,14 +180,14 @@ public class GameplayController implements Screen {
     inputController.add(playerController);
 
     // Load pause menu button
-    pauseButton = new MenuButton(0, 0, 3, 3, -46, 45, pauseButtonTexture);
+    pauseButton = new DashboardButton(0, 0, 3, 3, -46, 45, pauseButtonTexture);
     pauseButton.updatePosition(viewport);
     renderEngine.addRenderable(pauseButton);
     physicsEngine.addObject(pauseButton);
     inputController.addButton(pauseButton);
 
     // Load pause menu dashboard
-    pauseMenu = new MenuButton(0, 0, 1, 1, -viewport.getScreenWidth()/2, viewport.getScreenHeight()/2, pauseMenuTexture);
+    pauseMenu = new DashboardButton(0, 0, 1, 1, -viewport.getScreenWidth()/2, viewport.getScreenHeight()/2, pauseMenuTexture);
     pauseMenu.updatePosition(viewport);
     renderEngine.addRenderable(pauseMenu);
     physicsEngine.addObject(pauseMenu);

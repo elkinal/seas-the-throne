@@ -2,13 +2,11 @@ package edu.cornell.jade.seasthethrone.render;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import edu.cornell.jade.seasthethrone.gamemodel.MenuButton;
 import edu.cornell.jade.seasthethrone.level.BackgroundImage;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 

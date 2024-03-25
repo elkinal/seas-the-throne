@@ -1,4 +1,4 @@
-package edu.cornell.jade.seasthethrone.gamemodel;
+package edu.cornell.jade.seasthethrone.Dashboard;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,7 +11,7 @@ import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
-public class MenuButton extends BoxModel implements Renderable {
+public class DashboardButton extends BoxModel implements Renderable {
 
     private final TextureRegion pauseButtonTextureRegion;
     private boolean display;
@@ -23,7 +23,13 @@ public class MenuButton extends BoxModel implements Renderable {
     private float rectangleX;
     private float rectangleY;
 
-    public MenuButton(float x, float y, float width, float height, float offsetX, float offsetY, Texture texture) {
+    // Used when a button has multiple textures
+    private FilmStrip filmStrip;
+    private int animationFrame;
+    private int frameDelay;
+
+
+    public DashboardButton(float x, float y, float width, float height, float offsetX, float offsetY, Texture texture) {
 
         // Loads textures
         super(x, y, width, height);
