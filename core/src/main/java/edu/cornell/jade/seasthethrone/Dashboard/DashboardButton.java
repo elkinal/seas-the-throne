@@ -13,27 +13,38 @@ import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
 public class DashboardButton extends BoxModel implements Renderable {
 
-    private final TextureRegion pauseButtonTextureRegion;
     private boolean display;
 
+    // Define the location
     private final float offsetX;
     private final float offsetY;
 
+    // Define the outline of the button
     private final Rectangle boundingBox;
     private float rectangleX;
     private float rectangleY;
 
-    // Used when a button has multiple textures
-    private FilmStrip filmStrip;
-    private int animationFrame;
-    private int frameDelay;
+    // Used when a button only has one texture
+    private TextureRegion[] pauseButtonTextureRegions;
+    private int currentTexture = 0;
 
 
-    public DashboardButton(float x, float y, float width, float height, float offsetX, float offsetY, Texture texture) {
+    /** 1 or more textures may be passed as arguments */
+    public DashboardButton(float x, float y, float width, float height, float offsetX, float offsetY, Texture... textures) {
 
         // Loads textures
         super(x, y, width, height);
-        pauseButtonTextureRegion = new TextureRegion(texture);
+
+        if (textures.length == 1) {
+            pauseButtonTextureRegions = new TextureRegion[]{new TextureRegion(textures[0])};
+        }
+        else if (textures.length > 1){
+            pauseButtonTextureRegions = new TextureRegion[textures.length];
+
+            for (int i = 0; i < textures.length; i++)
+                pauseButtonTextureRegions[i] = new TextureRegion(textures[i]);
+
+        }
 
         // Setting parameters
         setActive(false);
@@ -77,8 +88,9 @@ public class DashboardButton extends BoxModel implements Renderable {
 
     @Override
     public void draw(RenderingEngine renderer) {
-        if (display)
-            renderer.draw(pauseButtonTextureRegion, getX(), getY());
+        if (display) {
+            renderer.draw(pauseButtonTextureRegions[currentTexture], getX(), getY());
+        }
     }
 
     @Override
