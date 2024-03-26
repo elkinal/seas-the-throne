@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.*;
@@ -23,6 +24,7 @@ import edu.cornell.jade.seasthethrone.level.Tile;
 import edu.cornell.jade.seasthethrone.level.Wall;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.model.Model;
+import edu.cornell.jade.seasthethrone.model.PolygonModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
@@ -95,7 +97,7 @@ public class GameplayController implements Screen {
   protected GameplayController() {
     gameState = GameState.PLAY;
 
-    this.level = new Level("levels/test1.json");
+    this.level = new Level("levels/shallow_map.json");
     DEFAULT_HEIGHT = level.DEFAULT_HEIGHT;
     DEFAULT_WIDTH = level.DEFAULT_WIDTH;
     WORLD_SCALE = level.WORLD_SCALE;
@@ -159,25 +161,25 @@ public class GameplayController implements Screen {
     bulletController = new BulletController(physicsEngine);
 
     // Load bosses
-    Vector2 bossLoc = level.getBosses().get(0);
-    BossModel boss = BossModel.Builder.newInstance()
-            .setX(bossLoc.x)
-            .setY(bossLoc.y)
-            .setFrameSize(110)
-            .setShootAnimation(new Texture("bosses/crab/crab_shoot.png"))
-            .setFrameDelay(12)
-            .build();
-    boss.setBodyType(BodyDef.BodyType.StaticBody);
-    renderEngine.addRenderable(boss);
-    physicsEngine.addObject(boss);
-    bossController = new BossController(boss);
+    for (int i = 0; i < level.getBosses().size; i++) {
+      Vector2 bossLoc = level.getBosses().get(i);
+      BossModel boss = BossModel.Builder.newInstance()
+              .setX(bossLoc.x)
+              .setY(bossLoc.y)
+              .setFrameSize(110)
+              .setShootAnimation(new Texture("bosses/crab/crab_shoot.png"))
+              .setFrameDelay(12)
+              .build();
+      boss.setBodyType(BodyDef.BodyType.StaticBody);
+      renderEngine.addRenderable(boss);
+      physicsEngine.addObject(boss);
+      bossController = new BossController(boss);
+    }
 
     // Load walls
     for (Wall wall : level.getWalls()) {
-//      ObstacleModel wallModel = new ObstacleModel(wall);
-//      physicsEngine.addObject(wallModel);
 
-      BoxModel model = new BoxModel(wall.x, wall.y, wall.width, wall.height);
+      PolygonModel model = new PolygonModel(wall.toList(), wall.x, wall.y);
       model.setBodyType(BodyDef.BodyType.StaticBody);
       physicsEngine.addObject(model);
     }
@@ -244,7 +246,7 @@ public class GameplayController implements Screen {
     for (Model r : objectCache) { renderEngine.addRenderable((Renderable) r); }
 
     draw(delta);
-    debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
+//    debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
 
     if (gameState == GameState.OVER) {
       if (inputController.didReset()) {

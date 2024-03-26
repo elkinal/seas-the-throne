@@ -202,9 +202,9 @@ public class Level {
      * @param bossLayer JSON object layer containing bosses
      * */
     private void parseBossLayer(HashMap<String, Object> bossLayer) {
-        Array<HashMap<Object, String>> bossWrapperList = (Array<HashMap<Object, String>>) bossLayer.get("objects");
+        Array<HashMap<String, Object>> bossWrapperList = (Array<HashMap<String, Object>>) bossLayer.get("objects");
 
-        for (HashMap<Object, String> bossWrapper : bossWrapperList) {
+        for (HashMap<String, Object> bossWrapper : bossWrapperList) {
             float x = Float.parseFloat((String) bossWrapper.get("x"));
             float y = Float.parseFloat((String) bossWrapper.get("y"));
             bosses.add(tiledToWorldCoords(new Vector2(x,y)));
@@ -217,17 +217,27 @@ public class Level {
      * @param wallLayer JSON object layer containing walls
      * */
     private void parseWallLayer(HashMap<String, Object> wallLayer) {
-        Array<HashMap<Object, String>> wallWrapperList = (Array<HashMap<Object, String>>) wallLayer.get("objects");
+        Array<HashMap<String, Object>> wallWrapperList = getArrayField(wallLayer, "objects");
 
-        for (HashMap<Object, String> wallWrapper : wallWrapperList) {
-            float x = Float.parseFloat((String) wallWrapper.get("x"));
-            float y = Float.parseFloat((String) wallWrapper.get("y"));
-            float width = Float.parseFloat((String) wallWrapper.get("width"));
-            float height = Float.parseFloat((String) wallWrapper.get("height"));
+        for (int i = 0; i < wallWrapperList.size; i++) {
+            HashMap<String, Object> thisWallWrapper = wallWrapperList.get(i);
+            Vector2 tiledCoords = new Vector2(
+                    getFloatField(thisWallWrapper, "x"),
+                    getFloatField(thisWallWrapper, "y"));
 
-            Vector2 pos = tiledToWorldCoords(new Vector2(x + width/2f, y + height/2f));
-            Vector2 dims = (new Vector2(width * WORLD_SCALE, height * WORLD_SCALE));
-            walls.add(new Wall(pos.x, pos.y, dims.x, dims.y));
+            Vector2 worldCoords = tiledToWorldCoords(tiledCoords);
+            Wall thisWall = new Wall(worldCoords.x, worldCoords.y);
+
+            Array<HashMap<String, Object>> vertexList = getArrayField(thisWallWrapper,"polygon");
+
+            for (HashMap<String, Object> vertex : vertexList) {
+                float x = WORLD_SCALE * getFloatField(vertex, "x");
+                float y = -WORLD_SCALE * getFloatField(vertex, "y");
+
+                thisWall.addVertex(x);
+                thisWall.addVertex(y);
+            }
+            walls.add(thisWall);
         }
     }
 

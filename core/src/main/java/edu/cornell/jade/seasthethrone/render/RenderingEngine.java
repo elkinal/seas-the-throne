@@ -45,7 +45,7 @@ public class RenderingEngine {
 
     /** LOADING IN FONT, might be better to have an AssetDirectory later */
     FreeTypeFontGenerator generator =
-        new FreeTypeFontGenerator(Gdx.files.internal("EBGaramond.ttf"));
+        new FreeTypeFontGenerator(Gdx.files.internal("Alagard.ttf"));
     FreeTypeFontGenerator.FreeTypeFontParameter parameter =
         new FreeTypeFontGenerator.FreeTypeFontParameter();
     parameter.size = 50; // font size
