@@ -1,8 +1,12 @@
 package edu.cornell.jade.seasthethrone;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import edu.cornell.jade.seasthethrone.render.GameCanvas;
 import edu.cornell.jade.seasthethrone.util.ScreenListener;
 
@@ -22,11 +26,11 @@ public class LoadScreen implements Screen {
 
     private int timer;
 
-    /** Scaling factor for when the screen changes resolution. */
-    private float scale;
-
     /** Background texture for start-up */
     private Texture background;
+
+    /** Font for display text */
+    private BitmapFont textFont;
 
     /** Default budget for asset loader (do nothing but load 60 fps) */
     private static int DEFAULT_BUDGET = 100;
@@ -35,6 +39,15 @@ public class LoadScreen implements Screen {
         this.canvas = canvas;
         budget = millis;
         timer = 0;
+
+        /** LOADING IN FONT, might be better to have an AssetDirectory later */
+        FreeTypeFontGenerator generator =
+                new FreeTypeFontGenerator(Gdx.files.internal("Alagard.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter =
+                new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 100; // font size
+        textFont = generator.generateFont(parameter);
+
         this.background = new Texture("levels/arenamaprough.png");
     }
 
@@ -58,8 +71,10 @@ public class LoadScreen implements Screen {
 
     private void draw() {
         canvas.begin();
-        canvas.draw(background, Color.WHITE, 0, 0,
+        canvas.draw(background, Color.BLACK, 0, 0,
                 0, 0, 0, 4f, 4f);
+
+        canvas.drawTextCentered("Loading...", textFont, 0);
         canvas.end();
     }
 
@@ -101,11 +116,6 @@ public class LoadScreen implements Screen {
     public void setScreenListener(ScreenListener listener) {
         this.listener = listener;
     }
-
-    /**
-     * Sets the scale for this mode
-     */
-    public void setScale(float scale) { this.scale = scale; }
 
     @Override
     public void show() {

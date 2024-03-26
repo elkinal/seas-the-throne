@@ -18,7 +18,7 @@ public class GDXRoot extends Game implements ScreenListener {
     image = new Texture("libgdx.png");
 
     controller = new GameplayController();
-    loading = new LoadScreen(controller.renderEngine.getGameCanvas(), 400);
+    loading = new LoadScreen(controller.renderEngine.getGameCanvas(), 200);
     loading.setScreenListener(this);
     loading.setScale(controller.WORLD_SCALE);
 
