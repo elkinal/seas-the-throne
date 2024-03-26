@@ -6,10 +6,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import edu.cornell.jade.seasthethrone.gamemodel.*;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
-import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerBodyModel;
-import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
-import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerShadowModel;
-import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerSpearModel;
+import edu.cornell.jade.seasthethrone.gamemodel.player.*;
 import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.util.PooledList;
 import java.util.Iterator;
@@ -34,11 +31,10 @@ public class PhysicsEngine implements ContactListener {
   /** To keep track of the continuous player-boss collision */
   private Optional<Contact> playerBossCollision;
 
-  public PhysicsEngine(Rectangle bounds, World world, PlayerModel player) {
+  public PhysicsEngine(Rectangle bounds, World world) {
     this.world = world;
     this.bounds = new Rectangle(bounds);
     world.setContactListener(this);
-    addObject(player);
     playerBossCollision = Optional.empty();
   }
 
@@ -66,15 +62,11 @@ public class PhysicsEngine implements ContactListener {
    * @param speed speed of bullet
    */
   public void spawnBullet(Vector2 pos, Vector2 vel, float speed, boolean shotByPlayer) {
-    BulletModel bullet = new BulletModel(pos.x, pos.y, 0.5f);
+    BulletModel bullet = shotByPlayer ? new PlayerBulletModel(pos.x, pos.y, 0.5f) :
+            new BulletModel(pos.x, pos.y, 0.5f);
     bullet.setVX(speed * vel.x);
     bullet.setVY(speed * vel.y);
-    if (shotByPlayer){
-      CollisionMask.setCategoryMaskBits(bullet, true);
-    }
-
     addObject(bullet);
-    bullet.createFixtures();
   }
 
   /**
@@ -210,9 +202,11 @@ public class PhysicsEngine implements ContactListener {
         handleCollision((PlayerBodyModel) bd1, (BossModel) bd2, contact);
       } else if (bd2 instanceof PlayerBodyModel && bd1 instanceof BossModel) {
         handleCollision((PlayerBodyModel) bd2, (BossModel) bd1, contact);
+      } else if (bd1 instanceof PlayerBulletModel && bd2 instanceof BossModel) {
+        handleCollision((PlayerBulletModel) bd1, (BossModel) bd2);
+      } else if (bd2 instanceof PlayerBulletModel && bd1 instanceof BossModel) {
+        handleCollision((PlayerBulletModel) bd2, (BossModel) bd1);
       }
-      else if (bd1 instanceof PlayerShadowModel && bd2 instanceof BulletModel){}
-      else if (bd2 instanceof PlayerShadowModel && bd1 instanceof BulletModel){}
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -279,7 +273,10 @@ public class PhysicsEngine implements ContactListener {
     }
   }
 
-  public void handleCollision( ObstacleModel obs, BulletModel b) {
+  /** Handle collision between player bullet and boss */
+  public void handleCollision(PlayerBulletModel pb, BossModel b) {
+    b.decrementHealth(pb.getDamage());
+    pb.markRemoved(true);
   }
 
   @Override

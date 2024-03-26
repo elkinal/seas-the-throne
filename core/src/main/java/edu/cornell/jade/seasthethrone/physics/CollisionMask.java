@@ -4,6 +4,7 @@ import com.badlogic.gdx.physics.box2d.Filter;
 import edu.cornell.jade.seasthethrone.gamemodel.*;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerBodyModel;
+import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerBulletModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerShadowModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerSpearModel;
 import edu.cornell.jade.seasthethrone.model.Model;
@@ -25,15 +26,12 @@ public class CollisionMask {
     /** Category bitmask for enemy bullet */
     private static final short CATEGORY_ENEMY_BULLET = 0x0008;
 
-    /** Category bitmask for player bullet */
-    private static final short CATEGORY_PLAYER_BULLET = 0x0010;
-
     /** Category bitmask for boss */
-    private static final short CATEGORY_BOSS = 0x0020;
+    private static final short CATEGORY_BOSS = 0x0010;
 
 
     /** Set the category and mask bits for a given model */
-    public static void setCategoryMaskBits(Model model, boolean shotByPlayer){
+    public static void setCategoryMaskBits(Model model){
         // If player
         if (model instanceof PlayerBodyModel || model instanceof PlayerSpearModel){
             model.setCategoryBits(CATEGORY_PLAYER);
@@ -45,8 +43,8 @@ public class CollisionMask {
             model.setMaskBits(CATEGORY_OBSTACLE);
         }
         // If player bullet
-        else if (model instanceof BulletModel && shotByPlayer) {
-            model.setCategoryBits(CATEGORY_PLAYER_BULLET);
+        else if (model instanceof PlayerBulletModel) {
+            model.setCategoryBits(CATEGORY_PLAYER);
             model.setMaskBits(CATEGORY_BOSS);
         }
         // If enemy bullet
@@ -57,12 +55,7 @@ public class CollisionMask {
         // If boss
         else if (model instanceof BossModel) {
             model.setCategoryBits(CATEGORY_BOSS);
-            model.setMaskBits((short) (CATEGORY_PLAYER | CATEGORY_PLAYER_BULLET));
+            model.setMaskBits( CATEGORY_PLAYER );
         }
-    }
-
-    /** Set the category and mask bits for a given model */
-    public static void setCategoryMaskBits(Model model){
-        setCategoryMaskBits(model, false);
     }
 }

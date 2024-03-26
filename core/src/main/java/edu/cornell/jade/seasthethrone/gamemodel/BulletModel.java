@@ -37,10 +37,12 @@ public class BulletModel extends SimpleModel implements FishRenderable {
   /** Amount of knockback force applied to player on collision */
   private float knockbackForce;
 
+  /** Amount of damage the player bullet inflicts (on bosses) */
+  private int damage;
+
   /**
    * {@link BulletModel} constructor using an x and y coordinate & radius. NOTE: as of now, you must
-   * call activatePhysics then createFixtures after constructing the BulletModel for it to be
-   * properly created.
+   * call activatePhysics after constructing the BulletModel for it to be properly created.
    *
    * @param x The x-position for this bullet in world coordinates
    * @param y The y-position for this bullet in world coordinates
@@ -54,8 +56,9 @@ public class BulletModel extends SimpleModel implements FishRenderable {
     setName("bullet");
     faceDirection = Direction.DOWN;
     filmStrip = new FilmStrip(FISH_TEXTURE, 1, 1);
+    damage = 5;
 
-    setBodyType(BodyDef.BodyType.KinematicBody);
+    setBodyType(BodyDef.BodyType.DynamicBody);
   }
 
   /** Returns knockback force to apply to player on collision */
@@ -63,10 +66,12 @@ public class BulletModel extends SimpleModel implements FishRenderable {
     return knockbackForce;
   }
 
+  /** Returns amount of damage to inflict (on bosses) */
+  public int getDamage() { return damage; }
+
   /**
    * {@link BulletModel} constructor using no arguments for compatability with pooling. NOTE: as of now, you must
-   * call activatePhysics then createFixtures after constructing the BulletModel for it to be
-   * properly created.
+   * call activatePhysics after constructing the BulletModel for it to be properly created.
    */
   public BulletModel() {
     super(0, 0);
