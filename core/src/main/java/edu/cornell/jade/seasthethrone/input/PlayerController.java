@@ -39,6 +39,9 @@ public class PlayerController implements Controllable {
   /** If shooting pressed in since last update */
   boolean shootingPressed;
 
+  /** If interact pressed in since last update */
+  boolean interactPressed;
+
   /** The vector direction of the player for dashing
    *  NOTE: this vector will always be normalized, and nonzero */
   Vector2 dashDirection;
@@ -79,6 +82,10 @@ public class PlayerController implements Controllable {
   public void pressSecondary() {
     shootingPressed = true;
   }
+
+  public void pressInteract() {interactPressed = true;}
+
+  public boolean isInteractPressed() { return interactPressed; }
 
   /**
    * Move in given direction based on offset

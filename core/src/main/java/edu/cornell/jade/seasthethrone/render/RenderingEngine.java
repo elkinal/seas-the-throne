@@ -61,10 +61,7 @@ public class RenderingEngine {
    * @param r The renderable to be added
    */
   public void addRenderable(Renderable r) {
-    renderables.add(r);
-
-
-
+    if (r != null) { renderables.add(r); }
   }
 
   public void setBackground(BackgroundImage bg) { BACKGROUND = bg;}

@@ -135,6 +135,8 @@ public class Level {
 
     private void parseBackgroundLayer(HashMap<String, Object> bgLayer) {
         Array<HashMap<String, Object>> properties = getArrayField(bgLayer, "properties");
+        if (properties == null) {return;}
+
         int width = Integer.parseInt((String) getProperty(properties, "width"));
         int height = Integer.parseInt((String) getProperty(properties, "height"));
         TextureRegion texture = new TextureRegion(new Texture(getStringField(bgLayer, "image")));
@@ -160,6 +162,8 @@ public class Level {
      * @param playerLayer the JSON Tiled player layer
      * */
     private void parsePlayerLayer(HashMap<String, Object> playerLayer) {
+        if (playerLayer.isEmpty()) {return;}
+
         HashMap<String, Object> playerWrapper = ((Array<HashMap<String, Object>>) playerLayer.get("objects")).get(0);
 
         float x = getFloatField(playerWrapper, "x");
@@ -175,6 +179,8 @@ public class Level {
      * @param tileLayer the JSON Tiled tile layer
      * */
     private void parseTileLayer(HashMap<String, Object> tileLayer) {
+        if (tileLayer.isEmpty()) {return;}
+
         Array<String> tileList = (Array<String>) tileLayer.get("data");
 
         for (int row = 0; row < TILED_WORLD_HEIGHT; row++) {
@@ -202,6 +208,8 @@ public class Level {
      * @param bossLayer JSON object layer containing bosses
      * */
     private void parseBossLayer(HashMap<String, Object> bossLayer) {
+        if (bossLayer.isEmpty()) {return;}
+
         Array<HashMap<String, Object>> bossWrapperList = (Array<HashMap<String, Object>>) bossLayer.get("objects");
 
         for (HashMap<String, Object> bossWrapper : bossWrapperList) {
@@ -217,6 +225,8 @@ public class Level {
      * @param wallLayer JSON object layer containing walls
      * */
     private void parseWallLayer(HashMap<String, Object> wallLayer) {
+        if (wallLayer.isEmpty()) {return;}
+
         Array<HashMap<String, Object>> wallWrapperList = getArrayField(wallLayer, "objects");
 
         for (int i = 0; i < wallWrapperList.size; i++) {
@@ -247,6 +257,8 @@ public class Level {
      * @param obstacleLayer JSON object layer containing obstacles
      * */
     private void parseObstacleLayer(HashMap<String, Object> obstacleLayer) {
+        if (obstacleLayer.isEmpty()) {return;}
+
         Array<HashMap<Object, String>> obsWrapperList = (Array<HashMap<Object, String>>) obstacleLayer.get("objects");
 
         for (HashMap<Object, String> obsWrapper : obsWrapperList) {

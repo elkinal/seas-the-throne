@@ -189,6 +189,11 @@ public class InputController {
     if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
       obj.pressSecondary();
     }
+    if (Gdx.input.isKeyPressed(Input.Keys.E)) {
+      obj.pressInteract();
+    }
+
+
     obj.moveHorizontal(hoff);
     obj.moveVertical(voff);
   }

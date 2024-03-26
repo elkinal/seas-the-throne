@@ -70,9 +70,9 @@ public class LoadScreen implements Screen {
 
 
     private void draw() {
-        canvas.begin();
+        canvas.begin();;
         canvas.draw(background, Color.BLACK, 0, 0,
-                0, 0, 0, 4f, 4f);
+                0, 0, 0, 10f, 10f);
 
         canvas.drawTextCentered("Loading...", textFont, 0);
         canvas.end();

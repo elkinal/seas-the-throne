@@ -21,6 +21,7 @@ legacy/spritebox_up.png
 levels/arenamaprough.png
 levels/boss-room-tileset.png
 levels/demonstatuepink.png
+levels/hub_world.json
 levels/shallowmap1.png
 levels/shallow_map.json
 levels/test1.json
