@@ -141,11 +141,15 @@ public class Level {
 
 
     private void parseBackgroundLayer(HashMap<String, Object> bgLayer) {
-        Array<HashMap<String, Object>> properties = JsonHandler.getArray(bgLayer, "properties");
-        if (properties == null) {return;}
+        int width;
+        try {
+        width = Integer.parseInt((String) JsonHandler.getProperty(bgLayer, "width"));
+        }
+        catch (Error e) {
+            return;
+        }
 
-        int width = Integer.parseInt((String) JsonHandler.getProperty(properties, "width"));
-        int height = Integer.parseInt((String) JsonHandler.getProperty(properties, "height"));
+        int height = Integer.parseInt((String) JsonHandler.getProperty(bgLayer, "height"));
         TextureRegion texture = new TextureRegion(new Texture(JsonHandler.getString(bgLayer, "image")));
 
         float x,y;
@@ -308,6 +312,7 @@ public class Level {
                 portal = new LevelObject(pos.x, pos.y, dims.x, dims.y);
             }
             portal.setType(LevelObject.LevelObjType.PORTAL);
+            portal.setTarget((String)JsonHandler.getProperty(portWrapper,"target"));
             portals.add(portal);
         }
     }

@@ -284,7 +284,13 @@
                 {
                  "height":20,
                  "id":9,
-                 "name":"levels/portal.png",
+                 "name":"levels\/portal.png",
+                 "properties":[
+                        {
+                         "name":"target",
+                         "type":"string",
+                         "value":"levels\/shallow_map.json"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,

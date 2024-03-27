@@ -201,7 +201,7 @@ public class GameplayController implements Screen {
 
     // Load portals
     for (LevelObject portal : level.getPortals()) {
-      PortalModel model = new PortalModel(portal.x, portal.y, portal.width, portal.height, portal.texture);
+      PortalModel model = new PortalModel(portal);
       renderEngine.addRenderable(model);
       physicsEngine.addObject(model);
     }

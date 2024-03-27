@@ -7,7 +7,6 @@ import com.badlogic.gdx.utils.Array;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
-import org.w3c.dom.Text;
 
 public class LevelObject implements Renderable {
     public enum LevelObjType {
@@ -21,12 +20,13 @@ public class LevelObject implements Renderable {
     public float width;
     public float height;
     public TextureRegion texture;
+    public String target;
 
     /** The type of object in the level this container represents */
     public LevelObjType type;
 
     /** Vertices for the polygonModel if this is representing a wall */
-    public Array<Float> vertecies = new Array<>();
+    public Array<Float> vertices = new Array<>();
 
     /** Default to transparent texture if none is specified */
     private final TextureRegion DEFAULT_TEXTURE = new TextureRegion(new Texture("empty.png"));
@@ -45,9 +45,9 @@ public class LevelObject implements Renderable {
         this.texture = texture;
     }
 
-    public LevelObject(float x, float y, Array<Float> vertecies) {
+    public LevelObject(float x, float y, Array<Float> vertices) {
         this(x,y);
-        this.vertecies = vertecies;
+        this.vertices = vertices;
     }
 
     public LevelObject(float x, float y, float width, float height) {
@@ -62,6 +62,8 @@ public class LevelObject implements Renderable {
     }
 
     public void setType(LevelObjType type) { this.type = type; }
+
+    public void setTarget(String target) { this.target = target; }
 
     @Override
     public Vector2 getPosition() {
@@ -96,14 +98,14 @@ public class LevelObject implements Renderable {
     }
 
     public void addVertex(float vertex) {
-        vertecies.add(vertex);
+        vertices.add(vertex);
     }
 
     /** Converts the array of vertices to a list, used to initialize a polygonModel */
     public float[] toList() {
-        float[] list = new float[vertecies.size];
-        for (int i = 0; i < vertecies.size; i++) {
-            list[i] = vertecies.get(i);
+        float[] list = new float[vertices.size];
+        for (int i = 0; i < vertices.size; i++) {
+            list[i] = vertices.get(i);
         }
         return list;
     }

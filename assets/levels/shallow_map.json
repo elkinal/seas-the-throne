@@ -1701,12 +1701,18 @@
                  "height":20,
                  "id":137,
                  "name":"levels\/portal.png",
+                 "properties":[
+                        {
+                         "name":"target",
+                         "type":"string",
+                         "value":"levels\/hub_world.json"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":20,
-                 "x":860,
-                 "y":1180
+                 "x":940,
+                 "y":1260
                 }],
          "opacity":1,
          "type":"objectgroup",

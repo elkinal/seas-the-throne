@@ -2,6 +2,7 @@ package edu.cornell.jade.seasthethrone.gamemodel;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import edu.cornell.jade.seasthethrone.level.LevelObject;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.model.SimpleModel;
 import edu.cornell.jade.seasthethrone.render.Renderable;
@@ -15,18 +16,26 @@ public class PortalModel extends BoxModel implements Renderable {
     /** Portal texture */
     private TextureRegion texture;
 
+    /** The JSON of the room/level this portal leads to */
+    private String target;
+
     /** Default to transparent texture if none is specified */
     private final TextureRegion DEFUALT_TEXTURE = new TextureRegion(new Texture("empty.png"));
 
-    public PortalModel(float x, float y, float width, float height) {
+    public PortalModel(float x, float y, float width, float height, String target) {
         super(x, y, width, height);
         setSensor(true);
+        this.target = target;
         this.texture = DEFUALT_TEXTURE;
     }
 
-    public PortalModel(float x, float y, float width, float height, TextureRegion texture) {
-        this(x, y, width, height);
+    public PortalModel(float x, float y, float width, float height, String target, TextureRegion texture) {
+        this(x, y, width, height, target);
         this.texture = texture;
+    }
+
+    public PortalModel(LevelObject portal) {
+        this(portal.x, portal.y, portal.width, portal.height, portal.target, portal.texture);
     }
 
     @Override
