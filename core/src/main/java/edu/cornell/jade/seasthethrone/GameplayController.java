@@ -178,11 +178,12 @@ public class GameplayController implements Screen {
 
     inputController.add(playerController);
 
+
     // Load pause menu dashboard
     pauseMenu = new PauseMenu(0, 0, 1, 1, -viewport.getScreenWidth()/2, viewport.getScreenHeight()/2);
 
-    uiController = new UIController(viewport);
-    uiController.setPauseMenu(pauseMenu);
+    uiController = new UIController(pauseMenu);
+    inputController.add(uiController);
 
     pauseMenu.updatePosition(viewport);
     renderEngine.addRenderable(pauseMenu);
@@ -202,7 +203,7 @@ public class GameplayController implements Screen {
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     renderEngine.drawRenderables();
 
-    //TODO: implement this
+    //TODO: paused issue
     pauseMenu.updatePosition(viewport);
     paused = uiController.getPauseMenu().isPaused();
 //    pauseMenu.setVisible(paused);
@@ -280,20 +281,11 @@ public class GameplayController implements Screen {
     // }
   }
 
-  public PauseMenu getPauseMenu() {
-    return pauseMenu;
-  }
-
   public void pause() {
     paused = true;
   }
 
-  public void unPause() {
-    paused = false;
-  }
-
-  public void resume() {
-  }
+  public void resume() {}
 
   public void hide() {
     active = false;
@@ -304,10 +296,7 @@ public class GameplayController implements Screen {
       physicsEngine.dispose();
   }
 
-  /** Returns true if the game is paused */
-  public boolean isPaused() {
-    return paused;
-  }
+
 
   /**
    * Compares Models based on height in the world

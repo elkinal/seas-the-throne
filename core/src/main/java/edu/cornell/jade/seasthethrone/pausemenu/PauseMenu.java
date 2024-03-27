@@ -11,7 +11,7 @@ import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
 public class PauseMenu extends BoxModel implements Renderable {
 
-    private boolean visible;
+    private boolean paused;
 
     // Defines the location
     private final float offsetX;
@@ -50,7 +50,6 @@ public class PauseMenu extends BoxModel implements Renderable {
 
         // Setting parameters
         setActive(false);
-        visible = true;
 
         this.offsetX = offsetX;
         this.offsetY = offsetY;
@@ -79,37 +78,32 @@ public class PauseMenu extends BoxModel implements Renderable {
 
     @Override
     public void draw(RenderingEngine renderer) {
-        if (visible) {
+        if (paused) {
             renderer.draw(pauseButtonTextureRegions[currentTexture], getX(), getY());
         }
     }
 
     /** Returns true if the menu is paused */
     public boolean isPaused() {
-        return visible;
+        return paused;
     }
 
-    /** Pauses the game and shows the pause menu */
+    /** Displays the menu when the game is paused */
     public void setPaused(boolean paused) {
-        this.visible = paused;
-    }
-
-    /** Sets the visibility of the button */
-    public void setVisible(boolean visible) {
-        this.visible = visible;
-        if (!visible)
+        this.paused = paused;
+        if (!paused)
             currentTexture = MenuSelection.RESUME.label;
     }
 
     /** Switches to a lower menu item */
     public void cycleDown() {
-        if (visible && currentTexture < 3)
+        if (!paused && currentTexture < 3)
             currentTexture++;
     }
 
     /** Switches to a higher menu item */
     public void cycleUp() {
-        if (visible && currentTexture > 0)
+        if (!paused && currentTexture > 0)
             currentTexture--;
     }
 

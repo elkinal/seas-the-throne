@@ -18,8 +18,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import edu.cornell.jade.seasthethrone.GameplayController;
-import edu.cornell.jade.seasthethrone.pausemenu.PauseMenu;
+import edu.cornell.jade.seasthethrone.pausemenu.UIController;
 import edu.cornell.jade.seasthethrone.util.Controllers;
 import edu.cornell.jade.seasthethrone.util.XBoxController;
 import java.util.*;
@@ -31,6 +30,9 @@ public class InputController {
 
   /** List of all the player input controllers */
   private ArrayList<Controllable> players;
+
+  /** List of all the UI input controllers */
+  private ArrayList<Controllable> overlays;
 
   /** XBox Controller support */
   private XBoxController xbox;
@@ -57,9 +59,12 @@ public class InputController {
    *
    * @param p the PlayerController to be added
    */
-  public void add(PlayerController p) {
-    if (!players.contains(p)) {
+  public void add(Controllable p) {
+    if (!players.contains(p) && p instanceof PlayerController) {
       players.add(p);
+    }
+    if (!overlays.contains(p) && p instanceof UIController) {
+      overlays.add(p);
     }
   }
 
@@ -85,6 +90,7 @@ public class InputController {
    */
   public InputController(Viewport screenToWorld) {
     this.players = new ArrayList<>();
+    this.overlays = new ArrayList<>();
     this.viewport = screenToWorld;
     this.dashCoordCache = new Vector2();
 
@@ -99,19 +105,36 @@ public class InputController {
    * Updates the state of this object (position) both vertically and horizontally.
    */
   public void update() {
+    // Reading inputs for players
     for (Controllable p : players) {
-      readInput(p);
+      readInput((PlayerController) p);
+    }
+
+    // Reading inputs for menu items
+    for (Controllable o : overlays) {
+      readInput((UIController) o);
     }
   }
 
   /** Reads the input for the player and converts the result into game logic. */
-  public void readInput(Controllable p) {
+  public void readInput(PlayerController p) {
     // Check to see if a GamePad is connected
 
     if (xbox != null && xbox.isConnected()) {
       readController(p);
     } else {
       readMouse(p);
+      readKeyboard(p);
+    }
+  }
+
+  /** Reads the input for the UI and converts the result into game logic. */
+  public void readInput(UIController p) {
+    // Check to see if a GamePad is connected
+
+    if (xbox != null && xbox.isConnected()) {
+      readController(p);
+    } else {
       readKeyboard(p);
     }
   }
@@ -188,6 +211,11 @@ public class InputController {
     if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
       obj.pressSecondary();
     }
+    if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+      System.out.println(obj.getClass());
+      obj.switchPaused();
+    }
+
     obj.moveHorizontal(hoff);
     obj.moveVertical(voff);
   }

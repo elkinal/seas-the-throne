@@ -31,8 +31,16 @@ public interface Controllable {
   /** Returns the current location of the controllable object */
   default public Vector2 getLocation(){ return null; }
 
-  /** Pauses the game*/
+
+
+
+  /** Returns the PauseMenu object */
   default public PauseMenu getPauseMenu() { return null; }
+
+  /** Changes the game state from paused - unpaused and vice versa */
+  default public void switchPaused() {
+
+  }
 
   /** Scrolls up in the pause menu */
   default public void cycleUp() {}
