@@ -1,9 +1,9 @@
 package edu.cornell.jade.seasthethrone.input;
 
 import java.util.Random;
-import com.badlogic.gdx.math.Vector;
+
 import com.badlogic.gdx.math.Vector2;
-import edu.cornell.jade.seasthethrone.gamemodel.BossModel;
+import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 
 public class BossController implements Controllable {
     /** The boss this controller controls */
@@ -37,6 +37,10 @@ public class BossController implements Controllable {
         speed = 2.5f;
         ticks = 0;
         currStateDuration = 0;
+    }
+
+    public boolean isAlive() {
+        return boss.isActive();
     }
 
     /** Called every tick. Checks to update state every 10 ticks */
