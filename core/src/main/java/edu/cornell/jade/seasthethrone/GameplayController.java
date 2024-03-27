@@ -235,7 +235,7 @@ public class GameplayController implements Screen {
 
     if (!playerController.isAlive()) {
       gameState = GameState.OVER;
-    } else if (!bossController.isAlive()) {
+    } else if (this.bossController != null && !bossController.isAlive()) {
       gameState = GameState.WIN;
     }
 
