@@ -15,7 +15,6 @@ public class JsonHandler {
      * Converts a JSON file to a HashMap.
      *
      * Currently all values are Objects
-     * TODO: Implement handling for specific value types to prevent casting later
      *
      * @param fileName name of the JSON file in assets (should be like levels/filename.json).
      *
@@ -68,5 +67,86 @@ public class JsonHandler {
         } else {
             return thisValue.asString();
         }
+    }
+
+    /**
+     * Finds the specified field in the specified map and returns its value. Assumes the value is an integer.
+     *
+     * @param map the JSON map containing the desired field
+     * @param fieldName the name of the field in the map
+     *
+     * @return the integer value stored at the given field
+     *
+     * @throws Exception if no field with fieldName is found in the map
+     * */
+    public static Integer getInt(HashMap<String, Object> map, String fieldName) {
+        try {
+            return Integer.parseInt((String) map.get(fieldName));
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Finds the specified field in the specified map and returns its value. Assumes the value is a float.
+     *
+     * @param map the JSON map containing the desired field
+     * @param fieldName the name of the field in the map
+     *
+     * @return the integer value stored at the given field
+     *
+     * @throws Exception if no field with fieldName is found in the map
+     * */
+    public static float getFloat(HashMap<String, Object> map, String fieldName) {
+        try {
+            return Float.parseFloat((String) map.get(fieldName));
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Finds the specified field in the specified map and returns its value. Assumes the value is a string.
+     *
+     * @param map the JSON map containing the desired field
+     * @param fieldName the name of the field in the map
+     *
+     * @return the integer value stored at the given field
+     *
+     * @throws Exception if no field with fieldName is found in the map
+     * */
+    public static String getString(HashMap<String, Object> map, String fieldName) {
+        try {
+            return (String) map.get(fieldName);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    /**
+     * Finds the specified field in the specified map and returns its value. Assumes the value is an array.
+     *
+     * @param map the JSON map containing the desired field
+     * @param fieldName the name of the field in the map
+     *
+     * @return the integer value stored at the given field
+     *
+     * @throws Exception if no field with fieldName is found in the map
+     * */
+    public static Array<HashMap<String, Object>> getArray(HashMap<String, Object> map, String fieldName) {
+        try {
+            return (Array<HashMap<String, Object>>) map.get(fieldName);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public static Object getProperty(Array<HashMap<String, Object>> properties, String propName) {
+        for (HashMap<String, Object> prop : properties) {
+            if (( (String)prop.get("name") ).equals(propName)) {
+                return prop.get("value");
+            }
+        }
+        throw new Error("No layer with name " + propName);
     }
 }
