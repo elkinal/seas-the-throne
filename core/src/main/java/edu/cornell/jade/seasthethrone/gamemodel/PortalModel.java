@@ -15,7 +15,7 @@ public class PortalModel extends BoxModel implements Renderable {
     /** Portal texture */
     private TextureRegion texture;
 
-
+    /** Default to transparent texture if none is specified */
     private final TextureRegion DEFUALT_TEXTURE = new TextureRegion(new Texture("empty.png"));
 
     public PortalModel(float x, float y, float width, float height) {

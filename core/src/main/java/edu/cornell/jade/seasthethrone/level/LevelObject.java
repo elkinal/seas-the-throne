@@ -22,8 +22,13 @@ public class LevelObject implements Renderable {
     public float height;
     public TextureRegion texture;
 
+    /** The type of object in the level this container represents */
     public LevelObjType type;
+
+    /** Vertices for the polygonModel if this is representing a wall */
     public Array<Float> vertecies = new Array<>();
+
+    /** Default to transparent texture if none is specified */
     private final TextureRegion DEFAULT_TEXTURE = new TextureRegion(new Texture("empty.png"));
 
     public Vector2 pos;
@@ -94,6 +99,7 @@ public class LevelObject implements Renderable {
         vertecies.add(vertex);
     }
 
+    /** Converts the array of vertices to a list, used to initialize a polygonModel */
     public float[] toList() {
         float[] list = new float[vertecies.size];
         for (int i = 0; i < vertecies.size; i++) {

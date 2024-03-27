@@ -282,6 +282,11 @@ public class Level {
         }
     }
 
+    /**
+     * Extracts portal objects from JSON portals layer
+     *
+     * @param portalLayer JSON object layer containing portals
+     * */
     private void parsePortalLayer(HashMap<String, Object> portalLayer) {
         if (portalLayer.isEmpty()) {return;}
 
