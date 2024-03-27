@@ -11,6 +11,7 @@ bullet/yellowfish_south.png
 bullet/yellowfish_SW.png
 bullet/yellowfish_west.png
 EBGaramond.ttf
+empty.png
 legacy/bullet_test.png
 legacy/spear_left_right.png
 legacy/spear_up_down.png

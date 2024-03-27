@@ -72,16 +72,16 @@ public class Level {
         // Load JSON to map
         HashMap<String, Object> levelMap = JsonHandler.jsonToMap(fileName);
         // Load in level constants
-        TILE_SIZE = getIntField(levelMap, "tilewidth");
-        TILED_WORLD_HEIGHT = getIntField(levelMap, "height");
-        TILED_WORLD_WIDTH = getIntField(levelMap, "width");
+        TILE_SIZE = JsonHandler.getInt(levelMap, "tilewidth");
+        TILED_WORLD_HEIGHT = JsonHandler.getInt(levelMap, "height");
+        TILED_WORLD_WIDTH = JsonHandler.getInt(levelMap, "width");
 
         // Create tileSets
         Array<HashMap<String, Object>> tileSetsList = (Array<HashMap<String, Object>>) levelMap.get("tilesets");
         for (HashMap<String, Object> tileSet : tileSetsList) {
             // For each tileSet
             Texture thisTexture = new Texture((String) tileSet.get("image"));
-            int thisGid = getIntField(tileSet, "firstgid");
+            int thisGid = JsonHandler.getInt(tileSet, "firstgid");
             firstGids.add(thisGid);
             // Split this tileSet up into textures
              tileSets.add(new TextureRegion(thisTexture).split(TILE_SIZE, TILE_SIZE));
@@ -134,25 +134,23 @@ public class Level {
 
 
     private void parseBackgroundLayer(HashMap<String, Object> bgLayer) {
-        Array<HashMap<String, Object>> properties = getArrayField(bgLayer, "properties");
+        Array<HashMap<String, Object>> properties = JsonHandler.getArray(bgLayer, "properties");
         if (properties == null) {return;}
 
-        int width = Integer.parseInt((String) getProperty(properties, "width"));
-        int height = Integer.parseInt((String) getProperty(properties, "height"));
-        TextureRegion texture = new TextureRegion(new Texture(getStringField(bgLayer, "image")));
+        int width = Integer.parseInt((String) JsonHandler.getProperty(properties, "width"));
+        int height = Integer.parseInt((String) JsonHandler.getProperty(properties, "height"));
+        TextureRegion texture = new TextureRegion(new Texture(JsonHandler.getString(bgLayer, "image")));
 
         float x,y;
         if ((String)bgLayer.get("offsetx") == null) {
             x = width/2f;
             y = height/2f;
         } else {
-            x = getFloatField(bgLayer, "offsetx") + width/2f;
-            y = getFloatField(bgLayer, "offsety") + height/2f;
+            x = JsonHandler.getFloat(bgLayer, "offsetx") + width/2f;
+            y = JsonHandler.getFloat(bgLayer, "offsety") + height/2f;
         }
 
         Vector2 pos = tiledToWorldCoords(new Vector2(x,y));
-
-        System.out.println("bg: "+pos+" "+width+" "+height);
         background = new BackgroundImage(pos, (int)(width*WORLD_SCALE), (int)(height*WORLD_SCALE), texture);
     }
 
@@ -166,8 +164,8 @@ public class Level {
 
         HashMap<String, Object> playerWrapper = ((Array<HashMap<String, Object>>) playerLayer.get("objects")).get(0);
 
-        float x = getFloatField(playerWrapper, "x");
-        float y = getFloatField(playerWrapper, "y");
+        float x = JsonHandler.getFloat(playerWrapper, "x");
+        float y = JsonHandler.getFloat(playerWrapper, "y");
         Vector2 playerPos = new Vector2(x,y);
 
         playerLoc = tiledToWorldCoords(playerPos);
@@ -213,8 +211,8 @@ public class Level {
         Array<HashMap<String, Object>> bossWrapperList = (Array<HashMap<String, Object>>) bossLayer.get("objects");
 
         for (HashMap<String, Object> bossWrapper : bossWrapperList) {
-            float x = Float.parseFloat((String) bossWrapper.get("x"));
-            float y = Float.parseFloat((String) bossWrapper.get("y"));
+            float x = JsonHandler.getFloat(bossWrapper, "x");
+            float y = JsonHandler.getFloat(bossWrapper, "y");
             bosses.add(tiledToWorldCoords(new Vector2(x,y)));
         }
     }
@@ -227,22 +225,22 @@ public class Level {
     private void parseWallLayer(HashMap<String, Object> wallLayer) {
         if (wallLayer.isEmpty()) {return;}
 
-        Array<HashMap<String, Object>> wallWrapperList = getArrayField(wallLayer, "objects");
+        Array<HashMap<String, Object>> wallWrapperList = JsonHandler.getArray(wallLayer, "objects");
 
         for (int i = 0; i < wallWrapperList.size; i++) {
             HashMap<String, Object> thisWallWrapper = wallWrapperList.get(i);
             Vector2 tiledCoords = new Vector2(
-                    getFloatField(thisWallWrapper, "x"),
-                    getFloatField(thisWallWrapper, "y"));
+                    JsonHandler.getFloat(thisWallWrapper, "x"),
+                    JsonHandler.getFloat(thisWallWrapper, "y"));
 
             Vector2 worldCoords = tiledToWorldCoords(tiledCoords);
             Wall thisWall = new Wall(worldCoords.x, worldCoords.y);
 
-            Array<HashMap<String, Object>> vertexList = getArrayField(thisWallWrapper,"polygon");
+            Array<HashMap<String, Object>> vertexList = JsonHandler.getArray(thisWallWrapper,"polygon");
 
             for (HashMap<String, Object> vertex : vertexList) {
-                float x = WORLD_SCALE * getFloatField(vertex, "x");
-                float y = -WORLD_SCALE * getFloatField(vertex, "y");
+                float x = WORLD_SCALE * JsonHandler.getFloat(vertex, "x");
+                float y = -WORLD_SCALE * JsonHandler.getFloat(vertex, "y");
 
                 thisWall.addVertex(x);
                 thisWall.addVertex(y);
@@ -266,11 +264,14 @@ public class Level {
             float y = Float.parseFloat((String) obsWrapper.get("y"));
             float width = Float.parseFloat((String) obsWrapper.get("width"));
             float height = Float.parseFloat((String) obsWrapper.get("height"));
-            TextureRegion texture = new TextureRegion(new Texture(obsWrapper.get("name")));
-
             Vector2 pos = tiledToWorldCoords(new Vector2(x + width/2f, y + height/2f));
             Vector2 dims = (new Vector2(width * WORLD_SCALE, height * WORLD_SCALE));
-            obstacles.add(new Obstacle(pos.x, pos.y, dims.x, dims.y, texture));
+
+            if (obsWrapper.get("name").length() > 0) {
+                TextureRegion texture = new TextureRegion(new Texture(obsWrapper.get("name")));
+                obstacles.add(new Obstacle(pos.x, pos.y, dims.x, dims.y, texture));
+            }
+            obstacles.add(new Obstacle(pos.x, pos.y, dims.x, dims.y));
         }
     }
 
@@ -329,86 +330,5 @@ public class Level {
         int y = TILE_SIZE * (index / TILED_WORLD_WIDTH) + TILE_SIZE/2;
         tempPos.set(x,y);
         return tempPos;
-    }
-
-    /**
-     * Finds the specified field in the specified map and returns its value. Assumes the value is an integer.
-     *
-     * @param map the JSON map containing the desired field
-     * @param fieldName the name of the field in the map
-     *
-     * @return the integer value stored at the given field
-     *
-     * @throws Exception if no field with fieldName is found in the map
-     * */
-    public Integer getIntField(HashMap<String, Object> map, String fieldName) {
-        try {
-            return Integer.parseInt((String) map.get(fieldName));
-        } catch (Exception e) {
-            throw e;
-        }
-    }
-
-    /**
-     * Finds the specified field in the specified map and returns its value. Assumes the value is a float.
-     *
-     * @param map the JSON map containing the desired field
-     * @param fieldName the name of the field in the map
-     *
-     * @return the integer value stored at the given field
-     *
-     * @throws Exception if no field with fieldName is found in the map
-     * */
-    public float getFloatField(HashMap<String, Object> map, String fieldName) {
-        try {
-            return Float.parseFloat((String) map.get(fieldName));
-        } catch (Exception e) {
-            throw e;
-        }
-    }
-
-    /**
-     * Finds the specified field in the specified map and returns its value. Assumes the value is a string.
-     *
-     * @param map the JSON map containing the desired field
-     * @param fieldName the name of the field in the map
-     *
-     * @return the integer value stored at the given field
-     *
-     * @throws Exception if no field with fieldName is found in the map
-     * */
-    public String getStringField(HashMap<String, Object> map, String fieldName) {
-        try {
-            return (String) map.get(fieldName);
-        } catch (Exception e) {
-            throw e;
-        }
-    }
-
-    /**
-     * Finds the specified field in the specified map and returns its value. Assumes the value is an array.
-     *
-     * @param map the JSON map containing the desired field
-     * @param fieldName the name of the field in the map
-     *
-     * @return the integer value stored at the given field
-     *
-     * @throws Exception if no field with fieldName is found in the map
-     * */
-    public Array<HashMap<String, Object>> getArrayField(HashMap<String, Object> map, String fieldName) {
-        try {
-            return (Array<HashMap<String, Object>>) map.get(fieldName);
-        } catch (Exception e) {
-            throw e;
-        }
-    }
-
-    public Object getProperty(Array<HashMap<String, Object>> properties, String propName) {
-        for (HashMap<String, Object> prop : properties) {
-            if (( (String)prop.get("name") ).equals(propName)) {
-                return prop.get("value");
-            }
-        }
-        throw new Error("No layer with name " + propName);
     }
 }
