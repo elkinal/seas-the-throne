@@ -19,7 +19,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import edu.cornell.jade.seasthethrone.GameplayController;
-import edu.cornell.jade.seasthethrone.Dashboard.PauseMenu;
+import edu.cornell.jade.seasthethrone.pausemenu.PauseMenu;
 import edu.cornell.jade.seasthethrone.util.Controllers;
 import edu.cornell.jade.seasthethrone.util.XBoxController;
 import java.util.*;
@@ -37,8 +37,6 @@ public class InputController {
 
   /** Whether the reset button was pressed. */
   protected boolean resetPressed;
-
-  protected PauseMenu pauseMenu;
 
   /**
    * Cache vector to return containing the dash coordinates of the previous read
@@ -190,17 +188,6 @@ public class InputController {
     if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
       obj.pressSecondary();
     }
-
-    // Pause menu inputs
-    if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-      GameplayController.paused = !GameplayController.paused;
-    }
-    if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-      pauseMenu.cycleUp();
-    }
-    if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-      pauseMenu.cycleDown();
-    }
     obj.moveHorizontal(hoff);
     obj.moveVertical(voff);
   }
@@ -224,8 +211,4 @@ public class InputController {
     obj.updateDirection(dashCoordCache);
   }
 
-  /** Adds a PauseMenu to handle */
-  public void addPauseMenu(PauseMenu button) {
-    this.pauseMenu = button;
-  }
 }

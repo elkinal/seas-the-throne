@@ -12,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.*;
 
-import edu.cornell.jade.seasthethrone.Dashboard.PauseMenu;
+import edu.cornell.jade.seasthethrone.pausemenu.PauseMenu;
 import edu.cornell.jade.seasthethrone.gamemodel.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.ObstacleModel;
 import edu.cornell.jade.seasthethrone.gamemodel.PlayerModel;
@@ -26,6 +26,7 @@ import edu.cornell.jade.seasthethrone.level.Tile;
 import edu.cornell.jade.seasthethrone.level.Wall;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.model.Model;
+import edu.cornell.jade.seasthethrone.pausemenu.UIController;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
@@ -97,6 +98,7 @@ public class GameplayController implements Screen {
 
   /** Handling the pause menu */
   private Stage stage;
+  private UIController uiController;
   private PauseMenu pauseMenu;
   public static boolean paused = false;
 
@@ -178,9 +180,12 @@ public class GameplayController implements Screen {
 
     // Load pause menu dashboard
     pauseMenu = new PauseMenu(0, 0, 1, 1, -viewport.getScreenWidth()/2, viewport.getScreenHeight()/2);
+
+    uiController = new UIController(viewport);
+    uiController.setPauseMenu(pauseMenu);
+
     pauseMenu.updatePosition(viewport);
     renderEngine.addRenderable(pauseMenu);
-    inputController.addPauseMenu(pauseMenu);
     physicsEngine.addObject(pauseMenu);
 }
 
@@ -189,7 +194,6 @@ public class GameplayController implements Screen {
       update(delta);
     }
     // draw(delta);
-
   }
 
   public void draw(float delta) {
@@ -198,12 +202,10 @@ public class GameplayController implements Screen {
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     renderEngine.drawRenderables();
 
-//    stage.act(delta);
-//    stage.draw();
-
-//    pauseButton.updatePosition(viewport);
+    //TODO: implement this
     pauseMenu.updatePosition(viewport);
-    pauseMenu.setVisible(paused);
+    paused = uiController.getPauseMenu().isPaused();
+//    pauseMenu.setVisible(paused);
 
   }
 

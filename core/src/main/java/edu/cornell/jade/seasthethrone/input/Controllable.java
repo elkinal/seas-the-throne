@@ -9,24 +9,35 @@
 package edu.cornell.jade.seasthethrone.input;
 
 import com.badlogic.gdx.math.Vector2;
+import edu.cornell.jade.seasthethrone.pausemenu.PauseMenu;
 
 public interface Controllable {
 
   /** Updates the horizontal movement of the character. */
-  public void moveHorizontal(float movement);
+  default public void moveHorizontal(float movement) {}
 
   /** Updates the vertical movement of the character. */
-  public void moveVertical(float movement);
+  default public void moveVertical(float movement) {}
 
   /** Updates the primary attack state of the character. */
-  public void pressPrimary();
+  default public void pressPrimary() {}
 
   /** Updates the secondary attack state of the character. */
-  public void pressSecondary();
+  default public void pressSecondary() {}
 
   /** Updates the direction the character is pointing for dash */
-  public void updateDirection(Vector2 mouseDir);
+  default public void updateDirection(Vector2 mouseDir) {}
 
   /** Returns the current location of the controllable object */
-  public Vector2 getLocation();
+  default public Vector2 getLocation(){ return null; }
+
+  /** Pauses the game*/
+  default public PauseMenu getPauseMenu() { return null; }
+
+  /** Scrolls up in the pause menu */
+  default public void cycleUp() {}
+
+  /** Scrolls down in the pause menu */
+  default public void cycleDown() {}
+
 }

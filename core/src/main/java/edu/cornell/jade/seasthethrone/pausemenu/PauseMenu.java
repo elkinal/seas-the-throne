@@ -1,9 +1,7 @@
-package edu.cornell.jade.seasthethrone.Dashboard;
+package edu.cornell.jade.seasthethrone.pausemenu;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
@@ -68,20 +66,10 @@ public class PauseMenu extends BoxModel implements Renderable {
 
     /** Updates the button's position on the game canvas */
     public void updatePosition(Viewport viewport) {
-
-        // Updating the position
-        float newX = Gdx.graphics.getWidth() + offsetX;
+        float newX = viewport.getScreenWidth() + offsetX;
         float newY = offsetY;
-
         Vector2 newLoc = viewport.unproject(new Vector2(newX, newY));
-
-        setX(newLoc.x);
-        setY(newLoc.y);
-
-        // Updating the rectangle
-        float rectangleX = getX() - getWidth() / 2;
-        float rectangleY = getY() - getHeight() / 2;
-
+        setPosition(newLoc);
     }
 
     @Override
@@ -96,40 +84,14 @@ public class PauseMenu extends BoxModel implements Renderable {
         }
     }
 
-    @Override
-    public int getFrameNumber() {
-        return 0;
-    }
-
-    @Override
-    public void setFrameNumber(int frameNumber) {
-
-    }
-
-    @Override
-    public FilmStrip getFilmStrip() {
-        return null;
-    }
-
-    @Override
-    public int getFramesInAnimation() {
-        return 0;
-    }
-
-
-    /** Hides the button */
-    public void show() {
-        visible = true;
-    }
-
-    /** Shows the button */
-    public void hide() {
-        visible = false;
-    }
-
-    /** Returns true if the menu is visible */
-    public boolean isVisible() {
+    /** Returns true if the menu is paused */
+    public boolean isPaused() {
         return visible;
+    }
+
+    /** Pauses the game and shows the pause menu */
+    public void setPaused(boolean paused) {
+        this.visible = paused;
     }
 
     /** Sets the visibility of the button */
@@ -149,5 +111,23 @@ public class PauseMenu extends BoxModel implements Renderable {
     public void cycleUp() {
         if (visible && currentTexture > 0)
             currentTexture--;
+    }
+
+    @Override
+    public int getFrameNumber() {
+        return 0;
+    }
+
+    @Override
+    public void setFrameNumber(int frameNumber) { }
+
+    @Override
+    public FilmStrip getFilmStrip() {
+        return null;
+    }
+
+    @Override
+    public int getFramesInAnimation() {
+        return 0;
     }
 }
