@@ -41,7 +41,6 @@ public interface Controllable {
   default public void switchPaused() {
 
   }
-
   /** Scrolls up in the pause menu */
   default public void cycleUp() {}
 

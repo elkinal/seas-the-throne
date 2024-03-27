@@ -42,7 +42,7 @@ public class PauseMenu extends BoxModel implements Renderable {
     }
 
 
-    /** 1 or more textures may be passed as arguments */
+    /** Constructor for the Pause Menu */
     public PauseMenu(float x, float y, float width, float height, float offsetX, float offsetY) {
 
         // Loads textures
@@ -71,18 +71,6 @@ public class PauseMenu extends BoxModel implements Renderable {
         setPosition(newLoc);
     }
 
-    @Override
-    public Vector2 getPosition() {
-        return null;
-    }
-
-    @Override
-    public void draw(RenderingEngine renderer) {
-        if (paused) {
-            renderer.draw(pauseButtonTextureRegions[currentTexture], getX(), getY());
-        }
-    }
-
     /** Returns true if the menu is paused */
     public boolean isPaused() {
         return paused;
@@ -97,14 +85,26 @@ public class PauseMenu extends BoxModel implements Renderable {
 
     /** Switches to a lower menu item */
     public void cycleDown() {
-        if (!paused && currentTexture < 3)
+        if (paused && currentTexture < 3)
             currentTexture++;
     }
 
     /** Switches to a higher menu item */
     public void cycleUp() {
-        if (!paused && currentTexture > 0)
+        if (paused && currentTexture > 0)
             currentTexture--;
+    }
+
+    @Override
+    public Vector2 getPosition() {
+        return null;
+    }
+
+    @Override
+    public void draw(RenderingEngine renderer) {
+        if (paused) {
+            renderer.draw(pauseButtonTextureRegions[currentTexture], getX(), getY());
+        }
     }
 
     @Override

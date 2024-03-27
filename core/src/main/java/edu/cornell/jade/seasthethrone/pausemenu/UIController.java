@@ -22,19 +22,6 @@ public class UIController implements Controllable {
         this.pauseMenu = pauseMenu;
     }
 
-//    public void pause() {
-//        pauseMenu.setPaused(true);
-//    }
-//
-//    public void unPause() {
-//        pauseMenu.setPaused(false);
-//    }
-//
-//    public boolean isPaused() {
-//        return getPauseMenu() != null && getPauseMenu().isPaused();
-//    }
-
-
     @Override
     public PauseMenu getPauseMenu() {
         return pauseMenu;

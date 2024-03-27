@@ -29,10 +29,7 @@ public class InputController {
   Viewport viewport;
 
   /** List of all the player input controllers */
-  private ArrayList<Controllable> players;
-
-  /** List of all the UI input controllers */
-  private ArrayList<Controllable> overlays;
+  private ArrayList<Controllable> controllables;
 
   /** XBox Controller support */
   private XBoxController xbox;
@@ -60,11 +57,8 @@ public class InputController {
    * @param p the PlayerController to be added
    */
   public void add(Controllable p) {
-    if (!players.contains(p) && p instanceof PlayerController) {
-      players.add(p);
-    }
-    if (!overlays.contains(p) && p instanceof UIController) {
-      overlays.add(p);
+    if (!controllables.contains(p)) {
+      controllables.add(p);
     }
   }
 
@@ -75,8 +69,8 @@ public class InputController {
    * @param p the PlayerController to be removed
    */
   public void remove(PlayerController p) {
-    if (players != null) {
-      players.remove(p);
+    if (controllables != null) {
+      controllables.remove(p);
     }
   }
 
@@ -89,8 +83,7 @@ public class InputController {
    *                      mouse coord.
    */
   public InputController(Viewport screenToWorld) {
-    this.players = new ArrayList<>();
-    this.overlays = new ArrayList<>();
+    this.controllables = new ArrayList<>();
     this.viewport = screenToWorld;
     this.dashCoordCache = new Vector2();
 
@@ -106,35 +99,18 @@ public class InputController {
    */
   public void update() {
     // Reading inputs for players
-    for (Controllable p : players) {
-      readInput((PlayerController) p);
-    }
-
-    // Reading inputs for menu items
-    for (Controllable o : overlays) {
-      readInput((UIController) o);
+    for (Controllable c : controllables) {
+      readInput(c);
     }
   }
 
   /** Reads the input for the player and converts the result into game logic. */
-  public void readInput(PlayerController p) {
+  public void readInput(Controllable p) {
     // Check to see if a GamePad is connected
-
     if (xbox != null && xbox.isConnected()) {
       readController(p);
     } else {
-      readMouse(p);
-      readKeyboard(p);
-    }
-  }
-
-  /** Reads the input for the UI and converts the result into game logic. */
-  public void readInput(UIController p) {
-    // Check to see if a GamePad is connected
-
-    if (xbox != null && xbox.isConnected()) {
-      readController(p);
-    } else {
+      if (p instanceof PlayerController) readMouse(p);
       readKeyboard(p);
     }
   }
@@ -193,6 +169,7 @@ public class InputController {
     float voff = 0;
     resetPressed = Gdx.input.isKeyPressed(Input.Keys.R);
 
+    // Player controls
     if (Gdx.input.isKeyPressed(Input.Keys.D)) {
       hoff += 1;
     }
@@ -211,9 +188,16 @@ public class InputController {
     if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
       obj.pressSecondary();
     }
+
+    // UI controls
     if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-      System.out.println(obj.getClass());
       obj.switchPaused();
+    }
+    if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+      obj.cycleUp();
+    }
+    if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+      obj.cycleDown();
     }
 
     obj.moveHorizontal(hoff);
