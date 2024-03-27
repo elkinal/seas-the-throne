@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import edu.cornell.jade.seasthethrone.GameplayController;
 import edu.cornell.jade.seasthethrone.level.BackgroundImage;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
@@ -106,9 +107,15 @@ public class RenderingEngine {
   }
 
   //Temporary for prototype
-  public void drawGameOver() {
+  public void drawGameState(GameplayController.GameState gs) {
     canvas.begin();
-    canvas.drawTextCentered("Game Over!", textFont, 60f);
+    switch(gs) {
+      case WIN:
+        canvas.drawTextCentered("YOU WIN!", textFont, 60f);
+        break;
+      default:
+        canvas.drawTextCentered("Game Over!", textFont, 60f);
+    }
     canvas.drawTextCentered("Press R to Restart", textFont, 0);
     canvas.end();
   }
