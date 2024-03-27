@@ -140,7 +140,11 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
 
   @Override
   public void draw(RenderingEngine renderer) {
-    renderer.draw(SPEAR_TEXTURE_REGION, getX(), getY());
+    float angle = directionCache.angleRad();
+    float mag = 3f;
+
+    renderer.draw(SPEAR_TEXTURE_REGION,
+            getX()+(float)(mag*Math.cos(angle)), getY()+(float)(mag*Math.sin(angle)));
   }
 
   @Override

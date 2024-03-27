@@ -144,6 +144,10 @@ public class InputController {
       obj.pressSecondary();
     }
 
+    if (xbox.getX()) {
+      obj.pressInteract();
+    }
+
     resetPressed = xbox.getY();
 
     //movement
