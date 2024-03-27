@@ -497,99 +497,79 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
       return new Builder();
     }
 
-    private Builder() {
-    }
-
+    private Builder() {}
     public Builder setX(float x) {
       this.x = x;
       return this;
     }
-
     public Builder setY(float y) {
       this.y = y;
       return this;
     }
-
     public Builder setFramesInAnimation(int frames) {
       framesInAnimation = frames;
       return this;
     }
-
     public Builder setFramesInAnimationDash(int frames) {
       framesInAnimationDash = frames;
       return this;
     }
-
     public Builder setTextureUp(Texture texture) {
       playerTextureUp = texture;
       return this;
     }
-
     public Builder setTextureDown(Texture texture) {
       playerTextureDown = texture;
       return this;
     }
-
     public Builder setTextureLeft(Texture texture) {
       playerTextureLeft = texture;
       return this;
     }
-
     public Builder setTextureRight(Texture texture) {
       playerTextureRight = texture;
       return this;
     }
-
     public Builder setTextureUpDash(Texture texture) {
       playerTextureUpDash = texture;
       return this;
     }
-
     public Builder setTextureDownDash(Texture texture) {
       playerTextureDownDash = texture;
       return this;
     }
-
     public Builder setTextureLeftDash(Texture texture) {
       playerTextureLeftDash = texture;
       return this;
     }
-
     public Builder setTextureRightDash(Texture texture) {
       playerTextureRightDash = texture;
       return this;
     }
-
     public Builder setDashIndicatorTexture(Texture texture) {
       dashIndicatorTexture = texture;
       return this;
     }
-
     public Builder setFrameDelay(int frameDelay) {
       this.frameDelay = frameDelay;
       return this;
     }
-
     public Builder setCooldownLimit(int cooldownLimit) {
       this.cooldownLimit = cooldownLimit;
       return this;
     }
-
     public Builder setDashLength(int dashLength) {
       this.dashLength = dashLength;
       return this;
     }
-
     public Builder setShootCooldownLimit(int shootCooldownLimit) {
       this.shootCooldownLimit = shootCooldownLimit;
       return this;
     }
-
     public Builder setMoveSpeed(float moveSpeed) {
       this.moveSpeed = moveSpeed;
       return this;
     }
-
     public PlayerModel build() {
       return new PlayerModel(this);
     }

@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerBulletModel;
 import edu.cornell.jade.seasthethrone.model.SimpleModel;
 import com.badlogic.gdx.utils.Pool;
 import edu.cornell.jade.seasthethrone.physics.CollisionMask;
@@ -36,9 +37,6 @@ public class BulletModel extends SimpleModel implements FishRenderable {
   /** Amount of knockback force applied to player on collision */
   private float knockbackForce;
 
-  /** Amount of damage the player bullet inflicts (on bosses) */
-  private int damage;
-
   /**
    * {@link BulletModel} constructor using an x and y coordinate & radius. NOTE:
    * as of now, you must
@@ -65,20 +63,11 @@ public class BulletModel extends SimpleModel implements FishRenderable {
     setName("bullet");
     fishTexture = builder.FISH_TEXTURE;
     filmStrip = new FilmStrip(fishTexture, 1, 1);
-
-    damage = 5;
-
-    setBodyType(BodyDef.BodyType.DynamicBody);
   }
 
   /** Returns knockback force to apply to player on collision */
   public float getKnockbackForce() {
     return knockbackForce;
-  }
-
-  /** Returns amount of damage to inflict (on bosses) */
-  public int getDamage() {
-    return damage;
   }
 
   /**
@@ -190,37 +179,30 @@ public class BulletModel extends SimpleModel implements FishRenderable {
     public static Builder newInstance() {
       return new Builder();
     }
-
     private Builder() {
     }
-
     public Builder setFishTexture(Texture texture) {
       FISH_TEXTURE = texture;
       return this;
     }
-
     public Builder setRadius(float radius) {
       this.radius = radius;
       return this;
     }
-
     public Builder setX(float x) {
       this.x = x;
       return this;
     }
-
     public Builder setY(float y) {
       this.y = y;
       return this;
     }
-
     public Builder setShotByPlayer(boolean shotByPlayer) {
       this.shotByPlayer = shotByPlayer;
       return this;
     }
-
     public BulletModel build() {
-      return new BulletModel(this);
+      return this.shotByPlayer ? new PlayerBulletModel(this) : new BulletModel(this);
     }
   }
 }
