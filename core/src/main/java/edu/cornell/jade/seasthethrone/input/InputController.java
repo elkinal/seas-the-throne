@@ -18,7 +18,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import edu.cornell.jade.seasthethrone.pausemenu.UIController;
 import edu.cornell.jade.seasthethrone.util.Controllers;
 import edu.cornell.jade.seasthethrone.util.XBoxController;
 import java.util.*;
@@ -191,13 +190,13 @@ public class InputController {
 
     // UI controls
     if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-      obj.switchPaused();
+      obj.pressPaused();
     }
     if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-      obj.cycleUp();
+      obj.pressUp();
     }
     if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
-      obj.cycleDown();
+      obj.pressDown();
     }
 
     obj.moveHorizontal(hoff);

@@ -9,7 +9,6 @@
 package edu.cornell.jade.seasthethrone.input;
 
 import com.badlogic.gdx.math.Vector2;
-import edu.cornell.jade.seasthethrone.pausemenu.PauseMenu;
 
 public interface Controllable {
 
@@ -32,19 +31,14 @@ public interface Controllable {
   default public Vector2 getLocation(){ return null; }
 
 
-
-
-  /** Returns the PauseMenu object */
-  default public PauseMenu getPauseMenu() { return null; }
-
   /** Changes the game state from paused - unpaused and vice versa */
-  default public void switchPaused() {
+  default public void pressPaused() {
 
   }
   /** Scrolls up in the pause menu */
-  default public void cycleUp() {}
+  default public void pressUp() {}
 
   /** Scrolls down in the pause menu */
-  default public void cycleDown() {}
+  default public void pressDown() {}
 
 }

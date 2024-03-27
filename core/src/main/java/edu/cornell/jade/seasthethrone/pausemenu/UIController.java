@@ -22,23 +22,22 @@ public class UIController implements Controllable {
         this.pauseMenu = pauseMenu;
     }
 
-    @Override
     public PauseMenu getPauseMenu() {
         return pauseMenu;
     }
 
     @Override
-    public void switchPaused() {
+    public void pressPaused() {
         pauseMenu.setPaused(!pauseMenu.isPaused());
     }
 
     @Override
-    public void cycleUp() {
+    public void pressUp() {
         pauseMenu.cycleUp();
     }
 
     @Override
-    public void cycleDown() {
+    public void pressDown() {
         pauseMenu.cycleDown();
     }
 }
