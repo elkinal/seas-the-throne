@@ -11,44 +11,53 @@ import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
-public class DashboardButton extends BoxModel implements Renderable {
+public class PauseMenu extends BoxModel implements Renderable {
 
-    private boolean display;
+    private boolean visible;
 
-    // Define the location
+    // Defines the location
     private final float offsetX;
     private final float offsetY;
 
-    // Define the outline of the button
+    // Defines the outline of the button
     private final Rectangle boundingBox;
     private float rectangleX;
     private float rectangleY;
 
     // Used when a button only has one texture
+    private final Texture pauseMenuTexture1 = new Texture("pause_menu/pausescreendisplay1.png");
+    private final Texture pauseMenuTexture2 = new Texture("pause_menu/pausescreendisplay2.png");
+    private final Texture pauseMenuTexture3 = new Texture("pause_menu/pausescreendisplay3.png");
+    private final Texture pauseMenuTexture4 = new Texture("pause_menu/pausescreendisplay4.png");
+
     private TextureRegion[] pauseButtonTextureRegions;
-    private int currentTexture = 0;
+
+    // Enum to select menu option
+    private int currentTexture = MenuSelection.RESUME.label;
+
+    public enum MenuSelection {
+        RESUME(0),
+        RESTART(1),
+        LEVEL_SELECT(2),
+        QUIT(3);
+
+        public final int label;
+
+        private MenuSelection(int label) {
+            this.label = label;
+        }
+    }
 
 
     /** 1 or more textures may be passed as arguments */
-    public DashboardButton(float x, float y, float width, float height, float offsetX, float offsetY, Texture... textures) {
+    public PauseMenu(float x, float y, float width, float height, float offsetX, float offsetY) {
 
         // Loads textures
         super(x, y, width, height);
 
-        if (textures.length == 1) {
-            pauseButtonTextureRegions = new TextureRegion[]{new TextureRegion(textures[0])};
-        }
-        else if (textures.length > 1){
-            pauseButtonTextureRegions = new TextureRegion[textures.length];
-
-            for (int i = 0; i < textures.length; i++)
-                pauseButtonTextureRegions[i] = new TextureRegion(textures[i]);
-
-        }
-
         // Setting parameters
         setActive(false);
-        display = true;
+        visible = true;
 
         this.offsetX = offsetX;
         this.offsetY = offsetY;
@@ -58,6 +67,14 @@ public class DashboardButton extends BoxModel implements Renderable {
         rectangleY = getY() - getHeight() / 2;
 
         boundingBox = new Rectangle(rectangleX, rectangleY, width, height);
+
+        // Loading textures
+        pauseButtonTextureRegions = new TextureRegion[] {
+                new TextureRegion(pauseMenuTexture1),
+                new TextureRegion(pauseMenuTexture2),
+                new TextureRegion(pauseMenuTexture3),
+                new TextureRegion(pauseMenuTexture4)
+        };
     }
 
     /** Updates the button's position on the game canvas */
@@ -88,7 +105,7 @@ public class DashboardButton extends BoxModel implements Renderable {
 
     @Override
     public void draw(RenderingEngine renderer) {
-        if (display) {
+        if (visible) {
             renderer.draw(pauseButtonTextureRegions[currentTexture], getX(), getY());
         }
     }
@@ -116,22 +133,48 @@ public class DashboardButton extends BoxModel implements Renderable {
 
     /** Hides the button */
     public void show() {
-        display = true;
+        visible = true;
     }
 
     /** Shows the button */
     public void hide() {
-        display = false;
+        visible = false;
+    }
+
+    /** Returns true if the menu is visible */
+    public boolean isVisible() {
+        return visible;
     }
 
     /** Sets the visibility of the button */
-    public void display(boolean display) {
-        this.display = display;
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+        if (!visible)
+            currentTexture = MenuSelection.RESUME.label;
     }
 
     /** Returns a rectangle covering the button's outline */
     public Rectangle getBoundingBox() {
         return boundingBox;
     }
+
+    /** Sets the current texture */
+    public void setSelection(MenuSelection selection) {
+        currentTexture = selection.label;
+    }
+
+    /** Switches to a lower menu item */
+    public void cycleDown() {
+        if (visible && currentTexture < 3)
+            currentTexture++;
+    }
+
+    /** Switches to a higher menu item */
+    public void cycleUp() {
+        if (visible && currentTexture > 0)
+            currentTexture--;
+    }
+
+
 
 }

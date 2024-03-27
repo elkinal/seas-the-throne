@@ -3,7 +3,6 @@ package edu.cornell.jade.seasthethrone;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -13,8 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.*;
 
+import edu.cornell.jade.seasthethrone.Dashboard.PauseMenu;
 import edu.cornell.jade.seasthethrone.gamemodel.BossModel;
-import edu.cornell.jade.seasthethrone.Dashboard.DashboardButton;
 import edu.cornell.jade.seasthethrone.gamemodel.ObstacleModel;
 import edu.cornell.jade.seasthethrone.gamemodel.PlayerModel;
 import edu.cornell.jade.seasthethrone.input.BossController;
@@ -96,11 +95,9 @@ public class GameplayController implements Screen {
   /** Comparator to sort Models by height */
   private heightComparator comp = new heightComparator();
 
+  /** Handling the pause menu */
   private Stage stage;
-  private DashboardButton pauseButton;
-  private DashboardButton pauseMenu;
-  private final Texture pauseButtonTexture = new Texture("pause_menu/pausebutton.png");
-  private final Texture pauseMenuTexture = new Texture("pause_menu/pausescreendisplay.png");
+  private PauseMenu pauseMenu;
   public static boolean paused = false;
 
   protected GameplayController() {
@@ -179,20 +176,12 @@ public class GameplayController implements Screen {
 
     inputController.add(playerController);
 
-    // Load pause menu button
-    pauseButton = new DashboardButton(0, 0, 3, 3, -46, 45, pauseButtonTexture);
-    pauseButton.updatePosition(viewport);
-    renderEngine.addRenderable(pauseButton);
-    physicsEngine.addObject(pauseButton);
-    inputController.addButton(pauseButton);
-
     // Load pause menu dashboard
-    pauseMenu = new DashboardButton(0, 0, 1, 1, -viewport.getScreenWidth()/2, viewport.getScreenHeight()/2, pauseMenuTexture);
+    pauseMenu = new PauseMenu(0, 0, 1, 1, -viewport.getScreenWidth()/2, viewport.getScreenHeight()/2);
     pauseMenu.updatePosition(viewport);
+    inputController.addPauseMenu(pauseMenu);
     renderEngine.addRenderable(pauseMenu);
     physicsEngine.addObject(pauseMenu);
-
-
 }
 
   public void render(float delta) {
@@ -209,12 +198,12 @@ public class GameplayController implements Screen {
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     renderEngine.drawRenderables();
 
-    stage.act(delta);
-    stage.draw();
+//    stage.act(delta);
+//    stage.draw();
 
-    pauseButton.updatePosition(viewport);
+//    pauseButton.updatePosition(viewport);
     pauseMenu.updatePosition(viewport);
-    pauseMenu.display(paused);
+    pauseMenu.setVisible(paused);
 
   }
 
@@ -289,6 +278,10 @@ public class GameplayController implements Screen {
     // }
   }
 
+  public PauseMenu getPauseMenu() {
+    return pauseMenu;
+  }
+
   public void pause() {
     paused = true;
   }
@@ -307,7 +300,6 @@ public class GameplayController implements Screen {
   public void dispose() {
     if (physicsEngine != null)
       physicsEngine.dispose();
-    stage.dispose();
   }
 
   /** Returns true if the game is paused */

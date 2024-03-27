@@ -19,7 +19,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import edu.cornell.jade.seasthethrone.GameplayController;
-import edu.cornell.jade.seasthethrone.Dashboard.DashboardButton;
+import edu.cornell.jade.seasthethrone.Dashboard.PauseMenu;
 import edu.cornell.jade.seasthethrone.util.Controllers;
 import edu.cornell.jade.seasthethrone.util.XBoxController;
 import java.util.*;
@@ -38,7 +38,7 @@ public class InputController {
   /** Whether the reset button was pressed. */
   protected boolean resetPressed;
 
-  protected ArrayList<DashboardButton> buttons;
+  protected PauseMenu pauseMenu;
 
   /**
    * Cache vector to return containing the dash coordinates of the previous read
@@ -89,7 +89,6 @@ public class InputController {
     this.players = new ArrayList<>();
     this.viewport = screenToWorld;
     this.dashCoordCache = new Vector2();
-    this.buttons = new ArrayList<>();
 
     // initializing the xbox controller
     if (Controllers.get().getControllers().size > 0) {
@@ -191,8 +190,16 @@ public class InputController {
     if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
       obj.pressSecondary();
     }
-    if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
-      unPause();
+
+    // Pause menu inputs
+    if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+      GameplayController.paused = !GameplayController.paused;
+    }
+    if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+      pauseMenu.cycleUp();
+    }
+    if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+      pauseMenu.cycleDown();
     }
     obj.moveHorizontal(hoff);
     obj.moveVertical(voff);
@@ -211,46 +218,15 @@ public class InputController {
    * @param obj Controller for the player
    */
   private void readMouse(Controllable obj) {
-
     Vector2 mousePos = new Vector2(Gdx.input.getX(), Gdx.input.getY());
-
     dashCoordCache.set(mousePos.x, mousePos.y);
-
     viewport.unproject(dashCoordCache);
     obj.updateDirection(dashCoordCache);
-
-    // Detecting when pause button is clicked
-    for (DashboardButton button : buttons) {
-      if (isBoxClicked(button, viewport.unproject(mousePos)) && Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-        pause();
-      }
-    }
   }
 
-
-
-  /** Adds a button to the listener */
-  public void addButton(DashboardButton button) {
-    buttons.add(button);
+  /** Adds a PauseMenu to handle */
+  public void addPauseMenu(PauseMenu button) {
+    this.pauseMenu = button;
   }
-
-  /** Returns if a button has been clicked */
-  private boolean isBoxClicked(DashboardButton model, Vector2 clickPos) {
-    return model.getBoundingBox().contains(clickPos);
-  }
-
-  private boolean isPaused() {
-    return GameplayController.paused;
-  }
-
-  private void pause() {
-    GameplayController.paused = true;
-  }
-
-  private void unPause() {
-    GameplayController.paused = false;
-  }
-
-
 
 }
