@@ -1,6 +1,7 @@
 package edu.cornell.jade.seasthethrone;
 
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -134,7 +135,26 @@ public class GameplayController implements Screen {
 
     // Load player
     Vector2 playerLoc = level.getPlayerLoc();
-    PlayerModel player = new PlayerModel(playerLoc.x, playerLoc.y);
+    PlayerModel player = PlayerModel.Builder.newInstance()
+            .setX(playerLoc.x)
+            .setY(playerLoc.y)
+            .setTextureUp(new Texture("player/playerspriterun_up_wspear.png"))
+            .setTextureDown(new Texture("player/playerspriterun_down_wspear.png"))
+            .setTextureLeft(new Texture("player/playerspriterun_left_wspear.png"))
+            .setTextureRight(new Texture("player/playerspriterun_right_wspear.png"))
+            .setTextureUpDash(new Texture("player/playerspritedashfilmstrip_up.png"))
+            .setTextureDownDash(new Texture("player/playerspritedashfilmstrip_down.png"))
+            .setTextureLeftDash(new Texture("player/playerspritedashfilmstrip_left.png"))
+            .setTextureRightDash(new Texture("player/playerspritedashfilmstrip_right.png"))
+            .setDashIndicatorTexture(new Texture("player/dash_indicator.png"))
+            .setFramesInAnimation(12)
+            .setFramesInAnimationDash(5)
+            .setFrameDelay(3)
+            .setDashLength(20)
+            .setMoveSpeed(8f)
+            .setCooldownLimit(30)
+            .setShootCooldownLimit(20)
+            .build();
     renderEngine.addRenderable(player);
 
     physicsEngine = new PhysicsEngine(bounds, world);
@@ -144,17 +164,24 @@ public class GameplayController implements Screen {
 
     // Load bosses
     Vector2 bossLoc = level.getBosses().get(0);
-    //TODO: load these points in from somewhere else
-    float[] bossVertices = {-4, -7, -4, 7, 4, 7, 4, -7};
-    BossModel crabBoss = new CrabBossModel(bossVertices, bossLoc.x, bossLoc.y);
-    renderEngine.addRenderable(crabBoss);
-    physicsEngine.addObject(crabBoss);
-    bossController = new BossController(crabBoss);
+    BossModel boss = BossModel.Builder.newInstance()
+            .setX(bossLoc.x)
+            .setY(bossLoc.y)
+            .setType("crab")
+            .setHealth(100)
+            .setHitbox(new float[] { -4, -7, -4, 7, 4, 7, 4, -7 })
+            .setFrameSize(110)
+            .setShootAnimation(new Texture("bosses/crab/crab_shoot.png"))
+            .setFrameDelay(12)
+            .build();
+    renderEngine.addRenderable(boss);
+    physicsEngine.addObject(boss);
+    bossController = new BossController(boss);
 
     // Load walls
     for (Wall wall : level.getWalls()) {
-//      ObstacleModel wallModel = new ObstacleModel(wall);
-//      physicsEngine.addObject(wallModel);
+      // ObstacleModel wallModel = new ObstacleModel(wall);
+      // physicsEngine.addObject(wallModel);
 
       BoxModel model = new BoxModel(wall.x, wall.y, wall.width, wall.height);
       model.setBodyType(BodyDef.BodyType.StaticBody);
@@ -162,7 +189,7 @@ public class GameplayController implements Screen {
     }
 
     for (Obstacle obs : level.getObstacles()) {
-//      BoxModel model = new BoxModel(obs.x, obs.y, obs.width, obs.height);
+      // BoxModel model = new BoxModel(obs.x, obs.y, obs.width, obs.height);
       ObstacleModel model = new ObstacleModel(obs, WORLD_SCALE);
       model.setBodyType(BodyDef.BodyType.StaticBody);
       renderEngine.addRenderable(model);
@@ -170,7 +197,7 @@ public class GameplayController implements Screen {
     }
 
     inputController.add(playerController);
-}
+  }
 
   public void render(float delta) {
     if (active) {
@@ -222,7 +249,9 @@ public class GameplayController implements Screen {
     }
     objectCache.sort(comp);
 
-    for (Model r : objectCache) { renderEngine.addRenderable((Renderable) r); }
+    for (Model r : objectCache) {
+      renderEngine.addRenderable((Renderable) r);
+    }
 
     draw(delta);
     debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
@@ -247,9 +276,9 @@ public class GameplayController implements Screen {
     Vector2 cameraPos = viewport
         .unproject(new Vector2(viewport.getCamera().position.x, viewport.getCamera().position.y));
 
-    Vector2 worldDims = new Vector2(viewport.getWorldWidth(),  viewport.getWorldHeight());
+    Vector2 worldDims = new Vector2(viewport.getWorldWidth(), viewport.getWorldHeight());
 
-    Vector2 diff = playerPos.sub(cameraPos).sub( worldDims.x / 2, -worldDims.y / 2);
+    Vector2 diff = playerPos.sub(cameraPos).sub(worldDims.x / 2, -worldDims.y / 2);
     viewport.getCamera().translate(diff.x, diff.y, 0);
 
     // if (diff.len() > 15f){
@@ -275,13 +304,16 @@ public class GameplayController implements Screen {
 
   /**
    * Compares Models based on height in the world
-   * */
+   */
   class heightComparator implements Comparator<Model> {
     @Override
     public int compare(Model o1, Model o2) {
       float diff = o2.getBody().getPosition().y - o1.getBody().getPosition().y;
-      if (diff > 0) {return 1;}
-      else if (diff < 0) {return -1;}
+      if (diff > 0) {
+        return 1;
+      } else if (diff < 0) {
+        return -1;
+      }
       return 0;
     }
   }

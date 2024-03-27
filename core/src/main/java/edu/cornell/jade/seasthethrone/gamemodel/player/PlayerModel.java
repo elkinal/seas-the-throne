@@ -19,34 +19,34 @@ import edu.cornell.jade.seasthethrone.util.FilmStrip;
 public class PlayerModel extends ComplexModel implements PlayerRenderable {
   /** FIXME: stop hardcoding textures */
   /** Frame is player animation */
-  private static int FRAMES_IN_ANIMATION = 12;
-  private static int FRAMES_IN_ANIMATION_DASH = 5;
+  private int framesInAnimation;
+  private int framesInAnimationDash;
 
   /** Player texture when facing up */
-  public static final Texture PLAYER_TEXTURE_UP = new Texture("player/playerspriterun_up_wspear.png");
+  public Texture playerTextureUp;
 
   /** Player texture when facing down */
-  public static final Texture PLAYER_TEXTURE_DOWN = new Texture("player/playerspriterun_down_wspear.png");
+  public Texture playerTextureDown;
 
   /** Player texture when facing left */
-  public static final Texture PLAYER_TEXTURE_LEFT = new Texture("player/playerspriterun_left_wspear.png");
+  public Texture playerTextureLeft;
 
   /** Player texture when facing right */
-  public static final Texture PLAYER_TEXTURE_RIGHT = new Texture("player/playerspriterun_right_wspear.png");
+  public Texture playerTextureRight;
   /** Player texture when dashing up */
-  public static final Texture PLAYER_TEXTURE_UP_DASH = new Texture("player/playerspritedashfilmstrip_up.png");
+  public Texture playerTextureUpDash;
 
   /** Player texture when dashing down */
-  public static final Texture PLAYER_TEXTURE_DOWN_DASH = new Texture("player/playerspritedashfilmstrip_down.png");
+  public Texture playerTextureDownDash;
 
   /** Player texture when dashing left */
-  public static final Texture PLAYER_TEXTURE_LEFT_DASH = new Texture("player/playerspritedashfilmstrip_left.png");
+  public Texture playerTextureLeftDash;
 
   /** Player texture when dashing right */
-  public static final Texture PLAYER_TEXTURE_RIGHT_DASH = new Texture("player/playerspritedashfilmstrip_right.png");
+  public Texture playerTextureRightDash;
 
   /** Player texture for the das indicator */
-  private static final Texture DASH_INDICATOR_TEXTURE = new Texture("player/dash_indicator.png");
+  private Texture dashIndicatorTexture;
 
   /** FilmStrip cache object */
   public FilmStrip filmStrip;
@@ -111,44 +111,57 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
 
   /** Scaling factor for player movement */
   private float moveSpeed;
+  /** Initial frame delay */
+  private int initFrameDelay;
 
   /**
    * {@link PlayerModel} constructor using an x and y coordinate.
    *
-   * @param x The x-position for this player in world coordinates
-   * @param y The y-position for this player in world coordinates
+   * @param builder The builder for the PlayerModel
    */
-  public PlayerModel(float x, float y) {
-    super(x, y);
+  public PlayerModel(Builder builder) {
+    super(builder.x, builder.y);
 
     cooldownCounter = 0;
-    cooldownLimit = 30;
+    cooldownLimit = builder.cooldownLimit;
 
-    moveSpeed = 8f;
+    framesInAnimation = builder.framesInAnimation;
+    framesInAnimationDash = builder.framesInAnimationDash;
+    moveSpeed = builder.moveSpeed;
     faceDirection = Direction.DOWN;
     dashCounter = 0;
-    dashLength = 20;
+    dashLength = builder.dashLength;
     isDashing = false;
     frameCounter = 1;
     dashFrameCounter = 1;
-    frameDelay = 3;
+    initFrameDelay = builder.frameDelay;
+    frameDelay = initFrameDelay;
+    playerTextureUp = builder.playerTextureUp;
+    playerTextureDown = builder.playerTextureDown;
+    playerTextureLeft = builder.playerTextureLeft;
+    playerTextureRight = builder.playerTextureRight;
+    playerTextureUpDash = builder.playerTextureUpDash;
+    playerTextureDownDash = builder.playerTextureDownDash;
+    playerTextureLeftDash = builder.playerTextureLeftDash;
+    playerTextureRightDash = builder.playerTextureRightDash;
+    dashIndicatorTexture = builder.dashIndicatorTexture;
 
-    shootCooldownLimit = 20;
+    shootCooldownLimit = builder.shootCooldownLimit;
     shootCounter = 0;
     isShooting = false;
 
-    PlayerBodyModel playerBody = new PlayerBodyModel(x, y);
+    PlayerBodyModel playerBody = new PlayerBodyModel(builder.x, builder.y);
     bodies.add(playerBody);
 
-    PlayerSpearModel playerSpear = new PlayerSpearModel(x, y, DASH_INDICATOR_TEXTURE, playerBody);
+    PlayerSpearModel playerSpear = new PlayerSpearModel(builder.x, builder.y, dashIndicatorTexture, playerBody);
     bodies.add(playerSpear);
 
-    PlayerShadowModel playerShadow = new PlayerShadowModel(x, y - 1.6f);
+    PlayerShadowModel playerShadow = new PlayerShadowModel(builder.x, builder.y - 1.6f);
     bodies.add(playerShadow);
 
-    filmStrip = new FilmStrip(PLAYER_TEXTURE_DOWN, 1, FRAMES_IN_ANIMATION);
-    filmStripDashUD = new FilmStrip(PLAYER_TEXTURE_DOWN_DASH, 1, FRAMES_IN_ANIMATION_DASH);
-    filmStripDashLR = new FilmStrip(PLAYER_TEXTURE_LEFT_DASH, 1, FRAMES_IN_ANIMATION_DASH);
+    filmStrip = new FilmStrip(playerTextureDown, 1, framesInAnimation);
+    filmStripDashUD = new FilmStrip(playerTextureDownDash, 1, framesInAnimationDash);
+    filmStripDashLR = new FilmStrip(playerTextureLeftDash, 1, framesInAnimationDash);
   }
 
   @Override
@@ -192,41 +205,41 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
 
   public int getFramesInAnimation() {
     if (isDashing)
-      return FRAMES_IN_ANIMATION_DASH;
+      return framesInAnimationDash;
     else
-      return FRAMES_IN_ANIMATION;
+      return framesInAnimation;
   }
 
   public Texture getTextureUp() {
-    return PLAYER_TEXTURE_UP;
+    return playerTextureUp;
   }
 
   public Texture getTextureDown() {
-    return PLAYER_TEXTURE_DOWN;
+    return playerTextureDown;
   }
 
   public Texture getTextureLeft() {
-    return PLAYER_TEXTURE_LEFT;
+    return playerTextureLeft;
   }
 
   public Texture getTextureRight() {
-    return PLAYER_TEXTURE_RIGHT;
+    return playerTextureRight;
   }
 
   public Texture getTextureUpDash() {
-    return PLAYER_TEXTURE_UP_DASH;
+    return playerTextureUpDash;
   }
 
   public Texture getTextureDownDash() {
-    return PLAYER_TEXTURE_DOWN_DASH;
+    return playerTextureDownDash;
   }
 
   public Texture getTextureLeftDash() {
-    return PLAYER_TEXTURE_LEFT_DASH;
+    return playerTextureLeftDash;
   }
 
   public Texture getTextureRightDash() {
-    return PLAYER_TEXTURE_RIGHT_DASH;
+    return playerTextureRightDash;
   }
 
   /**
@@ -280,7 +293,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   /** Sets the player to dashing */
   public void startDashing() {
     isDashing = true;
-    frameDelay = dashLength / FRAMES_IN_ANIMATION_DASH;
+    frameDelay = dashLength / framesInAnimationDash;
     frameCounter = 1;
     getSpearModel().setSpear(true);
     animationFrame = 0;
@@ -290,7 +303,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   /** Set dashing to false */
   public void stopDashing() {
     isDashing = false;
-    frameDelay = 3;
+    frameDelay = initFrameDelay;
     dashFrameCounter = 1;
     animationFrame = 0;
     getSpearModel().setSpear(false);
@@ -312,7 +325,9 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   }
 
   /** Sets value for shoot counter to the cooldown limit */
-  public void setShootCounter() { shootCounter = shootCooldownLimit; }
+  public void setShootCounter() {
+    shootCounter = shootCooldownLimit;
+  }
 
   /** Decrease fish counter. If the counter is sets to 0, stop shooting */
   public void decrementFishCount() {
@@ -427,6 +442,156 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
         faceDirection = Direction.UP;
       else
         faceDirection = Direction.DOWN;
+    }
+  }
+
+  public static class Builder {
+    /** player x position */
+    private float x;
+    /** player y position */
+    private float y;
+    /** Frame is player animation */
+    private int framesInAnimation;
+    private int framesInAnimationDash;
+
+    /** Player texture when facing up */
+    private Texture playerTextureUp;
+
+    /** Player texture when facing down */
+    private Texture playerTextureDown;
+
+    /** Player texture when facing left */
+    private Texture playerTextureLeft;
+
+    /** Player texture when facing right */
+    private Texture playerTextureRight;
+    /** Player texture when dashing up */
+    private Texture playerTextureUpDash;
+
+    /** Player texture when dashing down */
+    private Texture playerTextureDownDash;
+
+    /** Player texture when dashing left */
+    private Texture playerTextureLeftDash;
+
+    /** Player texture when dashing right */
+    private Texture playerTextureRightDash;
+    private Texture dashIndicatorTexture;
+
+    /** The number of frames to skip before animating the next player frame */
+    private int frameDelay;
+
+    /** The time limit (in frames) between dashes/shooting */
+    private int cooldownLimit;
+
+    /** The number of frames a dash lasts */
+    private int dashLength;
+
+    /** The time (in frames) between each bullet shot */
+    private int shootCooldownLimit;
+
+    /** Scaling factor for player movement */
+    private float moveSpeed;
+
+    public static Builder newInstance() {
+      return new Builder();
+    }
+
+    private Builder() {
+    }
+
+    public Builder setX(float x) {
+      this.x = x;
+      return this;
+    }
+
+    public Builder setY(float y) {
+      this.y = y;
+      return this;
+    }
+
+    public Builder setFramesInAnimation(int frames) {
+      framesInAnimation = frames;
+      return this;
+    }
+
+    public Builder setFramesInAnimationDash(int frames) {
+      framesInAnimationDash = frames;
+      return this;
+    }
+
+    public Builder setTextureUp(Texture texture) {
+      playerTextureUp = texture;
+      return this;
+    }
+
+    public Builder setTextureDown(Texture texture) {
+      playerTextureDown = texture;
+      return this;
+    }
+
+    public Builder setTextureLeft(Texture texture) {
+      playerTextureLeft = texture;
+      return this;
+    }
+
+    public Builder setTextureRight(Texture texture) {
+      playerTextureRight = texture;
+      return this;
+    }
+
+    public Builder setTextureUpDash(Texture texture) {
+      playerTextureUpDash = texture;
+      return this;
+    }
+
+    public Builder setTextureDownDash(Texture texture) {
+      playerTextureDownDash = texture;
+      return this;
+    }
+
+    public Builder setTextureLeftDash(Texture texture) {
+      playerTextureLeftDash = texture;
+      return this;
+    }
+
+    public Builder setTextureRightDash(Texture texture) {
+      playerTextureRightDash = texture;
+      return this;
+    }
+
+    public Builder setDashIndicatorTexture(Texture texture) {
+      dashIndicatorTexture = texture;
+      return this;
+    }
+
+    public Builder setFrameDelay(int frameDelay) {
+      this.frameDelay = frameDelay;
+      return this;
+    }
+
+    public Builder setCooldownLimit(int cooldownLimit) {
+      this.cooldownLimit = cooldownLimit;
+      return this;
+    }
+
+    public Builder setDashLength(int dashLength) {
+      this.dashLength = dashLength;
+      return this;
+    }
+
+    public Builder setShootCooldownLimit(int shootCooldownLimit) {
+      this.shootCooldownLimit = shootCooldownLimit;
+      return this;
+    }
+
+    public Builder setMoveSpeed(float moveSpeed) {
+      this.moveSpeed = moveSpeed;
+      return this;
+    }
+
+    public PlayerModel build() {
+      return new PlayerModel(this);
     }
   }
 

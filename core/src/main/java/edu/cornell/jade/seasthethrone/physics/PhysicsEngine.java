@@ -1,5 +1,6 @@
 package edu.cornell.jade.seasthethrone.physics;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -65,8 +66,13 @@ public class PhysicsEngine implements ContactListener {
    * @param speed speed of bullet
    */
   public void spawnBullet(Vector2 pos, Vector2 vel, float speed, boolean shotByPlayer) {
-    BulletModel bullet = shotByPlayer ? new PlayerBulletModel(pos.x, pos.y, 0.5f) :
-            new BulletModel(pos.x, pos.y, 0.5f);
+    BulletModel bullet = BulletModel.Builder.newInstance()
+        .setX(pos.x)
+        .setY(pos.y)
+        .setFishTexture(new Texture("bullet/yellowfish_east.png"))
+        .setRadius(0.5f)
+        .setShotByPlayer(shotByPlayer)
+        .build();
     bullet.setVX(speed * vel.x);
     bullet.setVY(speed * vel.y);
     addObject(bullet);
@@ -128,7 +134,7 @@ public class PhysicsEngine implements ContactListener {
 
     // Try to collide with the boss again (if player is not invincible)
     // I'm not a fan of this workaround but I couldn't figure anything else out
-    if(!playerBossCollision.isEmpty() && playerBossCollision.get().isTouching()){
+    if (!playerBossCollision.isEmpty() && playerBossCollision.get().isTouching()) {
       beginContact(playerBossCollision.get());
     }
   }
@@ -210,7 +216,7 @@ public class PhysicsEngine implements ContactListener {
       } else if (bd2 instanceof PlayerBulletModel && bd1 instanceof BossModel) {
         handleCollision((PlayerBulletModel) bd2, (BossModel) bd1);
       }
-      //TODO: Change BoxModel to the Obstacle types once we have them defined later
+      // TODO: Change BoxModel to the Obstacle types once we have them defined later
       else if (bd1 instanceof BulletModel && bd2 instanceof BoxModel) {
         bd1.markRemoved(true);
       } else if (bd2 instanceof BulletModel && bd1 instanceof BoxModel) {
@@ -223,7 +229,7 @@ public class PhysicsEngine implements ContactListener {
   }
 
   /** Helper function to apply a knockback on the player body. */
-  public void applyKnockback(PlayerBodyModel pb, Vector2 bd2Pos, float knockbackForce){
+  public void applyKnockback(PlayerBodyModel pb, Vector2 bd2Pos, float knockbackForce) {
 
     // Calculate knockback direction
     Vector2 knockbackDir = pb.getPosition().sub(bd2Pos).nor();
@@ -256,8 +262,10 @@ public class PhysicsEngine implements ContactListener {
       pb.setInvincible();
       applyKnockback(pb, b.getPosition(), b.getBodyKnockbackForce());
       playerBossCollision = Optional.empty();
-    } else{
-      if (playerBossCollision.isEmpty()) { playerBossCollision = Optional.of(c); }
+    } else {
+      if (playerBossCollision.isEmpty()) {
+        playerBossCollision = Optional.of(c);
+      }
     }
 
   }
@@ -275,9 +283,9 @@ public class PhysicsEngine implements ContactListener {
     pb.markRemoved(true);
   }
 
-
   @Override
-  public void endContact(Contact contact) {}
+  public void endContact(Contact contact) {
+  }
 
   @Override
   public void preSolve(Contact contact, Manifold oldManifold) {
