@@ -228,5 +228,4 @@ public class InputController {
   public void addPauseMenu(PauseMenu button) {
     this.pauseMenu = button;
   }
-
 }

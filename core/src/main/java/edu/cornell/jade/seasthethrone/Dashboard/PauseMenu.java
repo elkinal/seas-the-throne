@@ -19,11 +19,6 @@ public class PauseMenu extends BoxModel implements Renderable {
     private final float offsetX;
     private final float offsetY;
 
-    // Defines the outline of the button
-    private final Rectangle boundingBox;
-    private float rectangleX;
-    private float rectangleY;
-
     // Used when a button only has one texture
     private final Texture pauseMenuTexture1 = new Texture("pause_menu/pausescreendisplay1.png");
     private final Texture pauseMenuTexture2 = new Texture("pause_menu/pausescreendisplay2.png");
@@ -62,12 +57,6 @@ public class PauseMenu extends BoxModel implements Renderable {
         this.offsetX = offsetX;
         this.offsetY = offsetY;
 
-        // Setting the bounding Rectangle
-        rectangleX = getX() - getWidth() / 2;
-        rectangleY = getY() - getHeight() / 2;
-
-        boundingBox = new Rectangle(rectangleX, rectangleY, width, height);
-
         // Loading textures
         pauseButtonTextureRegions = new TextureRegion[] {
                 new TextureRegion(pauseMenuTexture1),
@@ -92,9 +81,6 @@ public class PauseMenu extends BoxModel implements Renderable {
         // Updating the rectangle
         float rectangleX = getX() - getWidth() / 2;
         float rectangleY = getY() - getHeight() / 2;
-
-        boundingBox.setX(rectangleX);
-        boundingBox.setY(rectangleY);
 
     }
 
@@ -153,16 +139,6 @@ public class PauseMenu extends BoxModel implements Renderable {
             currentTexture = MenuSelection.RESUME.label;
     }
 
-    /** Returns a rectangle covering the button's outline */
-    public Rectangle getBoundingBox() {
-        return boundingBox;
-    }
-
-    /** Sets the current texture */
-    public void setSelection(MenuSelection selection) {
-        currentTexture = selection.label;
-    }
-
     /** Switches to a lower menu item */
     public void cycleDown() {
         if (visible && currentTexture < 3)
@@ -174,7 +150,4 @@ public class PauseMenu extends BoxModel implements Renderable {
         if (visible && currentTexture > 0)
             currentTexture--;
     }
-
-
-
 }
