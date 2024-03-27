@@ -57,9 +57,11 @@ public abstract class BossModel extends PolygonModel implements Renderable {
         this.filmStrip = shootAnimation;
         frameCounter = 1;
         frameDelay = builder.frameDelay;
+        health = builder.health;
 
         bodyKnockbackForce = 70f;
         spearKnockbackForce = 130f;
+        setBodyType(BodyDef.BodyType.StaticBody);
     }
 
     public void draw(RenderingEngine renderer) {
@@ -124,6 +126,8 @@ public abstract class BossModel extends PolygonModel implements Renderable {
         private float x;
         /** boss y position */
         private float y;
+        /** type of the boss (ie. crab, etc.)*/
+        private String type;
 
         /** Number of frames in boss animation */
         private int frameSize;
@@ -140,6 +144,9 @@ public abstract class BossModel extends PolygonModel implements Renderable {
         /** Polygon indicating boss hitbox */
         private float[] hitbox;
 
+        /** Number of health points the boss has */
+        protected int health;
+
         public static Builder newInstance() {
             return new Builder();
         }
@@ -153,8 +160,16 @@ public abstract class BossModel extends PolygonModel implements Renderable {
             this.y = y;
             return this;
         }
+        public Builder setType(String type) {
+            this.type = type;
+            return this;
+        }
         public Builder setHitbox(float[] hitbox) {
             this.hitbox = hitbox;
+            return this;
+        }
+        public Builder setHealth(int health) {
+            this.health = health;
             return this;
         }
         public Builder setFrameSize(int frameSize) {
@@ -191,7 +206,12 @@ public abstract class BossModel extends PolygonModel implements Renderable {
             return this;
         }
         public BossModel build() {
-            return new BossModel(this);
+            switch (type){
+                case "crab": return new CrabBossModel(this);
+
+                // Should not get here
+                default: return new CrabBossModel(this);
+            }
         }
     }
 }
