@@ -7,8 +7,11 @@ import com.badlogic.gdx.utils.Array;
 import edu.cornell.jade.seasthethrone.gamemodel.*;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.*;
+import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.util.PooledList;
+
+import javax.swing.*;
 import java.util.Iterator;
 import java.util.Optional;
 
@@ -207,6 +210,12 @@ public class PhysicsEngine implements ContactListener {
       } else if (bd2 instanceof PlayerBulletModel && bd1 instanceof BossModel) {
         handleCollision((PlayerBulletModel) bd2, (BossModel) bd1);
       }
+      //TODO: Change BoxModel to the Obstacle types once we have them defined later
+      else if (bd1 instanceof BulletModel && bd2 instanceof BoxModel) {
+        bd1.markRemoved(true);
+      } else if (bd2 instanceof BulletModel && bd1 instanceof BoxModel) {
+        bd2.markRemoved(true);
+      }
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -258,19 +267,6 @@ public class PhysicsEngine implements ContactListener {
     b.decrementHealth(ps.getDamage());
     ps.getMainBody().setKnockbackTime(15);
     applyKnockback(ps.getMainBody(), b.getPosition(), b.getSpearKnockbackForce());
-    removeAllBullets();
-  }
-
-  /** Remove all bullets from the screen */
-  public void removeAllBullets(){
-    Iterator<PooledList<Model>.Entry> iterator = objects.entryIterator();
-    while (iterator.hasNext()) {
-      PooledList<Model>.Entry entry = iterator.next();
-      Model obj = entry.getValue();
-      if(obj instanceof BulletModel){
-        obj.markRemoved(true);
-      }
-    }
   }
 
   /** Handle collision between player bullet and boss */
@@ -278,6 +274,7 @@ public class PhysicsEngine implements ContactListener {
     b.decrementHealth(pb.getDamage());
     pb.markRemoved(true);
   }
+
 
   @Override
   public void endContact(Contact contact) {}

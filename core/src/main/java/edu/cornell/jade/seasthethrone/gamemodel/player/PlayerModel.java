@@ -312,9 +312,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   }
 
   /** Sets value for shoot counter to the cooldown limit */
-  public void setShootCounter() {
-    shootCounter = shootCooldownLimit;
-  }
+  public void setShootCounter() { shootCounter = shootCooldownLimit; }
 
   /** Decrease fish counter. If the counter is sets to 0, stop shooting */
   public void decrementFishCount() {
