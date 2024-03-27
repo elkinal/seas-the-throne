@@ -179,8 +179,8 @@ public class GameplayController implements Screen {
     // Load pause menu dashboard
     pauseMenu = new PauseMenu(0, 0, 1, 1, -viewport.getScreenWidth()/2, viewport.getScreenHeight()/2);
     pauseMenu.updatePosition(viewport);
-    inputController.addPauseMenu(pauseMenu);
     renderEngine.addRenderable(pauseMenu);
+    inputController.addPauseMenu(pauseMenu);
     physicsEngine.addObject(pauseMenu);
 }
 
