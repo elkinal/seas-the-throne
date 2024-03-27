@@ -25,6 +25,10 @@ player/playerspritedashfilmstrip_down.png
 player/playerspritedashfilmstrip_left.png
 player/playerspritedashfilmstrip_right.png
 player/playerspritedashfilmstrip_up.png
+player/playerspriteidle_down.png
+player/playerspriteidle_left.png
+player/playerspriteidle_right.png
+player/playerspriteidle_up.png
 player/playerspriterun_down_wspear.png
 player/playerspriterun_left_wspear.png
 player/playerspriterun_right_wspear.png

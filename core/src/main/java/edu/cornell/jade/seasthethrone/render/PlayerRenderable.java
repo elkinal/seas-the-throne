@@ -69,6 +69,30 @@ public interface PlayerRenderable extends Renderable {
    * @return if the spear animation should begin to play
    */
   public boolean spearExtended();
+  /**
+   * Returns the player's texture for when they face up idle
+   *
+   * @return the player's texture when facing up idle
+   */
+  public Texture getIdleUp();
+  /**
+   * Returns the player's texture for when they face down idle
+   *
+   * @return the player's texture when facing down idle
+   */
+  public Texture getIdleDown();
+  /**
+   * Returns the player's texture for when they face right idle
+   *
+   * @return the player's texture when facing right idle
+   */
+  public Texture getIdleRight();
+  /**
+   * Returns the player's texture for when they face left idle
+   *
+   * @return the player's texture when facing left idle
+   */
+  public Texture getIdleLeft();
 
   /**
    * Returns the direction player is facing
@@ -83,40 +107,54 @@ public interface PlayerRenderable extends Renderable {
    * @return true if player is dashing and false if not
    */
   public boolean isDashing();
+  /**
+   * Returns whether the player is idle
+   *
+   * @return true if player is idle and false if not
+   */
+  public boolean isIdle();
 
   /** Returns the number of current health points of the player. */
   public int getHealth();
 
   public default void draw(RenderingEngine renderer) {
 
-    int frame = getFrameNumber();
     FilmStrip filmStrip = getFilmStrip();
     switch (direction()) {
       case UP:
         if (isDashing())
           filmStrip.setTexture(getTextureUpDash());
+        else if (isIdle())
+          filmStrip.setTexture(getIdleUp());
         else
           filmStrip.setTexture(getTextureUp());
         break;
       case DOWN:
         if (isDashing())
           filmStrip.setTexture(getTextureDownDash());
+        else if (isIdle())
+          filmStrip.setTexture(getIdleDown());
         else
           filmStrip.setTexture(getTextureDown());
         break;
       case LEFT:
         if (isDashing())
           filmStrip.setTexture(getTextureLeftDash());
+        else if (isIdle())
+          filmStrip.setTexture(getIdleLeft());
         else
           filmStrip.setTexture(getTextureLeft());
         break;
       case RIGHT:
         if (isDashing())
           filmStrip.setTexture(getTextureRightDash());
+        else if (isIdle())
+          filmStrip.setTexture(getIdleRight());
         else
           filmStrip.setTexture(getTextureRight());
         break;
     }
+    int frame = getFrameNumber();
     filmStrip.setFrame(frame);
 
     Vector2 pos = getPosition();

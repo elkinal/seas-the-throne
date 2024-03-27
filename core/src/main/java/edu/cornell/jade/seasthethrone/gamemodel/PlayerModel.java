@@ -47,6 +47,14 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
 
   /** Player texture for the das indicator */
   private Texture dashIndicatorTexture;
+  /** Player texture for idle left */
+  private Texture idleLeft;
+  /** Player texture for idle right */
+  private Texture idleRight;
+  /** Player texture for idle up */
+  private Texture idleUp;
+  /** Player texture for idle down */
+  private Texture idleDown;
 
   /** FilmStrip cache object */
   public FilmStrip filmStrip;
@@ -55,6 +63,8 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   /** FilmStrip cache object for dash left and right */
 
   public FilmStrip filmStripDashLR;
+  /** FilmStrip cache object for idle */
+  public FilmStrip filmStripIdle;
   /** current animation frame */
   private int animationFrame;
 
@@ -145,6 +155,10 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     playerTextureLeftDash = builder.playerTextureLeftDash;
     playerTextureRightDash = builder.playerTextureRightDash;
     dashIndicatorTexture = builder.dashIndicatorTexture;
+    idleLeft = builder.idleLeft;
+    idleRight = builder.idleRight;
+    idleUp = builder.idleUp;
+    idleDown = builder.idleDown;
 
     shootCooldownLimit = builder.shootCooldownLimit;
     shootCounter = 0;
@@ -162,6 +176,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     filmStrip = new FilmStrip(playerTextureDown, 1, framesInAnimation);
     filmStripDashUD = new FilmStrip(playerTextureDownDash, 1, framesInAnimationDash);
     filmStripDashLR = new FilmStrip(playerTextureLeftDash, 1, framesInAnimationDash);
+    filmStripIdle = new FilmStrip(idleDown, 1, 1);
   }
 
   @Override
@@ -174,7 +189,10 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
         setFrameNumber((getFrameNumber() + 1) % getFramesInAnimation());
       }
       dashFrameCounter += 1;
-    } else {
+    } else if (isIdle()){
+      setFrameNumber(getFrameNumber());
+    }
+    else {
       if (frameCounter % frameDelay == 0) {
         setFrameNumber((getFrameNumber() + 1) % getFramesInAnimation());
       }
@@ -191,8 +209,10 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
         return filmStripDashUD;
       else
         return filmStripDashLR;
-    } else
-      return filmStrip;
+    } else if (isIdle())
+        return filmStripIdle;
+      else
+        return filmStrip;
   }
 
   public int getFrameNumber() {
@@ -206,6 +226,8 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   public int getFramesInAnimation() {
     if (isDashing)
       return framesInAnimationDash;
+    else if (isIdle())
+      return 1;
     else
       return framesInAnimation;
   }
@@ -241,6 +263,12 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   public Texture getTextureRightDash() {
     return playerTextureRightDash;
   }
+  public Texture getIdleLeft() {return idleLeft; }
+  public Texture getIdleRight() {return idleRight; }
+  public Texture getIdleUp() {return idleUp; }
+  public Texture getIdleDown() {return idleDown; }
+
+
 
   /**
    * Returns player's move speed.
@@ -265,8 +293,24 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
    *
    * @return true if the player is dashing.
    */
+  @Override
   public boolean isDashing() {
     return isDashing;
+  }
+  /**
+   * Returns true if the player is idle.
+   *
+   * @return true if the player is idle.
+   */
+  @Override
+  public boolean isIdle() {
+    if (getVX() <= 0.1 && getVY() <= 0.1 && getVX()>=-0.1 && getVY()>=-0.1){
+      frameCounter = 1;
+      dashFrameCounter = 1;
+      animationFrame = 0;
+      return true;
+    }
+    return false;
   }
 
   /** Returns if the player can dash */
@@ -476,6 +520,14 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     /** Player texture when dashing right */
     private Texture playerTextureRightDash;
     private Texture dashIndicatorTexture;
+    /** player texture for idle left */
+    private Texture idleLeft;
+    /** Player texture for idle right */
+    private Texture idleRight;
+    /** Player texture for idle up */
+    private Texture idleUp;
+    /** Player texture for idle down */
+    private Texture idleDown;
 
     /** The number of frames to skip before animating the next player frame */
     private int frameDelay;
@@ -549,6 +601,23 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
       dashIndicatorTexture = texture;
       return this;
     }
+    public Builder setIdleLeft(Texture texture){
+      idleLeft = texture;
+      return this;
+    }
+    public Builder setIdleRight(Texture texture){
+      idleRight = texture;
+      return this;
+    }
+    public Builder setIdleUp(Texture texture){
+      idleUp = texture;
+      return this;
+    }
+    public Builder setIdleDown(Texture texture){
+      idleDown = texture;
+      return this;
+    }
+
     public Builder setFrameDelay(int frameDelay){
       this.frameDelay = frameDelay;
       return this;
