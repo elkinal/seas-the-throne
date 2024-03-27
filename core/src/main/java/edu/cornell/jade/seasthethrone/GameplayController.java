@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.*;
 
+import edu.cornell.jade.seasthethrone.gamemodel.PortalModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.ObstacleModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.CrabBossModel;
@@ -19,10 +20,7 @@ import edu.cornell.jade.seasthethrone.input.BossController;
 import edu.cornell.jade.seasthethrone.input.InputController;
 import edu.cornell.jade.seasthethrone.input.PlayerController;
 import edu.cornell.jade.seasthethrone.bpedit.BulletController;
-import edu.cornell.jade.seasthethrone.level.Level;
-import edu.cornell.jade.seasthethrone.level.Obstacle;
-import edu.cornell.jade.seasthethrone.level.Tile;
-import edu.cornell.jade.seasthethrone.level.Wall;
+import edu.cornell.jade.seasthethrone.level.*;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.model.PolygonModel;
@@ -187,16 +185,23 @@ public class GameplayController implements Screen {
     }
 
     // Load walls
-    for (Wall wall : level.getWalls()) {
+    for (LevelObject wall : level.getWalls()) {
       PolygonModel model = new PolygonModel(wall.toList(), wall.x, wall.y);
       model.setBodyType(BodyDef.BodyType.StaticBody);
       physicsEngine.addObject(model);
     }
 
-    for (Obstacle obs : level.getObstacles()) {
+    for (LevelObject obs : level.getObstacles()) {
       // BoxModel model = new BoxModel(obs.x, obs.y, obs.width, obs.height);
       ObstacleModel model = new ObstacleModel(obs, WORLD_SCALE);
       model.setBodyType(BodyDef.BodyType.StaticBody);
+      renderEngine.addRenderable(model);
+      physicsEngine.addObject(model);
+    }
+
+    // Load portals
+    for (LevelObject portal : level.getPortals()) {
+      PortalModel model = new PortalModel(portal.x, portal.y, portal.width, portal.height, portal.texture);
       renderEngine.addRenderable(model);
       physicsEngine.addObject(model);
     }
@@ -265,7 +270,7 @@ public class GameplayController implements Screen {
     }
 
     draw(delta);
-//    debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
+    debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
 
     if (gameState == GameState.OVER || gameState == GameState.WIN) {
       if (inputController.didReset()) {

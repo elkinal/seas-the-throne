@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 import jdk.jshell.spi.ExecutionControlProvider;
 
 import javax.annotation.processing.SupportedSourceVersion;
+import javax.management.ObjectName;
 import javax.swing.text.View;
 import java.util.Deque;
 import java.util.HashMap;
@@ -29,9 +30,12 @@ public class Level {
 
     private final Array<EnemyModel> enemies = new Array<>();
 
-    private final Array<Wall> walls = new Array<>();
+    private final Array<LevelObject> walls = new Array<>();
 
-    private final Array<Obstacle> obstacles = new Array<>();
+    private final Array<LevelObject> obstacles = new Array<>();
+
+    private final Array<LevelObject> portals = new Array<>();
+
 
     private BackgroundImage background;
 
@@ -96,6 +100,7 @@ public class Level {
         parseBossLayer(getLayer("bosses"));
         parseWallLayer(getLayer("walls"));
         parseObstacleLayer(getLayer("obstacles"));
+        parsePortalLayer(getLayer("portals"));
 //        enemies = parseEnemyLayer(getLayer("enemies"));
 
     }
@@ -128,9 +133,11 @@ public class Level {
 
     public Array<Vector2> getBosses() {return bosses;}
 
-    public Array<Wall> getWalls() { return walls; }
+    public Array<LevelObject> getWalls() { return walls; }
 
-    public Array<Obstacle> getObstacles() { return obstacles; }
+    public Array<LevelObject> getObstacles() { return obstacles; }
+
+    public Array<LevelObject> getPortals() { return portals; }
 
 
     private void parseBackgroundLayer(HashMap<String, Object> bgLayer) {
@@ -234,7 +241,7 @@ public class Level {
                     JsonHandler.getFloat(thisWallWrapper, "y"));
 
             Vector2 worldCoords = tiledToWorldCoords(tiledCoords);
-            Wall thisWall = new Wall(worldCoords.x, worldCoords.y);
+            LevelObject thisWall = new LevelObject(worldCoords.x, worldCoords.y);
 
             Array<HashMap<String, Object>> vertexList = JsonHandler.getArray(thisWallWrapper,"polygon");
 
@@ -257,9 +264,9 @@ public class Level {
     private void parseObstacleLayer(HashMap<String, Object> obstacleLayer) {
         if (obstacleLayer.isEmpty()) {return;}
 
-        Array<HashMap<Object, String>> obsWrapperList = (Array<HashMap<Object, String>>) obstacleLayer.get("objects");
+        Array<HashMap<String, Object>> obsWrapperList = (Array<HashMap<String, Object>>) obstacleLayer.get("objects");
 
-        for (HashMap<Object, String> obsWrapper : obsWrapperList) {
+        for (HashMap<String, Object> obsWrapper : obsWrapperList) {
             float x = Float.parseFloat((String) obsWrapper.get("x"));
             float y = Float.parseFloat((String) obsWrapper.get("y"));
             float width = Float.parseFloat((String) obsWrapper.get("width"));
@@ -267,11 +274,36 @@ public class Level {
             Vector2 pos = tiledToWorldCoords(new Vector2(x + width/2f, y + height/2f));
             Vector2 dims = (new Vector2(width * WORLD_SCALE, height * WORLD_SCALE));
 
-            if (obsWrapper.get("name").length() > 0) {
-                TextureRegion texture = new TextureRegion(new Texture(obsWrapper.get("name")));
-                obstacles.add(new Obstacle(pos.x, pos.y, dims.x, dims.y, texture));
+            if (((String)obsWrapper.get("name")).length() > 0) {
+                TextureRegion texture = new TextureRegion(new Texture((String)obsWrapper.get("name")));
+                obstacles.add(new LevelObject(pos.x, pos.y, dims.x, dims.y, texture));
             }
-            obstacles.add(new Obstacle(pos.x, pos.y, dims.x, dims.y));
+            obstacles.add(new LevelObject(pos.x, pos.y, dims.x, dims.y));
+        }
+    }
+
+    private void parsePortalLayer(HashMap<String, Object> portalLayer) {
+        if (portalLayer.isEmpty()) {return;}
+
+        Array<HashMap<String, Object>> portWrapperList = (Array<HashMap<String, Object>>) portalLayer.get("objects");
+
+        for (HashMap<String, Object> portWrapper : portWrapperList) {
+            float x = Float.parseFloat((String) portWrapper.get("x"));
+            float y = Float.parseFloat((String) portWrapper.get("y"));
+            float width = Float.parseFloat((String) portWrapper.get("width"));
+            float height = Float.parseFloat((String) portWrapper.get("height"));
+            Vector2 pos = tiledToWorldCoords(new Vector2(x + width/2f, y));
+            Vector2 dims = (new Vector2(width * WORLD_SCALE, height * WORLD_SCALE));
+
+            LevelObject portal;
+            if (((String)portWrapper.get("name")).length() > 0) {
+                TextureRegion texture = new TextureRegion(new Texture((String)portWrapper.get("name")));
+                portal = new LevelObject(pos.x, pos.y, dims.x, dims.y, texture);
+            } else {
+                portal = new LevelObject(pos.x, pos.y, dims.x, dims.y);
+            }
+            portal.setType(LevelObject.LevelObjType.PORTAL);
+            portals.add(portal);
         }
     }
 
