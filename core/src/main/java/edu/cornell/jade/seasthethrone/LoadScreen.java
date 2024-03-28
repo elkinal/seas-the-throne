@@ -35,10 +35,14 @@ public class LoadScreen implements Screen {
     /** Default budget for asset loader (do nothing but load 60 fps) */
     private static int DEFAULT_BUDGET = 100;
 
-    public LoadScreen(GameCanvas canvas, int millis) {
+    /** The code for the screen this load screen exits to */
+    private int exitCode;
+
+    public LoadScreen(GameCanvas canvas, int millis, int exitCode) {
         this.canvas = canvas;
         budget = millis;
         timer = 0;
+        this.exitCode = exitCode;
 
         /** LOADING IN FONT, might be better to have an AssetDirectory later */
         FreeTypeFontGenerator generator =
@@ -51,8 +55,8 @@ public class LoadScreen implements Screen {
         this.background = new Texture("levels/arenamaprough.png");
     }
 
-    public LoadScreen(GameCanvas canvas) {
-        this(canvas, DEFAULT_BUDGET);
+    public LoadScreen(GameCanvas canvas, int exitCode) {
+        this(canvas, DEFAULT_BUDGET, exitCode);
     }
 
     /**
@@ -93,8 +97,7 @@ public class LoadScreen implements Screen {
 
             // We are are ready, notify our listener
             if (isReady() && listener != null) {
-                System.out.println("timer "+this.timer);
-                listener.exitScreen(this, 0);
+                listener.exitScreen(this, exitCode);
             }
         }
     }

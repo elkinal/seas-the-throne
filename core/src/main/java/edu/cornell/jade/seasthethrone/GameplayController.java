@@ -244,11 +244,15 @@ public class GameplayController implements Screen {
       gameState = GameState.WIN;
     }
 
-    if (playerController.isInteractPressed()) {
+    if (physicsEngine.hasTarget()) {
+      System.out.println("hasTarget");
       listener.exitScreen(this, 1);
-      level = new Level("levels/shallow_map.json");
+      level = new Level(physicsEngine.getTarget());
       setupGameplay();
     }
+
+    // Reset target
+    physicsEngine.setTarget(null);
 
     renderEngine.clear();
     renderEngine.addRenderable(level.getBackground());
@@ -270,7 +274,7 @@ public class GameplayController implements Screen {
     }
 
     draw(delta);
-    debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
+//    debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
 
     if (gameState == GameState.OVER || gameState == GameState.WIN) {
       if (inputController.didReset()) {

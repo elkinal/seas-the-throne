@@ -2,8 +2,11 @@ package edu.cornell.jade.seasthethrone.gamemodel;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.World;
 import edu.cornell.jade.seasthethrone.level.LevelObject;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
+import edu.cornell.jade.seasthethrone.model.ComplexModel;
 import edu.cornell.jade.seasthethrone.model.SimpleModel;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
@@ -24,7 +27,8 @@ public class PortalModel extends BoxModel implements Renderable {
 
     public PortalModel(float x, float y, float width, float height, String target) {
         super(x, y, width, height);
-        setSensor(true);
+//        this.setBodyType(BodyDef.BodyType.StaticBody);
+        this.setSensor(true);
         this.target = target;
         this.texture = DEFUALT_TEXTURE;
     }
@@ -38,15 +42,7 @@ public class PortalModel extends BoxModel implements Renderable {
         this(portal.x, portal.y, portal.width, portal.height, portal.target, portal.texture);
     }
 
-    @Override
-    protected void createFixtures() {
-
-    }
-
-    @Override
-    protected void releaseFixtures() {
-
-    }
+    public String getTarget() { return target; }
 
     @Override
     public void draw(RenderingEngine renderer) {

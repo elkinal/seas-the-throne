@@ -19,7 +19,7 @@ public class GDXRoot extends Game implements ScreenListener {
 
     controller = new GameplayController();
     controller.setScreenListener(this);
-    loading = new LoadScreen(controller.renderEngine.getGameCanvas(), 50);
+    loading = new LoadScreen(controller.renderEngine.getGameCanvas(), 50, 1);
     loading.setScreenListener(this);
     setScreen(loading);
   }
@@ -32,7 +32,7 @@ public class GDXRoot extends Game implements ScreenListener {
 
   @Override
   public void exitScreen(Screen screen, int exitCode) {
-    if (screen == loading && exitCode == 0) {
+    if (screen == loading && exitCode == 1) {
       setScreen(controller);
 
       loading.dispose();
@@ -40,7 +40,7 @@ public class GDXRoot extends Game implements ScreenListener {
     }
 
     if (screen == controller && exitCode == 1) {
-      loading = new LoadScreen(controller.renderEngine.getGameCanvas(), 50);
+      loading = new LoadScreen(controller.renderEngine.getGameCanvas(), 50, 1);
       loading.setScreenListener(this);
       setScreen(loading);
     }
