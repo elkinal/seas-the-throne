@@ -948,12 +948,12 @@
                          "y":0
                         }, 
                         {
-                         "x":16.25,
-                         "y":-10
+                         "x":15.9772727272727,
+                         "y":-20.6363636363637
                         }, 
                         {
-                         "x":33,
-                         "y":-10
+                         "x":33.0909090909091,
+                         "y":-20.7272727272727
                         }, 
                         {
                          "x":33.25,
@@ -1713,6 +1713,23 @@
                  "width":20,
                  "x":940,
                  "y":1260
+                }, 
+                {
+                 "height":18.6875,
+                 "id":141,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"target",
+                         "type":"string",
+                         "value":"levels\/tablet_room.json"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":15.375,
+                 "x":753.3125,
+                 "y":470.25
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1721,7 +1738,7 @@
          "y":0
         }],
  "nextlayerid":13,
- "nextobjectid":139,
+ "nextobjectid":142,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

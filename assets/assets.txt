@@ -26,6 +26,8 @@ levels/hub_world.json
 levels/portal.png
 levels/shallowmap1.png
 levels/shallow_map.json
+levels/tablet_room.json
+levels/tablet_room.png
 levels/test1.json
 libgdx.png
 player/dash_indicator.png

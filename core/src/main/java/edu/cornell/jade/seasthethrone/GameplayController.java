@@ -245,7 +245,7 @@ public class GameplayController implements Screen {
     }
 
     if (physicsEngine.hasTarget()) {
-      System.out.println("hasTarget");
+      System.out.println("hasTarget "+physicsEngine.getTarget());
       listener.exitScreen(this, 1);
       level = new Level(physicsEngine.getTarget());
       setupGameplay();
@@ -274,7 +274,7 @@ public class GameplayController implements Screen {
     }
 
     draw(delta);
-//    debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
+    debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
 
     if (gameState == GameState.OVER || gameState == GameState.WIN) {
       if (inputController.didReset()) {
