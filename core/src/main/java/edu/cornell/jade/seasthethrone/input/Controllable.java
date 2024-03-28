@@ -9,6 +9,7 @@
 package edu.cornell.jade.seasthethrone.input;
 
 import com.badlogic.gdx.math.Vector2;
+import edu.cornell.jade.seasthethrone.pausemenu.PauseMenu;
 
 public interface Controllable {
 
