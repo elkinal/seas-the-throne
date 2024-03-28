@@ -13,23 +13,34 @@ import com.badlogic.gdx.math.Vector2;
 public interface Controllable {
 
   /** Updates the horizontal movement of the character. */
-  public void moveHorizontal(float movement);
+  default public void moveHorizontal(float movement) {}
 
   /** Updates the vertical movement of the character. */
-  public void moveVertical(float movement);
+  default public void moveVertical(float movement) {}
 
   /** Updates the primary attack state of the character. */
-  public void pressPrimary();
+  default public void pressPrimary() {}
 
   /** Updates the secondary attack state of the character. */
-  public void pressSecondary();
+  default public void pressSecondary() {}
 
   /** Updates the interact state of the character. */
-  public void pressInteract();
+  default public void pressInteract() {};
 
   /** Updates the direction the character is pointing for dash/shoot */
-  public void updateDirection(Vector2 mouseDir);
+  default public void updateDirection(Vector2 mouseDir) { return null }
 
   /** Returns the current location of the controllable object */
-  public Vector2 getLocation();
+  default public Vector2 getLocation(){ return null; }
+
+  /** Changes the game state from paused - unpaused and vice versa */
+  default public void pressPaused() {
+
+  }
+  /** Scrolls up in the pause menu */
+  default public void pressUp() {}
+
+  /** Scrolls down in the pause menu */
+  default public void pressDown() {}
+
 }

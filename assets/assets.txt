@@ -27,6 +27,7 @@ levels/shallowmap1.png
 levels/shallow_map.json
 levels/test1.json
 libgdx.png
+pause_menu/pausescreen.png
 player/dash_indicator.png
 player/playerspritedashfilmstrip_down.png
 player/playerspritedashfilmstrip_left.png

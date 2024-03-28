@@ -1,13 +1,14 @@
 package edu.cornell.jade.seasthethrone;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.*;
 
@@ -101,6 +102,12 @@ public class GameplayController implements Screen {
   /** Listener that will update the player mode when we are done */
   private ScreenListener listener;
 
+  /** Handling the pause menu */
+  private Stage stage;
+  private UIController uiController;
+  private PauseMenu pauseMenu;
+  public static boolean paused = false;
+
   protected GameplayController() {
     gameState = GameState.PLAY;
 
@@ -109,6 +116,7 @@ public class GameplayController implements Screen {
     DEFAULT_WIDTH = level.DEFAULT_WIDTH;
     WORLD_SCALE = level.WORLD_SCALE;
     this.viewport = level.getViewport();
+    stage = new Stage(viewport);
 
     bounds = new Rectangle(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 
@@ -204,6 +212,18 @@ public class GameplayController implements Screen {
     inputController.add(playerController);
   }
 
+
+    // Load pause menu dashboard
+    pauseMenu = new PauseMenu(0, 0, 1, 1, -viewport.getScreenWidth()/2, viewport.getScreenHeight()/2, viewport);
+
+    uiController = new UIController(pauseMenu);
+    inputController.add(uiController);
+
+    pauseMenu.updatePosition(viewport);
+    renderEngine.addOverlayRenderables(pauseMenu);
+    physicsEngine.addObject(pauseMenu);
+}
+
   public void render(float delta) {
     if (active) {
       update(delta);
@@ -212,8 +232,15 @@ public class GameplayController implements Screen {
   }
 
   public void draw(float delta) {
-    // renderEngine.drawBackground();
+    Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
+    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     renderEngine.drawRenderables();
+
+    //TODO: paused issue
+    pauseMenu.updatePosition(viewport);
+    paused = uiController.getPauseMenu().isPaused();
+//    pauseMenu.setVisible(paused);
+
   }
 
   public void update(float delta) {
@@ -223,7 +250,7 @@ public class GameplayController implements Screen {
 
     // Right now just errors if you try to update playerController or physicsEngine
     // when player is null
-    if (gameState != GameState.OVER) {
+    if (gameState != GameState.OVER && !paused) {
       playerController.update();
       if (this.bossController != null) {bossController.update();}
       physicsEngine.update(delta);
@@ -303,10 +330,10 @@ public class GameplayController implements Screen {
   }
 
   public void pause() {
+    paused = true;
   }
 
-  public void resume() {
-  }
+  public void resume() {}
 
   public void hide() {
     active = false;
@@ -316,6 +343,8 @@ public class GameplayController implements Screen {
     if (physicsEngine != null)
       physicsEngine.dispose();
   }
+
+
 
   /**
    * Compares Models based on height in the world

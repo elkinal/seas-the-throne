@@ -28,7 +28,7 @@ public class InputController {
   Viewport viewport;
 
   /** List of all the player input controllers */
-  private ArrayList<Controllable> players;
+  private ArrayList<Controllable> controllables;
 
   /** XBox Controller support */
   private XBoxController xbox;
@@ -55,9 +55,9 @@ public class InputController {
    *
    * @param p the PlayerController to be added
    */
-  public void add(PlayerController p) {
-    if (!players.contains(p)) {
-      players.add(p);
+  public void add(Controllable p) {
+    if (!controllables.contains(p)) {
+      controllables.add(p);
     }
   }
 
@@ -68,8 +68,8 @@ public class InputController {
    * @param p the PlayerController to be removed
    */
   public void remove(PlayerController p) {
-    if (players != null) {
-      players.remove(p);
+    if (controllables != null) {
+      controllables.remove(p);
     }
   }
 
@@ -82,7 +82,7 @@ public class InputController {
    *                      mouse coord.
    */
   public InputController(Viewport screenToWorld) {
-    this.players = new ArrayList<>();
+    this.controllables = new ArrayList<>();
     this.viewport = screenToWorld;
     this.dashCoordCache = new Vector2();
 
@@ -97,8 +97,9 @@ public class InputController {
    * Updates the state of this object (position) both vertically and horizontally.
    */
   public void update() {
-    for (Controllable p : players) {
-      readInput(p);
+    // Reading inputs for players
+    for (Controllable c : controllables) {
+      readInput(c);
     }
   }
 
@@ -109,7 +110,7 @@ public class InputController {
     if (xbox != null && xbox.isConnected()) {
       readController(p);
     } else {
-      readMouse(p);
+      if (p instanceof PlayerController) readMouse(p);
       readKeyboard(p);
     }
   }
@@ -175,6 +176,7 @@ public class InputController {
     float voff = 0;
     resetPressed = Gdx.input.isKeyPressed(Input.Keys.R);
 
+    // Player controls
     if (Gdx.input.isKeyPressed(Input.Keys.D)) {
       hoff += 1;
     }
@@ -197,6 +199,18 @@ public class InputController {
       obj.pressInteract();
     }
 
+
+
+    // UI controls
+    if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+      obj.pressPaused();
+    }
+    if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+      obj.pressUp();
+    }
+    if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+      obj.pressDown();
+    }
 
     obj.moveHorizontal(hoff);
     obj.moveVertical(voff);
