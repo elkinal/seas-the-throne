@@ -1,5 +1,6 @@
 package edu.cornell.jade.seasthethrone.render;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import edu.cornell.jade.seasthethrone.util.Direction;
@@ -116,6 +117,8 @@ public interface PlayerRenderable extends Renderable {
 
   /** Returns the number of current health points of the player. */
   public int getHealth();
+  /** Returns whether the player is invincible*/
+  public boolean isInvincible();
 
   public default void draw(RenderingEngine renderer) {
 
@@ -158,7 +161,10 @@ public interface PlayerRenderable extends Renderable {
     filmStrip.setFrame(frame);
 
     Vector2 pos = getPosition();
-    renderer.draw(filmStrip, pos.x, pos.y, 0.12f);
+    if (isInvincible())
+      renderer.draw(filmStrip, pos.x, pos.y, 0.12f, Color.RED);
+    else
+      renderer.draw(filmStrip, pos.x, pos.y, 0.12f);
 
 //    setFrameNumber((frame + 1) % getFramesInAnimation());
 
