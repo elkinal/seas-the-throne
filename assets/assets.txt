@@ -2,6 +2,9 @@ Alagard.ttf
 bosses/crab/crab_hit.png
 bosses/crab/crab_idle.png
 bosses/crab/crab_shoot.png
+bosses/jelly/jelly_hit.gif
+bosses/jelly/jelly_idle.gif
+bosses/jelly/jelly_idle.png
 bullet/yellowfish_east.png
 bullet/yellowfish_NE.png
 bullet/yellowfish_north.png
@@ -12,6 +15,8 @@ bullet/yellowfish_SW.png
 bullet/yellowfish_west.png
 EBGaramond.ttf
 empty.png
+hs_err_pid14660.log
+hs_err_pid17444.log
 legacy/bullet_test.png
 legacy/spear_left_right.png
 legacy/spear_up_down.png

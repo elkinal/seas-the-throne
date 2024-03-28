@@ -13,6 +13,7 @@ public class LevelObject implements Renderable {
         PORTAL,
         WALL,
         OBSTACLE,
+        BOSS
     }
 
     public float x;
@@ -21,6 +22,7 @@ public class LevelObject implements Renderable {
     public float height;
     public TextureRegion texture;
     public String target;
+    public String bossName;
 
     /** The type of object in the level this container represents */
     public LevelObjType type;
@@ -64,6 +66,9 @@ public class LevelObject implements Renderable {
     public void setType(LevelObjType type) { this.type = type; }
 
     public void setTarget(String target) { this.target = target; }
+
+    public void setBossName(String name) { this.bossName = name; }
+    public String getBossName() { return this.bossName; }
 
     @Override
     public Vector2 getPosition() {

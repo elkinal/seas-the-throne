@@ -26,7 +26,7 @@ public class Level {
 
     private Vector2 playerLoc;
 
-    private final Array<Vector2> bosses = new Array<>();
+    private final Array<LevelObject> bosses = new Array<>();
 
     private final Array<EnemyModel> enemies = new Array<>();
 
@@ -131,7 +131,7 @@ public class Level {
 
     public Array<Tile> getTiles() { return tiles; }
 
-    public Array<Vector2> getBosses() {return bosses;}
+    public Array<LevelObject> getBosses() {return bosses;}
 
     public Array<LevelObject> getWalls() { return walls; }
 
@@ -224,7 +224,13 @@ public class Level {
         for (HashMap<String, Object> bossWrapper : bossWrapperList) {
             float x = JsonHandler.getFloat(bossWrapper, "x");
             float y = JsonHandler.getFloat(bossWrapper, "y");
-            bosses.add(tiledToWorldCoords(new Vector2(x,y)));
+            String name = JsonHandler.getString(bossWrapper, "name");
+            Vector2 pos = tiledToWorldCoords(new Vector2(x, y));
+
+            LevelObject boss = new LevelObject(pos.x, pos.y);
+            boss.setBossName(name);
+
+            bosses.add(boss);
         }
     }
 

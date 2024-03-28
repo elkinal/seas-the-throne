@@ -168,15 +168,17 @@ public class GameplayController implements Screen {
 
     // Load bosses
     for (int i = 0; i < level.getBosses().size; i++) {
-      Vector2 bossLoc = level.getBosses().get(i);
+      LevelObject bossContainer = level.getBosses().get(i);
+      String name = bossContainer.bossName;
       BossModel boss = BossModel.Builder.newInstance()
-              .setX(bossLoc.x)
-              .setY(bossLoc.y)
-              .setType("crab")
+              .setX(bossContainer.x)
+              .setY(bossContainer.y)
+              .setType(name)
+              // TODO: set everything below here based on bossName, load from assets.json
               .setHealth(100)
               .setHitbox(new float[]{-4, -7, -4, 7, 4, 7, 4, -7})
-              .setFrameSize(110)
-              .setShootAnimation(new Texture("bosses/crab/crab_shoot.png"))
+              .setFrameSize()
+              .setShootAnimation(new Texture("bosses/"+name+"/"+name+"_idle.png"))
               .setFrameDelay(12)
               .build();
       renderEngine.addRenderable(boss);

@@ -176,6 +176,21 @@ public abstract class BossModel extends PolygonModel implements Renderable {
             this.frameSize = frameSize;
             return this;
         }
+
+        public Builder setFrameSize() {
+            switch (this.type) {
+                case "crab":
+                    this.frameSize = 110;
+                    return this;
+                case "jelly":
+                    this.frameSize = 45;
+                    return this;
+                default:
+                    this.frameSize = 0;
+                    return this;
+            }
+
+        }
         public Builder setShootAnimation(Texture texture) {
             int width = texture.getWidth();
             shootAnimation = new FilmStrip(texture, 1, width / frameSize);;
@@ -208,6 +223,7 @@ public abstract class BossModel extends PolygonModel implements Renderable {
         public BossModel build() {
             switch (type){
                 case "crab": return new CrabBossModel(this);
+                case "jelly": return new JellyBossModel(this);
 
                 // Should not get here
                 default: return new CrabBossModel(this);
