@@ -20,7 +20,6 @@ levels/boss-room-tileset.png
 levels/demonstatuepink.png
 levels/test1.json
 libgdx.png
-pause_menu/pausebutton.png
 pause_menu/pausescreen.png
 player/dash_indicator.png
 player/playerspritedashfilmstrip_down.png
