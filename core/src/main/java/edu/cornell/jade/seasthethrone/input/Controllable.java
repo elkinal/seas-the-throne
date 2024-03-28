@@ -25,18 +25,16 @@ public interface Controllable {
   default public void pressSecondary() {}
 
   /** Updates the interact state of the character. */
-  default public void pressInteract() {};
+  default public void pressInteract() {}
 
   /** Updates the direction the character is pointing for dash/shoot */
-  default public void updateDirection(Vector2 mouseDir) { return null }
+  default public void updateDirection(Vector2 mouseDir) {}
 
   /** Returns the current location of the controllable object */
   default public Vector2 getLocation(){ return null; }
 
   /** Changes the game state from paused - unpaused and vice versa */
-  default public void pressPaused() {
-
-  }
+  default public void pressPaused() {}
   /** Scrolls up in the pause menu */
   default public void pressUp() {}
 

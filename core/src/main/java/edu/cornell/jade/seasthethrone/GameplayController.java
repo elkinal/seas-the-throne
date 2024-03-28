@@ -2,6 +2,8 @@ package edu.cornell.jade.seasthethrone;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -27,6 +29,8 @@ import edu.cornell.jade.seasthethrone.level.Wall;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.model.PolygonModel;
+import edu.cornell.jade.seasthethrone.pausemenu.PauseMenu;
+import edu.cornell.jade.seasthethrone.pausemenu.UIController;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
@@ -210,11 +214,11 @@ public class GameplayController implements Screen {
     }
 
     inputController.add(playerController);
-  }
 
 
     // Load pause menu dashboard
-    pauseMenu = new PauseMenu(0, 0, 1, 1, -viewport.getScreenWidth()/2, viewport.getScreenHeight()/2, viewport);
+
+    pauseMenu = new PauseMenu(0, 0, 1, 1, -viewport.getScreenWidth() / 2, viewport.getScreenHeight() / 2, viewport);
 
     uiController = new UIController(pauseMenu);
     inputController.add(uiController);
@@ -222,7 +226,8 @@ public class GameplayController implements Screen {
     pauseMenu.updatePosition(viewport);
     renderEngine.addOverlayRenderables(pauseMenu);
     physicsEngine.addObject(pauseMenu);
-}
+  }
+
 
   public void render(float delta) {
     if (active) {
@@ -343,23 +348,26 @@ public class GameplayController implements Screen {
     if (physicsEngine != null)
       physicsEngine.dispose();
   }
-
-
-
-  /**
-   * Compares Models based on height in the world
-   */
-  class heightComparator implements Comparator<Model> {
-    @Override
-    public int compare(Model o1, Model o2) {
-      float diff = o2.getBody().getPosition().y - o1.getBody().getPosition().y;
-      if (diff > 0) {
-        return 1;
-      } else if (diff < 0) {
-        return -1;
-      }
-      return 0;
-    }
-  }
-
 }
+
+
+
+
+/**
+ * Compares Models based on height in the world
+ */
+class heightComparator implements Comparator<Model> {
+  @Override
+  public int compare(Model o1, Model o2) {
+    float diff = o2.getBody().getPosition().y - o1.getBody().getPosition().y;
+    if (diff > 0) {
+      return 1;
+    } else if (diff < 0) {
+      return -1;
+    }
+    return 0;
+  }
+}
+
+
+
