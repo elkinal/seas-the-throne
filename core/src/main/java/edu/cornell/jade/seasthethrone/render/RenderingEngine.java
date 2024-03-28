@@ -16,9 +16,6 @@ public class RenderingEngine {
   /** The Renderable objects for rendering */
   private Array<Renderable> renderables;
 
-  /** The Renderables objects for UI elements that overlay the screen */
-  private Array<Renderable> overlayRenderables;
-
   /** Layers of renderables to be rendered in order */
   private Array<Array<Renderable>> renderLayers;
 
@@ -44,7 +41,6 @@ public class RenderingEngine {
    */
   public RenderingEngine(float worldWidth, float worldHeight, Viewport viewport, float worldScale) {
     renderables = new Array<>();
-    overlayRenderables = new Array<>();
     renderLayers = new Array<>();
     canvas = new GameCanvas();
 
@@ -66,11 +62,7 @@ public class RenderingEngine {
    * @param r The renderable to be added
    */
   public void addRenderable(Renderable r) {
-    if (r != null) renderables.add(r);
-  }
-
-  public void addOverlayRenderables(Renderable r) {
-    if (r != null) overlayRenderables.add(r);
+    if (r != null) { renderables.add(r); }
   }
 
   public void setBackground(BackgroundImage bg) { BACKGROUND = bg;}
@@ -90,9 +82,6 @@ public class RenderingEngine {
     canvas.begin();
     canvas.getSpriteBatch().setProjectionMatrix(getViewport().getCamera().combined);
     for (Renderable r : renderables) {
-      r.draw(this);
-    }
-    for (Renderable r : overlayRenderables) {
       r.draw(this);
     }
     canvas.end();

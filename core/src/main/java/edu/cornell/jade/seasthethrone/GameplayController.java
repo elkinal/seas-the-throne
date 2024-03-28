@@ -1,8 +1,6 @@
 package edu.cornell.jade.seasthethrone;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -10,7 +8,6 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.*;
 
@@ -29,8 +26,6 @@ import edu.cornell.jade.seasthethrone.level.Wall;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.model.PolygonModel;
-import edu.cornell.jade.seasthethrone.pausemenu.PauseMenu;
-import edu.cornell.jade.seasthethrone.pausemenu.UIController;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
@@ -106,12 +101,6 @@ public class GameplayController implements Screen {
   /** Listener that will update the player mode when we are done */
   private ScreenListener listener;
 
-  /** Handling the pause menu */
-  private Stage stage;
-  private UIController uiController;
-  private PauseMenu pauseMenu;
-  public static boolean paused = false;
-
   protected GameplayController() {
     gameState = GameState.PLAY;
 
@@ -120,7 +109,6 @@ public class GameplayController implements Screen {
     DEFAULT_WIDTH = level.DEFAULT_WIDTH;
     WORLD_SCALE = level.WORLD_SCALE;
     this.viewport = level.getViewport();
-    stage = new Stage(viewport);
 
     bounds = new Rectangle(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 
@@ -214,20 +202,7 @@ public class GameplayController implements Screen {
     }
 
     inputController.add(playerController);
-
-
-    // Load pause menu dashboard
-
-    pauseMenu = new PauseMenu(0, 0, 1, 1, -viewport.getScreenWidth() / 2, viewport.getScreenHeight() / 2, viewport);
-
-    uiController = new UIController(pauseMenu);
-    inputController.add(uiController);
-
-    pauseMenu.updatePosition(viewport);
-    renderEngine.addOverlayRenderables(pauseMenu);
-    physicsEngine.addObject(pauseMenu);
   }
-
 
   public void render(float delta) {
     if (active) {
@@ -237,15 +212,8 @@ public class GameplayController implements Screen {
   }
 
   public void draw(float delta) {
-    Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
-    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+    // renderEngine.drawBackground();
     renderEngine.drawRenderables();
-
-    //TODO: paused issue
-    pauseMenu.updatePosition(viewport);
-    paused = uiController.getPauseMenu().isPaused();
-//    pauseMenu.setVisible(paused);
-
   }
 
   public void update(float delta) {
@@ -255,7 +223,7 @@ public class GameplayController implements Screen {
 
     // Right now just errors if you try to update playerController or physicsEngine
     // when player is null
-    if (gameState != GameState.OVER && !paused) {
+    if (gameState != GameState.OVER) {
       playerController.update();
       if (this.bossController != null) {bossController.update();}
       physicsEngine.update(delta);
@@ -297,7 +265,7 @@ public class GameplayController implements Screen {
     }
 
     draw(delta);
-//    debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
+    debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
 
     if (gameState == GameState.OVER || gameState == GameState.WIN) {
       if (inputController.didReset()) {
@@ -335,10 +303,10 @@ public class GameplayController implements Screen {
   }
 
   public void pause() {
-    paused = true;
   }
 
-  public void resume() {}
+  public void resume() {
+  }
 
   public void hide() {
     active = false;
@@ -348,26 +316,21 @@ public class GameplayController implements Screen {
     if (physicsEngine != null)
       physicsEngine.dispose();
   }
-}
 
-
-
-
-/**
- * Compares Models based on height in the world
- */
-class heightComparator implements Comparator<Model> {
-  @Override
-  public int compare(Model o1, Model o2) {
-    float diff = o2.getBody().getPosition().y - o1.getBody().getPosition().y;
-    if (diff > 0) {
-      return 1;
-    } else if (diff < 0) {
-      return -1;
+  /**
+   * Compares Models based on height in the world
+   */
+  class heightComparator implements Comparator<Model> {
+    @Override
+    public int compare(Model o1, Model o2) {
+      float diff = o2.getBody().getPosition().y - o1.getBody().getPosition().y;
+      if (diff > 0) {
+        return 1;
+      } else if (diff < 0) {
+        return -1;
+      }
+      return 0;
     }
-    return 0;
   }
+
 }
-
-
-
