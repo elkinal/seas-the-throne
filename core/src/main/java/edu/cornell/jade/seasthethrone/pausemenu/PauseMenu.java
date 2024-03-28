@@ -1,5 +1,7 @@
 package edu.cornell.jade.seasthethrone.pausemenu;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -8,6 +10,7 @@ import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
+import org.w3c.dom.Text;
 
 public class PauseMenu extends BoxModel implements Renderable {
 
@@ -18,12 +21,10 @@ public class PauseMenu extends BoxModel implements Renderable {
     private final float offsetY;
 
     // Used when a button only has one texture
-    private final Texture pauseMenuTexture1 = new Texture("pause_menu/pausescreendisplay1.png");
-    private final Texture pauseMenuTexture2 = new Texture("pause_menu/pausescreendisplay2.png");
-    private final Texture pauseMenuTexture3 = new Texture("pause_menu/pausescreendisplay3.png");
-    private final Texture pauseMenuTexture4 = new Texture("pause_menu/pausescreendisplay4.png");
+    private final Texture scrollTexture = new Texture("pause_menu/pausescreen.png");
 
-    private TextureRegion[] pauseButtonTextureRegions;
+    private final TextureRegion scrollTextureRegion;
+    private final TextureRegion backgroundTextureRegion;
 
     // Enum to select menu option
     private int currentTexture = MenuSelection.RESUME.label;
@@ -43,9 +44,8 @@ public class PauseMenu extends BoxModel implements Renderable {
 
 
     /** Constructor for the Pause Menu */
-    public PauseMenu(float x, float y, float width, float height, float offsetX, float offsetY) {
+    public PauseMenu(float x, float y, float width, float height, float offsetX, float offsetY, Viewport viewport) {
 
-        // Loads textures
         super(x, y, width, height);
 
         // Setting parameters
@@ -54,13 +54,17 @@ public class PauseMenu extends BoxModel implements Renderable {
         this.offsetX = offsetX;
         this.offsetY = offsetY;
 
-        // Loading textures
-        pauseButtonTextureRegions = new TextureRegion[] {
-                new TextureRegion(pauseMenuTexture1),
-                new TextureRegion(pauseMenuTexture2),
-                new TextureRegion(pauseMenuTexture3),
-                new TextureRegion(pauseMenuTexture4)
-        };
+        // Loading scroll texture
+        scrollTextureRegion = new TextureRegion(scrollTexture);
+
+        // Creating dark background texture
+        Pixmap pixmap = new Pixmap(viewport.getScreenWidth()/2, viewport.getScreenHeight()/2, Pixmap.Format.RGBA8888);
+        Color backgroundColor = new Color(0, 0, 0, 0.55f);
+        pixmap.setColor(backgroundColor);
+        pixmap.fill();
+        Texture backgroundTexture = new Texture(pixmap);
+        backgroundTextureRegion = new TextureRegion(backgroundTexture);
+
     }
 
     /** Updates the button's position on the game canvas */
@@ -70,6 +74,7 @@ public class PauseMenu extends BoxModel implements Renderable {
         Vector2 newLoc = viewport.unproject(new Vector2(newX, newY));
         setPosition(newLoc);
     }
+
 
     /** Returns true if the menu is paused */
     public boolean isPaused() {
@@ -103,7 +108,8 @@ public class PauseMenu extends BoxModel implements Renderable {
     @Override
     public void draw(RenderingEngine renderer) {
         if (paused) {
-            renderer.draw(pauseButtonTextureRegions[currentTexture], getX(), getY());
+            renderer.draw(backgroundTextureRegion, getX(), getY());
+            renderer.draw(scrollTextureRegion, getX(), getY());
         }
     }
 

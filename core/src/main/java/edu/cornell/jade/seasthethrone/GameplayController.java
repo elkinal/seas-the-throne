@@ -180,13 +180,13 @@ public class GameplayController implements Screen {
 
 
     // Load pause menu dashboard
-    pauseMenu = new PauseMenu(0, 0, 1, 1, -viewport.getScreenWidth()/2, viewport.getScreenHeight()/2);
+    pauseMenu = new PauseMenu(0, 0, 1, 1, -viewport.getScreenWidth()/2, viewport.getScreenHeight()/2, viewport);
 
     uiController = new UIController(pauseMenu);
     inputController.add(uiController);
 
     pauseMenu.updatePosition(viewport);
-    renderEngine.addRenderable(pauseMenu);
+    renderEngine.addOverlayRenderables(pauseMenu);
     physicsEngine.addObject(pauseMenu);
 }
 
@@ -198,7 +198,6 @@ public class GameplayController implements Screen {
   }
 
   public void draw(float delta) {
-    // renderEngine.drawBackground();
     Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     renderEngine.drawRenderables();
