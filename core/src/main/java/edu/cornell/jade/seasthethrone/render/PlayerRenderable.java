@@ -96,6 +96,31 @@ public interface PlayerRenderable extends Renderable {
   public Texture getIdleLeft();
 
   /**
+   * Returns the player's texture for when they shoot up
+   *
+   * @return the player's texture when shooting up
+   */
+  public Texture getShootUp();
+  /**
+   * Returns the player's texture for when they shoot down
+   *
+   * @return the player's texture when shooting down
+   */
+  public Texture getShootDown();
+  /**
+   * Returns the player's texture for when they shoot right
+   *
+   * @return the player's texture when shooting right
+   */
+  public Texture getShootRight();
+  /**
+   * Returns the player's texture for when they shoot left
+   *
+   * @return the player's texture when shooting left
+   */
+  public Texture getShootLeft();
+
+  /**
    * Returns the direction player is facing
    *
    * @return direction of player
@@ -119,6 +144,8 @@ public interface PlayerRenderable extends Renderable {
   public int getHealth();
   /** Returns whether the player is invincible*/
   public boolean isInvincible();
+  /** Returns whether the player is shooting */
+  public boolean isShooting();
 
   public default void draw(RenderingEngine renderer) {
 
@@ -127,6 +154,10 @@ public interface PlayerRenderable extends Renderable {
       case UP:
         if (isDashing())
           filmStrip.setTexture(getTextureUpDash());
+        else if (isShooting()) {
+          filmStrip.setTexture(getShootUp());
+          System.out.println("111");
+        }
         else if (isIdle())
           filmStrip.setTexture(getIdleUp());
         else
@@ -135,6 +166,8 @@ public interface PlayerRenderable extends Renderable {
       case DOWN:
         if (isDashing())
           filmStrip.setTexture(getTextureDownDash());
+        else if (isShooting())
+          filmStrip.setTexture(getShootDown());
         else if (isIdle())
           filmStrip.setTexture(getIdleDown());
         else
@@ -143,6 +176,8 @@ public interface PlayerRenderable extends Renderable {
       case LEFT:
         if (isDashing())
           filmStrip.setTexture(getTextureLeftDash());
+        else if (isShooting())
+          filmStrip.setTexture(getShootLeft());
         else if (isIdle())
           filmStrip.setTexture(getIdleLeft());
         else
@@ -151,6 +186,8 @@ public interface PlayerRenderable extends Renderable {
       case RIGHT:
         if (isDashing())
           filmStrip.setTexture(getTextureRightDash());
+        else if (isShooting())
+          filmStrip.setTexture(getShootRight());
         else if (isIdle())
           filmStrip.setTexture(getIdleRight());
         else

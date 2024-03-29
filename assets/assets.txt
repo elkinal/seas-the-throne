@@ -21,6 +21,10 @@ levels/demonstatuepink.png
 levels/test1.json
 libgdx.png
 player/dash_indicator.png
+player/playershoot_down_filmstrip.png
+player/playershoot_left_filmstrip.png
+player/playershoot_right_filmstrip.png
+player/playershoot_up_filmstrip.png
 player/playerspritedashfilmstrip_down.png
 player/playerspritedashfilmstrip_left.png
 player/playerspritedashfilmstrip_right.png
