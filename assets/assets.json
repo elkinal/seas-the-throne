@@ -1,0 +1,35 @@
+{
+  "textures": {
+    "crab": {
+      "idle": {
+        "file": "bosses/crab/idle.png"
+      },
+      "shoot": {
+        "file": "bosses/crab/shoot.png"
+      },
+      "hurt": {
+        "file": "bosses/crab/hurt.png"
+      },
+      "death": {
+        "file": "bosses/crab/death.png"
+      },
+      "left": {
+        "file": "bosses/crab/left.png"
+      },
+      "right": {
+        "file": "bosses/crab/right.png"
+      },
+      "up": {
+        "file": "bosses/crab/up.png"
+      },
+      "down": {
+        "file": "bosses/crab/down.png"
+      }
+    }
+  },
+  "soundfx": {
+    "fusion": "sounds/fusion.mp3",
+    "laser": "sounds/laser.mp3",
+    "torpedo": "sounds/torpedo.mp3"
+  }
+}

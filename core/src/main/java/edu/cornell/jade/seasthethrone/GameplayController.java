@@ -32,9 +32,7 @@ import java.util.Comparator;
 /**
  * The primary controller class for the game.
  *
- * <p>
- * Delegates all of the work to other subcontrollers including input control,
- * physics engine, and
+ * <p>Delegates all of the work to other subcontrollers including input control, physics engine, and
  * rendering engine. Contains the central update method.
  */
 public class GameplayController implements Screen {
@@ -57,6 +55,7 @@ public class GameplayController implements Screen {
   PlayerController playerController;
 
   BossController bossController;
+
   /** Rendering Engine */
   RenderingEngine renderEngine;
 
@@ -109,7 +108,6 @@ public class GameplayController implements Screen {
     this.renderEngine = new RenderingEngine(DEFAULT_WIDTH, DEFAULT_HEIGHT, viewport, WORLD_SCALE);
 
     setupGameplay();
-
   }
 
   public void show() {
@@ -132,7 +130,8 @@ public class GameplayController implements Screen {
 
     // Load player
     Vector2 playerLoc = level.getPlayerLoc();
-    PlayerModel player = PlayerModel.Builder.newInstance()
+    PlayerModel player =
+        PlayerModel.Builder.newInstance()
             .setX(playerLoc.x)
             .setY(playerLoc.y)
             .setTextureUp(new Texture("player/playerspriterun_up_wspear.png"))
@@ -160,11 +159,12 @@ public class GameplayController implements Screen {
 
     // Load bosses
     Vector2 bossLoc = level.getBosses().get(0);
-    BossModel boss = BossModel.Builder.newInstance()
+    BossModel boss =
+        BossModel.Builder.newInstance()
             .setX(bossLoc.x)
             .setY(bossLoc.y)
             .setFrameSize(110)
-            .setShootAnimation(new Texture("bosses/crab/crab_shoot.png"))
+            .setShootAnimation(new Texture("bosses/crab/shoot.png"))
             .setFrameDelay(12)
             .build();
     boss.setBodyType(BodyDef.BodyType.StaticBody);
@@ -174,8 +174,8 @@ public class GameplayController implements Screen {
 
     // Load walls
     for (Wall wall : level.getWalls()) {
-//      ObstacleModel wallModel = new ObstacleModel(wall);
-//      physicsEngine.addObject(wallModel);
+      //      ObstacleModel wallModel = new ObstacleModel(wall);
+      //      physicsEngine.addObject(wallModel);
 
       BoxModel model = new BoxModel(wall.x, wall.y, wall.width, wall.height);
       model.setBodyType(BodyDef.BodyType.StaticBody);
@@ -183,7 +183,7 @@ public class GameplayController implements Screen {
     }
 
     for (Obstacle obs : level.getObstacles()) {
-//      BoxModel model = new BoxModel(obs.x, obs.y, obs.width, obs.height);
+      //      BoxModel model = new BoxModel(obs.x, obs.y, obs.width, obs.height);
       ObstacleModel model = new ObstacleModel(obs, WORLD_SCALE);
       model.setBodyType(BodyDef.BodyType.StaticBody);
       renderEngine.addRenderable(model);
@@ -191,7 +191,7 @@ public class GameplayController implements Screen {
     }
 
     inputController.add(playerController);
-}
+  }
 
   public void render(float delta) {
     if (active) {
@@ -219,7 +219,6 @@ public class GameplayController implements Screen {
 
       // Update camera
       updateCamera();
-
     }
 
     if (!playerController.isAlive()) {
@@ -236,12 +235,13 @@ public class GameplayController implements Screen {
     objectCache.clear();
     for (Model obj : physicsEngine.getObjects()) {
       assert (obj.isActive());
-      if (obj instanceof Renderable r)
-        objectCache.add((Model) r);
+      if (obj instanceof Renderable r) objectCache.add((Model) r);
     }
     objectCache.sort(comp);
 
-    for (Model r : objectCache) { renderEngine.addRenderable((Renderable) r); }
+    for (Model r : objectCache) {
+      renderEngine.addRenderable((Renderable) r);
+    }
 
     draw(delta);
     debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
@@ -263,12 +263,13 @@ public class GameplayController implements Screen {
   /** Updates the camera position to keep the player centered on the screen */
   private void updateCamera() {
     Vector2 playerPos = playerController.getLocation();
-    Vector2 cameraPos = viewport
-        .unproject(new Vector2(viewport.getCamera().position.x, viewport.getCamera().position.y));
+    Vector2 cameraPos =
+        viewport.unproject(
+            new Vector2(viewport.getCamera().position.x, viewport.getCamera().position.y));
 
-    Vector2 worldDims = new Vector2(viewport.getWorldWidth(),  viewport.getWorldHeight());
+    Vector2 worldDims = new Vector2(viewport.getWorldWidth(), viewport.getWorldHeight());
 
-    Vector2 diff = playerPos.sub(cameraPos).sub( worldDims.x / 2, -worldDims.y / 2);
+    Vector2 diff = playerPos.sub(cameraPos).sub(worldDims.x / 2, -worldDims.y / 2);
     viewport.getCamera().translate(diff.x, diff.y, 0);
 
     // if (diff.len() > 15f){
@@ -277,32 +278,29 @@ public class GameplayController implements Screen {
     // }
   }
 
-  public void pause() {
-  }
+  public void pause() {}
 
-  public void resume() {
-  }
+  public void resume() {}
 
   public void hide() {
     active = false;
   }
 
   public void dispose() {
-    if (physicsEngine != null)
-      physicsEngine.dispose();
+    if (physicsEngine != null) physicsEngine.dispose();
   }
 
-  /**
-   * Compares Models based on height in the world
-   * */
+  /** Compares Models based on height in the world */
   class heightComparator implements Comparator<Model> {
     @Override
     public int compare(Model o1, Model o2) {
       float diff = o2.getBody().getPosition().y - o1.getBody().getPosition().y;
-      if (diff > 0) {return 1;}
-      else if (diff < 0) {return -1;}
+      if (diff > 0) {
+        return 1;
+      } else if (diff < 0) {
+        return -1;
+      }
       return 0;
     }
   }
-
 }
