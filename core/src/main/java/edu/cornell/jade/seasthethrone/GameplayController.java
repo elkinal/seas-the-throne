@@ -170,14 +170,15 @@ public class GameplayController implements Screen {
     // Load bosses
     for (int i = 0; i < level.getBosses().size; i++) {
       Vector2 bossLoc = level.getBosses().get(i);
-      BossModel boss = BossModel.Builder.newInstance()
+      BossModel boss =
+          BossModel.Builder.newInstance()
               .setX(bossLoc.x)
               .setY(bossLoc.y)
               .setType("crab")
               .setHealth(100)
-              .setHitbox(new float[]{-4, -7, -4, 7, 4, 7, 4, -7})
+              .setHitbox(new float[] {-4, -7, -4, 7, 4, 7, 4, -7})
               .setFrameSize(110)
-              .setShootAnimation(new Texture("bosses/crab/shoot.png"))
+              .setMoveAnimation(new Texture("bosses/crab/idle.png"))
               .setFrameDelay(12)
               .build();
       renderEngine.addRenderable(boss);
@@ -224,7 +225,9 @@ public class GameplayController implements Screen {
     // when player is null
     if (gameState != GameState.OVER) {
       playerController.update();
-      if (this.bossController != null) {bossController.update();}
+      if (this.bossController != null) {
+        bossController.update();
+      }
       physicsEngine.update(delta);
 
       // Update camera
@@ -294,7 +297,7 @@ public class GameplayController implements Screen {
   /**
    * Sets the ScreenListener for this mode
    *
-   * The ScreenListener will respond to requests to quit.
+   * <p>The ScreenListener will respond to requests to quit.
    */
   public void setScreenListener(ScreenListener listener) {
     this.listener = listener;
@@ -312,9 +315,7 @@ public class GameplayController implements Screen {
     if (physicsEngine != null) physicsEngine.dispose();
   }
 
-  /**
-   * Compares Models based on height in the world
-   */
+  /** Compares Models based on height in the world */
   class heightComparator implements Comparator<Model> {
     @Override
     public int compare(Model o1, Model o2) {

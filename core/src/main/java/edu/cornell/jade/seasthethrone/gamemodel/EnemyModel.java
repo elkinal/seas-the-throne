@@ -1,70 +1,100 @@
 package edu.cornell.jade.seasthethrone.gamemodel;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
+import edu.cornell.jade.seasthethrone.model.PolygonModel;
+import edu.cornell.jade.seasthethrone.util.FilmStrip;
 import edu.cornell.jade.seasthethrone.util.JsonHandler;
+import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel.Builder;
 
 import java.awt.desktop.SystemEventListener;
 import java.util.HashMap;
 
 /**
  * Superclass for all enemy models that assigns filmstrips to all universal animations for each
- * enemy, such as idle animations, death animations, etc.
+ * enemy, such as idle animations, death animations, etc. It also contains all universal physics
+ * elements necessary using ComplexModel.
  */
-public class EnemyModel {
-  // all enemy textures
+public class EnemyModel extends PolygonModel {
+  // all universal enemy textures
   /** Boss texture when idle */
-  protected Texture bossIdleTexture;
+  protected Texture idleTexture;
 
   /** Boss texture when shooting bullets */
-  protected Texture bossShootTexture;
+  protected Texture shootTexture;
 
   /** Boss texture when hit by the player */
-  protected Texture bossHurtTexture;
+  protected Texture hurtTexture;
 
   /** Boss texture when is defeated */
-  protected Texture bossDeathTexture;
+  protected Texture deathTexture;
 
-  // textures that may be necessary but currently are not:
-  // the concern is that minibosses only have one movement filmstrip but bosses have 4
-  //    /** Boss texture when facing left */
-  //    protected Texture bossLeftTexture;
-  //
-  //    /** Boss texture when facing right */
-  //    protected Texture bossRightTexture;
-  //
-  //    /** Boss texture when facing up */
-  //    protected Texture bossUpTexture;
-  //
-  //    /** Boss texture when facing down */
-  //    protected Texture bossDownTexture;
+  // all universal enemy filmstrips
+  /** Filmstrip for idle animation */
+  protected FilmStrip idleAnimation;
+
+  /** Filmstrip for shoot animation */
+  protected FilmStrip shootAnimation;
+
+  /** Filmstrip for hurt animation */
+  protected FilmStrip hurtAnimation;
+
+  /** Filmstrip for death animation */
+  protected FilmStrip deathAnimation;
 
   /**
-   * Constructor for EnemyModel: the method used to assign all textures.
+   * Constructor for EnemyModel. Assigns all textures.
    *
-   * @param fileName this should always be "assets.json"
-   * @param enemyName this should be the enemy name in the json file (eg. crab)
+   * @param enemyName Enemy name in the json file (eg. crab)
+   * @param builder Builder from BossModel
    */
-  public EnemyModel(String fileName, String enemyName) {
+  public EnemyModel(Builder builder, String enemyName, int frameSize) {
+    super(builder.getHitbox(), builder.getX(), builder.getY());
     HashMap<String, Object> bossTextures =
-        (HashMap<String, Object>) JsonHandler.jsonToMap(fileName).get("textures");
+        (HashMap<String, Object>) JsonHandler.jsonToMap("assets.json").get("textures");
     HashMap<String, Object> specificBossTextures =
         (HashMap<String, Object>) bossTextures.get(enemyName);
 
-    bossIdleTexture =
+    idleTexture =
         new Texture(
             (String) ((HashMap<String, Object>) specificBossTextures.get("idle")).get("file"));
-    bossShootTexture =
+    shootTexture =
         new Texture(
             (String) ((HashMap<String, Object>) specificBossTextures.get("shoot")).get("file"));
-    //    bossHurtTexture =
-    //        new Texture(
-    //            (String) ((HashMap<String, Object>)
-    // specificBossTextures.get("hurt")).get("file"));
-    //    bossDeathTexture =
-    //        new Texture(
-    //            (String) ((HashMap<String, Object>)
-    // specificBossTextures.get("death")).get("file"));
+    hurtTexture =
+        new Texture(
+            (String) ((HashMap<String, Object>) specificBossTextures.get("hurt")).get("file"));
+    deathTexture =
+        new Texture(
+            (String) ((HashMap<String, Object>) specificBossTextures.get("death")).get("file"));
+
+    // make filmstrips
+    setFilmstrips(frameSize);
+  }
+
+  /**
+   * Instantiates all filmstrips with their respective textures.
+   *
+   * @param frameSize Number of frames in animation
+   */
+  private void setFilmstrips(int frameSize) {
+    idleAnimation = makeFilmStrip(idleTexture, frameSize);
+    shootAnimation = makeFilmStrip(shootTexture, frameSize);
+    hurtAnimation = makeFilmStrip(hurtTexture, frameSize);
+    deathAnimation = makeFilmStrip(deathTexture, frameSize);
+  }
+
+  /**
+   * Helper method for 'setFilmstrips', makes the filmstrip.
+   *
+   * @param t Texture used in the filmstrip
+   * @param frameSize Number of frames in animation
+   * @return the Filmstrip to be assigned
+   */
+  private FilmStrip makeFilmStrip(Texture t, int frameSize) {
+    int width = t.getWidth();
+    return new FilmStrip(t, 1, width / frameSize);
   }
 }
