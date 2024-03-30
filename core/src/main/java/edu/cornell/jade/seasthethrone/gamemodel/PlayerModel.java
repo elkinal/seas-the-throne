@@ -134,6 +134,8 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   private float moveSpeed;
   /** Initial frame delay */
   private int initFrameDelay;
+  /** Shoot timer for player */
+  private int shootTime;
 
   /**
    * {@link PlayerModel} constructor using an x and y coordinate.
@@ -179,6 +181,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     shootCooldownLimit = builder.shootCooldownLimit;
     shootCounter = 0;
     isShooting = false;
+    shootTime = 0;
 
     PlayerBodyModel playerBody = new PlayerBodyModel(builder.x, builder.y);
     bodies.add(playerBody);
@@ -207,7 +210,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
       }
       dashFrameCounter += 1;
     }
-    else if (isShooting()){
+    else if (isShootingAnimated()){
       if (frameCounter % frameDelay == 0) {
         setFrameNumber((getFrameNumber() + 1) % getFramesInAnimation());
       }
@@ -234,8 +237,9 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
       else
         return filmStripDashLR;
     }
-    else if (isShooting)
+    else if (isShootingAnimated()) {
       return filmStripShoot;
+    }
     else if (isIdle())
       return filmStripIdle;
     else
@@ -253,7 +257,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   public int getFramesInAnimation() {
     if (isDashing)
       return framesInAnimationDash;
-    else if (isShooting())
+    else if (isShootingAnimated())
       return framesInAnimationShoot;
     else if (isIdle())
       return 1;
@@ -362,6 +366,11 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     return false;
   }
 
+  @Override
+  public boolean isShootingAnimated() {
+    return shootTime > 0;
+  }
+
   /** Returns if the player can dash */
   public boolean canDash() {
     return !isDashing && !isShooting && !isInvincible() && cooldownCounter == 0;
@@ -433,6 +442,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   /** Sets the player to shooting */
   public void startShooting() {
     isShooting = true;
+    shootTime = shootCooldownLimit * getSpearModel().getNumSpeared();
     shootCounter = 0;
     animationFrame = 0;
     frameCounter = 1;
@@ -504,6 +514,8 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
    */
   @Override
   public void update(float delta) {
+    if (shootTime > 0)
+      shootTime -= 1;
     if (isDashing()) {
       dashCounter -= 1;
       if (dashCounter <= 0) {
