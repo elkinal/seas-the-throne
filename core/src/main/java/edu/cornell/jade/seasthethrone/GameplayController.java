@@ -6,13 +6,15 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.*;
 
-import edu.cornell.jade.seasthethrone.gamemodel.BossModel;
+import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.ObstacleModel;
-import edu.cornell.jade.seasthethrone.gamemodel.PlayerModel;
+import edu.cornell.jade.seasthethrone.gamemodel.boss.CrabBossModel;
+import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.input.BossController;
 import edu.cornell.jade.seasthethrone.input.InputController;
 import edu.cornell.jade.seasthethrone.input.PlayerController;
@@ -23,9 +25,11 @@ import edu.cornell.jade.seasthethrone.level.Tile;
 import edu.cornell.jade.seasthethrone.level.Wall;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.model.Model;
+import edu.cornell.jade.seasthethrone.model.PolygonModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
+import edu.cornell.jade.seasthethrone.util.ScreenListener;
 
 import java.util.Comparator;
 
@@ -44,7 +48,9 @@ public class GameplayController implements Screen {
     /** While we are playing the game */
     PLAY,
     /** Game over */
-    OVER
+    OVER,
+    /** Game win */
+    WIN,
   }
 
   private GameState gameState;
@@ -70,7 +76,7 @@ public class GameplayController implements Screen {
   protected static float DEFAULT_HEIGHT;
 
   /** Ratio between the pixel in a texture and the meter in the world */
-  private static float WORLD_SCALE;
+  protected float WORLD_SCALE;
 
   /** The Box2D world */
   protected PhysicsEngine physicsEngine;
@@ -92,10 +98,13 @@ public class GameplayController implements Screen {
   /** Comparator to sort Models by height */
   private heightComparator comp = new heightComparator();
 
+  /** Listener that will update the player mode when we are done */
+  private ScreenListener listener;
+
   protected GameplayController() {
     gameState = GameState.PLAY;
 
-    this.level = new Level("levels/test1.json");
+    this.level = new Level("levels/hub_world.json");
     DEFAULT_HEIGHT = level.DEFAULT_HEIGHT;
     DEFAULT_WIDTH = level.DEFAULT_WIDTH;
     WORLD_SCALE = level.WORLD_SCALE;
@@ -163,36 +172,38 @@ public class GameplayController implements Screen {
             .build();
     renderEngine.addRenderable(player);
 
-    physicsEngine = new PhysicsEngine(bounds, world, player);
+    physicsEngine = new PhysicsEngine(bounds, world);
+    physicsEngine.addObject(player);
     playerController = new PlayerController(physicsEngine, player);
     bulletController = new BulletController(physicsEngine);
 
     // Load bosses
-    Vector2 bossLoc = level.getBosses().get(0);
-    BossModel boss = BossModel.Builder.newInstance()
-            .setX(bossLoc.x)
-            .setY(bossLoc.y)
-            .setFrameSize(110)
-            .setShootAnimation(new Texture("bosses/crab/crab_shoot.png"))
-            .setFrameDelay(12)
-            .build();
-    boss.setBodyType(BodyDef.BodyType.StaticBody);
-    renderEngine.addRenderable(boss);
-    physicsEngine.addObject(boss);
-    bossController = new BossController(boss);
+    for (int i = 0; i < level.getBosses().size; i++) {
+      Vector2 bossLoc = level.getBosses().get(i);
+      BossModel boss = BossModel.Builder.newInstance()
+              .setX(bossLoc.x)
+              .setY(bossLoc.y)
+              .setType("crab")
+              .setHealth(100)
+              .setHitbox(new float[]{-4, -7, -4, 7, 4, 7, 4, -7})
+              .setFrameSize(110)
+              .setShootAnimation(new Texture("bosses/crab/crab_shoot.png"))
+              .setFrameDelay(12)
+              .build();
+      renderEngine.addRenderable(boss);
+      physicsEngine.addObject(boss);
+      bossController = new BossController(boss);
+    }
 
     // Load walls
     for (Wall wall : level.getWalls()) {
-//      ObstacleModel wallModel = new ObstacleModel(wall);
-//      physicsEngine.addObject(wallModel);
-
-      BoxModel model = new BoxModel(wall.x, wall.y, wall.width, wall.height);
+      PolygonModel model = new PolygonModel(wall.toList(), wall.x, wall.y);
       model.setBodyType(BodyDef.BodyType.StaticBody);
       physicsEngine.addObject(model);
     }
 
     for (Obstacle obs : level.getObstacles()) {
-//      BoxModel model = new BoxModel(obs.x, obs.y, obs.width, obs.height);
+      // BoxModel model = new BoxModel(obs.x, obs.y, obs.width, obs.height);
       ObstacleModel model = new ObstacleModel(obs, WORLD_SCALE);
       model.setBodyType(BodyDef.BodyType.StaticBody);
       renderEngine.addRenderable(model);
@@ -200,7 +211,7 @@ public class GameplayController implements Screen {
     }
 
     inputController.add(playerController);
-}
+  }
 
   public void render(float delta) {
     if (active) {
@@ -223,7 +234,7 @@ public class GameplayController implements Screen {
     // when player is null
     if (gameState != GameState.OVER) {
       playerController.update();
-      bossController.update();
+      if (this.bossController != null) {bossController.update();}
       physicsEngine.update(delta);
 
       // Update camera
@@ -233,6 +244,14 @@ public class GameplayController implements Screen {
 
     if (!playerController.isAlive()) {
       gameState = GameState.OVER;
+    } else if (this.bossController != null && !bossController.isAlive()) {
+      gameState = GameState.WIN;
+    }
+
+    if (playerController.isInteractPressed()) {
+      listener.exitScreen(this, 1);
+      level = new Level("levels/shallow_map.json");
+      setupGameplay();
     }
 
     renderEngine.clear();
@@ -250,16 +269,18 @@ public class GameplayController implements Screen {
     }
     objectCache.sort(comp);
 
-    for (Model r : objectCache) { renderEngine.addRenderable((Renderable) r); }
+    for (Model r : objectCache) {
+      renderEngine.addRenderable((Renderable) r);
+    }
 
     draw(delta);
     debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
 
-    if (gameState == GameState.OVER) {
+    if (gameState == GameState.OVER || gameState == GameState.WIN) {
       if (inputController.didReset()) {
         setupGameplay();
       } else {
-        renderEngine.drawGameOver();
+        renderEngine.drawGameState(gameState);
       }
     }
   }
@@ -275,15 +296,19 @@ public class GameplayController implements Screen {
     Vector2 cameraPos = viewport
         .unproject(new Vector2(viewport.getCamera().position.x, viewport.getCamera().position.y));
 
-    Vector2 worldDims = new Vector2(viewport.getWorldWidth(),  viewport.getWorldHeight());
+    Vector2 worldDims = new Vector2(viewport.getWorldWidth(), viewport.getWorldHeight());
 
-    Vector2 diff = playerPos.sub(cameraPos).sub( worldDims.x / 2, -worldDims.y / 2);
+    Vector2 diff = playerPos.sub(cameraPos).sub(worldDims.x / 2, -worldDims.y / 2);
     viewport.getCamera().translate(diff.x, diff.y, 0);
+  }
 
-    // if (diff.len() > 15f){
-    // float CAMERA_SPEED = 0.01f;
-    // viewport.getCamera().translate(CAMERA_SPEED* diff.x,CAMERA_SPEED* diff.y, 0);
-    // }
+  /**
+   * Sets the ScreenListener for this mode
+   *
+   * The ScreenListener will respond to requests to quit.
+   */
+  public void setScreenListener(ScreenListener listener) {
+    this.listener = listener;
   }
 
   public void pause() {
@@ -303,13 +328,16 @@ public class GameplayController implements Screen {
 
   /**
    * Compares Models based on height in the world
-   * */
+   */
   class heightComparator implements Comparator<Model> {
     @Override
     public int compare(Model o1, Model o2) {
       float diff = o2.getBody().getPosition().y - o1.getBody().getPosition().y;
-      if (diff > 0) {return 1;}
-      else if (diff < 0) {return -1;}
+      if (diff > 0) {
+        return 1;
+      } else if (diff < 0) {
+        return -1;
+      }
       return 0;
     }
   }

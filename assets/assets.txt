@@ -1,3 +1,6 @@
+Alagard.ttf
+bosses/crab/crab_hit.png
+bosses/crab/crab_idle.png
 bosses/crab/crab_shoot.png
 bullet/yellowfish_east.png
 bullet/yellowfish_NE.png
@@ -8,6 +11,7 @@ bullet/yellowfish_south.png
 bullet/yellowfish_SW.png
 bullet/yellowfish_west.png
 EBGaramond.ttf
+empty.png
 legacy/bullet_test.png
 legacy/spear_left_right.png
 legacy/spear_up_down.png
@@ -18,6 +22,9 @@ legacy/spritebox_up.png
 levels/arenamaprough.png
 levels/boss-room-tileset.png
 levels/demonstatuepink.png
+levels/hub_world.json
+levels/shallowmap1.png
+levels/shallow_map.json
 levels/test1.json
 libgdx.png
 player/dash_indicator.png

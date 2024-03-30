@@ -1,4 +1,4 @@
-package edu.cornell.jade.seasthethrone.gamemodel;
+package edu.cornell.jade.seasthethrone.gamemodel.player;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
@@ -186,7 +186,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     PlayerBodyModel playerBody = new PlayerBodyModel(builder.x, builder.y);
     bodies.add(playerBody);
 
-    PlayerSpearModel playerSpear = new PlayerSpearModel(builder.x, builder.y, dashIndicatorTexture);
+    PlayerSpearModel playerSpear = new PlayerSpearModel(builder.x, builder.y, dashIndicatorTexture, playerBody);
     bodies.add(playerSpear);
 
     PlayerShadowModel playerShadow = new PlayerShadowModel(builder.x, builder.y - 1.6f);
@@ -395,7 +395,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   /** Sets the player to dashing */
   public void startDashing() {
     isDashing = true;
-    frameDelay = dashLength/ framesInAnimationDash;
+    frameDelay = dashLength / framesInAnimationDash;
     frameCounter = 1;
     getSpearModel().setSpear(true);
     animationFrame = 0;
@@ -560,10 +560,11 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
         faceDirection = Direction.DOWN;
     }
   }
+
   public static class Builder {
-    /**player x position */
+    /** player x position */
     private float x;
-    /**player y position */
+    /** player y position */
     private float y;
     /** Frame is player animation */
     private int framesInAnimation;
@@ -624,25 +625,25 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
 
     /** Scaling factor for player movement */
     private float moveSpeed;
-    public static Builder newInstance()
-    {
+
+    public static Builder newInstance() {
       return new Builder();
     }
 
     private Builder() {}
-    public Builder setX(float x){
+    public Builder setX(float x) {
       this.x = x;
       return this;
     }
-    public Builder setY(float y){
+    public Builder setY(float y) {
       this.y = y;
       return this;
     }
-    public Builder setFramesInAnimation(int frames){
+    public Builder setFramesInAnimation(int frames) {
       framesInAnimation = frames;
       return this;
     }
-    public Builder setFramesInAnimationDash(int frames){
+    public Builder setFramesInAnimationDash(int frames) {
       framesInAnimationDash = frames;
       return this;
     }
@@ -654,35 +655,35 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
       playerTextureUp = texture;
       return this;
     }
-    public Builder setTextureDown(Texture texture){
+    public Builder setTextureDown(Texture texture) {
       playerTextureDown = texture;
       return this;
     }
-    public Builder setTextureLeft(Texture texture){
+    public Builder setTextureLeft(Texture texture) {
       playerTextureLeft = texture;
       return this;
     }
-    public Builder setTextureRight(Texture texture){
+    public Builder setTextureRight(Texture texture) {
       playerTextureRight = texture;
       return this;
     }
-    public Builder setTextureUpDash(Texture texture){
+    public Builder setTextureUpDash(Texture texture) {
       playerTextureUpDash = texture;
       return this;
     }
-    public Builder setTextureDownDash(Texture texture){
+    public Builder setTextureDownDash(Texture texture) {
       playerTextureDownDash = texture;
       return this;
     }
-    public Builder setTextureLeftDash(Texture texture){
+    public Builder setTextureLeftDash(Texture texture) {
       playerTextureLeftDash = texture;
       return this;
     }
-    public Builder setTextureRightDash(Texture texture){
+    public Builder setTextureRightDash(Texture texture) {
       playerTextureRightDash = texture;
       return this;
     }
-    public Builder setDashIndicatorTexture(Texture texture){
+    public Builder setDashIndicatorTexture(Texture texture) {
       dashIndicatorTexture = texture;
       return this;
     }
@@ -723,23 +724,23 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
       this.frameDelay = frameDelay;
       return this;
     }
-    public Builder setCooldownLimit (int cooldownLimit){
+    public Builder setCooldownLimit(int cooldownLimit) {
       this.cooldownLimit = cooldownLimit;
       return this;
     }
-    public Builder setDashLength (int dashLength){
+    public Builder setDashLength(int dashLength) {
       this.dashLength = dashLength;
       return this;
     }
-    public Builder setShootCooldownLimit (int shootCooldownLimit){
+    public Builder setShootCooldownLimit(int shootCooldownLimit) {
       this.shootCooldownLimit = shootCooldownLimit;
       return this;
     }
-    public Builder setMoveSpeed (float moveSpeed){
+    public Builder setMoveSpeed(float moveSpeed) {
       this.moveSpeed = moveSpeed;
       return this;
     }
-    public PlayerModel build(){
+    public PlayerModel build() {
       return new PlayerModel(this);
     }
   }
