@@ -24,6 +24,9 @@ public interface Controllable {
   /** Updates the secondary attack state of the character. */
   public void pressSecondary();
 
+  /** Updates the interact state of the character. */
+  public void pressInteract();
+
   /** Updates the direction the character is pointing for dash/shoot */
   public void updateDirection(Vector2 mouseDir);
 

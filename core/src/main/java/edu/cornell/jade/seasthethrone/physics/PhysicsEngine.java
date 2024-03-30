@@ -6,9 +6,15 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import edu.cornell.jade.seasthethrone.gamemodel.*;
+import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
+import edu.cornell.jade.seasthethrone.gamemodel.player.*;
+import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.util.PooledList;
+
+import javax.swing.*;
 import java.util.Iterator;
+import java.util.Optional;
 
 public class PhysicsEngine implements ContactListener {
 
@@ -26,11 +32,14 @@ public class PhysicsEngine implements ContactListener {
 
   private Array<BossModel> bosses = new Array<>();
 
-  public PhysicsEngine(Rectangle bounds, World world, PlayerModel player) {
+  /** To keep track of the continuous player-boss collision */
+  private Optional<Contact> playerBossCollision;
+
+  public PhysicsEngine(Rectangle bounds, World world) {
     this.world = world;
     this.bounds = new Rectangle(bounds);
     world.setContactListener(this);
-    addObject(player);
+    playerBossCollision = Optional.empty();
   }
 
   public PooledList<Model> getObjects() {
@@ -58,20 +67,15 @@ public class PhysicsEngine implements ContactListener {
    */
   public void spawnBullet(Vector2 pos, Vector2 vel, float speed, boolean shotByPlayer) {
     BulletModel bullet = BulletModel.Builder.newInstance()
-            .setX(pos.x)
-            .setY(pos.y)
-            .setFishTexture(new Texture("bullet/yellowfish_east.png"))
-            .setRadius(0.5f)
-            .setShotByPlayer(shotByPlayer)
-            .build();
+        .setX(pos.x)
+        .setY(pos.y)
+        .setFishTexture(new Texture("bullet/yellowfish_east.png"))
+        .setRadius(0.5f)
+        .setShotByPlayer(shotByPlayer)
+        .build();
     bullet.setVX(speed * vel.x);
     bullet.setVY(speed * vel.y);
-    if (shotByPlayer){
-      CollisionMask.setCategoryMaskBits(bullet, true);
-    }
-
     addObject(bullet);
-    bullet.createFixtures();
   }
 
   /**
@@ -126,6 +130,12 @@ public class PhysicsEngine implements ContactListener {
       } else {
         obj.update(delta);
       }
+    }
+
+    // Try to collide with the boss again (if player is not invincible)
+    // I'm not a fan of this workaround but I couldn't figure anything else out
+    if (!playerBossCollision.isEmpty() && playerBossCollision.get().isTouching()) {
+      beginContact(playerBossCollision.get());
     }
   }
 
@@ -193,13 +203,39 @@ public class PhysicsEngine implements ContactListener {
         handleCollision((PlayerSpearModel) bd1, (BulletModel) bd2);
       } else if (bd2 instanceof PlayerSpearModel && bd1 instanceof BulletModel) {
         handleCollision((PlayerSpearModel) bd2, (BulletModel) bd1);
+      } else if (bd1 instanceof PlayerSpearModel && bd2 instanceof BossModel) {
+        handleCollision((PlayerSpearModel) bd1, (BossModel) bd2);
+      } else if (bd2 instanceof PlayerSpearModel && bd1 instanceof BossModel) {
+        handleCollision((PlayerSpearModel) bd2, (BossModel) bd1);
+      } else if (bd1 instanceof PlayerBodyModel && bd2 instanceof BossModel) {
+        handleCollision((PlayerBodyModel) bd1, (BossModel) bd2, contact);
+      } else if (bd2 instanceof PlayerBodyModel && bd1 instanceof BossModel) {
+        handleCollision((PlayerBodyModel) bd2, (BossModel) bd1, contact);
+      } else if (bd1 instanceof PlayerBulletModel && bd2 instanceof BossModel) {
+        handleCollision((PlayerBulletModel) bd1, (BossModel) bd2);
+      } else if (bd2 instanceof PlayerBulletModel && bd1 instanceof BossModel) {
+        handleCollision((PlayerBulletModel) bd2, (BossModel) bd1);
       }
-      else if (bd1 instanceof PlayerShadowModel && bd2 instanceof BulletModel){}
-      else if (bd2 instanceof PlayerShadowModel && bd1 instanceof BulletModel){}
+      // TODO: Change BoxModel to the Obstacle types once we have them defined later
+      else if (bd1 instanceof BulletModel && bd2 instanceof BoxModel) {
+        bd1.markRemoved(true);
+      } else if (bd2 instanceof BulletModel && bd1 instanceof BoxModel) {
+        bd2.markRemoved(true);
+      }
 
     } catch (Exception e) {
       e.printStackTrace();
     }
+  }
+
+  /** Helper function to apply a knockback on the player body. */
+  public void applyKnockback(PlayerBodyModel pb, Vector2 bd2Pos, float knockbackForce) {
+
+    // Calculate knockback direction
+    Vector2 knockbackDir = pb.getPosition().sub(bd2Pos).nor();
+    // Apply knockback force
+    pb.getBody().setLinearVelocity(0, 0);
+    pb.getBody().applyLinearImpulse(knockbackDir.scl(knockbackForce), pb.getCentroid(), false);
   }
 
   /** Handle collision between player body and bullet */
@@ -208,15 +244,8 @@ public class PhysicsEngine implements ContactListener {
     if (!pb.isInvincible()) {
       pb.setHit(true);
       pb.setInvincible();
-      // Calculate knockback direction
-      Vector2 knockbackDir = pb.getPosition().sub(b.getPosition()).nor();
-      // Apply knockback force
-      pb.getBody().setLinearVelocity(0, 0);
-      pb.getBody().applyLinearImpulse(knockbackDir.scl(b.getKnockbackForce()), pb.getCentroid(), false);
+      applyKnockback(pb, b.getPosition(), b.getKnockbackForce());
     }
-  }
-
-  public void handleCollision( ObstacleModel obs, BulletModel b) {
   }
 
   /** Handle collision between player spear and bullet */
@@ -225,8 +254,38 @@ public class PhysicsEngine implements ContactListener {
     b.markRemoved(true);
   }
 
+  /** Handle collision between player body and boss */
+  public void handleCollision(PlayerBodyModel pb, BossModel b, Contact c) {
+    System.out.println(pb.isInvincible());
+    if (!pb.isInvincible()) {
+      pb.setHit(true);
+      pb.setInvincible();
+      applyKnockback(pb, b.getPosition(), b.getBodyKnockbackForce());
+      playerBossCollision = Optional.empty();
+    } else {
+      if (playerBossCollision.isEmpty()) {
+        playerBossCollision = Optional.of(c);
+      }
+    }
+
+  }
+
+  /** Handle collision between player spear and boss */
+  public void handleCollision(PlayerSpearModel ps, BossModel b) {
+    b.decrementHealth(ps.getDamage());
+    ps.getMainBody().setKnockbackTime(15);
+    applyKnockback(ps.getMainBody(), b.getPosition(), b.getSpearKnockbackForce());
+  }
+
+  /** Handle collision between player bullet and boss */
+  public void handleCollision(PlayerBulletModel pb, BossModel b) {
+    b.decrementHealth(pb.getDamage());
+    pb.markRemoved(true);
+  }
+
   @Override
-  public void endContact(Contact contact) {}
+  public void endContact(Contact contact) {
+  }
 
   @Override
   public void preSolve(Contact contact, Manifold oldManifold) {

@@ -12,7 +12,7 @@ package edu.cornell.jade.seasthethrone.input;
 
 import com.badlogic.gdx.math.Vector2;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
-import edu.cornell.jade.seasthethrone.gamemodel.PlayerModel;
+import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.util.Direction;
 import com.badlogic.gdx.math.MathUtils;
 
@@ -38,6 +38,9 @@ public class PlayerController implements Controllable {
 
   /** If shooting pressed in since last update */
   boolean shootingPressed;
+
+  /** If interact pressed in since last update */
+  boolean interactPressed;
 
   /** The vector direction of the player for dashing
    *  NOTE: this vector will always be normalized, and nonzero */
@@ -79,6 +82,10 @@ public class PlayerController implements Controllable {
   public void pressSecondary() {
     shootingPressed = true;
   }
+
+  public void pressInteract() {interactPressed = true;}
+
+  public boolean isInteractPressed() { return interactPressed; }
 
   /**
    * Move in given direction based on offset

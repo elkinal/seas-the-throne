@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import edu.cornell.jade.seasthethrone.GameplayController;
 import edu.cornell.jade.seasthethrone.level.BackgroundImage;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
@@ -45,7 +46,7 @@ public class RenderingEngine {
 
     /** LOADING IN FONT, might be better to have an AssetDirectory later */
     FreeTypeFontGenerator generator =
-        new FreeTypeFontGenerator(Gdx.files.internal("EBGaramond.ttf"));
+        new FreeTypeFontGenerator(Gdx.files.internal("Alagard.ttf"));
     FreeTypeFontGenerator.FreeTypeFontParameter parameter =
         new FreeTypeFontGenerator.FreeTypeFontParameter();
     parameter.size = 50; // font size
@@ -61,10 +62,7 @@ public class RenderingEngine {
    * @param r The renderable to be added
    */
   public void addRenderable(Renderable r) {
-    renderables.add(r);
-
-
-
+    if (r != null) { renderables.add(r); }
   }
 
   public void setBackground(BackgroundImage bg) { BACKGROUND = bg;}
@@ -109,9 +107,15 @@ public class RenderingEngine {
   }
 
   //Temporary for prototype
-  public void drawGameOver() {
+  public void drawGameState(GameplayController.GameState gs) {
     canvas.begin();
-    canvas.drawTextCentered("Game Over!", textFont, 60f);
+    switch(gs) {
+      case WIN:
+        canvas.drawTextCentered("YOU WIN!", textFont, 60f);
+        break;
+      default:
+        canvas.drawTextCentered("Game Over!", textFont, 60f);
+    }
     canvas.drawTextCentered("Press R to Restart", textFont, 0);
     canvas.end();
   }
