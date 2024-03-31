@@ -28,6 +28,10 @@ levels/shallow_map.json
 levels/test1.json
 libgdx.png
 player/dash_indicator.png
+player/playerdeath_down_filmstrip.png
+player/playerdeath_left_filmstrip.png
+player/playerdeath_right_filmstrip.png
+player/playerdeath_up_filmstrip.png
 player/playershoot_down_filmstrip.png
 player/playershoot_left_filmstrip.png
 player/playershoot_right_filmstrip.png

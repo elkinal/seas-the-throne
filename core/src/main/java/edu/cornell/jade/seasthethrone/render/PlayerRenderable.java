@@ -119,6 +119,31 @@ public interface PlayerRenderable extends Renderable {
    * @return the player's texture when shooting left
    */
   public Texture getShootLeft();
+  /**
+   * Returns the player's texture for when they die up
+   *
+   * @return the player's texture when dying up
+   */
+  public Texture getDieUp();
+  /**
+   * Returns the player's texture for when they die down
+   *
+   * @return the player's texture when dying down
+   */
+  public Texture getDieDown();
+  /**
+   * Returns the player's texture for when they die right
+   *
+   * @return the player's texture when dying right
+   */
+  public Texture getDieRight();
+  /**
+   * Returns the player's texture for when they die left
+   *
+   * @return the player's texture when dying left
+   */
+  public Texture getDieLeft();
+
 
   /**
    * Returns the direction player is facing
@@ -146,6 +171,8 @@ public interface PlayerRenderable extends Renderable {
   public boolean isInvincible();
   /** Returns whether the player is shooting */
   public boolean isShootingAnimated();
+  /** Returns whether the player is dead */
+  public boolean isDead();
 
   public default void draw(RenderingEngine renderer) {
 
@@ -159,6 +186,8 @@ public interface PlayerRenderable extends Renderable {
         }
         else if (isIdle())
           filmStrip.setTexture(getIdleUp());
+        else if (isDead())
+          filmStrip.setTexture(getDieUp());
         else
           filmStrip.setTexture(getTextureUp());
         break;
@@ -169,6 +198,8 @@ public interface PlayerRenderable extends Renderable {
           filmStrip.setTexture(getShootDown());
         else if (isIdle())
           filmStrip.setTexture(getIdleDown());
+        else if (isDead())
+          filmStrip.setTexture(getDieDown());
         else
           filmStrip.setTexture(getTextureDown());
         break;
@@ -179,6 +210,8 @@ public interface PlayerRenderable extends Renderable {
           filmStrip.setTexture(getShootLeft());
         else if (isIdle())
           filmStrip.setTexture(getIdleLeft());
+        else if (isDead())
+          filmStrip.setTexture(getDieLeft());
         else
           filmStrip.setTexture(getTextureLeft());
         break;
@@ -189,6 +222,8 @@ public interface PlayerRenderable extends Renderable {
           filmStrip.setTexture(getShootRight());
         else if (isIdle())
           filmStrip.setTexture(getIdleRight());
+        else if (isDead())
+          filmStrip.setTexture(getDieRight());
         else
           filmStrip.setTexture(getTextureRight());
         break;
