@@ -1,7 +1,9 @@
 Alagard.ttf
-bosses/crab/crab_hit.png
-bosses/crab/crab_idle.png
-bosses/crab/crab_shoot.png
+assets.json
+bosses/crab/attack.png
+bosses/crab/hit.png
+bosses/crab/idle.png
+bosses/crab/shoot.png
 bullet/yellowfish_east.png
 bullet/yellowfish_NE.png
 bullet/yellowfish_north.png
