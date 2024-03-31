@@ -10,7 +10,7 @@ import edu.cornell.jade.seasthethrone.util.FilmStrip;
 public class CrabBossModel extends BossModel {
 
   /** {@link CrabBossModel} constructor using Builder */
-  public CrabBossModel(Builder builder, int frameSize) {
+  public CrabBossModel(Builder builder) {
     super(builder);
   }
 }

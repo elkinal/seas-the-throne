@@ -201,11 +201,11 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     public BossModel build() {
       switch (type) {
         case "crab":
-          return new CrabBossModel(this, frameSize);
+          return new CrabBossModel(this);
 
           // Should not get here
         default:
-          return new CrabBossModel(this, frameSize);
+          return new CrabBossModel(this);
       }
     }
   }
