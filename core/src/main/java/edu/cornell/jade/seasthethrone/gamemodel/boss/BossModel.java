@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import edu.cornell.jade.seasthethrone.gamemodel.EnemyModel;
-import edu.cornell.jade.seasthethrone.model.PolygonModel;
 import edu.cornell.jade.seasthethrone.physics.CollisionMask;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
@@ -46,8 +45,8 @@ public abstract class BossModel extends EnemyModel implements Renderable {
    *
    * @param builder builder for BossModel
    */
-  public BossModel(Builder builder, String bossName) {
-    super(builder, bossName, builder.frameSize);
+  public BossModel(Builder builder) {
+    super(builder, builder.type, builder.frameSize);
     frameSize = builder.frameSize;
     moveAnimation = builder.moveAnimation;
     this.filmStrip = super.shootAnimation;
@@ -121,7 +120,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     /** boss y position */
     private float y;
 
-    /** type of the boss (ie. crab, etc.) */
+    /** Type of the boss (ie. crab, etc.). Must be the same string as the boss name in the json. */
     private String type;
 
     /** Number of frames in boss animation */

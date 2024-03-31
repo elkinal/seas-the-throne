@@ -1,15 +1,11 @@
 package edu.cornell.jade.seasthethrone.gamemodel;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Json;
 import edu.cornell.jade.seasthethrone.model.PolygonModel;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 import edu.cornell.jade.seasthethrone.util.JsonHandler;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel.Builder;
 
-import java.awt.desktop.SystemEventListener;
 import java.util.HashMap;
 
 /**
