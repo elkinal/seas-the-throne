@@ -224,7 +224,15 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     PlayerRenderable.super.draw(renderer);
 
     // Only move to next frame of animation every frameDelay number of frames
-    if (isDashing) {
+    if (isDead()){
+      if (frameCounter % frameDelay == 0 && getFrameNumber()< getFramesInAnimation() - 1) {
+        setFrameNumber(getFrameNumber() + 1);
+      }
+      else
+        setFrameNumber(getFrameNumber());
+      frameCounter += 1;
+    }
+    else if (isDashing) {
       if (dashFrameCounter % frameDelay == 0) {
         setFrameNumber((getFrameNumber() + 1) % getFramesInAnimation());
       }
@@ -250,7 +258,9 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   }
 
   public FilmStrip getFilmStrip() {
-    if (isDashing) {
+    if (isDead())
+      return filmStripDeath;
+    else if (isDashing) {
       if (faceDirection == Direction.DOWN || faceDirection == Direction.UP)
 
         return filmStripDashUD;
@@ -262,8 +272,6 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     }
     else if (isIdle())
       return filmStripIdle;
-    else if (isDead())
-      return filmStripDeath;
     else
       return filmStrip;
   }
@@ -277,14 +285,14 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   }
 
   public int getFramesInAnimation() {
-    if (isDashing)
+    if (isDead())
+      return framesInAnimationDeath;
+    else if (isDashing)
       return framesInAnimationDash;
     else if (isShootingAnimated())
       return framesInAnimationShoot;
     else if (isIdle())
       return 1;
-    else if (isDead())
-      return framesInAnimationDeath;
     else
       return framesInAnimation;
   }
@@ -393,13 +401,7 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
    */
   @Override
   public boolean isIdle() {
-    if (getVX() <= 0.1 && getVY() <= 0.1 && getVX()>=-0.1 && getVY()>=-0.1){
-      frameCounter = 1;
-      dashFrameCounter = 1;
-      animationFrame = 0;
-      return true;
-    }
-    return false;
+    return getVX() <= 0.1 && getVY() <= 0.1 && getVX()>=-0.1 && getVY()>=-0.1;
   }
 
   @Override
@@ -412,7 +414,12 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     return getHealth()<=0;
   }
   public boolean isTerminated(){
-    return isDead() && deathCount <= 0;
+    if (isDead() && deathCount <= 0) {
+      getBodyModel().markRemoved(true);
+      return true;
+    }
+    else
+      return false;
   }
   /** Returns if the player can dash */
   public boolean canDash() {
@@ -565,7 +572,12 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   public void update(float delta) {
     if (shootTime > 0)
       shootTime -= 1;
-    if (isDashing()) {
+    if (isDead()){
+      if (deathCount == framesInAnimationDeath * initFrameDelay)
+        startDying();
+      deathCount = Math.max(0, deathCount - 1);
+    }
+    else if (isDashing()) {
       dashCounter -= 1;
       if (dashCounter <= 0) {
         // exit dash
@@ -576,10 +588,10 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
     else if (isShooting()) {
       shootCounter = Math.max(0, shootCounter - 1);
     }
-    else if (isDead()){
-      if (deathCount == framesInAnimationDeath * 4)
-        startDying();
-      deathCount = Math.max(0, deathCount - 1);
+    else if (isIdle()){
+      animationFrame = 0;
+      frameCounter = 1;
+      dashFrameCounter = 1;
     }
     else {
       cooldownCounter = Math.max(0, cooldownCounter - 1);

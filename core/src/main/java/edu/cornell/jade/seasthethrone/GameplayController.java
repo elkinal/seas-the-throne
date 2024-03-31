@@ -237,7 +237,7 @@ public class GameplayController implements Screen {
 
     // Right now just errors if you try to update playerController or physicsEngine
     // when player is null
-    if (gameState != GameState.OVER) {
+    if (gameState != GameState.OVER && playerController.isAlive()) {
       playerController.update();
       if (this.bossController != null) {bossController.update();}
       physicsEngine.update(delta);
@@ -247,9 +247,10 @@ public class GameplayController implements Screen {
 
     }
 
-    if (!playerController.isAlive()) {
+    if (playerController.isTerminated()) {
       gameState = GameState.OVER;
-    } else if (this.bossController != null && !bossController.isAlive()) {
+    }
+    else if (this.bossController != null && !bossController.isAlive()) {
       gameState = GameState.WIN;
     }
 

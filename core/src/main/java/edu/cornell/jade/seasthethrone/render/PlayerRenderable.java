@@ -179,51 +179,51 @@ public interface PlayerRenderable extends Renderable {
     FilmStrip filmStrip = getFilmStrip();
     switch (direction()) {
       case UP:
-        if (isDashing())
+        if (isDead())
+          filmStrip.setTexture(getDieUp());
+        else if (isDashing())
           filmStrip.setTexture(getTextureUpDash());
         else if (isShootingAnimated()) {
           filmStrip.setTexture(getShootUp());
         }
         else if (isIdle())
           filmStrip.setTexture(getIdleUp());
-        else if (isDead())
-          filmStrip.setTexture(getDieUp());
         else
           filmStrip.setTexture(getTextureUp());
         break;
       case DOWN:
-        if (isDashing())
+        if (isDead())
+          filmStrip.setTexture(getDieDown());
+        else if (isDashing())
           filmStrip.setTexture(getTextureDownDash());
         else if (isShootingAnimated())
           filmStrip.setTexture(getShootDown());
         else if (isIdle())
           filmStrip.setTexture(getIdleDown());
-        else if (isDead())
-          filmStrip.setTexture(getDieDown());
         else
           filmStrip.setTexture(getTextureDown());
         break;
       case LEFT:
-        if (isDashing())
+        if (isDead())
+          filmStrip.setTexture(getDieLeft());
+        else if (isDashing())
           filmStrip.setTexture(getTextureLeftDash());
         else if (isShootingAnimated())
           filmStrip.setTexture(getShootLeft());
         else if (isIdle())
           filmStrip.setTexture(getIdleLeft());
-        else if (isDead())
-          filmStrip.setTexture(getDieLeft());
         else
           filmStrip.setTexture(getTextureLeft());
         break;
       case RIGHT:
-        if (isDashing())
+        if (isDead())
+          filmStrip.setTexture(getDieRight());
+        else if (isDashing())
           filmStrip.setTexture(getTextureRightDash());
         else if (isShootingAnimated())
           filmStrip.setTexture(getShootRight());
         else if (isIdle())
           filmStrip.setTexture(getIdleRight());
-        else if (isDead())
-          filmStrip.setTexture(getDieRight());
         else
           filmStrip.setTexture(getTextureRight());
         break;
@@ -232,7 +232,7 @@ public interface PlayerRenderable extends Renderable {
     filmStrip.setFrame(frame);
 
     Vector2 pos = getPosition();
-    if (isInvincible())
+    if (isInvincible()&&!isDead())
       renderer.draw(filmStrip, pos.x, pos.y, 0.12f, Color.RED);
     else
       renderer.draw(filmStrip, pos.x, pos.y, 0.12f);

@@ -50,9 +50,6 @@ public class PlayerBodyModel extends PolygonModel {
   public void setHit(boolean hit) {
     isHit = hit;
     health -= 1;
-    if(health <= 0){
-      markRemoved(true);
-    }
   }
 
   /** Number of current health points of the player */
