@@ -1,4 +1,5 @@
 Alagard.ttf
+bosses/crab/crabfallover_filmstrip.png
 bosses/crab/crab_hit.png
 bosses/crab/crab_idle.png
 bosses/crab/crab_shoot.png

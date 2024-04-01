@@ -40,7 +40,8 @@ public abstract class BossModel extends PolygonModel implements Renderable {
 
     /** Number of health points the boss has */
     protected int health;
-
+    /** Death animation countdown */
+    private int deathCount;
     /**
      * {@link BossModel} constructor using an x and y coordinate.
      *
@@ -58,6 +59,7 @@ public abstract class BossModel extends PolygonModel implements Renderable {
         frameCounter = 1;
         frameDelay = builder.frameDelay;
         health = builder.health;
+        deathCount = frameDelay * 16;
 
         bodyKnockbackForce = 70f;
         spearKnockbackForce = 130f;
@@ -70,9 +72,20 @@ public abstract class BossModel extends PolygonModel implements Renderable {
         filmStrip.setFrame(frame);
         Vector2 pos = getPosition();
         renderer.draw(filmStrip, pos.x, pos.y, 0.16f);
-
-        if (frameCounter % frameDelay == 0) {
-            setFrameNumber((getFrameNumber() + 1) % getFramesInAnimation());
+        if (isDead()) {
+            if (frameCounter % frameDelay == 0 && getFrameNumber()< getFramesInAnimation() - 1) {
+                setFrameNumber(getFrameNumber() + 1);
+                deathCount -= 1;
+            }
+            else {
+                setFrameNumber(getFrameNumber());
+                deathCount -= 1;
+            }
+        }
+        else {
+            if (frameCounter % frameDelay == 0) {
+                setFrameNumber((getFrameNumber() + 1) % getFramesInAnimation());
+            }
         }
         frameCounter += 1;
     }
@@ -84,6 +97,8 @@ public abstract class BossModel extends PolygonModel implements Renderable {
     public float getSpearKnockbackForce() {
         return spearKnockbackForce;
     }
+    public boolean isDead() {return health <= 0;}
+    public boolean isTerminated() {return deathCount <= 0;}
 
     /** Get remaining health points of the boss */
     public int getHealth() {
@@ -96,8 +111,8 @@ public abstract class BossModel extends PolygonModel implements Renderable {
      */
     public void decrementHealth(int damage) {
         health -= damage;
-        if (health <= 0) {
-            markRemoved(true);
+        if (isDead()) {
+            filmStrip = dieAnimation;
         }
     }
 
@@ -198,7 +213,8 @@ public abstract class BossModel extends PolygonModel implements Renderable {
         }
         public Builder setDieAnimation(Texture texture) {
             int width = texture.getWidth();
-            dieAnimation = new FilmStrip(texture, 1, width / frameSize);;
+            //TODO: Stop hardcoding columns
+            dieAnimation = new FilmStrip(texture, 1, 16);;
             return this;
         }
         public Builder setFrameDelay(int frameDelay) {

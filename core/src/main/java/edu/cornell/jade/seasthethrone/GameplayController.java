@@ -193,6 +193,7 @@ public class GameplayController implements Screen {
               .setHitbox(new float[]{-4, -7, -4, 7, 4, 7, 4, -7})
               .setFrameSize(110)
               .setShootAnimation(new Texture("bosses/crab/crab_shoot.png"))
+              .setDieAnimation(new Texture("bosses/crab/crabfallover_filmstrip.png"))
               .setFrameDelay(12)
               .build();
       renderEngine.addRenderable(boss);
@@ -250,8 +251,10 @@ public class GameplayController implements Screen {
     if (playerController.isTerminated()) {
       gameState = GameState.OVER;
     }
+    //FIXME: find a better way to remove boss
     else if (this.bossController != null && !bossController.isAlive()) {
       gameState = GameState.WIN;
+      bossController.remove();
     }
 
     if (playerController.isInteractPressed()) {

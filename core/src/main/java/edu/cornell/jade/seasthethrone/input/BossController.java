@@ -40,8 +40,9 @@ public class BossController implements Controllable {
     }
 
     public boolean isAlive() {
-        return boss.isActive();
+        return !boss.isTerminated();
     }
+    public void remove(){boss.markRemoved(true);}
 
     /** Called every tick. Checks to update state every 10 ticks */
     public void update() {
