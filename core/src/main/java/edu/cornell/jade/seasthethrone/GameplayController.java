@@ -60,7 +60,7 @@ public class GameplayController implements Screen {
   /** Sub-controller for handling updating physics engine based on input */
   PlayerController playerController;
 
-  BossController bossController;
+  Array<BossController> bossControllers;
   /** Rendering Engine */
   RenderingEngine renderEngine;
 
@@ -112,6 +112,7 @@ public class GameplayController implements Screen {
 
     active = false;
 
+    this.bossControllers = new Array<>();
     this.inputController = new InputController(viewport);
     this.renderEngine = new RenderingEngine(DEFAULT_WIDTH, DEFAULT_HEIGHT, viewport, WORLD_SCALE);
 
@@ -183,7 +184,7 @@ public class GameplayController implements Screen {
               .build();
       renderEngine.addRenderable(boss);
       physicsEngine.addObject(boss);
-      bossController = new BossController(boss);
+      bossControllers.add(new BossController(boss));
     }
 
     // Load walls
@@ -209,6 +210,8 @@ public class GameplayController implements Screen {
     }
 
     inputController.add(playerController);
+    System.out.println("phys engine: "+physicsEngine.getObjects().size());
+
   }
 
   public void render(float delta) {
@@ -232,7 +235,11 @@ public class GameplayController implements Screen {
     // when player is null
     if (gameState != GameState.OVER) {
       playerController.update();
-      if (this.bossController != null) {bossController.update();}
+      for (BossController bc : bossControllers) {
+        if (bc.isAlive()) {
+          bc.update();
+        }
+      }
       physicsEngine.update(delta);
 
       // Update camera
@@ -242,7 +249,7 @@ public class GameplayController implements Screen {
 
     if (!playerController.isAlive()) {
       gameState = GameState.OVER;
-    } else if (this.bossController != null && !bossController.isAlive()) {
+    } else if (!bossControllers.isEmpty() && allBossesDefeated()) {
       gameState = GameState.WIN;
     }
 
@@ -250,6 +257,9 @@ public class GameplayController implements Screen {
       System.out.println("hasTarget "+physicsEngine.getTarget());
       listener.exitScreen(this, 1);
       level = new Level(physicsEngine.getTarget());
+//      this.dispose();
+      physicsEngine.getObjects().clear();
+      this.renderEngine.clear();
       setupGameplay();
     }
 
@@ -328,6 +338,14 @@ public class GameplayController implements Screen {
       physicsEngine.dispose();
   }
 
+  public boolean allBossesDefeated() {
+    boolean defeated = true;
+    for (BossController bc : bossControllers) {
+      defeated = defeated && !bc.isAlive();
+    }
+    return  defeated;
+  }
+
   /**
    * Compares Models based on height in the world
    */
@@ -343,5 +361,6 @@ public class GameplayController implements Screen {
       return 0;
     }
   }
+
 
 }

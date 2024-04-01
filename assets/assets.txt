@@ -15,8 +15,13 @@ bullet/yellowfish_SW.png
 bullet/yellowfish_west.png
 EBGaramond.ttf
 empty.png
+hs_err_pid12260.log
+hs_err_pid13464.log
 hs_err_pid14660.log
+hs_err_pid16516.log
 hs_err_pid17444.log
+hs_err_pid18104.log
+hs_err_pid8532.log
 legacy/bullet_test.png
 legacy/spear_left_right.png
 legacy/spear_up_down.png
