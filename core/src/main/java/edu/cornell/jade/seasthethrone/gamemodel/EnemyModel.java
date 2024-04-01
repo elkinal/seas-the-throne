@@ -47,6 +47,7 @@ public class EnemyModel extends PolygonModel {
    * @param hitbox Polygon indicating a boss hitbox 
    * @param x x coordinate of the enemy model
    * @param y y coordinate of the enemy model
+   * @param frameSize number of frames in all animations 
    */
   public EnemyModel(float x, float y, float[] hitbox, String enemyName, int frameSize) {
     super(hitbox, x, y);
