@@ -17,7 +17,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   /** Boss-unique move animation TODO: make left right up down filmstrips */
   private FilmStrip moveAnimation;
 
-  /** TODO: IS THIS DESCRIPTION CORRECT--> The current filmstrip being used */
+  /** The current filmstrip being used */
   public FilmStrip filmStrip;
 
   /** The number of frames since this boss was inititalized */
