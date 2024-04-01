@@ -44,10 +44,12 @@ public class EnemyModel extends PolygonModel {
    * Constructor for EnemyModel. Assigns all textures.
    *
    * @param enemyName Enemy name in the json file (eg. crab)
-   * @param builder Builder from BossModel
+   * @param hitbox Polygon indicating a boss hitbox 
+   * @param x x coordinate of the enemy model
+   * @param y y coordinate of the enemy model
    */
-  public EnemyModel(Builder builder, String enemyName, int frameSize) {
-    super(builder.getHitbox(), builder.getX(), builder.getY());
+  public EnemyModel(float x, float y, float[] hitbox, String enemyName, int frameSize) {
+    super(hitbox, x, y);
     HashMap<String, Object> bossTextures =
         (HashMap<String, Object>) JsonHandler.jsonToMap("assets.json").get("textures");
     HashMap<String, Object> specificBossTextures =

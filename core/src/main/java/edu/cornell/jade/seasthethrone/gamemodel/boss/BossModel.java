@@ -46,7 +46,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
    * @param builder builder for BossModel
    */
   public BossModel(Builder builder) {
-    super(builder, builder.type, builder.frameSize);
+    super(builder.getX(), builder.getY(), builder.getHitbox(), builder.type, builder.frameSize);
     frameSize = builder.frameSize;
     moveAnimation = builder.moveAnimation;
     this.filmStrip = super.shootAnimation;
