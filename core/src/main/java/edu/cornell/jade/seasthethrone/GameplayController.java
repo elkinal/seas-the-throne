@@ -255,7 +255,7 @@ public class GameplayController implements Screen {
 
     if (physicsEngine.hasTarget()) {
       System.out.println("hasTarget "+physicsEngine.getTarget());
-      listener.exitScreen(this, 1);
+      listener.exitScreen(this, GDXRoot.EXIT_SWAP);
       level = new Level(physicsEngine.getTarget());
 //      this.dispose();
       physicsEngine.getObjects().clear();
