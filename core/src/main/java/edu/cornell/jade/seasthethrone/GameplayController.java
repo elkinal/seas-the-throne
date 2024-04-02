@@ -36,9 +36,7 @@ import java.util.Comparator;
 /**
  * The primary controller class for the game.
  *
- * <p>
- * Delegates all of the work to other subcontrollers including input control,
- * physics engine, and
+ * <p>Delegates all of the work to other subcontrollers including input control, physics engine, and
  * rendering engine. Contains the central update method.
  */
 public class GameplayController implements Screen {
@@ -63,6 +61,7 @@ public class GameplayController implements Screen {
   PlayerController playerController;
 
   BossController bossController;
+
   /** Rendering Engine */
   RenderingEngine renderEngine;
 
@@ -105,6 +104,7 @@ public class GameplayController implements Screen {
     gameState = GameState.PLAY;
 
     this.level = new Level("levels/hub_world.json");
+
     DEFAULT_HEIGHT = level.DEFAULT_HEIGHT;
     DEFAULT_WIDTH = level.DEFAULT_WIDTH;
     WORLD_SCALE = level.WORLD_SCALE;
@@ -118,7 +118,6 @@ public class GameplayController implements Screen {
     this.renderEngine = new RenderingEngine(DEFAULT_WIDTH, DEFAULT_HEIGHT, viewport, WORLD_SCALE);
 
     setupGameplay();
-
   }
 
   public void show() {
@@ -141,7 +140,8 @@ public class GameplayController implements Screen {
 
     // Load player
     Vector2 playerLoc = level.getPlayerLoc();
-    PlayerModel player = PlayerModel.Builder.newInstance()
+    PlayerModel player =
+        PlayerModel.Builder.newInstance()
             .setX(playerLoc.x)
             .setY(playerLoc.y)
             .setTextureUp(new Texture("player/playerspriterun_up_wspear.png"))
@@ -185,14 +185,16 @@ public class GameplayController implements Screen {
     // Load bosses
     for (int i = 0; i < level.getBosses().size; i++) {
       Vector2 bossLoc = level.getBosses().get(i);
-      BossModel boss = BossModel.Builder.newInstance()
+      BossModel boss =
+          BossModel.Builder.newInstance()
               .setX(bossLoc.x)
               .setY(bossLoc.y)
               .setType("crab")
               .setHealth(100)
-              .setHitbox(new float[]{-4, -7, -4, 7, 4, 7, 4, -7})
+              .setHitbox(new float[] {-4, -7, -4, 7, 4, 7, 4, -7})
               .setFrameSize(110)
-              .setShootAnimation(new Texture("bosses/crab/crab_shoot.png"))
+              .setMoveAnimation(new Texture("bosses/crab/idle.png"))
+              .setShootAnimation(new Texture("bosses/crab/shoot.png"))
               .setDieAnimation(new Texture("bosses/crab/crabfallover_filmstrip.png"))
               .setFrameDelay(12)
               .build();
@@ -240,12 +242,13 @@ public class GameplayController implements Screen {
     // when player is null
     if (gameState != GameState.OVER && playerController.isAlive()) {
       playerController.update();
-      if (this.bossController != null) {bossController.update();}
+      if (this.bossController != null) {
+        bossController.update();
+      }
       physicsEngine.update(delta);
 
       // Update camera
       updateCamera();
-
     }
 
     if (playerController.isTerminated()) {
@@ -273,8 +276,7 @@ public class GameplayController implements Screen {
     objectCache.clear();
     for (Model obj : physicsEngine.getObjects()) {
       assert (obj.isActive());
-      if (obj instanceof Renderable r)
-        objectCache.add((Model) r);
+      if (obj instanceof Renderable r) objectCache.add((Model) r);
     }
     objectCache.sort(comp);
 
@@ -302,8 +304,9 @@ public class GameplayController implements Screen {
   /** Updates the camera position to keep the player centered on the screen */
   private void updateCamera() {
     Vector2 playerPos = playerController.getLocation();
-    Vector2 cameraPos = viewport
-        .unproject(new Vector2(viewport.getCamera().position.x, viewport.getCamera().position.y));
+    Vector2 cameraPos =
+        viewport.unproject(
+            new Vector2(viewport.getCamera().position.x, viewport.getCamera().position.y));
 
     Vector2 worldDims = new Vector2(viewport.getWorldWidth(), viewport.getWorldHeight());
 
@@ -314,30 +317,25 @@ public class GameplayController implements Screen {
   /**
    * Sets the ScreenListener for this mode
    *
-   * The ScreenListener will respond to requests to quit.
+   * <p>The ScreenListener will respond to requests to quit.
    */
   public void setScreenListener(ScreenListener listener) {
     this.listener = listener;
   }
 
-  public void pause() {
-  }
+  public void pause() {}
 
-  public void resume() {
-  }
+  public void resume() {}
 
   public void hide() {
     active = false;
   }
 
   public void dispose() {
-    if (physicsEngine != null)
-      physicsEngine.dispose();
+    if (physicsEngine != null) physicsEngine.dispose();
   }
 
-  /**
-   * Compares Models based on height in the world
-   */
+  /** Compares Models based on height in the world */
   class heightComparator implements Comparator<Model> {
     @Override
     public int compare(Model o1, Model o2) {
@@ -350,5 +348,4 @@ public class GameplayController implements Screen {
       return 0;
     }
   }
-
 }
