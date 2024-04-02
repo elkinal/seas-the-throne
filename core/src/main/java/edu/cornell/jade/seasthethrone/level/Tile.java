@@ -8,35 +8,44 @@ import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
 public class Tile implements Renderable {
 
-    /** Position of the bottom left corner of the tile */
-    private Vector2 pos;
+  /** Position of the bottom left corner of the tile */
+  private Vector2 pos;
 
-    private TextureRegion texture;
+  private TextureRegion texture;
 
-    public Tile(TextureRegion tex, float x, float y) {
-        pos = new Vector2(x,y);
-        texture = tex;
-    }
+  public Tile(TextureRegion tex, float x, float y) {
+    pos = new Vector2(x, y);
+    texture = tex;
+  }
 
-    public void draw(RenderingEngine renderer) {
-        renderer.draw(getTexture(), getPosition().x, getPosition().y);
-    }
+  public void draw(RenderingEngine renderer) {
+    renderer.draw(getTexture(), getPosition().x, getPosition().y);
+  }
 
-    public Vector2 getPosition() { return pos;}
+  public Vector2 getPosition() {
+    return pos;
+  }
 
-    public TextureRegion getTexture() { return texture; }
+  public TextureRegion getTexture() {
+    return texture;
+  }
 
-    public void setTexture(TextureRegion tex) { texture = tex;}
+  public void setTexture(TextureRegion tex) {
+    texture = tex;
+  }
 
-    public int getFrameNumber() {return 0;}
+  public int getFrameNumber() {
+    return 0;
+  }
 
-    public void setFrameNumber(int frameNumber) {}
+  public void setFrameNumber(int frameNumber) {
+  }
 
-    public FilmStrip getFilmStrip() {
-        return null;
-    }
+  public FilmStrip getFilmStrip() {
+    return null;
+  }
 
-    public int getFramesInAnimation() {
-        return 0;
-    }
+  public int getFramesInAnimation() {
+    return 0;
+  }
 }
