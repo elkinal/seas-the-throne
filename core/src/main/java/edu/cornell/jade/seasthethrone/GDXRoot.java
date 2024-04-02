@@ -8,6 +8,7 @@ import edu.cornell.jade.seasthethrone.util.ScreenListener;
 
 public class GDXRoot extends Game implements ScreenListener {
   private static final int MIN_LOAD_TIME = 50;
+  private static final int EXIT_SWAP = 1;
 
   private SpriteBatch batch;
   private Texture image;
@@ -21,7 +22,7 @@ public class GDXRoot extends Game implements ScreenListener {
 
     controller = new GameplayController();
     controller.setScreenListener(this);
-    loading = new LoadScreen(controller.renderEngine.getGameCanvas(), MIN_LOAD_TIME, 1);
+    loading = new LoadScreen(MIN_LOAD_TIME, 1);
     loading.setScreenListener(this);
     setScreen(loading);
   }
@@ -34,15 +35,15 @@ public class GDXRoot extends Game implements ScreenListener {
 
   @Override
   public void exitScreen(Screen screen, int exitCode) {
-    if (screen == loading && exitCode == 1) {
+    if (screen == loading && exitCode == EXIT_SWAP) {
       setScreen(controller);
 
       loading.dispose();
       loading = null;
     }
 
-    if (screen == controller && exitCode == 1) {
-      loading = new LoadScreen(controller.renderEngine.getGameCanvas(), MIN_LOAD_TIME, 1);
+    if (screen == controller && exitCode == EXIT_SWAP) {
+      loading = new LoadScreen(MIN_LOAD_TIME, EXIT_SWAP);
       loading.setScreenListener(this);
       setScreen(loading);
     }

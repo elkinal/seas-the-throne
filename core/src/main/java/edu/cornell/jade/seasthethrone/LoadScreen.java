@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import edu.cornell.jade.seasthethrone.render.GameCanvas;
 import edu.cornell.jade.seasthethrone.util.ScreenListener;
 
@@ -41,8 +40,8 @@ public class LoadScreen implements Screen {
   /** The code for the screen this load screen exits to */
   private int exitCode;
 
-  public LoadScreen(GameCanvas canvas, int millis, int exitCode) {
-    this.canvas = canvas;
+  public LoadScreen(int millis, int exitCode) {
+    this.canvas = new GameCanvas();
     budget = millis;
     timer = 0;
     this.exitCode = exitCode;
@@ -57,7 +56,7 @@ public class LoadScreen implements Screen {
   }
 
   public LoadScreen(GameCanvas canvas, int exitCode) {
-    this(canvas, DEFAULT_BUDGET, exitCode);
+    this(DEFAULT_BUDGET, exitCode);
   }
 
   /**
