@@ -2,68 +2,64 @@ package edu.cornell.jade.seasthethrone.gamemodel;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.World;
 import edu.cornell.jade.seasthethrone.level.LevelObject;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
-import edu.cornell.jade.seasthethrone.model.ComplexModel;
-import edu.cornell.jade.seasthethrone.model.SimpleModel;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
-import javax.sound.sampled.Port;
-
 public class PortalModel extends BoxModel implements Renderable {
 
-    /** Portal texture */
-    private TextureRegion texture;
+  /** Portal texture */
+  private TextureRegion texture;
 
-    /** The JSON of the room/level this portal leads to */
-    private String target;
+  /** The JSON of the room/level this portal leads to */
+  private String target;
 
-    /** Default to transparent texture if none is specified */
-    private final TextureRegion DEFUALT_TEXTURE = new TextureRegion(new Texture("empty.png"));
+  /** Default to transparent texture if none is specified */
+  private final TextureRegion DEFUALT_TEXTURE = new TextureRegion(new Texture("empty.png"));
 
-    public PortalModel(float x, float y, float width, float height, String target) {
-        super(x, y, width, height);
-//        this.setBodyType(BodyDef.BodyType.StaticBody);
-        this.setSensor(true);
-        this.target = target;
-        this.texture = DEFUALT_TEXTURE;
-    }
+  public PortalModel(float x, float y, float width, float height, String target) {
+    super(x, y, width, height);
+    this.setSensor(true);
+    this.target = target;
+    this.texture = DEFUALT_TEXTURE;
+  }
 
-    public PortalModel(float x, float y, float width, float height, String target, TextureRegion texture) {
-        this(x, y, width, height, target);
-        this.texture = texture;
-    }
+  public PortalModel(float x, float y, float width, float height, String target, TextureRegion texture) {
+    this(x, y, width, height, target);
+    this.texture = texture;
+  }
 
-    public PortalModel(LevelObject portal) {
-        this(portal.x, portal.y, portal.width, portal.height, portal.target, portal.texture);
-    }
+  public PortalModel(LevelObject portal) {
+    this(portal.x, portal.y, portal.width, portal.height, portal.target, portal.texture);
+  }
 
-    public String getTarget() { return target; }
+  public String getTarget() {
+    return target;
+  }
 
-    @Override
-    public void draw(RenderingEngine renderer) {
-        renderer.draw(texture, getX(), getY());
-    }
+  @Override
+  public void draw(RenderingEngine renderer) {
+    renderer.draw(texture, getX(), getY());
+  }
 
-    @Override
-    public int getFrameNumber() {
-        return 0;
-    }
+  @Override
+  public int getFrameNumber() {
+    return 0;
+  }
 
-    @Override
-    public void setFrameNumber(int frameNumber) {}
+  @Override
+  public void setFrameNumber(int frameNumber) {
+  }
 
-    @Override
-    public FilmStrip getFilmStrip() {
-        return null;
-    }
+  @Override
+  public FilmStrip getFilmStrip() {
+    return null;
+  }
 
-    @Override
-    public int getFramesInAnimation() {
-        return 0;
-    }
+  @Override
+  public int getFramesInAnimation() {
+    return 0;
+  }
 }
