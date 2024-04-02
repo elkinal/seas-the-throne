@@ -52,6 +52,18 @@ player/playerspriterun_left_wspear.png
 player/playerspriterun_right_wspear.png
 player/playerspriterun_up_wspear.png
 player/dash_indicator.png
+player/playerdeath_down_filmstrip.png
+player/playerdeath_left_filmstrip.png
+player/playerdeath_right_filmstrip.png
+player/playerdeath_up_filmstrip.png
+player/playershoot_down_filmstrip.png
+player/playershoot_left_filmstrip.png
+player/playershoot_right_filmstrip.png
+player/playershoot_up_filmstrip.png
+player/playerspriteidle_down.png
+player/playerspriteidle_left.png
+player/playerspriteidle_right.png
+player/playerspriteidle_up.png
 hs_err_pid84780.log
 hs_err_pid86087.log
 Alagard.ttf
@@ -62,3 +74,4 @@ bosses/crab/death.png
 bosses/crab/hurt.png
 bosses/crab/idle.png
 bosses/crab/shoot.png
+bosses/crab/crabfallover_filmstrip.png

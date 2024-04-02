@@ -153,8 +153,22 @@ public class GameplayController implements Screen {
             .setTextureLeftDash(new Texture("player/playerspritedashfilmstrip_left.png"))
             .setTextureRightDash(new Texture("player/playerspritedashfilmstrip_right.png"))
             .setDashIndicatorTexture(new Texture("player/dash_indicator.png"))
+            .setIdleLeft(new Texture("player/playerspriteidle_left.png"))
+            .setIdleRight(new Texture("player/playerspriteidle_right.png"))
+            .setIdleUp(new Texture("player/playerspriteidle_up.png"))
+            .setIdleDown(new Texture("player/playerspriteidle_down.png"))
+            .setShootDown(new Texture("player/playershoot_down_filmstrip.png"))
+            .setShootUp(new Texture("player/playershoot_up_filmstrip.png"))
+            .setShootLeft(new Texture("player/playershoot_left_filmstrip.png"))
+            .setShootRight(new Texture("player/playershoot_right_filmstrip.png"))
+            .setDeathUp(new Texture("player/playerdeath_up_filmstrip.png"))
+            .setDeathDown(new Texture("player/playerdeath_down_filmstrip.png"))
+            .setDeathLeft(new Texture("player/playerdeath_left_filmstrip.png"))
+            .setDeathRight(new Texture("player/playerdeath_right_filmstrip.png"))
             .setFramesInAnimation(12)
             .setFramesInAnimationDash(5)
+            .setFramesInAnimationShoot(5)
+            .setFramesInAnimationDeath(16)
             .setFrameDelay(3)
             .setDashLength(20)
             .setMoveSpeed(8f)
@@ -180,6 +194,8 @@ public class GameplayController implements Screen {
               .setHitbox(new float[] {-4, -7, -4, 7, 4, 7, 4, -7})
               .setFrameSize(110)
               .setMoveAnimation(new Texture("bosses/crab/idle.png"))
+              .setShootAnimation(new Texture("bosses/crab/shoot.png"))
+              .setDieAnimation(new Texture("bosses/crab/crabfallover_filmstrip.png"))
               .setFrameDelay(12)
               .build();
       renderEngine.addRenderable(boss);
@@ -224,7 +240,7 @@ public class GameplayController implements Screen {
 
     // Right now just errors if you try to update playerController or physicsEngine
     // when player is null
-    if (gameState != GameState.OVER) {
+    if (gameState != GameState.OVER && playerController.isAlive()) {
       playerController.update();
       if (this.bossController != null) {
         bossController.update();
@@ -235,10 +251,13 @@ public class GameplayController implements Screen {
       updateCamera();
     }
 
-    if (!playerController.isAlive()) {
+    if (playerController.isTerminated()) {
       gameState = GameState.OVER;
-    } else if (this.bossController != null && !bossController.isAlive()) {
+    }
+    //FIXME: find a better way to remove boss
+    else if (this.bossController != null && !bossController.isAlive()) {
       gameState = GameState.WIN;
+      bossController.remove();
     }
 
     if (playerController.isInteractPressed()) {

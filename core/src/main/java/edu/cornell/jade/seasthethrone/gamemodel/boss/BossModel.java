@@ -17,6 +17,9 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   /** Boss-unique move animation TODO: make left right up down filmstrips */
   private FilmStrip moveAnimation;
 
+  private FilmStrip dieAnimation;
+  private FilmStrip getHitAnimation;
+
   /** The current filmstrip being used */
   public FilmStrip filmStrip;
 
@@ -40,19 +43,27 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   /** Number of health points the boss has */
   protected int health;
 
+  /** Death animation countdown */
+  private int deathCount;
+
   /**
    * {@link BossModel} constructor using an x and y coordinate.
    *
    * @param builder builder for BossModel
    */
   public BossModel(Builder builder) {
-    super(builder.getX(), builder.getY(), builder.getHitbox(), builder.type, builder.frameSize);
+    super(builder.x, builder.y, builder.hitbox, builder.type, builder.frameSize);
     frameSize = builder.frameSize;
+    shootAnimation = builder.shootAnimation;
+    idleAnimation = builder.idleAnimation;
     moveAnimation = builder.moveAnimation;
-    this.filmStrip = super.shootAnimation;
+    getHitAnimation = builder.getHitAnimation;
+    dieAnimation = builder.dieAnimation;
+    this.filmStrip = shootAnimation;
     frameCounter = 1;
     frameDelay = builder.frameDelay;
     health = builder.health;
+    deathCount = frameDelay * 16;
 
     bodyKnockbackForce = 70f;
     spearKnockbackForce = 130f;
@@ -65,9 +76,18 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     filmStrip.setFrame(frame);
     Vector2 pos = getPosition();
     renderer.draw(filmStrip, pos.x, pos.y, 0.16f);
-
-    if (frameCounter % frameDelay == 0) {
-      setFrameNumber((getFrameNumber() + 1) % getFramesInAnimation());
+    if (isDead()) {
+      if (frameCounter % frameDelay == 0 && getFrameNumber() < getFramesInAnimation() - 1) {
+        setFrameNumber(getFrameNumber() + 1);
+        deathCount -= 1;
+      } else {
+        setFrameNumber(getFrameNumber());
+        deathCount -= 1;
+      }
+    } else {
+      if (frameCounter % frameDelay == 0) {
+        setFrameNumber((getFrameNumber() + 1) % getFramesInAnimation());
+      }
     }
     frameCounter += 1;
   }
@@ -80,16 +100,27 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     return spearKnockbackForce;
   }
 
+  public boolean isDead() {
+    return health <= 0;
+  }
+
+  public boolean isTerminated() {
+    return deathCount <= 0;
+  }
+
   /** Get remaining health points of the boss */
   public int getHealth() {
     return health;
   }
 
-  /** Reduce boss HP by a specified amount If the boss dies, mark boss as removed */
+  /**
+   * Reduce boss HP by a specified amount
+   * If the boss dies, mark boss as removed
+   */
   public void decrementHealth(int damage) {
     health -= damage;
-    if (health <= 0) {
-      markRemoved(true);
+    if (isDead()) {
+      filmStrip = dieAnimation;
     }
   }
 
@@ -129,6 +160,11 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     /** Boss-unique move animation */
     private FilmStrip moveAnimation;
 
+    private FilmStrip getHitAnimation;
+    private FilmStrip dieAnimation;
+    private FilmStrip shootAnimation;
+    private FilmStrip idleAnimation;
+
     /** The number of frames between animation updates */
     private int frameDelay;
 
@@ -142,18 +178,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
       return new Builder();
     }
 
-    private Builder() {}
-
-    public float getX() {
-      return x;
-    }
-
-    public float getY() {
-      return y;
-    }
-
-    public float[] getHitbox() {
-      return hitbox;
+    private Builder() {
     }
 
     public Builder setX(float x) {
@@ -186,9 +211,38 @@ public abstract class BossModel extends EnemyModel implements Renderable {
       return this;
     }
 
+    public Builder setShootAnimation(Texture texture) {
+      int width = texture.getWidth();
+      shootAnimation = new FilmStrip(texture, 1, width / frameSize);
+      ;
+      return this;
+    }
+
+    public Builder setIdleAnimation(Texture texture) {
+      int width = texture.getWidth();
+      idleAnimation = new FilmStrip(texture, 1, width / frameSize);
+      ;
+      return this;
+    }
+
+    public Builder setGetHitAnimation(Texture texture) {
+      int width = texture.getWidth();
+      getHitAnimation = new FilmStrip(texture, 1, width / frameSize);
+      ;
+      return this;
+    }
+
     public Builder setMoveAnimation(Texture texture) {
       int width = texture.getWidth();
       moveAnimation = new FilmStrip(texture, 1, width / frameSize);
+      ;
+      return this;
+    }
+
+    public Builder setDieAnimation(Texture texture) {
+      int width = texture.getWidth();
+      // TODO: Stop hardcoding columns
+      dieAnimation = new FilmStrip(texture, 1, 16);
       ;
       return this;
     }
@@ -203,7 +257,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
         case "crab":
           return new CrabBossModel(this);
 
-          // Should not get here
+        // Should not get here
         default:
           return new CrabBossModel(this);
       }
