@@ -84,6 +84,7 @@ public class GameplayController implements Screen {
   /** Viewport maintaining relation between screen and world coordinates */
   private ExtendViewport viewport;
 
+  /** If the screen and world should be updated */
   protected boolean active;
 
   /** Temporary cache to sort physics renderables */
