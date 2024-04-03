@@ -90,7 +90,7 @@ public class GameplayController implements Screen {
   private Array<Model> objectCache = new Array<>();
 
   /** Comparator to sort Models by height */
-  private heightComparator comp = new heightComparator();
+  private HeightComparator comp = new HeightComparator();
 
   /** Listener that will update the player mode when we are done */
   private ScreenListener listener;
@@ -371,7 +371,7 @@ public class GameplayController implements Screen {
   /**
    * Compares Models based on height in the world
    */
-  class heightComparator implements Comparator<Model> {
+  class HeightComparator implements Comparator<Model> {
     @Override
     public int compare(Model o1, Model o2) {
       float diff = o2.getBody().getPosition().y - o1.getBody().getPosition().y;
