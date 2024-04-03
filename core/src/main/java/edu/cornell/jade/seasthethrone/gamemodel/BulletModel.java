@@ -4,11 +4,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.math.Vector2;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerBulletModel;
 import edu.cornell.jade.seasthethrone.model.SimpleModel;
 import com.badlogic.gdx.utils.Pool;
 import edu.cornell.jade.seasthethrone.physics.CollisionMask;
-import edu.cornell.jade.seasthethrone.render.FishRenderable;
+import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.Direction;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
@@ -23,7 +24,7 @@ import edu.cornell.jade.seasthethrone.util.FilmStrip;
  * <p>
  * TODO: make this implement Fish Renderable
  */
-public class BulletModel extends SimpleModel implements FishRenderable {
+public class BulletModel extends SimpleModel implements Renderable {
   /** Shape of the bullet, modeled as a circle */
   public CircleShape shape;
 
@@ -127,25 +128,26 @@ public class BulletModel extends SimpleModel implements FishRenderable {
 
   @Override
   public void draw(RenderingEngine renderer) {
-    FishRenderable.super.draw(renderer);
+    int frame = getFrameNumber();
+    FilmStrip filmStrip = getFilmStrip();
+    filmStrip.setFrame(frame);
+
+    Vector2 pos = getPosition();
+    renderer.draw(filmStrip, pos.x, pos.y, true, angle());
   }
 
-  @Override
   public int getFrameNumber() {
     return 0;
   }
 
-  @Override
   public void setFrameNumber(int frameNumber) {
 
   }
 
-  @Override
   public FilmStrip getFilmStrip() {
     return filmStrip;
   }
 
-  @Override
   public int getFramesInAnimation() {
     return 0;
   }
