@@ -169,16 +169,28 @@ public class GameplayController implements Screen {
 
     // Load bosses
     for (int i = 0; i < level.getBosses().size; i++) {
+      // TODO: set everything below here based on bossName, load from assets.json
       LevelObject bossContainer = level.getBosses().get(i);
       String name = bossContainer.bossName;
+      int frameSize;
+      switch (name) {
+        case "crab": 
+          frameSize = 110;
+          break;
+        case "jelly": 
+          frameSize = 45;
+          break;
+        default:
+          frameSize = 0;
+          return;
+      }
       BossModel boss = BossModel.Builder.newInstance()
               .setX(bossContainer.x)
               .setY(bossContainer.y)
               .setType(name)
-              // TODO: set everything below here based on bossName, load from assets.json
               .setHealth(100)
               .setHitbox(new float[]{-4, -7, -4, 7, 4, 7, 4, -7})
-              .setFrameSize()
+              .setFrameSize(frameSize)
               .setShootAnimation(new Texture("bosses/"+name+"/"+name+"_idle.png"))
               .setFrameDelay(12)
               .build();
