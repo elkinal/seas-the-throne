@@ -88,10 +88,10 @@ public class GameplayController implements Screen {
   protected boolean active;
 
   /** Temporary cache to sort physics renderables */
-  private Array<Model> objectCache = new Array<>();
+  private final Array<Model> objectCache = new Array<>();
 
   /** Comparator to sort Models by height */
-  private HeightComparator comp = new HeightComparator();
+  private final HeightComparator comp = new HeightComparator();
 
   /** Listener that will update the player mode when we are done */
   private ScreenListener listener;
