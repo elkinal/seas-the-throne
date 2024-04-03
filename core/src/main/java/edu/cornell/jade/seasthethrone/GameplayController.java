@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.*;
@@ -14,14 +13,12 @@ import com.badlogic.gdx.utils.viewport.*;
 import edu.cornell.jade.seasthethrone.gamemodel.PortalModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.ObstacleModel;
-import edu.cornell.jade.seasthethrone.gamemodel.boss.CrabBossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.input.BossController;
 import edu.cornell.jade.seasthethrone.input.InputController;
 import edu.cornell.jade.seasthethrone.input.PlayerController;
 import edu.cornell.jade.seasthethrone.bpedit.BulletController;
 import edu.cornell.jade.seasthethrone.level.*;
-import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.model.PolygonModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
@@ -34,9 +31,7 @@ import java.util.Comparator;
 /**
  * The primary controller class for the game.
  *
- * <p>
- * Delegates all of the work to other subcontrollers including input control,
- * physics engine, and
+ * <p>Delegates all of the work to other subcontrollers including input control, physics engine, and
  * rendering engine. Contains the central update method.
  */
 public class GameplayController implements Screen {
@@ -61,6 +56,7 @@ public class GameplayController implements Screen {
   PlayerController playerController;
 
   Array<BossController> bossControllers;
+
   /** Rendering Engine */
   RenderingEngine renderEngine;
 
@@ -103,6 +99,7 @@ public class GameplayController implements Screen {
     gameState = GameState.PLAY;
 
     this.level = new Level("levels/hub_world.json");
+
     DEFAULT_HEIGHT = level.DEFAULT_HEIGHT;
     DEFAULT_WIDTH = level.DEFAULT_WIDTH;
     WORLD_SCALE = level.WORLD_SCALE;
@@ -117,7 +114,6 @@ public class GameplayController implements Screen {
     this.renderEngine = new RenderingEngine(DEFAULT_WIDTH, DEFAULT_HEIGHT, viewport, WORLD_SCALE);
 
     setupGameplay();
-
   }
 
   public void show() {
@@ -140,7 +136,8 @@ public class GameplayController implements Screen {
 
     // Load player
     Vector2 playerLoc = level.getPlayerLoc();
-    PlayerModel player = PlayerModel.Builder.newInstance()
+    PlayerModel player =
+        PlayerModel.Builder.newInstance()
             .setX(playerLoc.x)
             .setY(playerLoc.y)
             .setTextureUp(new Texture("player/playerspriterun_up_wspear.png"))
@@ -152,8 +149,22 @@ public class GameplayController implements Screen {
             .setTextureLeftDash(new Texture("player/playerspritedashfilmstrip_left.png"))
             .setTextureRightDash(new Texture("player/playerspritedashfilmstrip_right.png"))
             .setDashIndicatorTexture(new Texture("player/dash_indicator.png"))
+            .setIdleLeft(new Texture("player/playerspriteidle_left.png"))
+            .setIdleRight(new Texture("player/playerspriteidle_right.png"))
+            .setIdleUp(new Texture("player/playerspriteidle_up.png"))
+            .setIdleDown(new Texture("player/playerspriteidle_down.png"))
+            .setShootDown(new Texture("player/playershoot_down_filmstrip.png"))
+            .setShootUp(new Texture("player/playershoot_up_filmstrip.png"))
+            .setShootLeft(new Texture("player/playershoot_left_filmstrip.png"))
+            .setShootRight(new Texture("player/playershoot_right_filmstrip.png"))
+            .setDeathUp(new Texture("player/playerdeath_up_filmstrip.png"))
+            .setDeathDown(new Texture("player/playerdeath_down_filmstrip.png"))
+            .setDeathLeft(new Texture("player/playerdeath_left_filmstrip.png"))
+            .setDeathRight(new Texture("player/playerdeath_right_filmstrip.png"))
             .setFramesInAnimation(12)
             .setFramesInAnimationDash(5)
+            .setFramesInAnimationShoot(5)
+            .setFramesInAnimationDeath(16)
             .setFrameDelay(3)
             .setDashLength(20)
             .setMoveSpeed(8f)
@@ -191,7 +202,7 @@ public class GameplayController implements Screen {
               .setHealth(100)
               .setHitbox(new float[]{-4, -7, -4, 7, 4, 7, 4, -7})
               .setFrameSize(frameSize)
-              .setShootAnimation(new Texture("bosses/"+name+"/"+name+"_idle.png"))
+              .setFalloverAnimation(new Texture("bosses/" + name + "/fallover.png"))
               .setFrameDelay(12)
               .build();
       renderEngine.addRenderable(boss);
@@ -245,7 +256,7 @@ public class GameplayController implements Screen {
 
     // Right now just errors if you try to update playerController or physicsEngine
     // when player is null
-    if (gameState != GameState.OVER) {
+    if (gameState != GameState.OVER && playerController.isAlive()) {
       playerController.update();
       for (BossController bc : bossControllers) {
         if (bc.isAlive()) {
@@ -256,13 +267,15 @@ public class GameplayController implements Screen {
 
       // Update camera
       updateCamera();
-
     }
 
-    if (!playerController.isAlive()) {
+    if (playerController.isTerminated()) {
       gameState = GameState.OVER;
     } else if (!bossControllers.isEmpty() && allBossesDefeated()) {
       gameState = GameState.WIN;
+      for (BossController bc : bossControllers) {
+        bc.remove();
+      }
     }
 
     if (physicsEngine.hasTarget()) {
@@ -288,8 +301,7 @@ public class GameplayController implements Screen {
     objectCache.clear();
     for (Model obj : physicsEngine.getObjects()) {
       assert (obj.isActive());
-      if (obj instanceof Renderable r)
-        objectCache.add((Model) r);
+      if (obj instanceof Renderable r) objectCache.add((Model) r);
     }
     objectCache.sort(comp);
 
@@ -317,8 +329,9 @@ public class GameplayController implements Screen {
   /** Updates the camera position to keep the player centered on the screen */
   private void updateCamera() {
     Vector2 playerPos = playerController.getLocation();
-    Vector2 cameraPos = viewport
-        .unproject(new Vector2(viewport.getCamera().position.x, viewport.getCamera().position.y));
+    Vector2 cameraPos =
+        viewport.unproject(
+            new Vector2(viewport.getCamera().position.x, viewport.getCamera().position.y));
 
     Vector2 worldDims = new Vector2(viewport.getWorldWidth(), viewport.getWorldHeight());
 
@@ -329,25 +342,22 @@ public class GameplayController implements Screen {
   /**
    * Sets the ScreenListener for this mode
    *
-   * The ScreenListener will respond to requests to quit.
+   * <p>The ScreenListener will respond to requests to quit.
    */
   public void setScreenListener(ScreenListener listener) {
     this.listener = listener;
   }
 
-  public void pause() {
-  }
+  public void pause() {}
 
-  public void resume() {
-  }
+  public void resume() {}
 
   public void hide() {
     active = false;
   }
 
   public void dispose() {
-    if (physicsEngine != null)
-      physicsEngine.dispose();
+    if (physicsEngine != null) physicsEngine.dispose();
   }
 
   public boolean allBossesDefeated() {
@@ -373,6 +383,4 @@ public class GameplayController implements Screen {
       return 0;
     }
   }
-
-
 }

@@ -66,6 +66,14 @@ public class PlayerController implements Controllable {
   public boolean isAlive() {
     return player.isActive();
   }
+  /**
+   * Returns true if the currently active player is terminated.
+   *
+   * @return true if the currently active player is terminated.
+   */
+  public boolean isTerminated() {
+    return player.isTerminated();
+  }
 
   public void moveHorizontal(float movement) {
     hoff = movement;
