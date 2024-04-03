@@ -25,6 +25,32 @@
       "down": {
         "file": "bosses/crab/down.png"
       }
+    },
+    "jelly": {
+      "idle": {
+        "file": "bosses/jelly/idle.png"
+      },
+      "shoot": {
+        "file": "bosses/jelly/shoot.png"
+      },
+      "hurt": {
+        "file": "bosses/jelly/hurt.png"
+      },
+      "death": {
+        "file": "bosses/jelly/death.png"
+      },
+      "left": {
+        "file": "bosses/jelly/left.png"
+      },
+      "right": {
+        "file": "bosses/jelly/right.png"
+      },
+      "up": {
+        "file": "bosses/jelly/up.png"
+      },
+      "down": {
+        "file": "bosses/jelly/down.png"
+      }
     }
   },
   "soundfx": {

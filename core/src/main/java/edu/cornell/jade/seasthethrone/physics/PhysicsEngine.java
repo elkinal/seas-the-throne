@@ -32,6 +32,9 @@ public class PhysicsEngine implements ContactListener {
 
   private Array<BossModel> bosses = new Array<>();
 
+  /** Filepath to the JSON of the level to switch to. Should be null unless the player is on a portal */
+  private String target;
+
   /** To keep track of the continuous player-boss collision */
   private Optional<Contact> playerBossCollision;
 
@@ -222,11 +225,27 @@ public class PhysicsEngine implements ContactListener {
       } else if (bd2 instanceof BulletModel && bd1 instanceof BoxModel) {
         bd2.markRemoved(true);
       }
+      // Handle portal sensors
+      else if (bd1 instanceof PortalModel && bd2 instanceof PlayerShadowModel) {
+        System.out.println("portal detected");
+        setTarget(((PortalModel) bd1).getTarget());
+      } else if (bd2 instanceof PortalModel && bd1 instanceof PlayerShadowModel) {
+        System.out.println("portal detected");
+        setTarget(((PortalModel) bd2).getTarget());
+      }
+
 
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
+
+  /** Sets the target for screen transition */
+  public void setTarget(String target) { this.target = target; }
+
+  public String getTarget() { return target; }
+
+  public boolean hasTarget() { return this.target != null; }
 
   /** Helper function to apply a knockback on the player body. */
   public void applyKnockback(PlayerBodyModel pb, Vector2 bd2Pos, float knockbackForce) {

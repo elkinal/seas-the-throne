@@ -57,5 +57,10 @@ public class CollisionMask {
             model.setCategoryBits(CATEGORY_BOSS);
             model.setMaskBits( CATEGORY_PLAYER );
         }
+        // If portal
+        else if (model instanceof PortalModel) {
+            model.setCategoryBits(CATEGORY_OBSTACLE);
+            model.setMaskBits(CATEGORY_PLAYER_SHADOW);
+        }
     }
 }

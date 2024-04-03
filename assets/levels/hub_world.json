@@ -57,8 +57,8 @@
                  "type":"",
                  "visible":true,
                  "width":20,
-                 "x":289.717657279375,
-                 "y":310.586404112068
+                 "x":289.718,
+                 "y":310.586
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -275,9 +275,37 @@
          "visible":true,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":8,
+         "name":"portals",
+         "objects":[
+                {
+                 "height":20,
+                 "id":9,
+                 "name":"levels\/portal.png",
+                 "properties":[
+                        {
+                         "name":"target",
+                         "type":"string",
+                         "value":"levels\/shallow_map.json"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":220,
+                 "y":220
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":8,
- "nextobjectid":6,
+ "nextlayerid":9,
+ "nextobjectid":10,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

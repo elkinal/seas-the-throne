@@ -4,8 +4,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
-import edu.cornell.jade.seasthethrone.level.Obstacle;
-import edu.cornell.jade.seasthethrone.level.Wall;
+import edu.cornell.jade.seasthethrone.level.LevelObject;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.model.ComplexModel;
 import edu.cornell.jade.seasthethrone.model.SimpleModel;
@@ -18,7 +17,7 @@ public class ObstacleModel extends ComplexModel implements Renderable {
 
     private float WORLD_SCALE;
 
-    public ObstacleModel(Obstacle obs, float scale) {
+    public ObstacleModel(LevelObject obs, float scale) {
         // TODO: extend for generic model, not just BoxModel
         super(obs.x, obs.y);
         this.texture = obs.texture;

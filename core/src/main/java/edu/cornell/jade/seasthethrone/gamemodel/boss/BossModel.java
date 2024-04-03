@@ -17,7 +17,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   /** Boss-unique move animation TODO: make left right up down filmstrips */
   private FilmStrip moveAnimation;
 
-  private FilmStrip dieAnimation;
+  private FilmStrip falloverAnimation;
   private FilmStrip getHitAnimation;
 
   /** The current filmstrip being used */
@@ -54,11 +54,9 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   public BossModel(Builder builder) {
     super(builder.x, builder.y, builder.hitbox, builder.type, builder.frameSize);
     frameSize = builder.frameSize;
-    shootAnimation = builder.shootAnimation;
-    idleAnimation = builder.idleAnimation;
     moveAnimation = builder.moveAnimation;
     getHitAnimation = builder.getHitAnimation;
-    dieAnimation = builder.dieAnimation;
+    falloverAnimation = builder.dieAnimation;
     this.filmStrip = shootAnimation;
     frameCounter = 1;
     frameDelay = builder.frameDelay;
@@ -72,7 +70,11 @@ public abstract class BossModel extends EnemyModel implements Renderable {
 
   public void draw(RenderingEngine renderer) {
     int frame = getFrameNumber();
-    FilmStrip filmStrip = getFilmStrip();
+    if (isDead()) {
+      filmStrip = falloverAnimation;
+    } else {
+      filmStrip = shootAnimation;
+    }
     filmStrip.setFrame(frame);
     Vector2 pos = getPosition();
     renderer.draw(filmStrip, pos.x, pos.y, 0.16f);
@@ -120,7 +122,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   public void decrementHealth(int damage) {
     health -= damage;
     if (isDead()) {
-      filmStrip = dieAnimation;
+      filmStrip = falloverAnimation;
     }
   }
 
@@ -239,7 +241,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
       return this;
     }
 
-    public Builder setDieAnimation(Texture texture) {
+    public Builder setFalloverAnimation(Texture texture) {
       int width = texture.getWidth();
       // TODO: Stop hardcoding columns
       dieAnimation = new FilmStrip(texture, 1, 16);

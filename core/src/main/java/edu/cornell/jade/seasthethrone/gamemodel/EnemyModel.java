@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Texture;
 import edu.cornell.jade.seasthethrone.model.PolygonModel;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 import edu.cornell.jade.seasthethrone.util.JsonHandler;
-import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel.Builder;
 
 import java.util.HashMap;
 

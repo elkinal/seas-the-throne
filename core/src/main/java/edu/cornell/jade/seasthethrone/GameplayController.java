@@ -6,24 +6,19 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.*;
 
+import edu.cornell.jade.seasthethrone.gamemodel.PortalModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.ObstacleModel;
-import edu.cornell.jade.seasthethrone.gamemodel.boss.CrabBossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.input.BossController;
 import edu.cornell.jade.seasthethrone.input.InputController;
 import edu.cornell.jade.seasthethrone.input.PlayerController;
 import edu.cornell.jade.seasthethrone.bpedit.BulletController;
-import edu.cornell.jade.seasthethrone.level.Level;
-import edu.cornell.jade.seasthethrone.level.Obstacle;
-import edu.cornell.jade.seasthethrone.level.Tile;
-import edu.cornell.jade.seasthethrone.level.Wall;
-import edu.cornell.jade.seasthethrone.model.BoxModel;
+import edu.cornell.jade.seasthethrone.level.*;
 import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.model.PolygonModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
@@ -60,7 +55,7 @@ public class GameplayController implements Screen {
   /** Sub-controller for handling updating physics engine based on input */
   PlayerController playerController;
 
-  BossController bossController;
+  Array<BossController> bossControllers;
 
   /** Rendering Engine */
   RenderingEngine renderEngine;
@@ -114,6 +109,7 @@ public class GameplayController implements Screen {
 
     active = false;
 
+    this.bossControllers = new Array<>();
     this.inputController = new InputController(viewport);
     this.renderEngine = new RenderingEngine(DEFAULT_WIDTH, DEFAULT_HEIGHT, viewport, WORLD_SCALE);
 
@@ -184,33 +180,44 @@ public class GameplayController implements Screen {
 
     // Load bosses
     for (int i = 0; i < level.getBosses().size; i++) {
-      Vector2 bossLoc = level.getBosses().get(i);
-      BossModel boss =
-          BossModel.Builder.newInstance()
-              .setX(bossLoc.x)
-              .setY(bossLoc.y)
-              .setType("crab")
+      // TODO: set everything below here based on bossName, load from assets.json
+      LevelObject bossContainer = level.getBosses().get(i);
+      String name = bossContainer.bossName;
+      int frameSize;
+      switch (name) {
+        case "crab": 
+          frameSize = 110;
+          break;
+        case "jelly": 
+          frameSize = 45;
+          break;
+        default:
+          frameSize = 0;
+          return;
+      }
+      BossModel boss = BossModel.Builder.newInstance()
+              .setX(bossContainer.x)
+              .setY(bossContainer.y)
+              .setType(name)
               .setHealth(100)
-              .setHitbox(new float[] {-4, -7, -4, 7, 4, 7, 4, -7})
-              .setFrameSize(110)
-              .setMoveAnimation(new Texture("bosses/crab/idle.png"))
-              .setShootAnimation(new Texture("bosses/crab/shoot.png"))
-              .setDieAnimation(new Texture("bosses/crab/crabfallover_filmstrip.png"))
+              .setHitbox(new float[]{-4, -7, -4, 7, 4, 7, 4, -7})
+              .setFrameSize(frameSize)
+              .setFalloverAnimation(new Texture("bosses/" + name + "/fallover.png"))
               .setFrameDelay(12)
               .build();
       renderEngine.addRenderable(boss);
       physicsEngine.addObject(boss);
-      bossController = new BossController(boss);
+      bossControllers.add(new BossController(boss));
     }
 
     // Load walls
-    for (Wall wall : level.getWalls()) {
+    for (LevelObject wall : level.getWalls()) {
       PolygonModel model = new PolygonModel(wall.toList(), wall.x, wall.y);
       model.setBodyType(BodyDef.BodyType.StaticBody);
       physicsEngine.addObject(model);
     }
 
-    for (Obstacle obs : level.getObstacles()) {
+    for (LevelObject obs : level.getObstacles()) {
       // BoxModel model = new BoxModel(obs.x, obs.y, obs.width, obs.height);
       ObstacleModel model = new ObstacleModel(obs, WORLD_SCALE);
       model.setBodyType(BodyDef.BodyType.StaticBody);
@@ -218,7 +225,16 @@ public class GameplayController implements Screen {
       physicsEngine.addObject(model);
     }
 
+    // Load portals
+    for (LevelObject portal : level.getPortals()) {
+      PortalModel model = new PortalModel(portal);
+      renderEngine.addRenderable(model);
+      physicsEngine.addObject(model);
+    }
+
     inputController.add(playerController);
+    System.out.println("phys engine: "+physicsEngine.getObjects().size());
+
   }
 
   public void render(float delta) {
@@ -242,8 +258,10 @@ public class GameplayController implements Screen {
     // when player is null
     if (gameState != GameState.OVER && playerController.isAlive()) {
       playerController.update();
-      if (this.bossController != null) {
-        bossController.update();
+      for (BossController bc : bossControllers) {
+        if (bc.isAlive()) {
+          bc.update();
+        }
       }
       physicsEngine.update(delta);
 
@@ -253,18 +271,25 @@ public class GameplayController implements Screen {
 
     if (playerController.isTerminated()) {
       gameState = GameState.OVER;
-    }
-    //FIXME: find a better way to remove boss
-    else if (this.bossController != null && !bossController.isAlive()) {
+    } else if (!bossControllers.isEmpty() && allBossesDefeated()) {
       gameState = GameState.WIN;
-      bossController.remove();
+      for (BossController bc : bossControllers) {
+        bc.remove();
+      }
     }
 
-    if (playerController.isInteractPressed()) {
-      listener.exitScreen(this, 1);
-      level = new Level("levels/shallow_map.json");
+    if (physicsEngine.hasTarget()) {
+      System.out.println("hasTarget "+physicsEngine.getTarget());
+      listener.exitScreen(this, GDXRoot.EXIT_SWAP);
+      level = new Level(physicsEngine.getTarget());
+//      this.dispose();
+      physicsEngine.getObjects().clear();
+      this.renderEngine.clear();
       setupGameplay();
     }
+
+    // Reset target
+    physicsEngine.setTarget(null);
 
     renderEngine.clear();
     renderEngine.addRenderable(level.getBackground());
@@ -335,7 +360,17 @@ public class GameplayController implements Screen {
     if (physicsEngine != null) physicsEngine.dispose();
   }
 
-  /** Compares Models based on height in the world */
+  public boolean allBossesDefeated() {
+    boolean defeated = true;
+    for (BossController bc : bossControllers) {
+      defeated = defeated && !bc.isAlive();
+    }
+    return  defeated;
+  }
+
+  /**
+   * Compares Models based on height in the world
+   */
   class heightComparator implements Comparator<Model> {
     @Override
     public int compare(Model o1, Model o2) {

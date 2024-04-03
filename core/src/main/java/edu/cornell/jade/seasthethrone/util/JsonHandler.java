@@ -141,7 +141,11 @@ public class JsonHandler {
         }
     }
 
-    public static Object getProperty(Array<HashMap<String, Object>> properties, String propName) {
+    public static Object getProperty(HashMap<String, Object> map, String propName) {
+        Array<HashMap<String, Object>> properties = getArray(map,"properties");
+        if (properties == null) {
+            throw new Error("Object has no custom properties");
+        }
         for (HashMap<String, Object> prop : properties) {
             if (( (String)prop.get("name") ).equals(propName)) {
                 return prop.get("value");
