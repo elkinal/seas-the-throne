@@ -64,13 +64,13 @@ public class GameplayController implements Screen {
   protected BulletController bulletController;
 
   /** Width of the game world in Box2d units */
-  protected static float DEFAULT_WIDTH;
+  protected float worldWidth;
 
   /** Height of the game world in Box2d units */
-  protected static float DEFAULT_HEIGHT;
+  protected float worldHeight;
 
   /** Ratio between the pixel in a texture and the meter in the world */
-  protected float WORLD_SCALE;
+  protected float worldScale;
 
   /** The Box2D world */
   protected PhysicsEngine physicsEngine;
@@ -100,18 +100,18 @@ public class GameplayController implements Screen {
 
     this.level = new Level("levels/hub_world.json");
 
-    DEFAULT_HEIGHT = level.DEFAULT_HEIGHT;
-    DEFAULT_WIDTH = level.DEFAULT_WIDTH;
-    WORLD_SCALE = level.WORLD_SCALE;
+    worldHeight = level.DEFAULT_HEIGHT;
+    worldWidth = level.DEFAULT_WIDTH;
+    worldScale = level.WORLD_SCALE;
     this.viewport = level.getViewport();
 
-    bounds = new Rectangle(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+    bounds = new Rectangle(0, 0, worldWidth, worldHeight);
 
     active = false;
 
     this.bossControllers = new Array<>();
     this.inputController = new InputController(viewport);
-    this.renderEngine = new RenderingEngine(DEFAULT_WIDTH, DEFAULT_HEIGHT, viewport, WORLD_SCALE);
+    this.renderEngine = new RenderingEngine(worldWidth, worldHeight, viewport, worldScale);
 
     setupGameplay();
   }
@@ -219,7 +219,7 @@ public class GameplayController implements Screen {
 
     for (LevelObject obs : level.getObstacles()) {
       // BoxModel model = new BoxModel(obs.x, obs.y, obs.width, obs.height);
-      ObstacleModel model = new ObstacleModel(obs, WORLD_SCALE);
+      ObstacleModel model = new ObstacleModel(obs, worldScale);
       model.setBodyType(BodyDef.BodyType.StaticBody);
       renderEngine.addRenderable(model);
       physicsEngine.addObject(model);
