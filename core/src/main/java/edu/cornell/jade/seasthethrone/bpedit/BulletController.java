@@ -3,6 +3,7 @@ package edu.cornell.jade.seasthethrone.bpedit;
 import edu.cornell.jade.seasthethrone.util.PooledList;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
+import edu.cornell.jade.seasthethrone.physics.CollisionMask;
 
 /**
  * Maintains a timer and adds bullets to the physics engine based on a series of
@@ -33,14 +34,15 @@ public class BulletController {
    * Increments the bulletTimer and spawns any new bullets which would need be
    * spawned.
    */
-  public void update() {
+  public void update(int delta) {
     bulletTimer++;
     for (BulletPattern p : patterns) {
-      p.updateTime(1);
+      p.updateTime(delta);
     }
     for (BulletPattern p : patterns) {
       while (p.hasNext()) {
         BulletModel b = p.next();
+        CollisionMask.setCategoryMaskBits(b);
         physicsEngine.addObject(b);
         b.createFixtures();
       }

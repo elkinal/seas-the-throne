@@ -77,7 +77,7 @@ public class BulletPattern {
      * @param timestamp the time at which the base bullet should fire
      */
     public BulletFamily(float bx, float by, float bvx, float bvy, float radius, int timestamp) {
-      super(-timestamp);
+      super(timestamp);
       this.timestamp = timestamp;
       this.bx = bx;
       this.by = by;
@@ -113,14 +113,10 @@ public class BulletPattern {
       res.bvy = bvy;
       res.radius = radius;
 
+      // TODO: remove this dynamic allocation in the render loop
       res.effect = new Queue<Effect>();
 
       return res;
-    }
-
-    @Override
-    public float getValue() {
-      return -timestamp;
     }
 
     /**
@@ -178,11 +174,12 @@ public class BulletPattern {
      * properties the same as its parent
      *
      * @param familyPool the pool to obtain new bullet families from
+     * @param timestamp  the timestamp of the clone
      *
      * @return the new bullet family
      */
 
-    public BulletFamily clone(Pool<BulletFamily> familyPool) {
+    public BulletFamily clone(int timestamp, Pool<BulletFamily> familyPool) {
       BulletFamily newFamily = BulletFamily.construct(bx, by, bvx, bvy, radius, timestamp, familyPool);
       for (Effect e : effect)
         newFamily.addEffect(e);
@@ -275,17 +272,18 @@ public class BulletPattern {
       return false;
     BulletFamily p = curBullets.peek();
     while (!p.effect.isEmpty()) {
-      BulletFamily clone = p.clone(bulletFamilyPool);
+      curBullets.pop();
+      BulletFamily clone = p.clone(p.getTimestamp(), bulletFamilyPool);
       clone.effect.removeFirst();
       bulletFamilyCache.add(clone);
       Effect e = p.effect.removeFirst();
       e.apply(bulletFamilyCache, bulletFamilyPool, bulletBasePool);
       for (BulletFamily np : bulletFamilyCache) {
-        curBullets.add(np);
+        curBullets.add(np, np.getTimestamp());
       }
       bulletFamilyCache.clear();
 
-      if (curBullets.isEmpty() || curBullets.peek().timestamp > timer)
+      if (curBullets.isEmpty() || curBullets.peek().getTimestamp() > timer)
         return false;
       p = curBullets.peek();
     }
