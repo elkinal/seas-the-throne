@@ -131,14 +131,15 @@ public class GameplayController implements Screen {
     World world = new World(new Vector2(0, 0), false);
 
     // Load background
-    // renderEngine.setBackground(level.getBackground());
     renderEngine.addRenderable(level.getBackground());
+
     // Load tiles
     for (Tile tile : level.getTiles()) {
       renderEngine.addRenderable(tile);
     }
 
     // Load player
+    // TODO: make this come from the information JSON
     Vector2 playerLoc = level.getPlayerLoc();
     PlayerModel player =
         PlayerModel.Builder.newInstance()
@@ -177,10 +178,9 @@ public class GameplayController implements Screen {
             .build();
     renderEngine.addRenderable(player);
 
+    // Initialize physics engine
     physicsEngine = new PhysicsEngine(bounds, world);
     physicsEngine.addObject(player);
-    playerController = new PlayerController(physicsEngine, player);
-    bulletController = new BulletController(physicsEngine);
 
     // Load bosses
     for (int i = 0; i < level.getBosses().size; i++) {
@@ -221,8 +221,8 @@ public class GameplayController implements Screen {
       physicsEngine.addObject(model);
     }
 
+    // Load Obstacles
     for (LevelObject obs : level.getObstacles()) {
-      // BoxModel model = new BoxModel(obs.x, obs.y, obs.width, obs.height);
       ObstacleModel model = new ObstacleModel(obs, worldScale);
       model.setBodyType(BodyDef.BodyType.StaticBody);
       renderEngine.addRenderable(model);
@@ -236,12 +236,14 @@ public class GameplayController implements Screen {
       physicsEngine.addObject(model);
     }
 
+    // Initlize controllers
     inputController.add(playerController);
+    playerController = new PlayerController(physicsEngine, player);
+    bulletController = new BulletController(physicsEngine);
 
     if (BuildConfig.DEBUG) {
       System.out.println("phys engine: " + physicsEngine.getObjects().size());
     }
-
   }
 
   public void render(float delta) {
@@ -256,15 +258,15 @@ public class GameplayController implements Screen {
 
   public void update(float delta) {
     viewport.apply();
-    inputController.update();
-    bulletController.update();
 
-    // Right now just errors if you try to update playerController or physicsEngine
-    // when player is null
-    if (gameState != GameState.OVER && playerController.isAlive()) {
+    inputController.update();
+
+    // Update entity controllers and camera if the game is not over
+    if (gameState != GameState.OVER) {
+      bulletController.update();
       playerController.update();
       for (BossController bc : bossControllers) {
-        if (bc.isAlive()) {
+        if (bc.isTerminated()) {
           bc.update();
         }
       }
@@ -274,15 +276,20 @@ public class GameplayController implements Screen {
       updateCamera();
     }
 
+    // Check if the player is dead, end the game
     if (playerController.isTerminated()) {
       gameState = GameState.OVER;
-    } else if (!bossControllers.isEmpty() && allBossesDefeated()) {
+    } 
+
+    // Check if the player is alive and all bosses are dead, if so the player wins
+    if (!bossControllers.isEmpty() && allBossesDefeated() && !playerController.isTerminated()) {
       gameState = GameState.WIN;
       for (BossController bc : bossControllers) {
         bc.remove();
       }
     }
 
+    // Load new level if the player has touched a portal, thus setting a target
     if (physicsEngine.hasTarget()) {
       if (BuildConfig.DEBUG) {
         System.out.println("hasTarget " + physicsEngine.getTarget());
@@ -295,9 +302,10 @@ public class GameplayController implements Screen {
       setupGameplay();
     }
 
-    // Reset target
+    // Reset target so player doesn't teleport again on next frame
     physicsEngine.setTarget(null);
 
+    // Render frame
     renderEngine.clear();
     renderEngine.addRenderable(level.getBackground());
     for (Tile tile : level.getTiles()) {
@@ -317,16 +325,20 @@ public class GameplayController implements Screen {
       renderEngine.addRenderable((Renderable) r);
     }
 
+    // Draw the rendereables
     draw(delta);
     if (BuildConfig.DEBUG) {
       debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
     }
 
-    if (gameState == GameState.OVER || gameState == GameState.WIN) {
-      if (inputController.didReset()) {
-        setupGameplay();
-      } else {
-        renderEngine.drawGameState(gameState);
+    // Draw reset and debug screen for wins and losses
+    if (BuildConfig.DEBUG) {
+      if (gameState == GameState.OVER || gameState == GameState.WIN) {
+        if (inputController.didReset()) {
+          setupGameplay();
+        } else {
+          renderEngine.drawGameState(gameState);
+        }
       }
     }
   }
@@ -358,9 +370,11 @@ public class GameplayController implements Screen {
     this.listener = listener;
   }
 
-  public void pause() {}
+  public void pause() {
+  }
 
-  public void resume() {}
+  public void resume() {
+  }
 
   public void hide() {
     active = false;
@@ -371,11 +385,10 @@ public class GameplayController implements Screen {
   }
 
   public boolean allBossesDefeated() {
-    boolean defeated = true;
-    for (BossController bc : bossControllers) {
-      defeated = defeated && !bc.isAlive();
-    }
-    return  defeated;
+    for (BossController bc : bossControllers)
+      if (!bc.isTerminated())
+        return false;
+    return true;
   }
 
   /**

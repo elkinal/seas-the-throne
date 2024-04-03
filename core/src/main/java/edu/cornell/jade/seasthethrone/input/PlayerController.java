@@ -59,14 +59,6 @@ public class PlayerController implements Controllable {
   }
 
   /**
-   * Returns true if the currently active player is alive.
-   *
-   * @return true if the currently active player is alive.
-   */
-  public boolean isAlive() {
-    return player.isActive();
-  }
-  /**
    * Returns true if the currently active player is terminated.
    *
    * @return true if the currently active player is terminated.

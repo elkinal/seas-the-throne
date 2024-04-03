@@ -39,7 +39,7 @@ public class BossController implements Controllable {
         currStateDuration = 0;
     }
 
-    public boolean isAlive() {
+    public boolean isTerminated() {
         return !boss.isTerminated();
     }
     public void remove(){boss.markRemoved(true);}
