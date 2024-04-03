@@ -25,7 +25,6 @@ import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.ScreenListener;
-import edu.cornell.jade.seasthethrone.BuildConfig;
 
 import java.util.Comparator;
 
