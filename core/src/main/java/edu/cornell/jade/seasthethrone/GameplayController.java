@@ -96,6 +96,9 @@ public class GameplayController implements Screen {
   /** Comparator to sort Models by height */
   private final HeightComparator comp = new HeightComparator();
 
+  /** Temporary cache used by updateCamera */
+  private final Vector2 updateCameraCache = new Vector2();
+
   /** Listener that will update the player mode when we are done */
   private ScreenListener listener;
 
@@ -237,9 +240,9 @@ public class GameplayController implements Screen {
     }
 
     // Initlize controllers
-    inputController.add(playerController);
     playerController = new PlayerController(physicsEngine, player);
     bulletController = new BulletController(physicsEngine);
+    inputController.add(playerController);
 
     if (BuildConfig.DEBUG) {
       System.out.println("phys engine: " + physicsEngine.getObjects().size());
@@ -266,7 +269,7 @@ public class GameplayController implements Screen {
       bulletController.update();
       playerController.update();
       for (BossController bc : bossControllers) {
-        if (bc.isTerminated()) {
+        if (!bc.isTerminated()) {
           bc.update();
         }
       }
@@ -351,13 +354,14 @@ public class GameplayController implements Screen {
   /** Updates the camera position to keep the player centered on the screen */
   private void updateCamera() {
     Vector2 playerPos = playerController.getLocation();
-    Vector2 cameraPos =
-        viewport.unproject(
-            new Vector2(viewport.getCamera().position.x, viewport.getCamera().position.y));
 
-    Vector2 worldDims = new Vector2(viewport.getWorldWidth(), viewport.getWorldHeight());
+    updateCameraCache.set(viewport.getCamera().position.x, viewport.getCamera().position.y);
+    Vector2 cameraPos = viewport.unproject(updateCameraCache);
 
-    Vector2 diff = playerPos.sub(cameraPos).sub(worldDims.x / 2, -worldDims.y / 2);
+    Vector2 diff = playerPos
+      .sub(cameraPos)
+      .sub(viewport.getWorldWidth() / 2, -viewport.getWorldHeight() / 2);
+
     viewport.getCamera().translate(diff.x, diff.y, 0);
   }
 

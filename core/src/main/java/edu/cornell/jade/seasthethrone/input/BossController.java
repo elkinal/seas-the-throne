@@ -40,7 +40,7 @@ public class BossController implements Controllable {
     }
 
     public boolean isTerminated() {
-        return !boss.isTerminated();
+        return boss.isTerminated();
     }
     public void remove(){boss.markRemoved(true);}
 
