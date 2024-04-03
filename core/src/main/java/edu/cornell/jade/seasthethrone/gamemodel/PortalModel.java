@@ -19,6 +19,15 @@ public class PortalModel extends BoxModel implements Renderable {
   /** Default to transparent texture if none is specified */
   private final TextureRegion DEFUALT_TEXTURE = new TextureRegion(new Texture("empty.png"));
 
+  /**
+   * Constructs a PortalModel
+   *
+   * @param x x coordiante of the portal
+   * @param y y coordiante of the portal
+   * @param width width of the portal model's collision rectangle
+   * @param height height of the portal model's collision rectangle
+   * @param target a code specifying where this portal leads
+   */
   public PortalModel(float x, float y, float width, float height, String target) {
     super(x, y, width, height);
     this.setSensor(true);
@@ -26,6 +35,16 @@ public class PortalModel extends BoxModel implements Renderable {
     this.texture = DEFUALT_TEXTURE;
   }
 
+  /**
+   * Constructs a PortalModel
+   *
+   * @param x x coordiante of the portal
+   * @param y y coordiante of the portal
+   * @param width width of the portal model's collision rectangle
+   * @param height height of the portal model's collision rectangle
+   * @param target a code specifying where this portal leads
+   * @param texture what the portal model will be rendered as
+   */
   public PortalModel(float x, float y, float width, float height, String target, TextureRegion texture) {
     this(x, y, width, height, target);
     this.texture = texture;
