@@ -11,8 +11,8 @@ import edu.cornell.jade.seasthethrone.gamemodel.player.*;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.util.PooledList;
+import edu.cornell.jade.seasthethrone.BuildConfig;
 
-import javax.swing.*;
 import java.util.Iterator;
 import java.util.Optional;
 
@@ -197,10 +197,12 @@ public class PhysicsEngine implements ContactListener {
       Model bd2 = (Model) body2.getUserData();
 
       if (bd1 instanceof PlayerBodyModel && bd2 instanceof BulletModel) {
-        System.out.println("player hit");
+        if (BuildConfig.DEBUG) System.out.println("player hit");
+
         handleCollision((PlayerBodyModel) bd1, (BulletModel) bd2);
       } else if (bd2 instanceof PlayerBodyModel && bd1 instanceof BulletModel) {
-        System.out.println("player hit");
+        if (BuildConfig.DEBUG) System.out.println("player hit");
+
         handleCollision((PlayerBodyModel) bd2, (BulletModel) bd1);
       } else if (bd1 instanceof PlayerSpearModel && bd2 instanceof BulletModel) {
         handleCollision((PlayerSpearModel) bd1, (BulletModel) bd2);
@@ -227,10 +229,12 @@ public class PhysicsEngine implements ContactListener {
       }
       // Handle portal sensors
       else if (bd1 instanceof PortalModel && bd2 instanceof PlayerShadowModel) {
-        System.out.println("portal detected");
+        if (BuildConfig.DEBUG) System.out.println("portal detected");
+
         setTarget(((PortalModel) bd1).getTarget());
       } else if (bd2 instanceof PortalModel && bd1 instanceof PlayerShadowModel) {
-        System.out.println("portal detected");
+        if (BuildConfig.DEBUG) System.out.println("portal detected");
+
         setTarget(((PortalModel) bd2).getTarget());
       }
 
@@ -275,7 +279,8 @@ public class PhysicsEngine implements ContactListener {
 
   /** Handle collision between player body and boss */
   public void handleCollision(PlayerBodyModel pb, BossModel b, Contact c) {
-    System.out.println(pb.isInvincible());
+    if (BuildConfig.DEBUG) System.out.println(pb.isInvincible());
+
     if (!pb.isInvincible()) {
       pb.setHit(true);
       pb.setInvincible();

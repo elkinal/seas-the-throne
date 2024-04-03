@@ -25,6 +25,7 @@ import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.ScreenListener;
+import edu.cornell.jade.seasthethrone.BuildConfig;
 
 import java.util.Comparator;
 
@@ -46,7 +47,10 @@ public class GameplayController implements Screen {
     WIN,
   }
 
+  /** State defining the current logic of the GameplayController. */
   private GameState gameState;
+
+  /** Renderer for debug hitboxes. */
   Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
 
   /** Sub-controller for collecting input */
@@ -234,7 +238,10 @@ public class GameplayController implements Screen {
     }
 
     inputController.add(playerController);
-    System.out.println("phys engine: "+physicsEngine.getObjects().size());
+
+    if (BuildConfig.DEBUG) {
+      System.out.println("phys engine: " + physicsEngine.getObjects().size());
+    }
 
   }
 
@@ -242,11 +249,9 @@ public class GameplayController implements Screen {
     if (active) {
       update(delta);
     }
-    // draw(delta);
   }
 
   public void draw(float delta) {
-    // renderEngine.drawBackground();
     renderEngine.drawRenderables();
   }
 
@@ -280,10 +285,12 @@ public class GameplayController implements Screen {
     }
 
     if (physicsEngine.hasTarget()) {
-      System.out.println("hasTarget "+physicsEngine.getTarget());
+      if (BuildConfig.DEBUG) {
+        System.out.println("hasTarget " + physicsEngine.getTarget());
+      }
+
       listener.exitScreen(this, GDXRoot.EXIT_SWAP);
       level = new Level(physicsEngine.getTarget());
-//      this.dispose();
       physicsEngine.getObjects().clear();
       this.renderEngine.clear();
       setupGameplay();
@@ -301,7 +308,8 @@ public class GameplayController implements Screen {
     // Add physics objects to rendering engine in height-sorted order
     objectCache.clear();
     for (Model obj : physicsEngine.getObjects()) {
-      assert (obj.isActive());
+      if (BuildConfig.DEBUG) assert obj.isActive();
+
       if (obj instanceof Renderable r) objectCache.add((Model) r);
     }
     objectCache.sort(comp);
@@ -311,7 +319,9 @@ public class GameplayController implements Screen {
     }
 
     draw(delta);
-    debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
+    if (BuildConfig.DEBUG) {
+      debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
+    }
 
     if (gameState == GameState.OVER || gameState == GameState.WIN) {
       if (inputController.didReset()) {
