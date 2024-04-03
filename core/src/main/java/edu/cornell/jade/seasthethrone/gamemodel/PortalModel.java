@@ -63,21 +63,17 @@ public class PortalModel extends BoxModel implements Renderable {
     renderer.draw(texture, getX(), getY());
   }
 
-  @Override
   public int getFrameNumber() {
     return 0;
   }
 
-  @Override
   public void setFrameNumber(int frameNumber) {
   }
 
-  @Override
   public FilmStrip getFilmStrip() {
     return null;
   }
 
-  @Override
   public int getFramesInAnimation() {
     return 0;
   }

@@ -7,7 +7,6 @@ import com.badlogic.gdx.physics.box2d.World;
 import edu.cornell.jade.seasthethrone.level.LevelObject;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.model.ComplexModel;
-import edu.cornell.jade.seasthethrone.model.SimpleModel;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
@@ -38,22 +37,18 @@ public class ObstacleModel extends ComplexModel implements Renderable {
         return (BoxModel) bodies.get(0);
     }
 
-    @Override
     public int getFrameNumber() {
         return 0;
     }
 
-    @Override
     public void setFrameNumber(int frameNumber) {
 
     }
 
-    @Override
     public FilmStrip getFilmStrip() {
         return null;
     }
 
-    @Override
     public int getFramesInAnimation() {
         return 0;
     }

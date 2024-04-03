@@ -160,22 +160,18 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
             getX()+(float)(mag*Math.cos(angle)), getY()+(float)(mag*Math.sin(angle)));
   }
 
-  @Override
   public int getFrameNumber() {
     return 0;
   }
 
-  @Override
   public void setFrameNumber(int frameNumber) {
 
   }
 
-  @Override
   public FilmStrip getFilmStrip() {
     return null;
   }
 
-  @Override
   public int getFramesInAnimation() {
     return 0;
   }

@@ -5,10 +5,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import edu.cornell.jade.seasthethrone.model.ComplexModel;
-import edu.cornell.jade.seasthethrone.render.PlayerRenderable;
+import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.Direction;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
+import com.badlogic.gdx.graphics.Color;
 
 /**
  * Model for the main player object of the game. This class extends
@@ -16,7 +17,7 @@ import edu.cornell.jade.seasthethrone.util.FilmStrip;
  * multiple joints and bodies for flexible collision control and movement
  * display.
  */
-public class PlayerModel extends ComplexModel implements PlayerRenderable {
+public class PlayerModel extends ComplexModel implements Renderable {
   /** FIXME: stop hardcoding textures */
   /** Frame is player animation */
   private int framesInAnimation;
@@ -221,7 +222,67 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
 
   @Override
   public void draw(RenderingEngine renderer) {
-    PlayerRenderable.super.draw(renderer);
+    FilmStrip filmStrip = getFilmStrip();
+    switch (direction()) {
+      case UP:
+        if (isDead())
+          filmStrip.setTexture(getDieUp());
+        else if (isDashing())
+          filmStrip.setTexture(getTextureUpDash());
+        else if (isShootingAnimated()) {
+          filmStrip.setTexture(getShootUp());
+        }
+        else if (isIdle())
+          filmStrip.setTexture(getIdleUp());
+        else
+          filmStrip.setTexture(getTextureUp());
+        break;
+      case DOWN:
+        if (isDead())
+          filmStrip.setTexture(getDieDown());
+        else if (isDashing())
+          filmStrip.setTexture(getTextureDownDash());
+        else if (isShootingAnimated())
+          filmStrip.setTexture(getShootDown());
+        else if (isIdle())
+          filmStrip.setTexture(getIdleDown());
+        else
+          filmStrip.setTexture(getTextureDown());
+        break;
+      case LEFT:
+        if (isDead())
+          filmStrip.setTexture(getDieLeft());
+        else if (isDashing())
+          filmStrip.setTexture(getTextureLeftDash());
+        else if (isShootingAnimated())
+          filmStrip.setTexture(getShootLeft());
+        else if (isIdle())
+          filmStrip.setTexture(getIdleLeft());
+        else
+          filmStrip.setTexture(getTextureLeft());
+        break;
+      case RIGHT:
+        if (isDead())
+          filmStrip.setTexture(getDieRight());
+        else if (isDashing())
+          filmStrip.setTexture(getTextureRightDash());
+        else if (isShootingAnimated())
+          filmStrip.setTexture(getShootRight());
+        else if (isIdle())
+          filmStrip.setTexture(getIdleRight());
+        else
+          filmStrip.setTexture(getTextureRight());
+        break;
+    }
+    int frame = getFrameNumber();
+    filmStrip.setFrame(frame);
+
+    Vector2 pos = getPosition();
+    if (isInvincible()&&!isDead())
+      renderer.draw(filmStrip, pos.x, pos.y, 0.12f, Color.RED);
+    else
+      renderer.draw(filmStrip, pos.x, pos.y, 0.12f);
+
 
     // Only move to next frame of animation every frameDelay number of frames
     if (isDead()){
@@ -333,22 +394,19 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
   public Texture getIdleRight() {return idleRight; }
   public Texture getIdleUp() {return idleUp; }
   public Texture getIdleDown() {return idleDown; }
-  @Override
+
   public Texture getShootUp() {
     return shootUp;
   }
 
-  @Override
   public Texture getShootDown() {
     return shootDown;
   }
 
-  @Override
   public Texture getShootRight() {
     return shootRight;
   }
 
-  @Override
   public Texture getShootLeft() {
     return shootLeft;
   }
@@ -390,7 +448,6 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
    *
    * @return true if the player is dashing.
    */
-  @Override
   public boolean isDashing() {
     return isDashing;
   }
@@ -399,17 +456,14 @@ public class PlayerModel extends ComplexModel implements PlayerRenderable {
    *
    * @return true if the player is idle.
    */
-  @Override
   public boolean isIdle() {
     return getVX() <= 0.1 && getVY() <= 0.1 && getVX()>=-0.1 && getVY()>=-0.1;
   }
 
-  @Override
   public boolean isShootingAnimated() {
     return shootTime > 0;
   }
 
-  @Override
   public boolean isDead(){
     return getHealth()<=0;
   }

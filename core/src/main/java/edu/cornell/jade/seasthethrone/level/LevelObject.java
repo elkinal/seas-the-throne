@@ -79,12 +79,10 @@ public class LevelObject implements Renderable {
     return this.bossName;
   }
 
-  @Override
   public Vector2 getPosition() {
     return pos;
   }
 
-  @Override
   public void draw(RenderingEngine renderer) {
     renderer.draw(texture, getPosition().x, getPosition().y);
   }
@@ -93,22 +91,14 @@ public class LevelObject implements Renderable {
     this.texture = texture;
   }
 
-  @Override
   public int getFrameNumber() {
     return 0;
   }
 
-  @Override
   public void setFrameNumber(int frameNumber) {
 
   }
 
-  @Override
-  public FilmStrip getFilmStrip() {
-    return null;
-  }
-
-  @Override
   public int getFramesInAnimation() {
     return 0;
   }

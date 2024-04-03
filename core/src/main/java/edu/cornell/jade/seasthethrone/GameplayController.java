@@ -46,7 +46,10 @@ public class GameplayController implements Screen {
     WIN,
   }
 
+  /** State defining the current logic of the GameplayController. */
   private GameState gameState;
+
+  /** Renderer for debug hitboxes. */
   Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
 
   /** Sub-controller for collecting input */
@@ -64,13 +67,13 @@ public class GameplayController implements Screen {
   protected BulletController bulletController;
 
   /** Width of the game world in Box2d units */
-  protected static float DEFAULT_WIDTH;
+  protected float worldWidth;
 
   /** Height of the game world in Box2d units */
-  protected static float DEFAULT_HEIGHT;
+  protected float worldHeight;
 
   /** Ratio between the pixel in a texture and the meter in the world */
-  protected float WORLD_SCALE;
+  protected float worldScale;
 
   /** The Box2D world */
   protected PhysicsEngine physicsEngine;
@@ -84,13 +87,17 @@ public class GameplayController implements Screen {
   /** Viewport maintaining relation between screen and world coordinates */
   private ExtendViewport viewport;
 
+  /** If the screen and world should be updated */
   protected boolean active;
 
   /** Temporary cache to sort physics renderables */
-  private Array<Model> objectCache = new Array<>();
+  private final Array<Model> objectCache = new Array<>();
 
   /** Comparator to sort Models by height */
-  private heightComparator comp = new heightComparator();
+  private final HeightComparator comp = new HeightComparator();
+
+  /** Temporary cache used by updateCamera */
+  private final Vector2 updateCameraCache = new Vector2();
 
   /** Listener that will update the player mode when we are done */
   private ScreenListener listener;
@@ -100,18 +107,18 @@ public class GameplayController implements Screen {
 
     this.level = new Level("levels/hub_world.json");
 
-    DEFAULT_HEIGHT = level.DEFAULT_HEIGHT;
-    DEFAULT_WIDTH = level.DEFAULT_WIDTH;
-    WORLD_SCALE = level.WORLD_SCALE;
+    worldHeight = level.DEFAULT_HEIGHT;
+    worldWidth = level.DEFAULT_WIDTH;
+    worldScale = level.WORLD_SCALE;
     this.viewport = level.getViewport();
 
-    bounds = new Rectangle(0, 0, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+    bounds = new Rectangle(0, 0, worldWidth, worldHeight);
 
     active = false;
 
     this.bossControllers = new Array<>();
     this.inputController = new InputController(viewport);
-    this.renderEngine = new RenderingEngine(DEFAULT_WIDTH, DEFAULT_HEIGHT, viewport, WORLD_SCALE);
+    this.renderEngine = new RenderingEngine(worldWidth, worldHeight, viewport, worldScale);
 
     setupGameplay();
   }
@@ -127,14 +134,15 @@ public class GameplayController implements Screen {
     World world = new World(new Vector2(0, 0), false);
 
     // Load background
-    // renderEngine.setBackground(level.getBackground());
     renderEngine.addRenderable(level.getBackground());
+
     // Load tiles
     for (Tile tile : level.getTiles()) {
       renderEngine.addRenderable(tile);
     }
 
     // Load player
+    // TODO: make this come from the information JSON
     Vector2 playerLoc = level.getPlayerLoc();
     PlayerModel player =
         PlayerModel.Builder.newInstance()
@@ -173,10 +181,9 @@ public class GameplayController implements Screen {
             .build();
     renderEngine.addRenderable(player);
 
+    // Initialize physics engine
     physicsEngine = new PhysicsEngine(bounds, world);
     physicsEngine.addObject(player);
-    playerController = new PlayerController(physicsEngine, player);
-    bulletController = new BulletController(physicsEngine);
 
     // Load bosses
     for (int i = 0; i < level.getBosses().size; i++) {
@@ -217,9 +224,9 @@ public class GameplayController implements Screen {
       physicsEngine.addObject(model);
     }
 
+    // Load Obstacles
     for (LevelObject obs : level.getObstacles()) {
-      // BoxModel model = new BoxModel(obs.x, obs.y, obs.width, obs.height);
-      ObstacleModel model = new ObstacleModel(obs, WORLD_SCALE);
+      ObstacleModel model = new ObstacleModel(obs, worldScale);
       model.setBodyType(BodyDef.BodyType.StaticBody);
       renderEngine.addRenderable(model);
       physicsEngine.addObject(model);
@@ -232,34 +239,37 @@ public class GameplayController implements Screen {
       physicsEngine.addObject(model);
     }
 
+    // Initlize controllers
+    playerController = new PlayerController(physicsEngine, player);
+    bulletController = new BulletController(physicsEngine);
     inputController.add(playerController);
-    System.out.println("phys engine: "+physicsEngine.getObjects().size());
 
+    if (BuildConfig.DEBUG) {
+      System.out.println("phys engine: " + physicsEngine.getObjects().size());
+    }
   }
 
   public void render(float delta) {
     if (active) {
       update(delta);
     }
-    // draw(delta);
   }
 
   public void draw(float delta) {
-    // renderEngine.drawBackground();
     renderEngine.drawRenderables();
   }
 
   public void update(float delta) {
     viewport.apply();
-    inputController.update();
-    bulletController.update();
 
-    // Right now just errors if you try to update playerController or physicsEngine
-    // when player is null
-    if (gameState != GameState.OVER && playerController.isAlive()) {
+    inputController.update();
+
+    // Update entity controllers and camera if the game is not over
+    if (gameState != GameState.OVER) {
+      bulletController.update();
       playerController.update();
       for (BossController bc : bossControllers) {
-        if (bc.isAlive()) {
+        if (!bc.isTerminated()) {
           bc.update();
         }
       }
@@ -269,28 +279,36 @@ public class GameplayController implements Screen {
       updateCamera();
     }
 
+    // Check if the player is dead, end the game
     if (playerController.isTerminated()) {
       gameState = GameState.OVER;
-    } else if (!bossControllers.isEmpty() && allBossesDefeated()) {
+    } 
+
+    // Check if the player is alive and all bosses are dead, if so the player wins
+    if (!bossControllers.isEmpty() && allBossesDefeated() && !playerController.isTerminated()) {
       gameState = GameState.WIN;
       for (BossController bc : bossControllers) {
         bc.remove();
       }
     }
 
+    // Load new level if the player has touched a portal, thus setting a target
     if (physicsEngine.hasTarget()) {
-      System.out.println("hasTarget "+physicsEngine.getTarget());
+      if (BuildConfig.DEBUG) {
+        System.out.println("hasTarget " + physicsEngine.getTarget());
+      }
+
       listener.exitScreen(this, GDXRoot.EXIT_SWAP);
       level = new Level(physicsEngine.getTarget());
-//      this.dispose();
       physicsEngine.getObjects().clear();
       this.renderEngine.clear();
       setupGameplay();
     }
 
-    // Reset target
+    // Reset target so player doesn't teleport again on next frame
     physicsEngine.setTarget(null);
 
+    // Render frame
     renderEngine.clear();
     renderEngine.addRenderable(level.getBackground());
     for (Tile tile : level.getTiles()) {
@@ -300,7 +318,8 @@ public class GameplayController implements Screen {
     // Add physics objects to rendering engine in height-sorted order
     objectCache.clear();
     for (Model obj : physicsEngine.getObjects()) {
-      assert (obj.isActive());
+      if (BuildConfig.DEBUG) assert obj.isActive();
+
       if (obj instanceof Renderable r) objectCache.add((Model) r);
     }
     objectCache.sort(comp);
@@ -309,14 +328,20 @@ public class GameplayController implements Screen {
       renderEngine.addRenderable((Renderable) r);
     }
 
+    // Draw the rendereables
     draw(delta);
-    debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
+    if (BuildConfig.DEBUG) {
+      debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
+    }
 
-    if (gameState == GameState.OVER || gameState == GameState.WIN) {
-      if (inputController.didReset()) {
-        setupGameplay();
-      } else {
-        renderEngine.drawGameState(gameState);
+    // Draw reset and debug screen for wins and losses
+    if (BuildConfig.DEBUG) {
+      if (gameState == GameState.OVER || gameState == GameState.WIN) {
+        if (inputController.didReset()) {
+          setupGameplay();
+        } else {
+          renderEngine.drawGameState(gameState);
+        }
       }
     }
   }
@@ -329,13 +354,14 @@ public class GameplayController implements Screen {
   /** Updates the camera position to keep the player centered on the screen */
   private void updateCamera() {
     Vector2 playerPos = playerController.getLocation();
-    Vector2 cameraPos =
-        viewport.unproject(
-            new Vector2(viewport.getCamera().position.x, viewport.getCamera().position.y));
 
-    Vector2 worldDims = new Vector2(viewport.getWorldWidth(), viewport.getWorldHeight());
+    updateCameraCache.set(viewport.getCamera().position.x, viewport.getCamera().position.y);
+    Vector2 cameraPos = viewport.unproject(updateCameraCache);
 
-    Vector2 diff = playerPos.sub(cameraPos).sub(worldDims.x / 2, -worldDims.y / 2);
+    Vector2 diff = playerPos
+      .sub(cameraPos)
+      .sub(viewport.getWorldWidth() / 2, -viewport.getWorldHeight() / 2);
+
     viewport.getCamera().translate(diff.x, diff.y, 0);
   }
 
@@ -348,9 +374,11 @@ public class GameplayController implements Screen {
     this.listener = listener;
   }
 
-  public void pause() {}
+  public void pause() {
+  }
 
-  public void resume() {}
+  public void resume() {
+  }
 
   public void hide() {
     active = false;
@@ -361,17 +389,16 @@ public class GameplayController implements Screen {
   }
 
   public boolean allBossesDefeated() {
-    boolean defeated = true;
-    for (BossController bc : bossControllers) {
-      defeated = defeated && !bc.isAlive();
-    }
-    return  defeated;
+    for (BossController bc : bossControllers)
+      if (!bc.isTerminated())
+        return false;
+    return true;
   }
 
   /**
    * Compares Models based on height in the world
    */
-  class heightComparator implements Comparator<Model> {
+  class HeightComparator implements Comparator<Model> {
     @Override
     public int compare(Model o1, Model o2) {
       float diff = o2.getBody().getPosition().y - o1.getBody().getPosition().y;
