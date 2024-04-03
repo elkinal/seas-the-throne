@@ -1,11 +1,11 @@
-package edu.cornell.jade.seasthethrone.input;
+package edu.cornell.jade.seasthethrone;
 
 import java.util.Random;
 
 import com.badlogic.gdx.math.Vector2;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 
-public class BossController implements Controllable {
+public class BossController {
   /** The boss this controller controls */
   private BossModel boss;
 
@@ -108,33 +108,5 @@ public class BossController implements Controllable {
     float x = 24 * (0.5f - rand.nextFloat());
     float y = 16 * (0.5f - rand.nextFloat());
     target.set(x, y);
-  }
-
-  @Override
-  public void moveHorizontal(float movement) {
-  }
-
-  @Override
-  public void moveVertical(float movement) {
-  }
-
-  @Override
-  public void pressPrimary() {
-  }
-
-  @Override
-  public void pressSecondary() {
-  }
-
-  public void pressInteract() {
-  };
-
-  @Override
-  public void updateDirection(Vector2 mouseDir) {
-  }
-
-  @Override
-  public Vector2 getLocation() {
-    return boss.getPosition();
   }
 }
