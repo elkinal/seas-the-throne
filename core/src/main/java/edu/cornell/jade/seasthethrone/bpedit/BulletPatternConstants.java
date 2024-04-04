@@ -1,8 +1,8 @@
 package edu.cornell.jade.seasthethrone.bpedit;
 
 import com.badlogic.gdx.math.MathUtils;
-import edu.cornell.jade.seasthethrone.bpedit.BulletPattern.BulletFamily;
-import edu.cornell.jade.seasthethrone.bpedit.BulletPattern.Effect;
+import edu.cornell.jade.seasthethrone.bpedit.Spawner.BulletFamily;
+import edu.cornell.jade.seasthethrone.bpedit.Spawner.Effect;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Array;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
@@ -14,22 +14,22 @@ import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
  */
 public class BulletPatternConstants {
   /** A Spiral bullet pattern */
-  public static BulletPattern RING;
+  public static Spawner RING;
 
   /** A stack of bullets with an underlying ring */
-  public static BulletPattern STACK_RING;
+  public static Spawner STACK_RING;
 
   /** A spriral stack of bullets */
-  public static BulletPattern SPIRAL;
+  public static Spawner SPIRAL;
 
   /** A ring of arcs */
-  public static BulletPattern ARC_RING;
+  public static Spawner ARC_RING;
 
   /** A pretty ice ring */
-  public static BulletPattern ICE;
+  public static Spawner ICE;
 
   /** A pretty flower shower ring */
-  public static BulletPattern FLOWER;
+  public static Spawner FLOWER;
 
   static {
     class Periodic implements Effect {
@@ -44,7 +44,7 @@ public class BulletPatternConstants {
         int numBullets = bullets.size;
         for (int i = 0; i < numBullets; i++) {
           BulletFamily orig = bullets.get(i);
-          BulletFamily b = orig.clone(orig.timestamp + ticks, familyPool);
+          BulletFamily b = orig.clone(familyPool);
           b.effect.addFirst(new Periodic(ticks));
           bullets.add(b);
         }
@@ -74,7 +74,7 @@ public class BulletPatternConstants {
           BulletFamily orig = bullets.get(k);
           for (int i = 0; i < dups - 1; i++) {
             float theta = off + MathUtils.random(-errorRange, errorRange) + (i + 1) * MathUtils.PI2 / dups;
-            BulletFamily clone = orig.clone(orig.getTimestamp() + delay * i, familyPool);
+            BulletFamily clone = orig.clone(familyPool);
             if (!aroundOrig) {
               clone.rotate(theta, 0, 0);
             } else {
@@ -105,7 +105,7 @@ public class BulletPatternConstants {
         for (int i = 0; i < numBullets; i++) {
           BulletFamily orig = bullets.get(i);
           for (int j = 0; j < dups; j++) {
-            BulletFamily clone = orig.clone(orig.getTimestamp(), familyPool);
+            BulletFamily clone = orig.clone(familyPool);
             clone.bvx *= 1 + velDiff * j;
             clone.bvy *= 1 + velDiff * j;
             bullets.add(clone);
@@ -127,7 +127,7 @@ public class BulletPatternConstants {
         int numBullets = bullets.size;
         for (int i = 0; i < numBullets; i++) {
           BulletFamily orig = bullets.get(i);
-          BulletFamily b = orig.clone(orig.timestamp + ticks, familyPool);
+          BulletFamily b = orig.clone(familyPool);
           b.rotate(step, 0, 0);
           b.effect.addFirst(new PeriodicRotate(ticks, step));
           bullets.add(b);
@@ -151,7 +151,7 @@ public class BulletPatternConstants {
         for (int i = 0; i < numBullets; i++) {
           BulletFamily orig = bullets.get(i);
           for (int j = 0; j < dups; j++) {
-            BulletFamily b = orig.clone(orig.timestamp, familyPool);
+            BulletFamily b = orig.clone(familyPool);
             float theta = j * centralAngle / (dups - 1) + offset;
             b.rotate(theta, 0, 0);
             bullets.add(b);
@@ -161,13 +161,13 @@ public class BulletPatternConstants {
 
     }
 
-    RING = new BulletPattern();
+    RING = new Spawner();
     BulletFamily f1 = new BulletFamily(2f, 0f, 2f, 0f, 0.5f, 0);
     f1.addEffect(new PeriodicRotate(30, 0.5f));
     f1.addEffect(new Ring(10, 0.0f, 0.0f, 0, false));
     RING.addFamily(f1);
 
-    STACK_RING = new BulletPattern();
+    STACK_RING = new Spawner();
     BulletFamily srf = new BulletFamily(2f, 0f, 10f, 0f, 0.5f, 0);
     srf.addEffect(new Periodic(60));
     srf.addEffect(new Ring(5, 0f, MathUtils.PI2, 0, false));
@@ -178,28 +178,28 @@ public class BulletPatternConstants {
     STACK_RING.addFamily(srf);
     STACK_RING.addFamily(b);
 
-    SPIRAL = new BulletPattern();
+    SPIRAL = new Spawner();
     BulletFamily c = new BulletFamily(15, 0, -5f, 0f, 0.5f, 0);
     c.addEffect(new Periodic(60));
     c.addEffect(new Ring(20, 0.0f, 0.0f, 5, false));
     c.addEffect(new Ring(5, 0.0f, 0.0f, 0, true));
     SPIRAL.addFamily(c);
 
-    ARC_RING = new BulletPattern();
+    ARC_RING = new Spawner();
     BulletFamily d = new BulletFamily(5, 0, 4f, 0f, 0.5f, 0);
     d.addEffect(new Periodic(60));
     d.addEffect(new Ring(6, 0.3f, MathUtils.PI2, 0, false));
     d.addEffect(new Arc(0f, 0.4f, 5));
     ARC_RING.addFamily(d);
 
-    ICE = new BulletPattern();
+    ICE = new Spawner();
     BulletFamily e = new BulletFamily(15, 0, -4f, 0f, 0.5f, 0);
     e.addEffect(new Periodic(3));
     e.addEffect(new Ring(8, 0.0f, 0.0f, 0, true));
     e.addEffect(new Ring(7, 0.0f, 0.0f, 0, false));
     ICE.addFamily(e);
 
-    FLOWER = new BulletPattern();
+    FLOWER = new Spawner();
     BulletFamily f = new BulletFamily(15, 0, -2f, 0f, 0.5f, 0);
     f.addEffect(new Periodic(60));
     f.addEffect(new Ring(7, 0.0f, 0.2f, 5, true));
