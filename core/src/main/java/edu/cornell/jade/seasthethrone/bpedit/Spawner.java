@@ -11,7 +11,6 @@ import com.badlogic.gdx.math.MathUtils;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.physics.CollisionMask;
 import com.badlogic.gdx.utils.ObjectSet;
-import com.badlogic.gdx.utils.IntMap;
 
 /**
  * Stores a bullet pattern. This is sourse of bullets which, at a given an
@@ -275,6 +274,16 @@ public class Spawner {
     }
 
     /**
+     * Sets the timestamp of a given bullet, after how many ticks the bullet will
+     * spawn.
+     *
+     * @param timestamp new timestamp
+     */
+    public void setTimestamp(int timestamp) {
+      this.timestamp = timestamp;
+    }
+
+    /**
      * Adds a delayed action to the bullet family. The action's timestamp should
      * always be greater than the bullet family's timestamp.
      *
@@ -363,7 +372,6 @@ public class Spawner {
      *
      * @return the new bullet family
      */
-
     public BulletFamily clone(Pool<BulletFamily> familyPool) {
       BulletFamily newFamily = BulletFamily.construct(bx, by, bvx, bvy, radius, timestamp, familyPool);
       for (Effect e : effect)
@@ -371,11 +379,10 @@ public class Spawner {
       return newFamily;
     }
 
-    public BulletModel realizeBase(Pool<BulletModel> modelPool) {
-      BulletModel m = BulletModel.construct(bx, by, radius, modelPool);
-      m.setVX(bvx);
-      m.setVY(bvy);
-      return m;
+    @Override
+    public String toString() {
+      return "BulletFamily [bvx=" + bvx + ", bvy=" + bvy + ", bx=" + bx + ", by=" + by + ", delayedActions="
+          + delayedActions + ", effect=" + effect + ", radius=" + radius + ", timestamp=" + timestamp + "]";
     }
   }
 
@@ -418,6 +425,9 @@ public class Spawner {
   /** The set of bullet models added to the physics engine */
   private ObjectSet<BulletModel> added;
 
+  /** Builder for bullets */
+  private BulletModel.Builder bulletBuilder;
+
   /**
    * The current rotation of the spawner. Rotations are relative to the spawner's
    * origin and measured in radians and applied before any translation.
@@ -428,8 +438,9 @@ public class Spawner {
    * Constructs a <code>Spawner<code>.
    *
    * @param physicsEngine {@link PhysicsEngine} to add bullets to
+   * @param bulletBuilder a builder to create bullet models
    */
-  public Spawner(PhysicsEngine physicsEngine) {
+  public Spawner(BulletModel.Builder bulletBuilder, PhysicsEngine physicsEngine) {
     timer = 0;
     curBullets = new BinaryHeap<>();
     bulletFamilyCache = new Array<>();
@@ -441,6 +452,7 @@ public class Spawner {
     this.added = new ObjectSet<>();
     this.delayedActions = new BinaryHeap<>();
     this.delayedActionsList = new ObjectSet<>();
+    this.bulletBuilder = bulletBuilder;
   }
 
   /**
@@ -448,10 +460,11 @@ public class Spawner {
    *
    * @param x             x coordinate of spawner
    * @param y             y coordinate of spawner
+   * @param bulletBuilder a builder to create bullet models
    * @param physicsEngine {@link PhysicsEngine} to add bullets to
    */
-  public Spawner(float x, float y, PhysicsEngine physicsEngine) {
-    this(physicsEngine);
+  public Spawner(float x, float y, BulletModel.Builder bulletBuilder, PhysicsEngine physicsEngine) {
+    this(bulletBuilder, physicsEngine);
     this.x = x;
     this.y = y;
   }
@@ -485,7 +498,7 @@ public class Spawner {
    * @param py player y position
    */
   private void applyDelayedActions(float px, float py) {
-    while (-delayedActions.peek().getValue() < timer) {
+    while (!delayedActions.isEmpty() && -delayedActions.peek().getValue() < timer) {
       delayedActions.pop().apply(px, py);
     }
   }
@@ -574,7 +587,7 @@ public class Spawner {
     while (hasNext()) {
       BulletModel b = next();
       CollisionMask.setCategoryMaskBits(b);
-      physicsEngine.addObject(next());
+      physicsEngine.addObject(b);
       b.createFixtures();
       added.add(b);
     }
@@ -591,7 +604,14 @@ public class Spawner {
     assert hasNext();
     BulletFamily f = curBullets.pop();
     f.rotate(rotation, x, y);
-    BulletModel m = BulletModel.construct(f.bx + x, f.by + y, f.radius, bulletBasePool);
+    bulletBuilder
+      .setX(f.bx + x)
+      .setY(f.by + y)
+      .setVX(f.bvx)
+      .setVY(f.bvy)
+      .setShotByPlayer(false)
+      .setRadius(f.radius);
+    BulletModel m = BulletModel.construct(bulletBuilder, bulletBasePool);
 
     for (DelayedAction a : f.delayedActions) {
       a.setModel(m);

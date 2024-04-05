@@ -15,7 +15,7 @@ import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.ObstacleModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.input.InputController;
-import edu.cornell.jade.seasthethrone.bpedit.BulletController;
+import edu.cornell.jade.seasthethrone.bpedit.AttackPattern;
 import edu.cornell.jade.seasthethrone.level.*;
 import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.model.PolygonModel;
@@ -23,6 +23,9 @@ import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.ScreenListener;
+import edu.cornell.jade.seasthethrone.gamemodel.boss.CrabBossModel;
+import edu.cornell.jade.seasthethrone.gamemodel.boss.JellyBossModel;
+import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 
 import java.util.Comparator;
 
@@ -62,7 +65,7 @@ public class GameplayController implements Screen {
   RenderingEngine renderEngine;
 
   /** Controller for keeping track of bullet patterns */
-  protected BulletController bulletController;
+  protected AttackPattern bulletController;
 
   /** Width of the game world in Box2d units */
   protected float worldWidth;
@@ -96,6 +99,9 @@ public class GameplayController implements Screen {
 
   /** Temporary cache used by updateCamera */
   private final Vector2 updateCameraCache = new Vector2();
+
+  /** fish bullet builder */
+  BulletModel.Builder fishBulletBuilder;
 
   /** Listener that will update the player mode when we are done */
   private ScreenListener listener;
@@ -183,6 +189,10 @@ public class GameplayController implements Screen {
     physicsEngine = new PhysicsEngine(bounds, world);
     physicsEngine.addObject(player);
 
+    // Load fish bullets builder
+    fishBulletBuilder = BulletModel.Builder.newInstance()
+      .setFishTexture(new Texture("bullet/yellowfish_east.png"));
+
     // Load bosses
     for (int i = 0; i < level.getBosses().size; i++) {
       // TODO: set everything below here based on bossName, load from assets.json
@@ -212,7 +222,13 @@ public class GameplayController implements Screen {
               .build();
       renderEngine.addRenderable(boss);
       physicsEngine.addObject(boss);
-      bossControllers.add(new BossController(boss));
+      if (boss instanceof CrabBossModel b) {
+        bossControllers.add(new CrabBossController(b, player, fishBulletBuilder, physicsEngine));
+      } else if (boss instanceof JellyBossModel b) {
+        // create jelly boss
+      } else {
+        // log an error
+      }
     }
 
     // Load walls
@@ -239,7 +255,6 @@ public class GameplayController implements Screen {
 
     // Initlize controllers
     playerController = new PlayerController(physicsEngine, player);
-    bulletController = new BulletController(physicsEngine);
     inputController.add(playerController);
 
     if (BuildConfig.DEBUG) {
@@ -264,11 +279,10 @@ public class GameplayController implements Screen {
 
     // Update entity controllers and camera if the game is not over
     if (gameState != GameState.OVER) {
-      bulletController.update();
       playerController.update();
       for (BossController bc : bossControllers) {
         if (!bc.isTerminated()) {
-          bc.update();
+          bc.update(delta);
         }
       }
       physicsEngine.update(delta);

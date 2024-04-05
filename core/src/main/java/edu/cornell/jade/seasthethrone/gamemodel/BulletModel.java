@@ -57,6 +57,8 @@ public class BulletModel extends SimpleModel implements Renderable {
     //
     // setBodyType(BodyDef.BodyType.KinematicBody);
     super(builder.x, builder.y);
+    setVX(builder.vx);
+    setVY(builder.vy);
     shape = new CircleShape();
     shape.setRadius(builder.radius);
     knockbackForce = 20f;
@@ -84,13 +86,18 @@ public class BulletModel extends SimpleModel implements Renderable {
     setName("bullet");
   }
 
-  public static BulletModel construct(float x, float y, float radius, Pool<BulletModel> pool) {
+  public static BulletModel construct(Builder builder, Pool<BulletModel> pool) {
+    // TODO: remove these allocations, pool!!!
     BulletModel res = pool.obtain();
-    res.setX(x);
-    res.setY(y);
-    res.shape.setRadius(radius);
+    res.setX(builder.x);
+    res.setY(builder.y);
+    res.setVX(builder.vx);
+    res.setVY(builder.vy);
+    res.shape = new CircleShape();
+    res.shape.setRadius(builder.radius);
     res.setBodyType(BodyDef.BodyType.DynamicBody);
     res.setName("bullet");
+    res.filmStrip = new FilmStrip(builder.FISH_TEXTURE, 1, 1);
     return res;
   }
 
@@ -171,6 +178,10 @@ public class BulletModel extends SimpleModel implements Renderable {
     private float x;
     /** bullet y position */
     private float y;
+    /** bullet velocity x component */
+    private float vx;
+    /** bullet velocity y component */
+    private float vy;
     /** Texture for bullet */
     private Texture FISH_TEXTURE;
     /** Radius of shape of bullet */
@@ -197,6 +208,14 @@ public class BulletModel extends SimpleModel implements Renderable {
     }
     public Builder setY(float y) {
       this.y = y;
+      return this;
+    }
+    public Builder setVX(float vx) {
+      this.vx = vx;
+      return this;
+    }
+    public Builder setVY(float vy) {
+      this.vy = vy;
       return this;
     }
     public Builder setShotByPlayer(boolean shotByPlayer) {

@@ -1,9 +1,11 @@
 package edu.cornell.jade.seasthethrone.bpedit.patterns;
 
+import com.badlogic.gdx.math.MathUtils;
+
 import edu.cornell.jade.seasthethrone.bpedit.AttackPattern;
 import edu.cornell.jade.seasthethrone.bpedit.Spawner;
+import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
-import com.badlogic.gdx.math.MathUtils;
 
 public final class ArcsAcrossTheTopAttack extends AttackPattern {
   /*
@@ -43,16 +45,17 @@ public final class ArcsAcrossTheTopAttack extends AttackPattern {
    * @param length        length of the line of arcs
    * @param period        the length of one repeition of the attack in ticks
    * @param shots         the number of arc shots fired in a single period
+   * @param builder       a builder to create bullet models
    * @param physicsEngine {@link PhysicsEngine} to add bullets to
    */
   public ArcsAcrossTheTopAttack(float leftX, float leftY, float length, int period, int shots,
-      PhysicsEngine physicsEngine) {
+      BulletModel.Builder builder, PhysicsEngine physicsEngine) {
     this.length = length;
     this.period = period;
 
     this.stepsTaken = 0;
-    this.spawner = SpawnerFactory.constructRepeatingDownwardsFacingArc(BULLETS, CENTRAL_ANGLE, period / shots,
-        physicsEngine);
+    this.spawner = SpawnerFactory.constructRepeatingDownwardsFacingArc(BULLETS, CENTRAL_ANGLE,
+        (period + shots - 1) / shots, builder, physicsEngine);
     this.spawner.translate(leftX, leftY);
 
     this.addSpawner(spawner);

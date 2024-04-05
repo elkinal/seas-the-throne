@@ -64,6 +64,7 @@ class Periodic implements Effect {
       BulletFamily orig = bullets.get(i);
       BulletFamily b = orig.clone(familyPool);
       b.prependEffect(new Periodic(ticks));
+      b.setTimestamp(b.getTimestamp() + ticks);
       bullets.add(b);
     }
   }

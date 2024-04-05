@@ -27,9 +27,6 @@ public class PhysicsEngine implements ContactListener {
   /** The boundary of the world */
   private Rectangle bounds;
 
-  /** Timer for spawning bullets */
-  private int bulletTimer;
-
   private Array<BossModel> bosses = new Array<>();
 
   /** Filepath to the JSON of the level to switch to. Should be null unless the player is on a portal */
@@ -82,23 +79,6 @@ public class PhysicsEngine implements ContactListener {
   }
 
   /**
-   * Spawns bullets at a set interval in a circular pattern
-   *
-   * @param bulletTimer value of the timer, used to set angle
-   */
-  public void spawnBulletPattern(int bulletTimer) {
-    for (BossModel boss : bosses) {
-      float speed = 6;
-      Vector2 bossPos = boss.getPosition();
-      float theta = bulletTimer * 0.01f;
-      Vector2 v_i = new Vector2((float) Math.cos(theta), (float) Math.sin(theta));
-
-      spawnBullet(bossPos.add(0, 2), v_i, speed, false);
-      spawnBullet(bossPos.add(0, 2), v_i, -speed, false);
-    }
-  }
-
-  /**
    * The core gameplay loop of this world.
    *
    * <p>
@@ -109,11 +89,6 @@ public class PhysicsEngine implements ContactListener {
    * @param delta Number of seconds since last animation frame
    */
   public void update(float delta) {
-    if (bulletTimer % 20 == 0) {
-      spawnBulletPattern(bulletTimer);
-    }
-    bulletTimer += 1;
-
     // turn the physics engine crank
     world.step(delta, 8, 4);
 
