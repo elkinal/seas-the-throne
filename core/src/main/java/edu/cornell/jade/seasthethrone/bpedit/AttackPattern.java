@@ -10,6 +10,10 @@ import edu.cornell.jade.seasthethrone.util.PooledList;
  * have 4-10 of these and a regular enemy may only have 1.
  */
 public abstract class AttackPattern {
+
+  /** Distance to render bullets from */
+  private static float RENDER_DISTANCE = 100f;
+
   /** If the attack pattern has been cleaned up to be removed */
   private boolean cleanedUp;
 
@@ -40,6 +44,7 @@ public abstract class AttackPattern {
     animateStep();
     for (Spawner p : spawners) {
       p.update(px, py);
+      p.removeFarFrom(px, py, RENDER_DISTANCE);
     }
   }
 
