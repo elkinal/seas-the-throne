@@ -88,6 +88,7 @@ public class BulletModel extends SimpleModel implements Renderable {
 
   public static BulletModel construct(Builder builder, Pool<BulletModel> pool) {
     // TODO: remove these allocations, pool!!!
+    // TODO: fix this so it actually works
     BulletModel res = pool.obtain();
     res.setX(builder.x);
     res.setY(builder.y);

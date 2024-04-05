@@ -58,6 +58,16 @@ public abstract class AttackPattern {
   }
 
   /**
+   * Frees any removed models. This should be called after a physics engine
+   * update.
+   */
+  public void freeRemoved() {
+    for (Spawner s : spawners) {
+      s.freeRemovedBullets();
+    }
+  }
+
+  /**
    * Modifies any bullet patterns, called during update.
    */
   abstract protected void animateStep();
