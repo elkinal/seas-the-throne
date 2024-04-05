@@ -21,9 +21,7 @@ public abstract class AttackPattern {
   protected PooledList<Spawner> spawners;
 
   /**
-   * Constructs a BulletController
-   *
-   * @param physicsEngine physicsEngine to modify when adding bullets
+   * Constructs an AttackPattern
    */
   protected AttackPattern() {
     spawners = new PooledList<>();
