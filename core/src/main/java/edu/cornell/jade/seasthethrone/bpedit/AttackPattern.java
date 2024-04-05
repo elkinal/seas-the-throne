@@ -14,15 +14,15 @@ public abstract class AttackPattern {
   protected int bulletTimer;
 
   /** A list of the bullet patterns to spawn */
-  protected PooledList<Spawner> patterns;
+  protected PooledList<Spawner> spawners;
 
   /**
    * Constructs a BulletController
    *
    * @param physicsEngine physicsEngine to modify when adding bullets
    */
-  public AttackPattern() {
-    patterns = new PooledList<>();
+  protected AttackPattern() {
+    spawners = new PooledList<>();
     bulletTimer = 0;
   }
 
@@ -36,7 +36,7 @@ public abstract class AttackPattern {
   public void update(float px, float py) {
     animateStep();
     bulletTimer++;
-    for (Spawner p : patterns) {
+    for (Spawner p : spawners) {
       p.update(px, py);
     }
   }
@@ -50,9 +50,9 @@ public abstract class AttackPattern {
    * Adds a bullet pattern to the bullet controller so the patterns bullets will
    * spawn.
    *
-   * @param bulletPattern bullet pattern to add
+   * @param spawner spawner to add
    */
-  public void addPattern(Spawner bulletPattern) {
-    patterns.add(bulletPattern);
+  protected void addSpawner(Spawner spawner) {
+    spawners.add(spawner);
   }
 }

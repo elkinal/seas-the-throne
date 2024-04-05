@@ -346,6 +346,16 @@ public class Spawner {
     }
 
     /**
+     * Adds an effect to be applied to the <code>base</code> at before previously
+     * added effects have been applied.
+     *
+     * @param e the effect to be added
+     */
+    public void prependEffect(Effect e) {
+      effect.addFirst(e);
+    }
+
+    /**
      * Clones the bullet family, with the base also a clone with some subset of its
      * properties the same as its parent
      *
