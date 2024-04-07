@@ -28,7 +28,7 @@ public class InputController {
   Viewport viewport;
 
   /** List of all the player input controllers */
-  private ArrayList<Controllable> players;
+  private ArrayList<Controllable> controllables;
 
   /** XBox Controller support */
   private XBoxController xbox;
@@ -51,25 +51,25 @@ public class InputController {
   }
 
   /**
-   * Adds p to 'players.' Adding a duplicated object does nothing.
+   * Adds c to 'controllables.' Adding a duplicated object does nothing.
    *
-   * @param p the PlayerController to be added
+   * @param c the Controllable to be added
    */
-  public void add(PlayerController p) {
-    if (!players.contains(p)) {
-      players.add(p);
+  public void add(Controllable c) {
+    if (!controllables.contains(c)) {
+      controllables.add(c);
     }
   }
 
   /**
-   * Removes p from 'players.' Removing an object which was never added does
+   * Removes c from 'controllables.' Removing an object which was never added does
    * nothing.
    *
-   * @param p the PlayerController to be removed
+   * @param c the Controllable to be removed
    */
-  public void remove(PlayerController p) {
-    if (players != null) {
-      players.remove(p);
+  public void remove(Controllable c) {
+    if (controllables != null) {
+      controllables.remove(c);
     }
   }
 
@@ -82,7 +82,7 @@ public class InputController {
    *                      mouse coord.
    */
   public InputController(Viewport screenToWorld) {
-    this.players = new ArrayList<>();
+    this.controllables = new ArrayList<>();
     this.viewport = screenToWorld;
     this.dashCoordCache = new Vector2();
 
@@ -97,7 +97,7 @@ public class InputController {
    * Updates the state of this object (position) both vertically and horizontally.
    */
   public void update() {
-    for (Controllable p : players) {
+    for (Controllable p : controllables) {
       readInput(p);
     }
   }
