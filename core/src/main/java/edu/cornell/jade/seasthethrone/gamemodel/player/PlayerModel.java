@@ -646,6 +646,7 @@ public class PlayerModel extends ComplexModel implements Renderable {
       animationFrame = 0;
       frameCounter = 1;
       dashFrameCounter = 1;
+      cooldownCounter = Math.max(0, cooldownCounter - 1);
     }
     else {
       cooldownCounter = Math.max(0, cooldownCounter - 1);
