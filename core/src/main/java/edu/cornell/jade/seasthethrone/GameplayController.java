@@ -4,9 +4,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.*;
 
@@ -139,7 +137,6 @@ public class GameplayController implements Screen {
 
     // Load background
     renderEngine.addRenderable(level.getBackground());
-
     // Load tiles
     for (Tile tile : level.getTiles()) {
       renderEngine.addRenderable(tile);
@@ -188,7 +185,6 @@ public class GameplayController implements Screen {
     // Initialize physics engine
     physicsEngine = new PhysicsEngine(bounds, world);
     physicsEngine.addObject(player);
-
     // Load fish bullets builder
     fishBulletBuilder = BulletModel.Builder.newInstance()
       .setFishTexture(new Texture("bullet/yellowfish_east.png"));
@@ -258,7 +254,7 @@ public class GameplayController implements Screen {
     inputController.add(playerController);
 
     if (BuildConfig.DEBUG) {
-      System.out.println("phys engine: " + physicsEngine.getObjects().size());
+      System.out.println("num objects: " + physicsEngine.getObjects().size());
     }
   }
 
@@ -285,6 +281,7 @@ public class GameplayController implements Screen {
           bc.update(delta);
         }
       }
+
       physicsEngine.update(delta);
 
       // Update camera
@@ -312,9 +309,12 @@ public class GameplayController implements Screen {
 
       listener.exitScreen(this, GDXRoot.EXIT_SWAP);
       level = new Level(physicsEngine.getTarget());
-      physicsEngine.getObjects().clear();
+//      physicsEngine.getObjects().clear();
+//      physicsEngine.dispose();
       this.renderEngine.clear();
+      System.out.println("pre setup");
       setupGameplay();
+      System.out.println("post setup");
     }
 
     // Reset target so player doesn't teleport again on next frame
@@ -356,6 +356,8 @@ public class GameplayController implements Screen {
         }
       }
     }
+
+    System.out.println("end update");
   }
 
   public void resize(int width, int height) {
