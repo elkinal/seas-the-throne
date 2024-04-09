@@ -108,9 +108,19 @@ public class PhysicsEngine implements ContactListener {
         }
         entry.remove();
       } else {
+        if (obj instanceof PlayerModel) {
+          // Resolve knockback flag
+          PlayerBodyModel body = ((PlayerModel) obj).getBodyModel();
+          if (body.isJustKnoocked()) {
+            applyKnockback(body, body.getKnockingBodyPos(), body.getKnockbackForce());
+            body.setJustKnocked(false);
+          }
+      }
         obj.update(delta);
       }
     }
+
+
 
     // Try to collide with the boss again (if player is not invincible)
     // I'm not a fan of this workaround but I couldn't figure anything else out
@@ -244,7 +254,7 @@ public class PhysicsEngine implements ContactListener {
     if (!pb.isInvincible()) {
       pb.setHit(true);
       pb.setInvincible();
-      applyKnockback(pb, b.getPosition(), b.getKnockbackForce());
+      pb.setKnockedBack(b.getPosition(), b.getKnockbackForce());
     }
   }
 
@@ -261,7 +271,7 @@ public class PhysicsEngine implements ContactListener {
     if (!pb.isInvincible()) {
       pb.setHit(true);
       pb.setInvincible();
-      applyKnockback(pb, b.getPosition(), b.getBodyKnockbackForce());
+      pb.setKnockedBack(b.getPosition(), b.getBodyKnockbackForce());
       playerBossCollision = Optional.empty();
     } else {
       if (playerBossCollision.isEmpty()) {
@@ -275,7 +285,7 @@ public class PhysicsEngine implements ContactListener {
   public void handleCollision(PlayerSpearModel ps, BossModel b) {
     b.decrementHealth(ps.getDamage());
     ps.getMainBody().setKnockbackTime(15);
-    applyKnockback(ps.getMainBody(), b.getPosition(), b.getSpearKnockbackForce());
+    ps.getMainBody().setKnockedBack(b.getPosition(), b.getSpearKnockbackForce());
   }
 
   /** Handle collision between player bullet and boss */
