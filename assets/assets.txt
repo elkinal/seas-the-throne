@@ -13,6 +13,7 @@ bosses/jelly/idle.png
 bosses/jelly/jelly_hit.gif
 bosses/jelly/jelly_idle.gif
 bosses/jelly/shoot.png
+bullet/urchinbullet.png
 bullet/yellowfish_east.png
 bullet/yellowfish_NE.png
 bullet/yellowfish_north.png
@@ -62,3 +63,5 @@ player/playerspriterun_down_wspear.png
 player/playerspriterun_left_wspear.png
 player/playerspriterun_right_wspear.png
 player/playerspriterun_up_wspear.png
+player/player_dash_ne.png
+player/player_dash_nw.png

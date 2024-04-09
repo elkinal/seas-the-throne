@@ -141,6 +141,7 @@ public class BulletModel extends SimpleModel implements Renderable {
     filmStrip.setFrame(frame);
 
     Vector2 pos = getPosition();
+
     renderer.draw(filmStrip, pos.x, pos.y, true, angle());
   }
 
