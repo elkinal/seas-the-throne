@@ -48,7 +48,7 @@ public class PhysicsEngine implements ContactListener {
 
   public void dispose() {
     objects.clear();
-    world.dispose();
+//    world.dispose();
   }
 
   /**
@@ -274,7 +274,7 @@ public class PhysicsEngine implements ContactListener {
       pb.setKnockedBack(b.getPosition(), b.getBodyKnockbackForce());
       playerBossCollision = Optional.empty();
     } else {
-      if (playerBossCollision.isEmpty()) {
+      if (playerBossCollision.isEmpty() && pb.getHealth() > 0) {
         playerBossCollision = Optional.of(c);
       }
     }
