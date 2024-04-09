@@ -20,12 +20,14 @@ import edu.cornell.jade.seasthethrone.model.PolygonModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
+import edu.cornell.jade.seasthethrone.util.JsonHandler;
 import edu.cornell.jade.seasthethrone.util.ScreenListener;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.CrabBossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.JellyBossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 
 import java.util.Comparator;
+import java.util.HashMap;
 
 /**
  * The primary controller class for the game.
@@ -149,27 +151,27 @@ public class GameplayController implements Screen {
         PlayerModel.Builder.newInstance()
             .setX(playerLoc.x)
             .setY(playerLoc.y)
-            .setTextureUp(new Texture("player/playerspriterun_up_wspear.png"))
-            .setTextureDown(new Texture("player/playerspriterun_down_wspear.png"))
-            .setTextureLeft(new Texture("player/playerspriterun_left_wspear.png"))
-            .setTextureRight(new Texture("player/playerspriterun_right_wspear.png"))
-            .setTextureUpDash(new Texture("player/playerspritedashfilmstrip_up.png"))
-            .setTextureDownDash(new Texture("player/playerspritedashfilmstrip_down.png"))
-            .setTextureLeftDash(new Texture("player/playerspritedashfilmstrip_left.png"))
-            .setTextureRightDash(new Texture("player/playerspritedashfilmstrip_right.png"))
+            .setTextureUp(new Texture("player/player_run_up.png"))
+            .setTextureDown(new Texture("player/player_run_down.png"))
+            .setTextureLeft(new Texture("player/player_run_left.png"))
+            .setTextureRight(new Texture("player/player_run_right.png"))
+            .setTextureUpDash(new Texture("player/player_dash_up.png"))
+            .setTextureDownDash(new Texture("player/player_dash_down.png"))
+            .setTextureLeftDash(new Texture("player/player_dash_left.png"))
+            .setTextureRightDash(new Texture("player/player_dash_right.png"))
             .setDashIndicatorTexture(new Texture("player/dash_indicator.png"))
-            .setIdleLeft(new Texture("player/playerspriteidle_left.png"))
-            .setIdleRight(new Texture("player/playerspriteidle_right.png"))
-            .setIdleUp(new Texture("player/playerspriteidle_up.png"))
-            .setIdleDown(new Texture("player/playerspriteidle_down.png"))
-            .setShootDown(new Texture("player/playershoot_down_filmstrip.png"))
-            .setShootUp(new Texture("player/playershoot_up_filmstrip.png"))
-            .setShootLeft(new Texture("player/playershoot_left_filmstrip.png"))
-            .setShootRight(new Texture("player/playershoot_right_filmstrip.png"))
-            .setDeathUp(new Texture("player/playerdeath_up_filmstrip.png"))
-            .setDeathDown(new Texture("player/playerdeath_down_filmstrip.png"))
-            .setDeathLeft(new Texture("player/playerdeath_left_filmstrip.png"))
-            .setDeathRight(new Texture("player/playerdeath_right_filmstrip.png"))
+            .setIdleLeft(new Texture("player/player_idle_right.png"))
+            .setIdleRight(new Texture("player/player_idle_right.png"))
+            .setIdleUp(new Texture("player/player_idle_up.png"))
+            .setIdleDown(new Texture("player/player_idle_down.png"))
+            .setShootDown(new Texture("player/player_shoot_down.png"))
+            .setShootUp(new Texture("player/player_shoot_up.png"))
+            .setShootLeft(new Texture("player/player_shoot_left.png"))
+            .setShootRight(new Texture("player/player_shoot_right.png"))
+            .setDeathUp(new Texture("player/player_death_up.png"))
+            .setDeathDown(new Texture("player/player_death_down.png"))
+            .setDeathLeft(new Texture("player/player_death_left.png"))
+            .setDeathRight(new Texture("player/player_death_right.png"))
             .setFramesInAnimation(12)
             .setFramesInAnimationDash(5)
             .setFramesInAnimationShoot(5)
@@ -312,9 +314,8 @@ public class GameplayController implements Screen {
 //      physicsEngine.getObjects().clear();
 //      physicsEngine.dispose();
       this.renderEngine.clear();
-      System.out.println("pre setup");
+//      disposeBosses();
       setupGameplay();
-      System.out.println("post setup");
     }
 
     // Reset target so player doesn't teleport again on next frame
@@ -356,8 +357,6 @@ public class GameplayController implements Screen {
         }
       }
     }
-
-    System.out.println("end update");
   }
 
   public void resize(int width, int height) {
@@ -407,6 +406,12 @@ public class GameplayController implements Screen {
       if (!bc.isTerminated())
         return false;
     return true;
+  }
+
+  public void disposeBosses() {
+    for (BossController boss : bossControllers) {
+      boss.dispose();
+    }
   }
 
   /**

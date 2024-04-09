@@ -1,5 +1,8 @@
 package edu.cornell.jade.seasthethrone;
 
+import edu.cornell.jade.seasthethrone.bpedit.AttackPattern;
+import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
+
 public interface BossController {
   /**
    * Called every tick. Updates the state of the model based on the controller
@@ -18,4 +21,7 @@ public interface BossController {
    * @return if the boss this controller controls is dead
    */
   public boolean isTerminated();
+
+  /** Cleans up this bosses attack patterns */
+  public void dispose();
 }
