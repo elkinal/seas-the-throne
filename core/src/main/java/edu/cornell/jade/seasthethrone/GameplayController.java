@@ -20,14 +20,12 @@ import edu.cornell.jade.seasthethrone.model.PolygonModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
-import edu.cornell.jade.seasthethrone.util.JsonHandler;
 import edu.cornell.jade.seasthethrone.util.ScreenListener;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.CrabBossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.JellyBossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 
 import java.util.Comparator;
-import java.util.HashMap;
 
 /**
  * The primary controller class for the game.
@@ -139,6 +137,7 @@ public class GameplayController implements Screen {
 
     // Load background
     renderEngine.addRenderable(level.getBackground());
+
     // Load tiles
     for (Tile tile : level.getTiles()) {
       renderEngine.addRenderable(tile);
@@ -255,6 +254,9 @@ public class GameplayController implements Screen {
     playerController = new PlayerController(physicsEngine, player);
     inputController.add(playerController);
 
+    // Load UI
+    renderEngine.addUI(playerController.getHealthBar());
+
     if (BuildConfig.DEBUG) {
       System.out.println("num objects: " + physicsEngine.getObjects().size());
     }
@@ -268,6 +270,7 @@ public class GameplayController implements Screen {
 
   public void draw(float delta) {
     renderEngine.drawRenderables();
+    renderEngine.drawUI();
   }
 
   public void update(float delta) {

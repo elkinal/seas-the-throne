@@ -65,3 +65,9 @@ player/player_shoot_left.png
 player/player_shoot_right.png
 player/player_shoot_up.png
 player/playe_idle_left.png
+ui/playerhealth_0.png
+ui/playerhealth_1_5.png
+ui/playerhealth_2_5.png
+ui/playerhealth_3_5.png
+ui/playerhealth_4_5.png
+ui/playerhealth_5_5.png
