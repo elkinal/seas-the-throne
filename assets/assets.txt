@@ -76,6 +76,12 @@ ui/darkammo_2_5.png
 ui/darkammo_3_5.png
 ui/darkammo_4_5.png
 ui/darkammo_5_5.png
+ui/health_hori_0.png
+ui/health_hori_1.png
+ui/health_hori_2.png
+ui/health_hori_3.png
+ui/health_hori_4.png
+ui/health_hori_5.png
 ui/playerhealth_0.png
 ui/playerhealth_1_5.png
 ui/playerhealth_2_5.png

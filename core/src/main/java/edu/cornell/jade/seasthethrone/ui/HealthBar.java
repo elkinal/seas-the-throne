@@ -18,16 +18,22 @@ public class HealthBar implements Renderable {
     private float aspectRatio;
 
     /** Scale of health bar on the screen */
-    private final float SCALE = 400f;
+    private final float SCALE = 100f;
 
     public HealthBar() {
         this.textures = new Array<>();
-        textures.add(new Texture("ui/playerhealth_0.png"));
-        textures.add(new Texture("ui/playerhealth_1_5.png"));
-        textures.add(new Texture("ui/playerhealth_2_5.png"));
-        textures.add(new Texture("ui/playerhealth_3_5.png"));
-        textures.add(new Texture("ui/playerhealth_4_5.png"));
-        textures.add(new Texture("ui/playerhealth_5_5.png"));
+//        textures.add(new Texture("ui/playerhealth_0.png"));
+//        textures.add(new Texture("ui/playerhealth_1_5.png"));
+//        textures.add(new Texture("ui/playerhealth_2_5.png"));
+//        textures.add(new Texture("ui/playerhealth_3_5.png"));
+//        textures.add(new Texture("ui/playerhealth_4_5.png"));
+//        textures.add(new Texture("ui/playerhealth_5_5.png"));
+        textures.add(new Texture("ui/health_hori_0.png"));
+        textures.add(new Texture("ui/health_hori_1.png"));
+        textures.add(new Texture("ui/health_hori_2.png"));
+        textures.add(new Texture("ui/health_hori_3.png"));
+        textures.add(new Texture("ui/health_hori_4.png"));
+        textures.add(new Texture("ui/health_hori_5.png"));
         this.texture = textures.get(textures.size - 1);
 
         this.aspectRatio = (float) texture.getWidth() /texture.getHeight();
@@ -35,7 +41,7 @@ public class HealthBar implements Renderable {
 
     /** Updates the texture of this health bar to match player health */
     public void update(int currHealth) {
-        if (currHealth > textures.size || currHealth < 1) {
+        if (currHealth >= textures.size || currHealth < 1) {
             this.texture = textures.get(0);
             return;
         }

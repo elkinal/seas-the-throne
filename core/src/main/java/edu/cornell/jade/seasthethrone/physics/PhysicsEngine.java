@@ -171,6 +171,8 @@ public class PhysicsEngine implements ContactListener {
     Fixture fix1 = contact.getFixtureA();
     Fixture fix2 = contact.getFixtureB();
 
+    if (fix1 == null || fix2 == null) {return;}
+
     Body body1 = fix1.getBody();
     Body body2 = fix2.getBody();
 

@@ -42,7 +42,6 @@ public class AmmoBar implements Renderable {
 
     @Override
     public void draw(RenderingEngine renderer) {
-        System.out.println("here");
         renderer.draw(new TextureRegion(texture), playerPos.x, playerPos.y - 2.5f);
     }
 }
