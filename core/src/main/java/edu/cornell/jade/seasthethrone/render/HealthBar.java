@@ -24,8 +24,8 @@ public class HealthBar implements Renderable{
         textures.add(new Texture("ui/playerhealth_1_5.png"));
         textures.add(new Texture("ui/playerhealth_2_5.png"));
         textures.add(new Texture("ui/playerhealth_3_5.png"));
-//        textures.add(new Texture("ui/playerhealth_4_5.png"));
-//        textures.add(new Texture("ui/playerhealth_5_5.png"));
+        textures.add(new Texture("ui/playerhealth_4_5.png"));
+        textures.add(new Texture("ui/playerhealth_5_5.png"));
         this.texture = textures.get(textures.size - 1);
 
         this.aspectRatio = (float) texture.getWidth() /texture.getHeight();

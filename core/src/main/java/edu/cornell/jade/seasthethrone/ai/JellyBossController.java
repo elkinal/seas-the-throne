@@ -1,24 +1,26 @@
-package edu.cornell.jade.seasthethrone;
+package edu.cornell.jade.seasthethrone.ai;
 
 import edu.cornell.jade.seasthethrone.bpedit.AttackPattern;
-import edu.cornell.jade.seasthethrone.bpedit.patterns.ArcsAcrossTheTopAttack;
+import edu.cornell.jade.seasthethrone.bpedit.patterns.RingAttack;
+import edu.cornell.jade.seasthethrone.bpedit.patterns.TrackingSpiralAttack;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
-import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
-import edu.cornell.jade.seasthethrone.gamemodel.boss.CrabBossModel;
+import edu.cornell.jade.seasthethrone.gamemodel.boss.JellyBossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 
 /**
- * A controller defining the bahavior of a crab boss.
+ * A controller defining the behavior of a jelly boss.
  */
-public class CrabBossController implements BossController {
+public class JellyBossController implements BossController {
   /** Enumeration of AI states. */
   private static enum State {
     /** The boss is stationary */
     IDLE,
     /** The boss is attacking */
     ATTACK,
-    /** The boss is moving towards a target */
+    /** The boss is attacking and moving at the same time */
+    ATTACK_MOVE,
+    /** The boss is moving (and not attacking) */
     MOVE,
     /** The boss has been defeated */
     DEAD,
@@ -30,22 +32,19 @@ public class CrabBossController implements BossController {
    * -----------------------------------
    */
   /** The distance the player must be from the boss before it begins attacking. */
-  private static float AGRO_DISTANCE = 30f;
+  private static float AGRO_DISTANCE = 35f;
 
-  /** The x offset from the boss arc across the tops left side starts on */
-  private static float X_OFFSET = -30f;
+  /** The delay length between successive bullets in the spiral attack */
+  private static int SPIRAL_DELAY = 6;
 
-  /** The y offset from the boss arc across the tops left side starts on */
-  private static float Y_OFFSET = 20f;
+  /** The number of bullets in a circular spiral shot */
+  private static int SPIRAL_SHOTS = 24;
 
-  /** The length of the arc of bullets */
-  private static float ARC_LINE_LENGTH = 60f;
+  /** The delay length between successive bullets in the ring attack */
+  private static int RING_DELAY = 100;
 
-  /** The ticks in a period of the arc attack */
-  private static int ARC_PERIOD = 60;
-
-  /** The number of arc shots fired in a single period */
-  private static int ARC_SHOTS = 6;
+  /** The number of bullets in a circular ring attack */
+  private static int RING_SHOTS = 24;
 
   /*
    * -------------------------------
@@ -53,7 +52,7 @@ public class CrabBossController implements BossController {
    * -------------------------------
    */
   /** The model being controlled */
-  private CrabBossModel boss;
+  private JellyBossModel boss;
 
   /** The player model being attacked */
   private PlayerModel player;
@@ -67,6 +66,9 @@ public class CrabBossController implements BossController {
   /** The first attack */
   private final AttackPattern attack1;
 
+  /** The second attack */
+  private final AttackPattern attack2;
+
   /**
    * Constructs a crab boss controller
    *
@@ -75,33 +77,31 @@ public class CrabBossController implements BossController {
    * @param builder       a builder to create bullet models
    * @param physicsEngine physics engine to add bullet attack to
    */
-  public CrabBossController(CrabBossModel boss, PlayerModel player, BulletModel.Builder builder,
-      PhysicsEngine physicsEngine) {
+  public JellyBossController(JellyBossModel boss, PlayerModel player, BulletModel.Builder builder,
+                             PhysicsEngine physicsEngine) {
     this.boss = boss;
     this.player = player;
     this.state = State.IDLE;
 
-    this.attack1 = new ArcsAcrossTheTopAttack(boss.getX() + X_OFFSET, boss.getY() + Y_OFFSET, ARC_LINE_LENGTH,
-        ARC_PERIOD, ARC_SHOTS, builder, physicsEngine);
+    this.attack1 = new TrackingSpiralAttack(boss, SPIRAL_DELAY, SPIRAL_SHOTS, builder, physicsEngine);
+    this.attack2 = new RingAttack(boss.getX(), boss.getY(), RING_DELAY, RING_SHOTS, builder, physicsEngine);
   }
 
   /**
-   * Returns if the crab this model controls is dead.
+   * Returns if the jelly this model controls is dead.
    *
-   * @return if the crab this controller controls is dead
+   * @return if the jelly this controller controls is dead
    */
   public boolean isTerminated() {
     return boss.isTerminated();
   }
 
+  @Override
+  public void dispose() {attackPattern.cleanup();}
+
   /** Marks the boss for removal from the physics engine. */
   public void remove() {
     boss.markRemoved(true);
-  }
-
-  /** Cleans up this boss's attack pattern */
-  public void dispose() {
-    attackPattern.cleanup();
   }
 
   /**
@@ -121,7 +121,7 @@ public class CrabBossController implements BossController {
       case IDLE:
         if (boss.getPosition().dst(player.getPosition()) < AGRO_DISTANCE) {
           state = State.ATTACK;
-          attackPattern = attack1;
+          attackPattern = attack2;
         }
         break;
       case ATTACK:

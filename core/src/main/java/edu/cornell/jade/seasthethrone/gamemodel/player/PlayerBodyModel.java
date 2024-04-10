@@ -37,7 +37,7 @@ public class PlayerBodyModel extends PolygonModel {
   public PlayerBodyModel(float[] vertices, float x, float y) {
     super(vertices, x, y);
     isHit = false;
-    health = 3;
+    health = 5;
     iframeCounter = 0;
     iframeLimit = 70;
     knockbackTime = iframeLimit/10;
