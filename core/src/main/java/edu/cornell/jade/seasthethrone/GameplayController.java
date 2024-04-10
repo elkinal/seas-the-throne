@@ -290,7 +290,10 @@ public class GameplayController implements Screen {
           bc.update(delta);
         }
       }
-      physicsEngine.update(delta);
+
+      if (!pauseController.getPaused()) {
+        physicsEngine.update(delta);
+      }
 
       // Update camera
       updateCamera();

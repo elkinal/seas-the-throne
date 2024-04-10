@@ -49,6 +49,9 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   /** Whether the boss should continue being animated. */
   private boolean shouldUpdate;
 
+  /** Whether the player should always be animated regardless of game state. */
+  private boolean alwaysAnimate;
+
   /**
    * {@link BossModel} constructor using an x and y coordinate.
    *
@@ -74,13 +77,16 @@ public abstract class BossModel extends EnemyModel implements Renderable {
 
   @Override
   public void draw(RenderingEngine renderer) {
+    FilmStrip currentStrip = filmStrip;
+    if (shouldUpdate) {
+      currentStrip = progressFrame();
+    }
     Vector2 pos = getPosition();
-    renderer.draw(filmStrip, pos.x, pos.y, 0.16f);
+    renderer.draw(currentStrip, pos.x, pos.y, 0.16f);
   }
 
   @Override
-  public void progressFrame() {
-    System.out.println("progressing boss frames");
+  public FilmStrip progressFrame() {
     int frame = getFrameNumber();
     if (isDead()) {
       filmStrip = falloverAnimation;
@@ -103,6 +109,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
       }
     }
     frameCounter += 1;
+    return filmStrip;
   }
 
   @Override
@@ -116,8 +123,13 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   }
 
   @Override
-  public boolean getUpdate() {
-    return shouldUpdate;
+  public void setAlwaysAnimate(boolean animate) {
+    alwaysAnimate = animate;
+  }
+
+  @Override
+  public boolean alwaysAnimate() {
+    return alwaysAnimate;
   }
 
   public float getBodyKnockbackForce() {

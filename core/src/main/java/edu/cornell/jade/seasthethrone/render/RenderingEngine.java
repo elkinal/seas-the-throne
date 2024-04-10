@@ -68,7 +68,7 @@ public class RenderingEngine {
   /** Disable animation of all renderables in render engine (make them not updateable). */
   public void disableAnimation() {
     for (Renderable r : renderables) {
-      r.neverUpdate();
+      if (!r.alwaysAnimate()) r.neverUpdate();
     }
   }
 
@@ -107,9 +107,6 @@ public class RenderingEngine {
     canvas.getSpriteBatch().setProjectionMatrix(getViewport().getCamera().combined);
     for (Renderable r : renderables) {
       r.draw(this);
-      if (r.getUpdate()) {
-        r.progressFrame();
-      }
     }
     canvas.end();
   }

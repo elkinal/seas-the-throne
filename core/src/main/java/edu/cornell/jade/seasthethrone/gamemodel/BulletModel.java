@@ -139,7 +139,9 @@ public class BulletModel extends SimpleModel implements Renderable {
   }
 
   @Override
-  public void progressFrame() {}
+  public FilmStrip progressFrame() {
+    return filmStrip;
+  }
 
   @Override
   public void alwaysUpdate() {}
@@ -148,8 +150,13 @@ public class BulletModel extends SimpleModel implements Renderable {
   public void neverUpdate() {}
 
   @Override
-  public boolean getUpdate() {
-    return true;
+  public void setAlwaysAnimate(boolean animate) {
+    //    alwaysAnimate = animate;
+  }
+
+  @Override
+  public boolean alwaysAnimate() {
+    return false;
   }
 
   public int getFrameNumber() {

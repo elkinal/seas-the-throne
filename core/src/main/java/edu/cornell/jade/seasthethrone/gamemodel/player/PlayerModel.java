@@ -172,6 +172,9 @@ public class PlayerModel extends ComplexModel implements Renderable {
   /** Whether the player should continue being animated. */
   private boolean shouldUpdate;
 
+  /** Whether the player should always be animated regardless of game state. */
+  private boolean alwaysAnimate;
+
   /**
    * {@link PlayerModel} constructor using an x and y coordinate.
    *
@@ -245,49 +248,53 @@ public class PlayerModel extends ComplexModel implements Renderable {
 
   @Override
   public void draw(RenderingEngine renderer) {
+    FilmStrip currentStrip = filmStrip;
+    if (shouldUpdate) {
+      currentStrip = progressFrame();
+    }
     Vector2 pos = getPosition();
     if (isInvincible() && !isDead()) renderer.draw(filmStrip, pos.x, pos.y, 0.12f, Color.RED);
-    else renderer.draw(filmStrip, pos.x, pos.y, 0.12f);
+    else renderer.draw(currentStrip, pos.x, pos.y, 0.12f);
     getSpearModel().draw(renderer);
   }
 
   @Override
-  public void progressFrame() {
-    System.out.println("progressing player frames");
-    FilmStrip filmStrip = getFilmStrip();
+  public FilmStrip progressFrame() {
+    FilmStrip strip = getFilmStrip();
     switch (direction()) {
       case UP:
-        if (isDead()) filmStrip.setTexture(getDieUp());
-        else if (isDashing()) filmStrip.setTexture(getTextureUpDash());
-        else if (isShootingAnimated()) {
-          filmStrip.setTexture(getShootUp());
-        } else if (isIdle()) filmStrip.setTexture(getIdleUp());
-        else filmStrip.setTexture(getTextureUp());
+        if (isDead()) strip.setTexture(getDieUp());
+        else if (isDashing()) {
+          strip.setTexture(getTextureUpDash());
+        } else if (isShootingAnimated()) {
+          strip.setTexture(getShootUp());
+        } else if (isIdle()) strip.setTexture(getIdleUp());
+        else strip.setTexture(getTextureUp());
         break;
       case DOWN:
-        if (isDead()) filmStrip.setTexture(getDieDown());
-        else if (isDashing()) filmStrip.setTexture(getTextureDownDash());
-        else if (isShootingAnimated()) filmStrip.setTexture(getShootDown());
-        else if (isIdle()) filmStrip.setTexture(getIdleDown());
-        else filmStrip.setTexture(getTextureDown());
+        if (isDead()) strip.setTexture(getDieDown());
+        else if (isDashing()) strip.setTexture(getTextureDownDash());
+        else if (isShootingAnimated()) strip.setTexture(getShootDown());
+        else if (isIdle()) strip.setTexture(getIdleDown());
+        else strip.setTexture(getTextureDown());
         break;
       case LEFT:
-        if (isDead()) filmStrip.setTexture(getDieLeft());
-        else if (isDashing()) filmStrip.setTexture(getTextureLeftDash());
-        else if (isShootingAnimated()) filmStrip.setTexture(getShootLeft());
-        else if (isIdle()) filmStrip.setTexture(getIdleLeft());
-        else filmStrip.setTexture(getTextureLeft());
+        if (isDead()) strip.setTexture(getDieLeft());
+        else if (isDashing()) strip.setTexture(getTextureLeftDash());
+        else if (isShootingAnimated()) strip.setTexture(getShootLeft());
+        else if (isIdle()) strip.setTexture(getIdleLeft());
+        else strip.setTexture(getTextureLeft());
         break;
       case RIGHT:
-        if (isDead()) filmStrip.setTexture(getDieRight());
-        else if (isDashing()) filmStrip.setTexture(getTextureRightDash());
-        else if (isShootingAnimated()) filmStrip.setTexture(getShootRight());
-        else if (isIdle()) filmStrip.setTexture(getIdleRight());
-        else filmStrip.setTexture(getTextureRight());
+        if (isDead()) strip.setTexture(getDieRight());
+        else if (isDashing()) strip.setTexture(getTextureRightDash());
+        else if (isShootingAnimated()) strip.setTexture(getShootRight());
+        else if (isIdle()) strip.setTexture(getIdleRight());
+        else strip.setTexture(getTextureRight());
         break;
     }
     int frame = getFrameNumber();
-    filmStrip.setFrame(frame);
+    strip.setFrame(frame);
 
     // Only move to next frame of animation every frameDelay number of frames
     if (isDead()) {
@@ -313,6 +320,7 @@ public class PlayerModel extends ComplexModel implements Renderable {
       }
       frameCounter += 1;
     }
+    return strip;
   }
 
   @Override
@@ -322,12 +330,18 @@ public class PlayerModel extends ComplexModel implements Renderable {
 
   @Override
   public void neverUpdate() {
+    System.out.println("no update");
     shouldUpdate = false;
   }
 
   @Override
-  public boolean getUpdate() {
-    return shouldUpdate;
+  public void setAlwaysAnimate(boolean animate) {
+    alwaysAnimate = animate;
+  }
+
+  @Override
+  public boolean alwaysAnimate() {
+    return alwaysAnimate;
   }
 
   public FilmStrip getFilmStrip() {
