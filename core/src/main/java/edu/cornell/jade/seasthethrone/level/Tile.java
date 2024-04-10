@@ -18,8 +18,23 @@ public class Tile implements Renderable {
     texture = tex;
   }
 
+  @Override
   public void draw(RenderingEngine renderer) {
     renderer.draw(getTexture(), getPosition().x, getPosition().y);
+  }
+
+  @Override
+  public void progressFrame() {}
+
+  @Override
+  public void alwaysUpdate() {}
+
+  @Override
+  public void neverUpdate() {}
+
+  @Override
+  public boolean getUpdate() {
+    return true;
   }
 
   public Vector2 getPosition() {
@@ -38,8 +53,7 @@ public class Tile implements Renderable {
     return 0;
   }
 
-  public void setFrameNumber(int frameNumber) {
-  }
+  public void setFrameNumber(int frameNumber) {}
 
   public FilmStrip getFilmStrip() {
     return null;

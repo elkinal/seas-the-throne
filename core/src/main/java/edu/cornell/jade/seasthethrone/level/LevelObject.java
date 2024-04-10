@@ -83,8 +83,23 @@ public class LevelObject implements Renderable {
     return pos;
   }
 
+  @Override
   public void draw(RenderingEngine renderer) {
     renderer.draw(texture, getPosition().x, getPosition().y);
+  }
+
+  @Override
+  public void progressFrame() {}
+
+  @Override
+  public void alwaysUpdate() {}
+
+  @Override
+  public void neverUpdate() {}
+
+  @Override
+  public boolean getUpdate() {
+    return true;
   }
 
   public void setTexture(TextureRegion texture) {
@@ -95,9 +110,7 @@ public class LevelObject implements Renderable {
     return 0;
   }
 
-  public void setFrameNumber(int frameNumber) {
-
-  }
+  public void setFrameNumber(int frameNumber) {}
 
   public int getFramesInAnimation() {
     return 0;
@@ -107,9 +120,7 @@ public class LevelObject implements Renderable {
     vertices.add(vertex);
   }
 
-  /**
-   * Converts the array of vertices to a list, used to initialize a polygonModel
-   */
+  /** Converts the array of vertices to a list, used to initialize a polygonModel */
   public float[] toList() {
     float[] list = new float[vertices.size];
     for (int i = 0; i < vertices.size; i++) {
@@ -117,5 +128,4 @@ public class LevelObject implements Renderable {
     }
     return list;
   }
-
 }

@@ -45,7 +45,8 @@ public class PortalModel extends BoxModel implements Renderable {
    * @param target a code specifying where this portal leads
    * @param texture what the portal model will be rendered as
    */
-  public PortalModel(float x, float y, float width, float height, String target, TextureRegion texture) {
+  public PortalModel(
+      float x, float y, float width, float height, String target, TextureRegion texture) {
     this(x, y, width, height, target);
     this.texture = texture;
   }
@@ -63,12 +64,25 @@ public class PortalModel extends BoxModel implements Renderable {
     renderer.draw(texture, getX(), getY());
   }
 
+  @Override
+  public void progressFrame() {}
+
+  @Override
+  public void alwaysUpdate() {}
+
+  @Override
+  public void neverUpdate() {}
+
+  @Override
+  public boolean getUpdate() {
+    return true;
+  }
+
   public int getFrameNumber() {
     return 0;
   }
 
-  public void setFrameNumber(int frameNumber) {
-  }
+  public void setFrameNumber(int frameNumber) {}
 
   public FilmStrip getFilmStrip() {
     return null;

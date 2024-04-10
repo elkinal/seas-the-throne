@@ -46,6 +46,9 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   /** Death animation countdown */
   private int deathCount;
 
+  /** Whether the boss should continue being animated. */
+  private boolean shouldUpdate;
+
   /**
    * {@link BossModel} constructor using an x and y coordinate.
    *
@@ -62,13 +65,22 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     frameDelay = builder.frameDelay;
     health = builder.health;
     deathCount = frameDelay * 16;
+    shouldUpdate = true;
 
     bodyKnockbackForce = 70f;
     spearKnockbackForce = 130f;
     setBodyType(BodyDef.BodyType.StaticBody);
   }
 
+  @Override
   public void draw(RenderingEngine renderer) {
+    Vector2 pos = getPosition();
+    renderer.draw(filmStrip, pos.x, pos.y, 0.16f);
+  }
+
+  @Override
+  public void progressFrame() {
+    System.out.println("progressing boss frames");
     int frame = getFrameNumber();
     if (isDead()) {
       filmStrip = falloverAnimation;
@@ -76,8 +88,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
       filmStrip = shootAnimation;
     }
     filmStrip.setFrame(frame);
-    Vector2 pos = getPosition();
-    renderer.draw(filmStrip, pos.x, pos.y, 0.16f);
+
     if (isDead()) {
       if (frameCounter % frameDelay == 0 && getFrameNumber() < getFramesInAnimation() - 1) {
         setFrameNumber(getFrameNumber() + 1);
@@ -92,6 +103,21 @@ public abstract class BossModel extends EnemyModel implements Renderable {
       }
     }
     frameCounter += 1;
+  }
+
+  @Override
+  public void alwaysUpdate() {
+    shouldUpdate = true;
+  }
+
+  @Override
+  public void neverUpdate() {
+    shouldUpdate = false;
+  }
+
+  @Override
+  public boolean getUpdate() {
+    return shouldUpdate;
   }
 
   public float getBodyKnockbackForce() {
@@ -115,10 +141,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     return health;
   }
 
-  /**
-   * Reduce boss HP by a specified amount
-   * If the boss dies, mark boss as removed
-   */
+  /** Reduce boss HP by a specified amount If the boss dies, mark boss as removed */
   public void decrementHealth(int damage) {
     health -= damage;
     if (isDead()) {
@@ -180,8 +203,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
       return new Builder();
     }
 
-    private Builder() {
-    }
+    private Builder() {}
 
     public Builder setX(float x) {
       this.x = x;
@@ -223,7 +245,6 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     public Builder setIdleAnimation(Texture texture) {
       int width = texture.getWidth();
       idleAnimation = new FilmStrip(texture, 1, width / frameSize);
-      ;
       return this;
     }
 
@@ -259,7 +280,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
         case "crab":
           return new CrabBossModel(this);
 
-        // Should not get here
+          // Should not get here
         default:
           return new CrabBossModel(this);
       }

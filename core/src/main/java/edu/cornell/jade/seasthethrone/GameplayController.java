@@ -61,6 +61,9 @@ public class GameplayController implements Screen {
 
   Array<BossController> bossControllers;
 
+  /** Sub-controller for handling pausing the game */
+  PauseController pauseController;
+
   /** Rendering Engine */
   RenderingEngine renderEngine;
 
@@ -123,6 +126,7 @@ public class GameplayController implements Screen {
     this.bossControllers = new Array<>();
     this.inputController = new InputController(viewport);
     this.renderEngine = new RenderingEngine(worldWidth, worldHeight, viewport, worldScale);
+    pauseController = new PauseController(playerController, renderEngine, physicsEngine);
 
     setupGameplay();
   }
@@ -190,8 +194,8 @@ public class GameplayController implements Screen {
     physicsEngine.addObject(player);
 
     // Load fish bullets builder
-    fishBulletBuilder = BulletModel.Builder.newInstance()
-      .setFishTexture(new Texture("bullet/yellowfish_east.png"));
+    fishBulletBuilder =
+        BulletModel.Builder.newInstance().setFishTexture(new Texture("bullet/yellowfish_east.png"));
 
     // Load bosses
     for (int i = 0; i < level.getBosses().size; i++) {
@@ -200,22 +204,23 @@ public class GameplayController implements Screen {
       String name = bossContainer.bossName;
       int frameSize;
       switch (name) {
-        case "crab": 
+        case "crab":
           frameSize = 110;
           break;
-        case "jelly": 
+        case "jelly":
           frameSize = 45;
           break;
         default:
           frameSize = 0;
           return;
       }
-      BossModel boss = BossModel.Builder.newInstance()
+      BossModel boss =
+          BossModel.Builder.newInstance()
               .setX(bossContainer.x)
               .setY(bossContainer.y)
               .setType(name)
               .setHealth(100)
-              .setHitbox(new float[]{-4, -7, -4, 7, 4, 7, 4, -7})
+              .setHitbox(new float[] {-4, -7, -4, 7, 4, 7, 4, -7})
               .setFrameSize(frameSize)
               .setFalloverAnimation(new Texture("bosses/" + name + "/fallover.png"))
               .setFrameDelay(12)
@@ -294,7 +299,8 @@ public class GameplayController implements Screen {
     // Check if the player is dead, end the game
     if (playerController.isTerminated()) {
       gameState = GameState.OVER;
-    } 
+      pauseController.pauseGame();
+    }
 
     // Check if the player is alive and all bosses are dead, if so the player wins
     if (!bossControllers.isEmpty() && allBossesDefeated() && !playerController.isTerminated()) {
@@ -343,7 +349,8 @@ public class GameplayController implements Screen {
     // Draw the rendereables
     draw(delta);
     if (BuildConfig.DEBUG) {
-      debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
+      debugRenderer.render(
+          physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
     }
 
     // Draw reset and debug screen for wins and losses
@@ -370,9 +377,8 @@ public class GameplayController implements Screen {
     updateCameraCache.set(viewport.getCamera().position.x, viewport.getCamera().position.y);
     Vector2 cameraPos = viewport.unproject(updateCameraCache);
 
-    Vector2 diff = playerPos
-      .sub(cameraPos)
-      .sub(viewport.getWorldWidth() / 2, -viewport.getWorldHeight() / 2);
+    Vector2 diff =
+        playerPos.sub(cameraPos).sub(viewport.getWorldWidth() / 2, -viewport.getWorldHeight() / 2);
 
     viewport.getCamera().translate(diff.x, diff.y, 0);
   }
@@ -386,11 +392,9 @@ public class GameplayController implements Screen {
     this.listener = listener;
   }
 
-  public void pause() {
-  }
+  public void pause() {}
 
-  public void resume() {
-  }
+  public void resume() {}
 
   public void hide() {
     active = false;
@@ -401,15 +405,11 @@ public class GameplayController implements Screen {
   }
 
   public boolean allBossesDefeated() {
-    for (BossController bc : bossControllers)
-      if (!bc.isTerminated())
-        return false;
+    for (BossController bc : bossControllers) if (!bc.isTerminated()) return false;
     return true;
   }
 
-  /**
-   * Compares Models based on height in the world
-   */
+  /** Compares Models based on height in the world */
   class HeightComparator implements Comparator<Model> {
     @Override
     public int compare(Model o1, Model o2) {

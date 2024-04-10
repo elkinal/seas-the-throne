@@ -12,50 +12,64 @@ import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
 public class ObstacleModel extends ComplexModel implements Renderable {
-    private TextureRegion texture;
+  private TextureRegion texture;
 
-    private float WORLD_SCALE;
+  private float WORLD_SCALE;
 
-    public ObstacleModel(LevelObject obs, float scale) {
-        // TODO: extend for generic model, not just BoxModel
-        super(obs.x, obs.y);
-        this.texture = obs.texture;
-        this.WORLD_SCALE = scale;
-        BoxModel hitbox = new BoxModel(obs.x, obs.y, obs.width, obs.height);
-        hitbox.setBodyType(BodyDef.BodyType.StaticBody);
-        bodies.add(hitbox);
-    }
+  public ObstacleModel(LevelObject obs, float scale) {
+    // TODO: extend for generic model, not just BoxModel
+    super(obs.x, obs.y);
+    this.texture = obs.texture;
+    this.WORLD_SCALE = scale;
+    BoxModel hitbox = new BoxModel(obs.x, obs.y, obs.width, obs.height);
+    hitbox.setBodyType(BodyDef.BodyType.StaticBody);
+    bodies.add(hitbox);
+  }
 
-    @Override
-    public void draw(RenderingEngine renderer) {
-        Vector2 pos = getPosition();
-        float y_offset = WORLD_SCALE*texture.getRegionHeight()/2f - getModel().getHeight()/2f;
-        renderer.draw(texture, pos.x, pos.y + y_offset);
-    }
+  @Override
+  public void draw(RenderingEngine renderer) {
+    Vector2 pos = getPosition();
+    float y_offset = WORLD_SCALE * texture.getRegionHeight() / 2f - getModel().getHeight() / 2f;
+    renderer.draw(texture, pos.x, pos.y + y_offset);
+  }
 
-    public BoxModel getModel() {
-        return (BoxModel) bodies.get(0);
-    }
+  @Override
+  public void progressFrame() {}
 
-    public int getFrameNumber() {
-        return 0;
-    }
+  @Override
+  public void alwaysUpdate() {}
 
-    public void setFrameNumber(int frameNumber) {
+  @Override
+  public void neverUpdate() {}
 
-    }
+  @Override
+  public boolean getUpdate() {
+    return true;
+  }
 
-    public FilmStrip getFilmStrip() {
-        return null;
-    }
+  public BoxModel getModel() {
+    return (BoxModel) bodies.get(0);
+  }
 
-    public int getFramesInAnimation() {
-        return 0;
-    }
+  public int getFrameNumber() {
+    return 0;
+  }
 
-    protected boolean createJoints(World world) {
-        return true;
-    }
-    protected void createFixtures() {}
-    protected void releaseFixtures() {}
+  public void setFrameNumber(int frameNumber) {}
+
+  public FilmStrip getFilmStrip() {
+    return null;
+  }
+
+  public int getFramesInAnimation() {
+    return 0;
+  }
+
+  protected boolean createJoints(World world) {
+    return true;
+  }
+
+  protected void createFixtures() {}
+
+  protected void releaseFixtures() {}
 }
