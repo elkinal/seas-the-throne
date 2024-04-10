@@ -3,6 +3,7 @@ package edu.cornell.jade.seasthethrone;
 import edu.cornell.jade.seasthethrone.bpedit.AttackPattern;
 import edu.cornell.jade.seasthethrone.bpedit.patterns.ArcsAcrossTheTopAttack;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
+import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.CrabBossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
@@ -96,6 +97,11 @@ public class CrabBossController implements BossController {
   /** Marks the boss for removal from the physics engine. */
   public void remove() {
     boss.markRemoved(true);
+  }
+
+  /** Cleans up this boss's attack pattern */
+  public void dispose() {
+    attackPattern.cleanup();
   }
 
   /**

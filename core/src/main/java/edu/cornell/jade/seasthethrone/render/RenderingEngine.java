@@ -15,6 +15,9 @@ public class RenderingEngine {
   /** The Renderable objects for rendering */
   private Array<Renderable> renderables;
 
+  /** UI renderable objects */
+  private Array<Renderable> ui_elements = new Array<>();
+
   /** Layers of renderables to be rendered in order */
   private Array<Array<Renderable>> renderLayers;
 
@@ -85,6 +88,22 @@ public class RenderingEngine {
     }
     canvas.end();
   }
+
+  /** Draws UI elements independent of the camera */
+  public void drawUI() {
+    canvas.beginUI();
+    for (Renderable r : ui_elements) {
+      r.draw(this);
+    }
+    canvas.endUI();
+  }
+
+  /** Adds UI element to the engine */
+  public void addUI(Renderable r) {
+    ui_elements.add(r);
+  }
+
+  public Array<Renderable> getUI() { return this.ui_elements; }
 
   public void drawRenderLayers() {
     canvas.clear();
