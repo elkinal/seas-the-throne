@@ -46,10 +46,10 @@ levels/tablet_room.json
 levels/tablet_room.png
 libgdx.png
 player/dash_indicator.png
-player/player_dash_ne.png
-player/player_dash_nw.png
 player/player_dash_down.png
 player/player_dash_left.png
+player/player_dash_ne.png
+player/player_dash_nw.png
 player/player_dash_right.png
 player/player_dash_up.png
 player/player_death_down.png
