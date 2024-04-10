@@ -276,8 +276,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
 
     public Builder setFalloverAnimation(Texture texture) {
       int width = texture.getWidth();
-      // TODO: Stop hardcoding columns
-      dieAnimation = new FilmStrip(texture, 1, 16);
+      dieAnimation = new FilmStrip(texture, 1, width / frameSize);
       ;
       return this;
     }
