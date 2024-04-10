@@ -1,5 +1,7 @@
 package edu.cornell.jade.seasthethrone.ai;
 
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import edu.cornell.jade.seasthethrone.bpedit.AttackPattern;
 import edu.cornell.jade.seasthethrone.bpedit.patterns.RingAttack;
 import edu.cornell.jade.seasthethrone.bpedit.patterns.TrackingSpiralAttack;
@@ -7,6 +9,8 @@ import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.JellyBossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
+
+import java.util.Random;
 
 /**
  * A controller defining the behavior of a jelly boss.
@@ -38,13 +42,13 @@ public class JellyBossController implements BossController {
   private static int SPIRAL_DELAY = 6;
 
   /** The number of bullets in a circular spiral shot */
-  private static int SPIRAL_SHOTS = 24;
+  private static int SPIRAL_SHOTS = 22;
 
   /** The delay length between successive bullets in the ring attack */
   private static int RING_DELAY = 100;
 
   /** The number of bullets in a circular ring attack */
-  private static int RING_SHOTS = 24;
+  private static int RING_SHOTS = 26;
 
   /*
    * -------------------------------
@@ -62,6 +66,18 @@ public class JellyBossController implements BossController {
 
   /** The boss's current state */
   private State state;
+
+  /** The timer for state switching */
+  private int timer;
+
+  /** The current goal position of the boss */
+  private Vector2 goalPos;
+
+  /** Random number generator */
+  private Random rand;
+
+  /** The bounds of which the boss can move */
+  private Rectangle bounds;
 
   /** The first attack */
   private final AttackPattern attack1;
@@ -83,8 +99,12 @@ public class JellyBossController implements BossController {
     this.player = player;
     this.state = State.IDLE;
 
-    this.attack1 = new TrackingSpiralAttack(boss, SPIRAL_DELAY, SPIRAL_SHOTS, builder, physicsEngine);
-    this.attack2 = new RingAttack(boss.getX(), boss.getY(), RING_DELAY, RING_SHOTS, builder, physicsEngine);
+    this.attack1 = new RingAttack(boss, RING_DELAY, RING_SHOTS, builder, physicsEngine);
+    this.attack2 = new TrackingSpiralAttack(boss, SPIRAL_DELAY, SPIRAL_SHOTS, builder, physicsEngine);
+
+    this.goalPos = new Vector2();
+    this.rand = new Random();
+    this.bounds = new Rectangle(boss.getX()-10, boss.getY()-15, 20, 30);
   }
 
   /**
@@ -93,7 +113,7 @@ public class JellyBossController implements BossController {
    * @return if the jelly this controller controls is dead
    */
   public boolean isTerminated() {
-    return boss.isTerminated();
+    return boss.isDead();
   }
 
   @Override
@@ -121,13 +141,46 @@ public class JellyBossController implements BossController {
       case IDLE:
         if (boss.getPosition().dst(player.getPosition()) < AGRO_DISTANCE) {
           state = State.ATTACK;
-          attackPattern = attack2;
+          attackPattern = attack1;
+          timer = rand.nextInt(240, 480);
         }
         break;
       case ATTACK:
+        if (boss.reachedHealthThreshold()) {
+          state = State.MOVE;
+          findNewGoalPos();
+        } else if (timer <= 0) {
+          state = State.ATTACK_MOVE;
+          findNewGoalPos();
+          attackPattern = attack2;
+        }
+        break;
+      case ATTACK_MOVE:
+        if (boss.getPosition().sub(goalPos).dot(boss.getLinearVelocity()) > 0) {
+          boss.setVX(0);
+          boss.setVY(0);
+          state = State.ATTACK;
+          attackPattern = attack1;
+          timer = rand.nextInt(120, 150);
+        } else if (boss.reachedHealthThreshold()) {
+          state = State.MOVE;
+          findNewGoalPos();
+        }
         break;
       case MOVE:
-        break;
+        if (boss.getPosition().sub(goalPos).dot(boss.getLinearVelocity()) > 0){
+          boss.setVX(0);
+          boss.setVY(0);
+          if (rand.nextBoolean()) {
+            state = State.ATTACK;
+            attackPattern = attack1;
+            timer = rand.nextInt(120, 150);
+          } else {
+            state = State.ATTACK_MOVE;
+            findNewGoalPos();
+            attackPattern = attack2;
+          }
+        }
       case DEAD:
         break;
     }
@@ -140,11 +193,26 @@ public class JellyBossController implements BossController {
         break;
       case ATTACK:
         attackPattern.update(player.getX(), player.getY());
+        timer -= 1;
+        break;
+      case ATTACK_MOVE:
+        attackPattern.update(player.getX(), player.getY());
         break;
       case MOVE:
         break;
       case DEAD:
         break;
     }
+  }
+
+  /** Helper function to generate new goal position & set boss velocity */
+  private void findNewGoalPos(){
+    goalPos.set(rand.nextFloat(bounds.getX(), bounds.getX()+bounds.getWidth()),
+            rand.nextFloat(bounds.getY(), bounds.getY()+bounds.getHeight()));
+    while (boss.getPosition().dst(goalPos) < 8) {
+      goalPos.set(rand.nextFloat(bounds.getX(), bounds.getX()+bounds.getWidth()),
+              rand.nextFloat(bounds.getY(), bounds.getY()+bounds.getHeight()));
+    }
+    boss.setLinearVelocity(boss.getPosition().sub(goalPos).nor().scl(-5));
   }
 }

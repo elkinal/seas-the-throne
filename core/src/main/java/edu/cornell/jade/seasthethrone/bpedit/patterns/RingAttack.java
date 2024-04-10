@@ -18,6 +18,9 @@ public class RingAttack extends AttackPattern {
   /** the spawner actually creating the arc */
   private final Spawner spawner;
 
+  /** the model being tracked */
+  private Model toTrack;
+
   /**
    * Constructs the attack
    *
@@ -28,15 +31,18 @@ public class RingAttack extends AttackPattern {
    * @param builder       a builder to create bullet models
    * @param physicsEngine {@link PhysicsEngine} to add bullets to
    */
-  public RingAttack(float ox, float oy, int delay, int shots,
+  public RingAttack(Model toTrack, int delay, int shots,
                     BulletModel.Builder builder, PhysicsEngine physicsEngine) {
 
     this.spawner = SpawnerFactory.constructRepeatingRing(shots, delay, builder, physicsEngine);
-    this.spawner.translate(ox, oy);
+    this.spawner.translate(toTrack.getX(), toTrack.getY());
+    this.toTrack = toTrack;
 
     this.addSpawner(spawner);
   }
 
   @Override
-  protected void animateStep() {}
+  protected void animateStep() {
+    this.spawner.moveSpawner(toTrack.getX(), toTrack.getY());
+  }
 }

@@ -100,9 +100,6 @@ public class BulletModel extends SimpleModel implements Renderable {
     res.setBodyType(BodyDef.BodyType.DynamicBody);
     res.setName("bullet");
     res.filmStrip = new FilmStrip(builder.FISH_TEXTURE, 1, 1);
-
-    System.out.println(res.getX() + " " + res.getY());
-
     return res;
   }
 
