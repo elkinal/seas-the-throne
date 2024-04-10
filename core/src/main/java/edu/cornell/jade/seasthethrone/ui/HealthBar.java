@@ -1,10 +1,12 @@
-package edu.cornell.jade.seasthethrone.render;
+package edu.cornell.jade.seasthethrone.ui;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
+import edu.cornell.jade.seasthethrone.render.Renderable;
+import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 
 
-public class HealthBar implements Renderable{
+public class HealthBar implements Renderable {
 
     /** Current texture for the healthbar */
     private Texture texture;

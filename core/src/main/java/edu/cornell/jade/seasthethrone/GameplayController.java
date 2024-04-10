@@ -333,6 +333,8 @@ public class GameplayController implements Screen {
     // Render frame
     renderEngine.clear();
     renderEngine.addRenderable(level.getBackground());
+    renderEngine.addRenderable(playerController.getAmmoBar());
+
     for (Tile tile : level.getTiles()) {
       renderEngine.addRenderable(tile);
     }
