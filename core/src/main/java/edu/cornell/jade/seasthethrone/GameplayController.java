@@ -4,9 +4,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.*;
 
@@ -152,27 +150,27 @@ public class GameplayController implements Screen {
         PlayerModel.Builder.newInstance()
             .setX(playerLoc.x)
             .setY(playerLoc.y)
-            .setTextureUp(new Texture("player/playerspriterun_up_wspear.png"))
-            .setTextureDown(new Texture("player/playerspriterun_down_wspear.png"))
-            .setTextureLeft(new Texture("player/playerspriterun_left_wspear.png"))
-            .setTextureRight(new Texture("player/playerspriterun_right_wspear.png"))
-            .setTextureUpDash(new Texture("player/playerspritedashfilmstrip_up.png"))
-            .setTextureDownDash(new Texture("player/playerspritedashfilmstrip_down.png"))
-            .setTextureLeftDash(new Texture("player/playerspritedashfilmstrip_left.png"))
-            .setTextureRightDash(new Texture("player/playerspritedashfilmstrip_right.png"))
+            .setTextureUp(new Texture("player/player_run_up.png"))
+            .setTextureDown(new Texture("player/player_run_down.png"))
+            .setTextureLeft(new Texture("player/player_run_left.png"))
+            .setTextureRight(new Texture("player/player_run_right.png"))
+            .setTextureUpDash(new Texture("player/player_dash_up.png"))
+            .setTextureDownDash(new Texture("player/player_dash_down.png"))
+            .setTextureLeftDash(new Texture("player/player_dash_left.png"))
+            .setTextureRightDash(new Texture("player/player_dash_right.png"))
             .setDashIndicatorTexture(new Texture("player/dash_indicator.png"))
-            .setIdleLeft(new Texture("player/playerspriteidle_left.png"))
-            .setIdleRight(new Texture("player/playerspriteidle_right.png"))
-            .setIdleUp(new Texture("player/playerspriteidle_up.png"))
-            .setIdleDown(new Texture("player/playerspriteidle_down.png"))
-            .setShootDown(new Texture("player/playershoot_down_filmstrip.png"))
-            .setShootUp(new Texture("player/playershoot_up_filmstrip.png"))
-            .setShootLeft(new Texture("player/playershoot_left_filmstrip.png"))
-            .setShootRight(new Texture("player/playershoot_right_filmstrip.png"))
-            .setDeathUp(new Texture("player/playerdeath_up_filmstrip.png"))
-            .setDeathDown(new Texture("player/playerdeath_down_filmstrip.png"))
-            .setDeathLeft(new Texture("player/playerdeath_left_filmstrip.png"))
-            .setDeathRight(new Texture("player/playerdeath_right_filmstrip.png"))
+            .setIdleLeft(new Texture("player/player_idle_right.png"))
+            .setIdleRight(new Texture("player/player_idle_right.png"))
+            .setIdleUp(new Texture("player/player_idle_up.png"))
+            .setIdleDown(new Texture("player/player_idle_down.png"))
+            .setShootDown(new Texture("player/player_shoot_down.png"))
+            .setShootUp(new Texture("player/player_shoot_up.png"))
+            .setShootLeft(new Texture("player/player_shoot_left.png"))
+            .setShootRight(new Texture("player/player_shoot_right.png"))
+            .setDeathUp(new Texture("player/player_death_up.png"))
+            .setDeathDown(new Texture("player/player_death_down.png"))
+            .setDeathLeft(new Texture("player/player_death_left.png"))
+            .setDeathRight(new Texture("player/player_death_right.png"))
             .setFramesInAnimation(12)
             .setFramesInAnimationDash(5)
             .setFramesInAnimationShoot(5)
@@ -188,7 +186,6 @@ public class GameplayController implements Screen {
     // Initialize physics engine
     physicsEngine = new PhysicsEngine(bounds, world);
     physicsEngine.addObject(player);
-
     // Load fish bullets builder
     fishBulletBuilder = BulletModel.Builder.newInstance()
       .setFishTexture(new Texture("bullet/yellowfish_east.png"));
@@ -257,8 +254,11 @@ public class GameplayController implements Screen {
     playerController = new PlayerController(physicsEngine, player);
     inputController.add(playerController);
 
+    // Load UI
+    renderEngine.addUI(playerController.getHealthBar());
+
     if (BuildConfig.DEBUG) {
-      System.out.println("phys engine: " + physicsEngine.getObjects().size());
+      System.out.println("num objects: " + physicsEngine.getObjects().size());
     }
   }
 
@@ -270,6 +270,7 @@ public class GameplayController implements Screen {
 
   public void draw(float delta) {
     renderEngine.drawRenderables();
+    renderEngine.drawUI();
   }
 
   public void update(float delta) {
@@ -285,6 +286,7 @@ public class GameplayController implements Screen {
           bc.update(delta);
         }
       }
+
       physicsEngine.update(delta);
 
       // Update camera
@@ -312,8 +314,8 @@ public class GameplayController implements Screen {
 
       listener.exitScreen(this, GDXRoot.EXIT_SWAP);
       level = new Level(physicsEngine.getTarget());
-      physicsEngine.getObjects().clear();
       this.renderEngine.clear();
+
       setupGameplay();
     }
 
@@ -405,6 +407,12 @@ public class GameplayController implements Screen {
       if (!bc.isTerminated())
         return false;
     return true;
+  }
+
+  public void disposeBosses() {
+    for (BossController boss : bossControllers) {
+      boss.dispose();
+    }
   }
 
   /**
