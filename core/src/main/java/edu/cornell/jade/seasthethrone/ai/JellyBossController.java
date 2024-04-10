@@ -41,7 +41,7 @@ public class JellyBossController implements BossController {
   private static int SPIRAL_SHOTS = 24;
 
   /** The delay length between successive bullets in the ring attack */
-  private static int RING_DELAY = 50;
+  private static int RING_DELAY = 100;
 
   /** The number of bullets in a circular ring attack */
   private static int RING_SHOTS = 24;
@@ -95,6 +95,9 @@ public class JellyBossController implements BossController {
   public boolean isTerminated() {
     return boss.isTerminated();
   }
+
+  @Override
+  public void dispose() {attackPattern.cleanup();}
 
   /** Marks the boss for removal from the physics engine. */
   public void remove() {

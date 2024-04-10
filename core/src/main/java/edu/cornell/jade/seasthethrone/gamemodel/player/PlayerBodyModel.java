@@ -1,5 +1,6 @@
 package edu.cornell.jade.seasthethrone.gamemodel.player;
 
+import com.badlogic.gdx.math.Vector2;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.model.PolygonModel;
 
@@ -24,6 +25,15 @@ public class PlayerBodyModel extends PolygonModel {
   /** Frame time of the knockback duration */
   private int knockbackTime;
 
+  /** Location of the body knocking the player back */
+  private Vector2 knockingBodyPos;
+
+  /** The force of knockback applied by the knocking body */
+  private float knockbackForce;
+
+  /** If the player is flagged for knockback application */
+  private boolean justKnocked;
+
   public PlayerBodyModel(float[] vertices, float x, float y) {
     super(vertices, x, y);
     isHit = false;
@@ -31,6 +41,7 @@ public class PlayerBodyModel extends PolygonModel {
     iframeCounter = 0;
     iframeLimit = 70;
     knockbackTime = iframeLimit/10;
+    justKnocked = false;
   }
 
   /** Create new player body at position (x,y) */
@@ -66,6 +77,26 @@ public class PlayerBodyModel extends PolygonModel {
   public boolean isKnockedBack(){
     return knockbackTime > 0;
   }
+
+  /** Returns if the player is flagged for knockback application */
+  public boolean isJustKnoocked() { return justKnocked; }
+
+  public void setJustKnocked(boolean b) { justKnocked = b; }
+
+  public Vector2 getKnockingBodyPos() {
+    return knockingBodyPos;
+  }
+
+  public float getKnockbackForce() {
+    return knockbackForce;
+  }
+
+  public void setKnockedBack(Vector2 b2pos, float force) {
+    this.justKnocked = true;
+    this.knockingBodyPos = b2pos;
+    this.knockbackForce = force;
+  }
+
 
   /** Sets the player invincible according to the iframe limit */
   public void setInvincible(){
