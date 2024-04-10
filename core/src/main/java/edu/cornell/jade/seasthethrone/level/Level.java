@@ -11,6 +11,9 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.HashMap;
 
 public class Level {
+  /** Name of this level */
+  public String name;
+
   private final Array<HashMap<String, Object>> layers;
 
   private Vector2 playerLoc;
@@ -63,6 +66,8 @@ public class Level {
   public Level(String fileName) {
     this.viewport = new ExtendViewport(DEFAULT_WIDTH, DEFAULT_HEIGHT);
     tempPos = new Vector2();
+    this.name = parseName(fileName);
+    System.out.println(this.name);
 
     // Load JSON to map
     HashMap<String, Object> levelMap = JsonHandler.jsonToMap(fileName);
@@ -398,5 +403,16 @@ public class Level {
     int y = TILE_SIZE * (index / TILED_WORLD_WIDTH) + TILE_SIZE / 2;
     tempPos.set(x, y);
     return tempPos;
+  }
+
+  /**
+   * Returns the name of the JSON used to load this level.
+   *
+   * "levels/name.json" -> "name"
+   * */
+  private String parseName(String fileName) {
+    int start = fileName.indexOf("/") + 1;
+    int end = fileName.indexOf(".");
+    return fileName.substring(start, end);
   }
 }

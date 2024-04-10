@@ -11,6 +11,7 @@
 package edu.cornell.jade.seasthethrone;
 
 import com.badlogic.gdx.math.Vector2;
+import edu.cornell.jade.seasthethrone.level.LevelState;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.ui.AmmoBar;
@@ -209,8 +210,17 @@ public class PlayerController implements Controllable {
     return player.getPosition();
   }
 
+  public int getHealth() {return player.getHealth();}
+
+  public int getAmmo() {return player.getSpearModel().getNumSpeared();}
+
   public Renderable getHealthBar() { return this.healthBar; }
   public Renderable getAmmoBar() { return this.ammoBar; }
+
+  public void transferState(LevelState state) {
+    player.getBodyModel().setHealth(state.getPlayerHealth());
+    player.getSpearModel().setNumSpeared(state.getPlayerAmmo());
+  }
 
   public void update() {
     healthBar.update(player.getHealth());

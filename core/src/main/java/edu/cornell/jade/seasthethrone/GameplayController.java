@@ -29,6 +29,7 @@ import edu.cornell.jade.seasthethrone.gamemodel.boss.JellyBossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 
 import java.util.Comparator;
+import java.util.HashMap;
 
 /**
  * The primary controller class for the game.
@@ -83,6 +84,9 @@ public class GameplayController implements Screen {
   /** The level currently loaded */
   protected Level level;
 
+  /** Map of previously visited rooms and levels */
+  protected HashMap<String, LevelState> storedLevels;
+
   /** The boundary of the world */
   protected Rectangle bounds;
 
@@ -111,6 +115,7 @@ public class GameplayController implements Screen {
     gameState = GameState.PLAY;
 
     this.level = new Level("levels/hub_world.json");
+    this.storedLevels = new HashMap<>();
 
     worldHeight = level.DEFAULT_HEIGHT;
     worldWidth = level.DEFAULT_WIDTH;
@@ -323,12 +328,7 @@ public class GameplayController implements Screen {
       if (BuildConfig.DEBUG) {
         System.out.println("hasTarget " + physicsEngine.getTarget());
       }
-
-      listener.exitScreen(this, GDXRoot.EXIT_SWAP);
-      level = new Level(physicsEngine.getTarget());
-      this.renderEngine.clear();
-
-      setupGameplay();
+      changeLevel();
     }
 
     // Reset target so player doesn't teleport again on next frame
@@ -372,6 +372,40 @@ public class GameplayController implements Screen {
         }
       }
     }
+  }
+
+  /** Changes the current level to the one specified by the physics engine target. */
+  private void changeLevel() {
+    // Save the current level state
+    if (storedLevels.containsKey(level.name)) {
+      storedLevels.get(level.name).update(playerController, bossControllers);
+    } else {
+      storedLevels.put(level.name, new LevelState(playerController, bossControllers));
+    }
+
+    String oldLevelName = level.name;
+
+    listener.exitScreen(this, GDXRoot.EXIT_SWAP);
+    level = new Level(physicsEngine.getTarget());
+    this.renderEngine.clear();
+    bossControllers.clear();
+    setupGameplay();
+    transferState(storedLevels.get(oldLevelName), storedLevels.get(level.name));
+  }
+
+  /** Loads the stored state of the target level, if it exists */
+  private void transferState(LevelState oldState, LevelState newState) {
+    playerController.transferState(oldState);
+
+    // Load boss state if this is not the first time entering level
+    if (newState != null && newState.getBossHps().size > 0) {
+      for (int i = 0; i < bossControllers.size; i++) {
+        int storedHp = newState.getBossHps().get(i);
+        bossControllers.get(i).transferState(storedHp);
+      }
+      }
+
+
   }
 
   public void resize(int width, int height) {
@@ -421,12 +455,6 @@ public class GameplayController implements Screen {
       if (!bc.isTerminated())
         return false;
     return true;
-  }
-
-  public void disposeBosses() {
-    for (BossController boss : bossControllers) {
-      boss.dispose();
-    }
   }
 
   /**

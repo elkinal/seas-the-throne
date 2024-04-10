@@ -126,6 +126,8 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     return health;
   }
 
+  public void setHealth(int health) {this.health = health;}
+
   /**
    * Reduce boss HP by a specified amount
    * If the boss dies, mark boss as removed

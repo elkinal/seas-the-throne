@@ -6,6 +6,7 @@ import edu.cornell.jade.seasthethrone.bpedit.AttackPattern;
 import edu.cornell.jade.seasthethrone.bpedit.patterns.RingAttack;
 import edu.cornell.jade.seasthethrone.bpedit.patterns.TrackingSpiralAttack;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
+import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.JellyBossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
@@ -105,6 +106,14 @@ public class JellyBossController implements BossController {
     this.goalPos = new Vector2();
     this.rand = new Random();
     this.bounds = new Rectangle(boss.getX()-10, boss.getY()-15, 20, 30);
+  }
+
+  /** Returns the boss of this controller */
+  public BossModel getBoss() {return boss;}
+
+  /** Loads in the boss's previous state */
+  public void transferState(int storedHp) {
+    this.boss.setHealth(storedHp);
   }
 
   /**

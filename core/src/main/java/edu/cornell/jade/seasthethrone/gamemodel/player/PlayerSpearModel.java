@@ -106,6 +106,8 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
     return numSpeared;
   }
 
+  public void setNumSpeared(int num) {numSpeared = num;}
+
   /**
    * If possible, increment spear counter
    */
