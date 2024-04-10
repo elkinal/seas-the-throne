@@ -1,6 +1,7 @@
 package edu.cornell.jade.seasthethrone.ai;
 
 import edu.cornell.jade.seasthethrone.bpedit.AttackPattern;
+import edu.cornell.jade.seasthethrone.bpedit.patterns.RingAttack;
 import edu.cornell.jade.seasthethrone.bpedit.patterns.TrackingSpiralAttack;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.JellyBossModel;
@@ -31,16 +32,19 @@ public class JellyBossController implements BossController {
    * -----------------------------------
    */
   /** The distance the player must be from the boss before it begins attacking. */
-  private static float AGRO_DISTANCE = 30f;
+  private static float AGRO_DISTANCE = 35f;
 
-  /** The length of the arc of bullets */
-  private static float ARC_LINE_LENGTH = 60f;
+  /** The delay length between successive bullets in the spiral attack */
+  private static int SPIRAL_DELAY = 6;
 
-  /** The ticks in a period of the arc attack */
-  private static int ARC_PERIOD = 60;
+  /** The number of bullets in a circular spiral shot */
+  private static int SPIRAL_SHOTS = 24;
 
-  /** The number of arc shots fired in a single period */
-  private static int ARC_SHOTS = 6;
+  /** The delay length between successive bullets in the ring attack */
+  private static int RING_DELAY = 50;
+
+  /** The number of bullets in a circular ring attack */
+  private static int RING_SHOTS = 24;
 
   /*
    * -------------------------------
@@ -62,6 +66,9 @@ public class JellyBossController implements BossController {
   /** The first attack */
   private final AttackPattern attack1;
 
+  /** The second attack */
+  private final AttackPattern attack2;
+
   /**
    * Constructs a crab boss controller
    *
@@ -76,7 +83,8 @@ public class JellyBossController implements BossController {
     this.player = player;
     this.state = State.IDLE;
 
-    this.attack1 = new TrackingSpiralAttack(boss, 6, 24, builder, physicsEngine);
+    this.attack1 = new TrackingSpiralAttack(boss, SPIRAL_DELAY, SPIRAL_SHOTS, builder, physicsEngine);
+    this.attack2 = new RingAttack(boss.getX(), boss.getY(), RING_DELAY, RING_SHOTS, builder, physicsEngine);
   }
 
   /**
@@ -110,7 +118,7 @@ public class JellyBossController implements BossController {
       case IDLE:
         if (boss.getPosition().dst(player.getPosition()) < AGRO_DISTANCE) {
           state = State.ATTACK;
-          attackPattern = attack1;
+          attackPattern = attack2;
         }
         break;
       case ATTACK:

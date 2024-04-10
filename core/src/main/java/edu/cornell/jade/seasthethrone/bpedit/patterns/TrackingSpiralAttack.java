@@ -45,7 +45,6 @@ public class TrackingSpiralAttack extends AttackPattern {
     this.spawner = SpawnerFactory.constructTrackingRepeatingBullet(delay, builder, physicsEngine);
     this.spawner.translate(toTrack.getX(), toTrack.getY());
 
-
     this.addSpawner(spawner);
   }
 
