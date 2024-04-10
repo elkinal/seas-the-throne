@@ -48,7 +48,7 @@ public class PhysicsEngine implements ContactListener {
 
   public void dispose() {
     objects.clear();
-    world.dispose();
+//    world.dispose();
   }
 
   /**
@@ -90,8 +90,10 @@ public class PhysicsEngine implements ContactListener {
    */
   public void update(float delta) {
     // turn the physics engine crank
-    world.step(delta, 8, 4);
+    System.out.println("pre step "+world.getFixtureCount());
 
+    world.step(delta, 8, 4);
+    System.out.println("post step");
     // Garbage collect the deleted objects.
     // Note how we use the linked list nodes to delete O(1) in place.
     // This is O(n) without copying.
@@ -106,9 +108,19 @@ public class PhysicsEngine implements ContactListener {
         }
         entry.remove();
       } else {
+        if (obj instanceof PlayerModel) {
+          // Resolve knockback flag
+          PlayerBodyModel body = ((PlayerModel) obj).getBodyModel();
+          if (body.isJustKnoocked()) {
+            applyKnockback(body, body.getKnockingBodyPos(), body.getKnockbackForce());
+            body.setJustKnocked(false);
+          }
+      }
         obj.update(delta);
       }
     }
+
+
 
     // Try to collide with the boss again (if player is not invincible)
     // I'm not a fan of this workaround but I couldn't figure anything else out
@@ -242,7 +254,7 @@ public class PhysicsEngine implements ContactListener {
     if (!pb.isInvincible()) {
       pb.setHit(true);
       pb.setInvincible();
-      applyKnockback(pb, b.getPosition(), b.getKnockbackForce());
+      pb.setKnockedBack(b.getPosition(), b.getKnockbackForce());
     }
   }
 
@@ -259,10 +271,10 @@ public class PhysicsEngine implements ContactListener {
     if (!pb.isInvincible()) {
       pb.setHit(true);
       pb.setInvincible();
-      applyKnockback(pb, b.getPosition(), b.getBodyKnockbackForce());
+      pb.setKnockedBack(b.getPosition(), b.getBodyKnockbackForce());
       playerBossCollision = Optional.empty();
     } else {
-      if (playerBossCollision.isEmpty()) {
+      if (playerBossCollision.isEmpty() && pb.getHealth() > 0) {
         playerBossCollision = Optional.of(c);
       }
     }
@@ -273,7 +285,7 @@ public class PhysicsEngine implements ContactListener {
   public void handleCollision(PlayerSpearModel ps, BossModel b) {
     b.decrementHealth(ps.getDamage());
     ps.getMainBody().setKnockbackTime(15);
-    applyKnockback(ps.getMainBody(), b.getPosition(), b.getSpearKnockbackForce());
+    ps.getMainBody().setKnockedBack(b.getPosition(), b.getSpearKnockbackForce());
   }
 
   /** Handle collision between player bullet and boss */

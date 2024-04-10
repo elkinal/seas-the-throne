@@ -9,6 +9,9 @@ import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
+import java.util.Arrays;
+import java.util.Iterator;
+
 public abstract class BossModel extends EnemyModel implements Renderable {
 
   /** Number of frames in boss animation */
@@ -52,6 +55,12 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   /** Whether the player should always be animated regardless of game state. */
   private boolean alwaysAnimate;
 
+  /** Health threshold numbers */
+  private int[] healthThresholds;
+
+  /** Keeps track of currently tracked threshold */
+  private int thresholdPointer;
+
   /**
    * {@link BossModel} constructor using an x and y coordinate.
    *
@@ -72,7 +81,9 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     alwaysAnimate = false;
     bodyKnockbackForce = 70f;
     spearKnockbackForce = 130f;
-    setBodyType(BodyDef.BodyType.StaticBody);
+    healthThresholds = builder.healthThresholds;
+    thresholdPointer = 0;
+    setBodyType(BodyDef.BodyType.KinematicBody);
   }
 
   @Override
@@ -154,6 +165,9 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     health -= damage;
     if (isDead()) {
       filmStrip = falloverAnimation;
+      // TODO: kinda hard-coded in right now, find a way to make body inactive
+      setVX(0);
+      setVY(0);
     }
   }
 
@@ -175,6 +189,21 @@ public abstract class BossModel extends EnemyModel implements Renderable {
 
   public int getFramesInAnimation() {
     return filmStrip.getSize();
+  }
+
+  /**
+   * Returns if the boss's health reached under a certain health threshold.
+   *
+   * @return True if the health threshold was reach, false otherwise
+   */
+  public boolean reachedHealthThreshold() {
+    if (thresholdPointer < healthThresholds.length
+        && health <= healthThresholds[thresholdPointer]) {
+      thresholdPointer++;
+      return true;
+    } else {
+      return false;
+    }
   }
 
   public static class Builder {
@@ -206,6 +235,9 @@ public abstract class BossModel extends EnemyModel implements Renderable {
 
     /** Number of health points the boss has */
     protected int health;
+
+    /** Health threshold numbers */
+    private int[] healthThresholds;
 
     public static Builder newInstance() {
       return new Builder();
@@ -283,11 +315,17 @@ public abstract class BossModel extends EnemyModel implements Renderable {
       return this;
     }
 
+    public Builder setHealthThresholds(int[] thresholds) {
+      this.healthThresholds = thresholds;
+      return this;
+    }
+
     public BossModel build() {
       switch (type) {
         case "crab":
           return new CrabBossModel(this);
-
+        case "jelly":
+          return new JellyBossModel(this);
           // Should not get here
         default:
           return new CrabBossModel(this);

@@ -1,4 +1,7 @@
-package edu.cornell.jade.seasthethrone;
+package edu.cornell.jade.seasthethrone.ai;
+
+import edu.cornell.jade.seasthethrone.bpedit.AttackPattern;
+import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 
 public interface BossController {
   /**
@@ -17,4 +20,7 @@ public interface BossController {
    * @return if the boss this controller controls is dead
    */
   public boolean isDead();
+
+  /** Cleans up this bosses attack patterns */
+  public void dispose();
 }

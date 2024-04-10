@@ -16,7 +16,7 @@ import edu.cornell.jade.seasthethrone.util.FilmStrip;
  */
 public class PlayerSpearModel extends BoxModel implements Renderable {
   /** Width of spear */
-  private static float SPEAR_WIDTH = 0.8f;
+  private static float SPEAR_WIDTH = 1.2f;
 
   /** Length of spear */
   private static float SPEAR_LENGTH = 3.2f;

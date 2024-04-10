@@ -1,8 +1,10 @@
-package edu.cornell.jade.seasthethrone;
+package edu.cornell.jade.seasthethrone.ai;
 
+import edu.cornell.jade.seasthethrone.ai.BossController;
 import edu.cornell.jade.seasthethrone.bpedit.AttackPattern;
 import edu.cornell.jade.seasthethrone.bpedit.patterns.ArcsAcrossTheTopAttack;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
+import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.CrabBossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
@@ -81,6 +83,7 @@ public class CrabBossController implements BossController {
     this.player = player;
     this.state = State.IDLE;
 
+    System.out.println(boss.getX() + " " + boss.getY());
     this.attack1 =
         new ArcsAcrossTheTopAttack(
             boss.getX() + X_OFFSET,
@@ -106,6 +109,11 @@ public class CrabBossController implements BossController {
   @Override
   public void remove() {
     boss.markRemoved(true);
+  }
+
+  /** Cleans up this boss's attack pattern */
+  public void dispose() {
+    attackPattern.cleanup();
   }
 
   /**

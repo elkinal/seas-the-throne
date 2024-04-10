@@ -13,6 +13,8 @@ package edu.cornell.jade.seasthethrone;
 import com.badlogic.gdx.math.Vector2;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
+import edu.cornell.jade.seasthethrone.render.HealthBar;
+import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.util.Direction;
 import edu.cornell.jade.seasthethrone.input.Controllable;
 import com.badlogic.gdx.math.MathUtils;
@@ -52,6 +54,9 @@ public class PlayerController implements Controllable {
   /** The vector direction the player is moving */
   Vector2 moveDirection;
 
+  /** The health bar UI element associated with this player */
+  HealthBar healthBar;
+
   /** Constructs PlayerController */
   public PlayerController(PhysicsEngine physicsEngine, PlayerModel player) {
     this.physicsEngine = physicsEngine;
@@ -59,10 +64,7 @@ public class PlayerController implements Controllable {
     // start dash indicator down
     dashDirection = new Vector2(0, -1);
     moveDirection = new Vector2();
-  }
-
-  public boolean isInitiallyDead() {
-    return player.isDead();
+    this.healthBar = new HealthBar();
   }
 
   /**
@@ -202,7 +204,13 @@ public class PlayerController implements Controllable {
     return player.getPosition();
   }
 
+  public Renderable getHealthBar() {
+    return this.healthBar;
+  }
+
   public void update() {
+    healthBar.update(player.getHealth());
+
     if (dashingPressed && player.canDash()) {
       // TODO: what happens if you get hit while dashing? (during iframes)
       beginDashing();

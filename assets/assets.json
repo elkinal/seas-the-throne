@@ -1,5 +1,63 @@
 {
   "textures": {
+    "player": {
+      "dash":{
+        "dash_up": {
+          "file": "player/player_dash_up.png"
+        },
+        "dash_down": {
+          "file": "player/player_dash_down.png"
+        },
+        "dash_left": {
+          "file": "player/player_dash_left.png"
+        },
+        "dash_right": {
+          "file": "player/player_dash_right.png"
+        }
+      },
+      "shoot":{
+        "dash_up": {
+          "file": "player/player_dash_up.png"
+        },
+        "dash_down": {
+          "file": "player/player_dash_down.png"
+        },
+        "dash_left": {
+          "file": "player/player_dash_left.png"
+        },
+        "dash_right": {
+          "file": "player/player_dash_right.png"
+        }
+      },
+      "run":{
+        "dash_up": {
+          "file": "player/player_dash_up.png"
+        },
+        "dash_down": {
+          "file": "player/player_dash_down.png"
+        },
+        "dash_left": {
+          "file": "player/player_dash_left.png"
+        },
+        "dash_right": {
+          "file": "player/player_dash_right.png"
+        }
+      },
+      "idle":{
+        "dash_up": {
+          "file": "player/player_dash_up.png"
+        },
+        "dash_down": {
+          "file": "player/player_dash_down.png"
+        },
+        "dash_left": {
+          "file": "player/player_dash_left.png"
+        },
+        "dash_right": {
+          "file": "player/player_dash_right.png"
+        }
+      }
+    },
     "crab": {
       "idle": {
         "file": "bosses/crab/idle.png"

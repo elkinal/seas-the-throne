@@ -22,6 +22,7 @@ public class PlayerModel extends ComplexModel implements Renderable {
 
   private int framesInAnimationDash;
 
+  private int framesInAnimationDashDiagonal;
   private int framesInAnimationShoot;
   private int framesInAnimationDeath;
 
@@ -48,6 +49,13 @@ public class PlayerModel extends ComplexModel implements Renderable {
 
   /** Player texture when dashing right */
   public Texture playerTextureRightDash;
+
+  /** Player dashes when dashing diagonally */
+  public Texture playerTextureNEDash;
+
+  public Texture playerTextureNWDash;
+  public Texture playerTextureSEDash;
+  public Texture playerTextureSWDash;
 
   /** Player texture for the das indicator */
   private Texture dashIndicatorTexture;
@@ -96,6 +104,9 @@ public class PlayerModel extends ComplexModel implements Renderable {
 
   /** FilmStrip cache object for dash left and right */
   public FilmStrip filmStripDashLR;
+
+  /** Filmstrip cache object for dash diagonal */
+  public FilmStrip filmStripDashDiagonal;
 
   /** FilmStrip cache object for idle */
   public FilmStrip filmStripIdle;
@@ -188,6 +199,7 @@ public class PlayerModel extends ComplexModel implements Renderable {
 
     framesInAnimation = builder.framesInAnimation;
     framesInAnimationDash = builder.framesInAnimationDash;
+    framesInAnimationDashDiagonal = builder.framesInAnimationDashDiagonal;
     framesInAnimationShoot = builder.framesInAnimationShoot;
     framesInAnimationDeath = builder.framesInAnimationDeath;
     moveSpeed = builder.moveSpeed;
@@ -208,6 +220,10 @@ public class PlayerModel extends ComplexModel implements Renderable {
     playerTextureDownDash = builder.playerTextureDownDash;
     playerTextureLeftDash = builder.playerTextureLeftDash;
     playerTextureRightDash = builder.playerTextureRightDash;
+    playerTextureNEDash = builder.playerTextureNEDash;
+    playerTextureNWDash = builder.playerTextureNWDash;
+    playerTextureSEDash = builder.playerTextureSEDash;
+    playerTextureSWDash = builder.playerTextureSWDash;
     dashIndicatorTexture = builder.dashIndicatorTexture;
     idleLeft = builder.idleLeft;
     idleRight = builder.idleRight;
@@ -241,6 +257,7 @@ public class PlayerModel extends ComplexModel implements Renderable {
     filmStrip = new FilmStrip(playerTextureDown, 1, framesInAnimation);
     filmStripDashUD = new FilmStrip(playerTextureDownDash, 1, framesInAnimationDash);
     filmStripDashLR = new FilmStrip(playerTextureLeftDash, 1, framesInAnimationDash);
+    filmStripDashDiagonal = new FilmStrip(playerTextureNEDash, 1, framesInAnimationDashDiagonal);
     filmStripIdle = new FilmStrip(idleDown, 1, 1);
     filmStripShoot = new FilmStrip(shootDown, 1, framesInAnimationShoot);
     filmStripDeath = new FilmStrip(dieDown, 1, framesInAnimationDeath);
@@ -347,7 +364,9 @@ public class PlayerModel extends ComplexModel implements Renderable {
     if (isDead()) return filmStripDeath;
     else if (isDashing) {
       if (faceDirection == Direction.DOWN || faceDirection == Direction.UP) return filmStripDashUD;
-      else return filmStripDashLR;
+      else if (faceDirection == Direction.RIGHT || faceDirection == Direction.LEFT)
+        return filmStripDashLR;
+      else return filmStripDashDiagonal;
     } else if (isShootingAnimated()) {
       return filmStripShoot;
     } else if (isIdle()) return filmStripIdle;
@@ -400,6 +419,22 @@ public class PlayerModel extends ComplexModel implements Renderable {
 
   public Texture getTextureRightDash() {
     return playerTextureRightDash;
+  }
+
+  public Texture getTextureNEDash() {
+    return playerTextureNEDash;
+  }
+
+  public Texture getTextureNWDash() {
+    return playerTextureNWDash;
+  }
+
+  public Texture getTextureSWDash() {
+    return playerTextureSWDash;
+  }
+
+  public Texture getTextureSEDash() {
+    return playerTextureSEDash;
   }
 
   public Texture getIdleLeft() {
@@ -690,12 +725,38 @@ public class PlayerModel extends ComplexModel implements Renderable {
     float vx = moveDirection.x;
     float vy = moveDirection.y;
 
-    if (Math.abs(vx) > Math.abs(vy)) {
-      if (vx > 0) faceDirection = Direction.RIGHT;
-      else faceDirection = Direction.LEFT;
-    } else if (Math.abs(vx) < Math.abs(vy)) {
-      if (vy > 0) faceDirection = Direction.UP;
-      else faceDirection = Direction.DOWN;
+    if (!isDashing()) {
+      if (Math.abs(vx) > Math.abs(vy)) {
+        if (vx > 0) faceDirection = Direction.RIGHT;
+        else faceDirection = Direction.LEFT;
+      } else if (Math.abs(vx) < Math.abs(vy)) {
+        if (vy > 0) faceDirection = Direction.UP;
+        else faceDirection = Direction.DOWN;
+      }
+    } else {
+      if (Math.abs(vx) > Math.abs(vy)) {
+        final boolean nonDiagonalX = 0.414 * Math.abs(vx) > Math.abs(vy);
+        if (vx > 0) {
+          if (nonDiagonalX) faceDirection = Direction.RIGHT;
+          else if (vy > 0) faceDirection = Direction.NE;
+          else faceDirection = Direction.SE;
+        } else {
+          if (nonDiagonalX) faceDirection = Direction.LEFT;
+          else if (vy > 0) faceDirection = Direction.NW;
+          else faceDirection = Direction.SW;
+        }
+      } else if (Math.abs(vx) < Math.abs(vy)) {
+        final boolean nonDiagonalY = 0.414 * Math.abs(vy) > Math.abs(vx);
+        if (vy > 0) {
+          if (nonDiagonalY) faceDirection = Direction.UP;
+          else if (vx > 0) faceDirection = Direction.NE;
+          else faceDirection = Direction.NW;
+        } else {
+          if (nonDiagonalY) faceDirection = Direction.DOWN;
+          else if (vx > 0) faceDirection = Direction.SE;
+          else faceDirection = Direction.SW;
+        }
+      }
     }
   }
 
@@ -710,6 +771,7 @@ public class PlayerModel extends ComplexModel implements Renderable {
     private int framesInAnimation;
 
     private int framesInAnimationDash;
+    private int framesInAnimationDashDiagonal;
     private int framesInAnimationShoot;
     private int framesInAnimationDeath;
 
@@ -737,6 +799,12 @@ public class PlayerModel extends ComplexModel implements Renderable {
     /** Player texture when dashing right */
     private Texture playerTextureRightDash;
 
+    /** Player dashes when dashing diagonally */
+    public Texture playerTextureNEDash;
+
+    public Texture playerTextureNWDash;
+    public Texture playerTextureSEDash;
+    public Texture playerTextureSWDash;
     private Texture dashIndicatorTexture;
 
     /** player texture for idle left */
@@ -816,6 +884,11 @@ public class PlayerModel extends ComplexModel implements Renderable {
       return this;
     }
 
+    public Builder setFramesInAnimationDashDiagonal(int frames) {
+      framesInAnimationDashDiagonal = frames;
+      return this;
+    }
+
     public Builder setFramesInAnimationShoot(int frames) {
       framesInAnimationShoot = frames;
       return this;
@@ -863,6 +936,26 @@ public class PlayerModel extends ComplexModel implements Renderable {
 
     public Builder setTextureRightDash(Texture texture) {
       playerTextureRightDash = texture;
+      return this;
+    }
+
+    public Builder setTextureNEDash(Texture texture) {
+      playerTextureNEDash = texture;
+      return this;
+    }
+
+    public Builder setTextureNWDash(Texture texture) {
+      playerTextureNWDash = texture;
+      return this;
+    }
+
+    public Builder setTextureSEDash(Texture texture) {
+      playerTextureSEDash = texture;
+      return this;
+    }
+
+    public Builder setTextureSWDash(Texture texture) {
+      playerTextureSWDash = texture;
       return this;
     }
 
