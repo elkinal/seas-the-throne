@@ -1674,6 +1674,18 @@
                  "width":20,
                  "x":1400,
                  "y":1540
+                }, 
+                {
+                 "gid":41,
+                 "height":20,
+                 "id":159,
+                 "name":"jelly",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":380,
+                 "y":1720
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1761,7 +1773,7 @@
          "y":0
         }],
  "nextlayerid":13,
- "nextobjectid":158,
+ "nextobjectid":160,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

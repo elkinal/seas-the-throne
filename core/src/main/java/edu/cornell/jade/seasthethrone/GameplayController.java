@@ -220,7 +220,7 @@ public class GameplayController implements Screen {
               .setY(bossContainer.y)
               .setType(name)
               .setHealth(100)
-              .setHitbox(new float[]{-4, -7, -4, 7, 4, 7, 4, -7})
+              .setHitbox(name)
               .setFrameSize(frameSize)
               .setFalloverAnimation(new Texture("bosses/" + name + "/fallover.png"))
               .setFrameDelay(12)

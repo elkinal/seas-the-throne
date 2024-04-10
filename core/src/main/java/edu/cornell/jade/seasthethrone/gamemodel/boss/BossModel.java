@@ -198,7 +198,18 @@ public abstract class BossModel extends EnemyModel implements Renderable {
       return this;
     }
 
-    public Builder setHitbox(float[] hitbox) {
+    public Builder setHitbox(String type) {
+      float[] hitbox;
+      switch (type) {
+        case "crab":
+          hitbox = new float[]{-4, -7, -4, 7, 4, 7, 4, -7};
+          break;
+        case "jelly":
+          hitbox = new float[]{-3, -3, -3, 3,3, 3, 3, -3};
+          break;
+        default:
+          hitbox = new float[]{-4, -7, -4, 7, 4, 7, 4, -7};
+      }
       this.hitbox = hitbox;
       return this;
     }

@@ -18,30 +18,30 @@ public class HealthBar implements Renderable {
     private float aspectRatio;
 
     /** Scale of health bar on the screen */
-    private final float SCALE = 100f;
+    private final float SCALE = 400f;
 
     public HealthBar() {
-        this.textures = new Array<>();
-//        textures.add(new Texture("ui/playerhealth_0.png"));
-//        textures.add(new Texture("ui/playerhealth_1_5.png"));
-//        textures.add(new Texture("ui/playerhealth_2_5.png"));
-//        textures.add(new Texture("ui/playerhealth_3_5.png"));
-//        textures.add(new Texture("ui/playerhealth_4_5.png"));
-//        textures.add(new Texture("ui/playerhealth_5_5.png"));
-        textures.add(new Texture("ui/health_hori_0.png"));
-        textures.add(new Texture("ui/health_hori_1.png"));
-        textures.add(new Texture("ui/health_hori_2.png"));
-        textures.add(new Texture("ui/health_hori_3.png"));
-        textures.add(new Texture("ui/health_hori_4.png"));
-        textures.add(new Texture("ui/health_hori_5.png"));
-        this.texture = textures.get(textures.size - 1);
+        this.textures = new Array<>(6);
+        textures.add(new Texture("ui/playerhealth_0.png"));
+        textures.add(new Texture("ui/playerhealth_1_5.png"));
+        textures.add(new Texture("ui/playerhealth_2_5.png"));
+        textures.add(new Texture("ui/playerhealth_3_5.png"));
+        textures.add(new Texture("ui/playerhealth_4_5.png"));
+        textures.add(new Texture("ui/playerhealth_5_5.png"));
+//        textures.insert(0,new Texture("ui/health_hori_0.png"));
+//        textures.insert(1,new Texture("ui/health_hori_1.png"));
+//        textures.insert(2,new Texture("ui/health_hori_2.png"));
+//        textures.insert(3,new Texture("ui/health_hori_3.png"));
+//        textures.insert(4,new Texture("ui/health_hori_4.png"));
+//        textures.insert(5,new Texture("ui/health_hori_1.png"));
+        this.texture = textures.get(5);
 
         this.aspectRatio = (float) texture.getWidth() /texture.getHeight();
     }
 
     /** Updates the texture of this health bar to match player health */
     public void update(int currHealth) {
-        if (currHealth >= textures.size || currHealth < 1) {
+        if (currHealth < 0) {
             this.texture = textures.get(0);
             return;
         }
