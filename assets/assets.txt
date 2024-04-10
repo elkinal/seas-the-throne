@@ -11,6 +11,7 @@ bosses/jelly/fallover.png
 bosses/jelly/hurt.png
 bosses/jelly/idle.png
 bosses/jelly/shoot.png
+bullet/urchinbullet.png
 bullet/yellowfish_east.png
 bullet/yellowfish_NE.png
 bullet/yellowfish_north.png
@@ -45,6 +46,8 @@ levels/tablet_room.json
 levels/tablet_room.png
 libgdx.png
 player/dash_indicator.png
+player/player_dash_ne.png
+player/player_dash_nw.png
 player/player_dash_down.png
 player/player_dash_left.png
 player/player_dash_right.png

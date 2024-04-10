@@ -150,6 +150,10 @@ public class GameplayController implements Screen {
         PlayerModel.Builder.newInstance()
             .setX(playerLoc.x)
             .setY(playerLoc.y)
+            .setTextureNEDash(new Texture("player/player_dash_ne.png"))
+            .setTextureNWDash(new Texture("player/player_dash_nw.png"))
+            .setTextureSWDash(new Texture("player/player_dash_ne.png"))
+            .setTextureSEDash(new Texture("player/player_dash_ne.png"))
             .setTextureUp(new Texture("player/player_run_up.png"))
             .setTextureDown(new Texture("player/player_run_down.png"))
             .setTextureLeft(new Texture("player/player_run_left.png"))
@@ -173,6 +177,7 @@ public class GameplayController implements Screen {
             .setDeathRight(new Texture("player/player_death_right.png"))
             .setFramesInAnimation(12)
             .setFramesInAnimationDash(5)
+            .setFramesInAnimationDashDiagonal(7)
             .setFramesInAnimationShoot(5)
             .setFramesInAnimationDeath(16)
             .setFrameDelay(3)
@@ -197,10 +202,10 @@ public class GameplayController implements Screen {
       String name = bossContainer.bossName;
       int frameSize;
       switch (name) {
-        case "crab": 
+        case "crab":
           frameSize = 110;
           break;
-        case "jelly": 
+        case "jelly":
           frameSize = 45;
           break;
         default:
@@ -296,7 +301,7 @@ public class GameplayController implements Screen {
     // Check if the player is dead, end the game
     if (playerController.isTerminated()) {
       gameState = GameState.OVER;
-    } 
+    }
 
     // Check if the player is alive and all bosses are dead, if so the player wins
     if (!bossControllers.isEmpty() && allBossesDefeated() && !playerController.isTerminated()) {
