@@ -160,6 +160,10 @@ public class GameplayController implements Screen {
             .setTextureDownDash(new Texture("player/playerspritedashfilmstrip_down.png"))
             .setTextureLeftDash(new Texture("player/playerspritedashfilmstrip_left.png"))
             .setTextureRightDash(new Texture("player/playerspritedashfilmstrip_right.png"))
+            .setTextureNEDash(new Texture("player/player_dash_ne.png"))
+            .setTextureNWDash(new Texture("player/player_dash_nw.png"))
+            .setTextureSWDash(new Texture("player/player_dash_ne.png"))
+            .setTextureSEDash(new Texture("player/player_dash_ne.png"))
             .setDashIndicatorTexture(new Texture("player/dash_indicator.png"))
             .setIdleLeft(new Texture("player/playerspriteidle_left.png"))
             .setIdleRight(new Texture("player/playerspriteidle_right.png"))
@@ -175,6 +179,7 @@ public class GameplayController implements Screen {
             .setDeathRight(new Texture("player/playerdeath_right_filmstrip.png"))
             .setFramesInAnimation(12)
             .setFramesInAnimationDash(5)
+            .setFramesInAnimationDashDiagonal(7)
             .setFramesInAnimationShoot(5)
             .setFramesInAnimationDeath(16)
             .setFrameDelay(3)
@@ -200,10 +205,10 @@ public class GameplayController implements Screen {
       String name = bossContainer.bossName;
       int frameSize;
       switch (name) {
-        case "crab": 
+        case "crab":
           frameSize = 110;
           break;
-        case "jelly": 
+        case "jelly":
           frameSize = 45;
           break;
         default:
@@ -294,7 +299,7 @@ public class GameplayController implements Screen {
     // Check if the player is dead, end the game
     if (playerController.isTerminated()) {
       gameState = GameState.OVER;
-    } 
+    }
 
     // Check if the player is alive and all bosses are dead, if so the player wins
     if (!bossControllers.isEmpty() && allBossesDefeated() && !playerController.isTerminated()) {
