@@ -527,6 +527,18 @@ public class Spawner {
   }
 
   /**
+   * Moves the spawner. All bullets spawned will now be moved by this
+   * given offset
+   *
+   * @param x new x coordinate
+   * @param y new y coordinate
+   */
+  public void moveSpawner(float x, float y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  /**
    * Rotates the spawner around its origin. All bullets spawned will now be
    * rotated by this given offset. This is applied before any translation.
    *

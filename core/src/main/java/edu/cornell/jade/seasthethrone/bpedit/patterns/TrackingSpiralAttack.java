@@ -27,6 +27,9 @@ public class TrackingSpiralAttack extends AttackPattern {
   /** the spawner actually creating the arc */
   private final Spawner spawner;
 
+  /** The model being tracked */
+  private Model toTrack;
+
   /**
    * Constructs the attack
    *
@@ -44,12 +47,14 @@ public class TrackingSpiralAttack extends AttackPattern {
     this.stepsTaken = 0;
     this.spawner = SpawnerFactory.constructTrackingRepeatingBullet(delay, builder, physicsEngine);
     this.spawner.translate(toTrack.getX(), toTrack.getY());
+    this.toTrack = toTrack;
 
     this.addSpawner(spawner);
   }
 
   @Override
   protected void animateStep() {
+    this.spawner.moveSpawner(toTrack.getX(), toTrack.getY());
     if (stepsTaken == delay - 1) {
       spawner.rotates(angle);
       stepsTaken = 0;
