@@ -51,12 +51,15 @@ player/player_dash_left.png
 player/player_dash_ne.png
 player/player_dash_nw.png
 player/player_dash_right.png
+player/player_dash_se.png
+player/player_dash_sw.png
 player/player_dash_up.png
 player/player_death_down.png
 player/player_death_left.png
 player/player_death_right.png
 player/player_death_up.png
 player/player_idle_down.png
+player/player_idle_left.png
 player/player_idle_right.png
 player/player_idle_up.png
 player/player_run_down.png
