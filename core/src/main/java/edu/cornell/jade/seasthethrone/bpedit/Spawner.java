@@ -305,6 +305,17 @@ public class Spawner {
     }
 
     /**
+     * Sets the position of the base bullet
+     *
+     * @param x x component of the position
+     * @param y y component of the position
+     */
+    public void setPosition(float x, float y) {
+      this.bx = x;
+      this.by = y;
+    }
+
+    /**
      * Translates the base bullet pattern by some x and y
      *
      * @param x x amount to translate by
@@ -586,9 +597,7 @@ public class Spawner {
   private void addBullets() {
     while (hasNext()) {
       BulletModel b = next();
-      CollisionMask.setCategoryMaskBits(b);
       physicsEngine.addObject(b);
-      b.createFixtures();
       added.add(b);
     }
   }
@@ -603,7 +612,7 @@ public class Spawner {
   private BulletModel next() {
     assert hasNext();
     BulletFamily f = curBullets.pop();
-    f.rotate(rotation, x, y);
+    f.rotate(rotation, 0, 0);
     bulletBuilder
       .setX(f.bx + x)
       .setY(f.by + y)

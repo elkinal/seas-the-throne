@@ -258,7 +258,8 @@ public abstract class BossModel extends EnemyModel implements Renderable {
       switch (type) {
         case "crab":
           return new CrabBossModel(this);
-
+        case "jelly":
+          return new JellyBossModel(this);
         // Should not get here
         default:
           return new CrabBossModel(this);

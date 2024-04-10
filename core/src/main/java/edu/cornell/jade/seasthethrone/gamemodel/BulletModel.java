@@ -61,7 +61,7 @@ public class BulletModel extends SimpleModel implements Renderable {
     setVY(builder.vy);
     shape = new CircleShape();
     shape.setRadius(builder.radius);
-    knockbackForce = 20f;
+    knockbackForce = 30f;
     setBodyType(BodyDef.BodyType.DynamicBody);
     setName("bullet");
     fishTexture = builder.FISH_TEXTURE;
@@ -89,6 +89,7 @@ public class BulletModel extends SimpleModel implements Renderable {
   public static BulletModel construct(Builder builder, Pool<BulletModel> pool) {
     // TODO: remove these allocations, pool!!!
     // TODO: fix this so it actually works
+
     BulletModel res = pool.obtain();
     res.setX(builder.x);
     res.setY(builder.y);
@@ -99,6 +100,9 @@ public class BulletModel extends SimpleModel implements Renderable {
     res.setBodyType(BodyDef.BodyType.DynamicBody);
     res.setName("bullet");
     res.filmStrip = new FilmStrip(builder.FISH_TEXTURE, 1, 1);
+
+    System.out.println(res.getX() + " " + res.getY());
+
     return res;
   }
 

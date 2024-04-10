@@ -1,9 +1,11 @@
 package edu.cornell.jade.seasthethrone.bpedit.patterns;
 
+import com.badlogic.gdx.math.Vector2;
 import edu.cornell.jade.seasthethrone.bpedit.Spawner.Effect;
 import edu.cornell.jade.seasthethrone.bpedit.Spawner.BulletFamily;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import com.badlogic.gdx.utils.*;
+import edu.cornell.jade.seasthethrone.model.Model;
 
 /** Creates an arc of bullets. */
 class Arc implements Effect {

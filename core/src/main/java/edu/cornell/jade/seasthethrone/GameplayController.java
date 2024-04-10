@@ -10,6 +10,9 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.*;
 
+import edu.cornell.jade.seasthethrone.ai.BossController;
+import edu.cornell.jade.seasthethrone.ai.CrabBossController;
+import edu.cornell.jade.seasthethrone.ai.JellyBossController;
 import edu.cornell.jade.seasthethrone.gamemodel.PortalModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.ObstacleModel;
@@ -225,7 +228,7 @@ public class GameplayController implements Screen {
       if (boss instanceof CrabBossModel b) {
         bossControllers.add(new CrabBossController(b, player, fishBulletBuilder, physicsEngine));
       } else if (boss instanceof JellyBossModel b) {
-        // create jelly boss
+        bossControllers.add(new JellyBossController(b, player, fishBulletBuilder, physicsEngine));
       } else {
         // log an error
       }

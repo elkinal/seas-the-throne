@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.MathUtils;
 import edu.cornell.jade.seasthethrone.bpedit.Spawner;
 import edu.cornell.jade.seasthethrone.bpedit.Spawner.BulletFamily;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
+import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 
 /**
@@ -12,6 +13,28 @@ import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
  * {@link SpawnerFactory}.
  */
 public final class SpawnerFactory {
+
+  /**
+   * Constructs a single repeatedly shooting bullet whose origin
+   * changes based on the tracked model.
+   *
+   * @param delay         delay in between firings
+   * @param builder       a builder to create bullet models
+   * @param physicsEngine {@link PhysicsEngine} to add bullets to
+   */
+  public static Spawner constructTrackingRepeatingBullet(int delay, BulletModel.Builder builder,
+                                                         PhysicsEngine physicsEngine) {
+    Spawner out = new Spawner(builder, physicsEngine);
+    BulletFamily f = new BulletFamily(-1f, 0f, -8f, -0f, 0.5f, 0);
+    f.addEffect(new Periodic(delay));
+    out.addFamily(f);
+
+    f = new BulletFamily(1f, 0f, 8f, -0f, 0.5f, 0);
+    f.addEffect(new Periodic(delay));
+    out.addFamily(f);
+    return out;
+  }
+
   /**
    * Constructs an arc pointed to the bottom of the screen.
    *
