@@ -69,7 +69,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     health = builder.health;
     deathCount = frameDelay * 16;
     shouldUpdate = true;
-
+    alwaysAnimate = false;
     bodyKnockbackForce = 70f;
     spearKnockbackForce = 130f;
     setBodyType(BodyDef.BodyType.StaticBody);
@@ -142,10 +142,6 @@ public abstract class BossModel extends EnemyModel implements Renderable {
 
   public boolean isDead() {
     return health <= 0;
-  }
-
-  public boolean isTerminated() {
-    return deathCount <= 0;
   }
 
   /** Get remaining health points of the boss */

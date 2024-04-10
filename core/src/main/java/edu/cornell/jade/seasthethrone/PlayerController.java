@@ -43,8 +43,10 @@ public class PlayerController implements Controllable {
   /** If interact pressed in since last update */
   boolean interactPressed;
 
-  /** The vector direction of the player for dashing
-   *  NOTE: this vector will always be normalized, and nonzero */
+  /**
+   * The vector direction of the player for dashing NOTE: this vector will always be normalized, and
+   * nonzero
+   */
   Vector2 dashDirection;
 
   /** The vector direction the player is moving */
@@ -54,9 +56,13 @@ public class PlayerController implements Controllable {
   public PlayerController(PhysicsEngine physicsEngine, PlayerModel player) {
     this.physicsEngine = physicsEngine;
     this.player = player;
-    //start dash indicator down
+    // start dash indicator down
     dashDirection = new Vector2(0, -1);
     moveDirection = new Vector2();
+  }
+
+  public boolean isInitiallyDead() {
+    return player.isDead();
   }
 
   /**
@@ -64,8 +70,8 @@ public class PlayerController implements Controllable {
    *
    * @return true if the currently active player is terminated.
    */
-  public boolean isTerminated() {
-    return player.isTerminated();
+  public boolean isDead() {
+    return player.isDead();
   }
 
   public void moveHorizontal(float movement) {
@@ -84,19 +90,21 @@ public class PlayerController implements Controllable {
     shootingPressed = true;
   }
 
-  public void pressInteract() {interactPressed = true;}
+  public void pressInteract() {
+    interactPressed = true;
+  }
 
-  public boolean isInteractPressed() { return interactPressed; }
+  public boolean isInteractPressed() {
+    return interactPressed;
+  }
 
   /**
    * Move in given direction based on offset
    *
-   * @param x a value from -1 to 1 representing the percentage of movement speed
-   *          to be at in the
-   *          given direction
-   * @param y a value from -1 to 1 representing the percentage of movement speed
-   *          to be at in the
-   *          given direction
+   * @param x a value from -1 to 1 representing the percentage of movement speed to be at in the
+   *     given direction
+   * @param y a value from -1 to 1 representing the percentage of movement speed to be at in the
+   *     given direction
    */
   public void setVelPercentages(float x, float y) {
     float mag = (float) Math.sqrt(x * x + y * y);
@@ -112,8 +120,9 @@ public class PlayerController implements Controllable {
     float moveSpeed = player.getMoveSpeed();
 
     // Player should not move while knocked back (first part of iframes)
-    if (player.isKnockedBack()) { return; }
-    else if (player.isDashing()) {
+    if (player.isKnockedBack()) {
+      return;
+    } else if (player.isDashing()) {
       moveSpeed *= 4;
       moveDirection.set(moveSpeed * dashDirection.x, moveSpeed * dashDirection.y);
     } else {
@@ -143,9 +152,9 @@ public class PlayerController implements Controllable {
   }
 
   /** Shoot a single bullet */
-  public void shoot(){
+  public void shoot() {
     Vector2 playerPos = player.getPosition();
-    //TODO: stop hardcoding the offset
+    // TODO: stop hardcoding the offset
     Vector2 startPos = playerPos.add(dashDirection.x * 1.5f, dashDirection.y * 1.5f);
     physicsEngine.spawnBullet(startPos, dashDirection, 16, true);
 
@@ -160,20 +169,15 @@ public class PlayerController implements Controllable {
   }
 
   /** Begin shooting */
-  public void beginShooting(){
+  public void beginShooting() {
     player.startShooting();
   }
 
-  /**
-   * Set the player to spearing or shooting,
-   * depending on which is applicable.
-   */
-  public void spearOrShoot(){
-  }
+  /** Set the player to spearing or shooting, depending on which is applicable. */
+  public void spearOrShoot() {}
 
   /**
-   * Transforms the player and mouse positions to the same, centered coordinate
-   * system and sets this
+   * Transforms the player and mouse positions to the same, centered coordinate system and sets this
    * player's dash direction to the vector difference of those positions.
    *
    * @param mousePos the position of the mouse in screen coordinates
@@ -188,7 +192,7 @@ public class PlayerController implements Controllable {
 
     Vector2 diff = mousePos.sub(player.getPosition());
 
-    if (diff.len2() > NO_DASH_ERROR){
+    if (diff.len2() > NO_DASH_ERROR) {
       dashDirection.set(diff.nor());
     }
   }
@@ -199,10 +203,10 @@ public class PlayerController implements Controllable {
   }
 
   public void update() {
-    if (dashingPressed && player.canDash()){
-      //TODO: what happens if you get hit while dashing? (during iframes)
+    if (dashingPressed && player.canDash()) {
+      // TODO: what happens if you get hit while dashing? (during iframes)
       beginDashing();
-    } else if(shootingPressed && player.canShoot()){
+    } else if (shootingPressed && player.canShoot()) {
       beginShooting();
     }
 
@@ -212,7 +216,7 @@ public class PlayerController implements Controllable {
 
     player.updateSpear(dashDirection);
 
-    if(player.canShootBullet()) {
+    if (player.canShootBullet()) {
       shoot();
     }
 

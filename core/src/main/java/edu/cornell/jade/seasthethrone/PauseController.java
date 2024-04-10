@@ -6,7 +6,7 @@ import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 
 public class PauseController {
   /** The player model */
-  PlayerController player;
+  PlayerModel player;
 
   /** The rendering engine */
   RenderingEngine renderEngine;
@@ -16,7 +16,7 @@ public class PauseController {
 
   boolean isPaused;
 
-  public PauseController(PlayerController player, RenderingEngine render, PhysicsEngine physics) {
+  public PauseController(RenderingEngine render, PhysicsEngine physics) {
     this.player = player;
     renderEngine = render;
     physicsEngine = physics;
@@ -24,8 +24,6 @@ public class PauseController {
   }
 
   public void pauseGame() {
-    // in renderable make setalwaysanimate(true) that makes model always animate (override
-    // disableanimation)
     renderEngine.disableAnimation();
     isPaused = true;
   }
@@ -36,7 +34,6 @@ public class PauseController {
   }
 
   public boolean getPaused() {
-    //    System.out.println(isPaused);
     return isPaused;
   }
 }

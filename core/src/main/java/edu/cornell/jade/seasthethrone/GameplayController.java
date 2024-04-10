@@ -126,7 +126,7 @@ public class GameplayController implements Screen {
     this.bossControllers = new Array<>();
     this.inputController = new InputController(viewport);
     this.renderEngine = new RenderingEngine(worldWidth, worldHeight, viewport, worldScale);
-    pauseController = new PauseController(playerController, renderEngine, physicsEngine);
+    pauseController = new PauseController(renderEngine, physicsEngine);
 
     setupGameplay();
   }
@@ -286,7 +286,7 @@ public class GameplayController implements Screen {
     if (gameState != GameState.OVER) {
       playerController.update();
       for (BossController bc : bossControllers) {
-        if (!bc.isTerminated()) {
+        if (!bc.isDead()) {
           bc.update(delta);
         }
       }
@@ -299,14 +299,17 @@ public class GameplayController implements Screen {
       updateCamera();
     }
 
-    // Check if the player is dead, end the game
-    if (playerController.isTerminated()) {
-      gameState = GameState.OVER;
+    if (playerController.isInitiallyDead()) {
       pauseController.pauseGame();
+      // Check if the player is dead, end the game
+      if (playerController.isDead()) {
+        System.out.println("game state over");
+        gameState = GameState.OVER;
+      }
     }
 
     // Check if the player is alive and all bosses are dead, if so the player wins
-    if (!bossControllers.isEmpty() && allBossesDefeated() && !playerController.isTerminated()) {
+    if (!bossControllers.isEmpty() && allBossesDefeated() && !playerController.isDead()) {
       gameState = GameState.WIN;
       for (BossController bc : bossControllers) {
         bc.remove();
@@ -408,7 +411,7 @@ public class GameplayController implements Screen {
   }
 
   public boolean allBossesDefeated() {
-    for (BossController bc : bossControllers) if (!bc.isTerminated()) return false;
+    for (BossController bc : bossControllers) if (!bc.isDead()) return false;
     return true;
   }
 

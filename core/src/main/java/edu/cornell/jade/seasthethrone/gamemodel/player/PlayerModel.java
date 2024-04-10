@@ -330,7 +330,6 @@ public class PlayerModel extends ComplexModel implements Renderable {
 
   @Override
   public void neverUpdate() {
-    System.out.println("no update");
     shouldUpdate = false;
   }
 
@@ -492,14 +491,11 @@ public class PlayerModel extends ComplexModel implements Renderable {
   }
 
   public boolean isDead() {
-    return getHealth() <= 0;
-  }
-
-  public boolean isTerminated() {
-    if (isDead() && deathCount <= 0) {
+    if (getHealth() <= 0) {
+      setAlwaysAnimate(true);
       getBodyModel().markRemoved(true);
-      return true;
-    } else return false;
+    }
+    return getHealth() <= 0;
   }
 
   /** Returns if the player can dash */

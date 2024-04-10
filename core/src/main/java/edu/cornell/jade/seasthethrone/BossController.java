@@ -2,8 +2,7 @@ package edu.cornell.jade.seasthethrone;
 
 public interface BossController {
   /**
-   * Called every tick. Updates the state of the model based on the controller
-   * state.
+   * Called every tick. Updates the state of the model based on the controller state.
    *
    * @param delta time since update was last called
    */
@@ -17,5 +16,5 @@ public interface BossController {
    *
    * @return if the boss this controller controls is dead
    */
-  public boolean isTerminated();
+  public boolean isDead();
 }
