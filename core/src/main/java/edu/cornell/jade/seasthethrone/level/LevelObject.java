@@ -24,6 +24,8 @@ public class LevelObject implements Renderable {
   public String target;
   public String bossName;
 
+  public Vector2 playerLoc;
+
   /** The type of object in the level this container represents */
   public LevelObjType type;
 
@@ -56,6 +58,11 @@ public class LevelObject implements Renderable {
     this(x, y);
     this.width = width;
     this.height = height;
+  }
+
+  public LevelObject(float x, float y, float width, float height, Vector2 playerLoc) {
+    this(x, y, width, height);
+    this.playerLoc = playerLoc;
   }
 
   public LevelObject(float x, float y, float width, float height, TextureRegion texture) {

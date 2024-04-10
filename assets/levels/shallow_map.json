@@ -1738,6 +1738,16 @@
                  "name":"levels\/portal.png",
                  "properties":[
                         {
+                         "name":"playerX",
+                         "type":"float",
+                         "value":300
+                        }, 
+                        {
+                         "name":"playerY",
+                         "type":"float",
+                         "value":300
+                        }, 
+                        {
                          "name":"target",
                          "type":"string",
                          "value":"levels\/hub_world.json"
@@ -1755,6 +1765,16 @@
                  "name":"",
                  "properties":[
                         {
+                         "name":"playerX",
+                         "type":"float",
+                         "value":109
+                        }, 
+                        {
+                         "name":"playerY",
+                         "type":"float",
+                         "value":275
+                        }, 
+                        {
                          "name":"target",
                          "type":"string",
                          "value":"levels\/tablet_room.json"
@@ -1763,8 +1783,8 @@
                  "type":"",
                  "visible":true,
                  "width":15.375,
-                 "x":753.313,
-                 "y":470.25
+                 "x":753.403909090909,
+                 "y":473.340909090909
                 }],
          "opacity":1,
          "type":"objectgroup",

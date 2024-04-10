@@ -210,6 +210,8 @@ public class PlayerController implements Controllable {
     return player.getPosition();
   }
 
+  public void setPlayerLocation(Vector2 loc) {player.setPosition(loc);}
+
   public int getHealth() {return player.getHealth();}
 
   public int getAmmo() {return player.getSpearModel().getNumSpeared();}

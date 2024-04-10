@@ -341,6 +341,11 @@ public class Level {
       }
       portal.setType(LevelObject.LevelObjType.PORTAL);
       portal.setTarget((String) JsonHandler.getProperty(portWrapper, "target"));
+
+      Vector2 playerLoc = new Vector2(
+              Float.parseFloat(JsonHandler.getProperty(portWrapper, "playerX")),
+              Float.parseFloat(JsonHandler.getProperty(portWrapper, "playerY")));
+      portal.playerLoc = playerLoc;
       portals.add(portal);
     }
   }
@@ -354,7 +359,7 @@ public class Level {
    *
    * @return the vector position in physics world coordinates
    */
-  private Vector2 tiledToWorldCoords(Vector2 tiledCoords) {
+  public Vector2 tiledToWorldCoords(Vector2 tiledCoords) {
     float x = tiledCoords.x - (TILED_WORLD_WIDTH * TILE_SIZE) / 2f;
     float y = -(tiledCoords.y - (TILED_WORLD_HEIGHT * TILE_SIZE) / 2f);
 

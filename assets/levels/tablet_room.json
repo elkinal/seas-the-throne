@@ -253,6 +253,16 @@
                  "name":"",
                  "properties":[
                         {
+                         "name":"playerX",
+                         "type":"float",
+                         "value":760
+                        }, 
+                        {
+                         "name":"playerY",
+                         "type":"float",
+                         "value":502
+                        }, 
+                        {
                          "name":"target",
                          "type":"string",
                          "value":"levels\/shallow_map.json"

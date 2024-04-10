@@ -32,6 +32,9 @@ public class PhysicsEngine implements ContactListener {
   /** Filepath to the JSON of the level to switch to. Should be null unless the player is on a portal */
   private String target;
 
+  /** The location to spawn in the player when the level is loaded */
+  private Vector2 spawnPoint;
+
   /** To keep track of the continuous player-boss collision */
   private Optional<Contact> playerBossCollision;
 
@@ -219,10 +222,12 @@ public class PhysicsEngine implements ContactListener {
         if (BuildConfig.DEBUG) System.out.println("portal detected");
 
         setTarget(((PortalModel) bd1).getTarget());
+        setSpawnPoint(((PortalModel) bd1).getPlayerLoc());
       } else if (bd2 instanceof PortalModel && bd1 instanceof PlayerShadowModel) {
         if (BuildConfig.DEBUG) System.out.println("portal detected");
 
         setTarget(((PortalModel) bd2).getTarget());
+        setSpawnPoint(((PortalModel) bd2).getPlayerLoc());
       }
 
 
@@ -233,6 +238,10 @@ public class PhysicsEngine implements ContactListener {
 
   /** Sets the target for screen transition */
   public void setTarget(String target) { this.target = target; }
+
+  public void setSpawnPoint(Vector2 spawn) {this.spawnPoint = spawn;}
+
+  public Vector2 getSpawnPoint() {return spawnPoint;}
 
   public String getTarget() { return target; }
 

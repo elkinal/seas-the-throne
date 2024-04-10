@@ -153,7 +153,13 @@ public class GameplayController implements Screen {
 
     // Load player
     // TODO: make this come from the information JSON
-    Vector2 playerLoc = level.getPlayerLoc();
+    Vector2 playerLoc;
+    if (physicsEngine == null || physicsEngine.getSpawnPoint() == null) {
+      playerLoc = level.getPlayerLoc();
+    } else {
+      playerLoc = level.tiledToWorldCoords(physicsEngine.getSpawnPoint());
+    }
+
     PlayerModel player =
         PlayerModel.Builder.newInstance()
             .setX(playerLoc.x)
@@ -333,6 +339,7 @@ public class GameplayController implements Screen {
 
     // Reset target so player doesn't teleport again on next frame
     physicsEngine.setTarget(null);
+    physicsEngine.setSpawnPoint(null);
 
     // Render frame
     renderEngine.clear();
