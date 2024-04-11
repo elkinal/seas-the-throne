@@ -137,10 +137,12 @@ public class InputController {
 
     // dashing
     if (xbox.getRightTrigger() > 0.6f) {
+//      obj.pressSecondary();
       obj.pressPrimary();
     }
     // shooting
     if (xbox.getLeftTrigger() > 0.6f) {
+//      obj.pressPrimary();
       obj.pressSecondary();
     }
 

@@ -14,7 +14,7 @@ import edu.cornell.jade.seasthethrone.util.FilmStrip;
 public class ObstacleModel extends ComplexModel implements Renderable {
     private TextureRegion texture;
 
-    private float WORLD_SCALE;
+    private final float WORLD_SCALE;
 
     public ObstacleModel(LevelObject obs, float scale) {
         // TODO: extend for generic model, not just BoxModel

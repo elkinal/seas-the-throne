@@ -1648,6 +1648,61 @@
         }, 
         {
          "draworder":"topdown",
+         "id":13,
+         "name":"gates",
+         "objects":[
+                {
+                 "height":20,
+                 "id":161,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":60,
+                 "x":840,
+                 "y":1136
+                }, 
+                {
+                 "height":20,
+                 "id":162,
+                 "name":"levels\/portal.png",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":false
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":60,
+                 "x":840,
+                 "y":1160
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
          "id":2,
          "name":"bosses",
          "objects":[
@@ -1783,8 +1838,8 @@
                  "type":"",
                  "visible":true,
                  "width":15.375,
-                 "x":753.403909090909,
-                 "y":473.340909090909
+                 "x":753.404,
+                 "y":473.341
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1792,8 +1847,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":13,
- "nextobjectid":160,
+ "nextlayerid":14,
+ "nextobjectid":165,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

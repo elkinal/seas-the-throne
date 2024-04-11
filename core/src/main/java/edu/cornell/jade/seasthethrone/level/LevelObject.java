@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import edu.cornell.jade.seasthethrone.gamemodel.ObstacleModel;
+import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
@@ -36,6 +38,12 @@ public class LevelObject implements Renderable {
   private final TextureRegion DEFAULT_TEXTURE = new TextureRegion(new Texture("empty.png"));
 
   public Vector2 pos;
+
+  // GateModel state
+  public Array<LevelObject> sensors = new Array<>();
+  public Array<LevelObject> walls = new Array<>();
+
+  public LevelObject() {}
 
   public LevelObject(float x, float y) {
     this.x = x;

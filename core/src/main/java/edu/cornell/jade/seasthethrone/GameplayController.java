@@ -14,6 +14,7 @@ import edu.cornell.jade.seasthethrone.ai.JellyBossController;
 import edu.cornell.jade.seasthethrone.gamemodel.PortalModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.ObstacleModel;
+import edu.cornell.jade.seasthethrone.gamemodel.gate.GateModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.input.InputController;
 import edu.cornell.jade.seasthethrone.bpedit.AttackPattern;
@@ -269,6 +270,13 @@ public class GameplayController implements Screen {
     // Load portals
     for (LevelObject portal : level.getPortals()) {
       PortalModel model = new PortalModel(portal);
+      renderEngine.addRenderable(model);
+      physicsEngine.addObject(model);
+    }
+
+    // Load gates
+    for (LevelObject gate : level.getGates()) {
+      GateModel model = new GateModel(gate, level.WORLD_SCALE);
       renderEngine.addRenderable(model);
       physicsEngine.addObject(model);
     }

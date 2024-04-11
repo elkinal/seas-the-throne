@@ -141,7 +141,7 @@ public class JsonHandler {
         }
     }
 
-    public static String getProperty(HashMap<String, Object> map, String propName) {
+    public static String getStringProperty(HashMap<String, Object> map, String propName) {
         Array<HashMap<String, Object>> properties = getArray(map,"properties");
         if (properties == null) {
             throw new Error("Object has no custom properties");
@@ -153,5 +153,20 @@ public class JsonHandler {
                 }
         }
         throw new Error("No layer with name " + propName);
+    }
+
+    public static int getIntProperty(HashMap<String, Object> map, String propName) {
+        String val = getStringProperty(map, propName);
+        return Integer.parseInt(val);
+    }
+
+    public static float getFloatProperty(HashMap<String, Object> map, String propName) {
+        String val = getStringProperty(map, propName);
+        return Float.parseFloat(val);
+    }
+
+    public static boolean getBoolProperty(HashMap<String, Object> map, String propName) {
+        String val = getStringProperty(map, propName);
+        return Boolean.parseBoolean(val);
     }
 }
