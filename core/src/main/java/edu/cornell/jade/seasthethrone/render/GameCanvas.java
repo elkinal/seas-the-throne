@@ -959,7 +959,7 @@ public class GameCanvas {
   }
 
   /** Draws UI textures independent of the primary sprite batch */
-  public void drawUI(Texture texture, Color tint, float x, float y, float width, float height) {
+  public void drawUI(TextureRegion texture, Color tint, float x, float y, float width, float height) {
     if (active != DrawPass.STANDARD) {
       Gdx.app.error(
               "GameCanvas", "Cannot draw without active begin()", new IllegalStateException());
@@ -972,8 +972,7 @@ public class GameCanvas {
   }
 
   /** Draws UI textures independent of the primary sprite batch */
-
-  public void drawUI(Texture texture, float x, float y, float width, float height) {
+  public void drawUI(TextureRegion texture, float x, float y, float width, float height) {
     if (active != DrawPass.STANDARD) {
       Gdx.app.error(
               "GameCanvas", "Cannot draw without active begin()", new IllegalStateException());
@@ -982,9 +981,8 @@ public class GameCanvas {
 
     // Unlike Lab 1, we can shortcut without a master drawing method
     uiBatch.setColor(Color.WHITE);
-    uiBatch.draw(texture, x, y, width, height);
+    uiBatch.draw(texture, x,y,0, 0, width, height, 1, 1, 0);
   }
-
   /**
    * Draws text on the screen.
    *

@@ -186,6 +186,7 @@ public class RenderingEngine {
 
   public void clear() {
     renderables.clear();
+    ui_elements.clear();
   }
 
   /** Returns the gameCanvas */
