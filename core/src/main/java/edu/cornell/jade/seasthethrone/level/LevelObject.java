@@ -11,12 +11,6 @@ import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
 public class LevelObject implements Renderable {
-  public enum LevelObjType {
-    PORTAL,
-    WALL,
-    OBSTACLE,
-    BOSS
-  }
 
   public float x;
   public float y;
@@ -27,9 +21,6 @@ public class LevelObject implements Renderable {
   public String bossName;
 
   public Vector2 playerLoc;
-
-  /** The type of object in the level this container represents */
-  public LevelObjType type;
 
   /** Vertices for the polygonModel if this is representing a wall */
   public Array<Float> vertices = new Array<>();
@@ -42,6 +33,8 @@ public class LevelObject implements Renderable {
   // GateModel state
   public Array<LevelObject> sensors = new Array<>();
   public Array<LevelObject> walls = new Array<>();
+
+  public int id;
 
   public LevelObject() {}
 
@@ -76,10 +69,6 @@ public class LevelObject implements Renderable {
   public LevelObject(float x, float y, float width, float height, TextureRegion texture) {
     this(x, y, width, height);
     this.texture = texture;
-  }
-
-  public void setType(LevelObjType type) {
-    this.type = type;
   }
 
   public void setTarget(String target) {

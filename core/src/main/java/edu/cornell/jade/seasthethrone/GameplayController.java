@@ -240,6 +240,7 @@ public class GameplayController implements Screen {
               .setFrameSize(frameSize)
               .setFalloverAnimation(new Texture("bosses/" + name + "/fallover.png"))
               .setFrameDelay(12)
+              .setRoomId(bossContainer.id)
               .build();
       renderEngine.addRenderable(boss);
       physicsEngine.addObject(boss);
@@ -276,7 +277,13 @@ public class GameplayController implements Screen {
 
     // Load gates
     for (LevelObject gate : level.getGates()) {
+      int roomId = gate.id;
       GateModel model = new GateModel(gate, level.WORLD_SCALE);
+      for (BossController bc : bossControllers) {
+        if (bc.getBoss().getRoomId() == roomId) {
+          model.addBoss(bc.getBoss());
+        }
+      }
       renderEngine.addRenderable(model);
       physicsEngine.addObject(model);
     }

@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import edu.cornell.jade.seasthethrone.gamemodel.*;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
+import edu.cornell.jade.seasthethrone.gamemodel.gate.GateSensorModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.*;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.model.Model;
@@ -228,6 +229,16 @@ public class PhysicsEngine implements ContactListener {
 
         setTarget(((PortalModel) bd2).getTarget());
         setSpawnPoint(((PortalModel) bd2).getPlayerLoc());
+      }
+      // Handle gate sensors
+      else if (bd1 instanceof PlayerShadowModel && bd2 instanceof GateSensorModel) {
+        if (BuildConfig.DEBUG) System.out.println("gate detected");
+
+        ((GateSensorModel) bd2).setRaised(true);
+      } else if (bd2 instanceof PlayerShadowModel && bd1 instanceof GateSensorModel) {
+        if (BuildConfig.DEBUG) System.out.println("gate detected");
+
+        ((GateSensorModel) bd1).setRaised(true);
       }
 
 

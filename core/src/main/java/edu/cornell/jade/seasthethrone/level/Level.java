@@ -95,12 +95,12 @@ public class Level {
 
     parseBackgroundLayer(getLayer("background"));
     parsePlayerLayer(getLayer("player"));
+    parseGatesLayer(getLayer("gates"));
     parseTileLayer(getLayer("tiles"));
     parseBossLayer(getLayer("bosses"));
     parseWallLayer(getLayer("walls"));
     parseObstacleLayer(getLayer("obstacles"));
     parsePortalLayer(getLayer("portals"));
-    parseGatesLayer(getLayer("gates"));
     // enemies = parseEnemyLayer(getLayer("enemies"));
 
   }
@@ -248,10 +248,18 @@ public class Level {
       float x = JsonHandler.getFloat(bossWrapper, "x");
       float y = JsonHandler.getFloat(bossWrapper, "y");
       String name = JsonHandler.getString(bossWrapper, "name");
+      int id;
+      try {
+        id = JsonHandler.getIntProperty(bossWrapper, "id");
+      } catch (Error e) {
+        id = -1;
+      }
+
       Vector2 pos = tiledToWorldCoords(new Vector2(x, y));
 
       LevelObject boss = new LevelObject(pos.x, pos.y);
       boss.setBossName(name);
+      boss.id = id;
 
       bosses.add(boss);
     }
@@ -376,6 +384,7 @@ public class Level {
       LevelObject gateObject = new LevelObject();
       gateObject.walls = thisGateGroup.get("walls");
       gateObject.sensors = thisGateGroup.get("sensors");
+      gateObject.id = id;
 
       this.gates.add(gateObject);
     }
@@ -410,7 +419,6 @@ public class Level {
       } else {
         portal = new LevelObject(pos.x, pos.y, dims.x, dims.y);
       }
-      portal.setType(LevelObject.LevelObjType.PORTAL);
       portal.setTarget(JsonHandler.getStringProperty(portWrapper, "target"));
 
       Vector2 playerLoc = new Vector2(

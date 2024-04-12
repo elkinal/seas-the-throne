@@ -55,6 +55,9 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   /** Keeps track of currently tracked threshold */
   private int thresholdPointer;
 
+  /** The ID number of the room this boss is associated with */
+  private int roomId;
+
   /**
    * {@link BossModel} constructor using an x and y coordinate.
    *
@@ -71,6 +74,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     frameDelay = builder.frameDelay;
     health = builder.health;
     deathCount = frameDelay * 16;
+    roomId = builder.roomId;
 
     bodyKnockbackForce = 70f;
     spearKnockbackForce = 130f;
@@ -128,6 +132,8 @@ public abstract class BossModel extends EnemyModel implements Renderable {
 
   public void setHealth(int health) {this.health = health;}
 
+  /** Returns the room this boss is in */
+  public int getRoomId() { return roomId; }
   /**
    * Reduce boss HP by a specified amount
    * If the boss dies, mark boss as removed
@@ -210,6 +216,9 @@ public abstract class BossModel extends EnemyModel implements Renderable {
 
     /** Health threshold numbers */
     private int[] healthThresholds;
+
+    /** ID for the room this boss is in */
+    private int roomId;
 
     public static Builder newInstance() {
       return new Builder();
@@ -297,6 +306,11 @@ public abstract class BossModel extends EnemyModel implements Renderable {
 
     public Builder setFrameDelay(int frameDelay) {
       this.frameDelay = frameDelay;
+      return this;
+    }
+
+    public Builder setRoomId(int id) {
+      this.roomId = id;
       return this;
     }
 
