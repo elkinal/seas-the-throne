@@ -101,6 +101,9 @@ public class GameplayController implements Screen {
   /** Temporary cache used by updateCamera */
   private final Vector2 updateCameraCache = new Vector2();
 
+  /** Used to smooth camera movement. higher = more snappy camera */
+  private final float cameraSmoothness = 0.12f;
+
   /** fish bullet builder */
   BulletModel.Builder fishBulletBuilder;
 
@@ -381,11 +384,12 @@ public class GameplayController implements Screen {
     updateCameraCache.set(viewport.getCamera().position.x, viewport.getCamera().position.y);
     Vector2 cameraPos = viewport.unproject(updateCameraCache);
 
-    Vector2 diff = playerPos
-      .sub(cameraPos)
-      .sub(viewport.getWorldWidth() / 2, -viewport.getWorldHeight() / 2);
+    Vector2 targetPos = playerPos.cpy()
+            .sub(viewport.getWorldWidth() / 2, -viewport.getWorldHeight() / 2);
 
-    viewport.getCamera().translate(diff.x, diff.y, 0);
+    Vector2 diff = targetPos.sub(cameraPos).scl(cameraSmoothness);
+
+    viewport.getCamera().position.add(diff.x, diff.y, 0);
   }
 
   /**

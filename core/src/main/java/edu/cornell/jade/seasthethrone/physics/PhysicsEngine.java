@@ -90,10 +90,10 @@ public class PhysicsEngine implements ContactListener {
    */
   public void update(float delta) {
     // turn the physics engine crank
-    System.out.println("pre step "+world.getFixtureCount());
+//    System.out.println("pre step "+world.getFixtureCount());
 
     world.step(delta, 8, 4);
-    System.out.println("post step");
+//    System.out.println("post step");
     // Garbage collect the deleted objects.
     // Note how we use the linked list nodes to delete O(1) in place.
     // This is O(n) without copying.
