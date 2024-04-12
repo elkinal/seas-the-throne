@@ -37,6 +37,7 @@ legacy/spritebox_up.png
 legacy/test1.json
 levels/arenamaprough.png
 levels/boss-room-tileset.png
+levels/gate.png
 levels/hub_world.json
 levels/pinkdemonstatue.png
 levels/portal.png

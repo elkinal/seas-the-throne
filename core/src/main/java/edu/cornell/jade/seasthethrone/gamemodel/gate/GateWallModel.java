@@ -16,12 +16,14 @@ public class GateWallModel extends BoxModel implements Renderable {
         super(obs.x, obs.y, obs.width, obs.height);
         this.texture = obs.texture;
         this.WORLD_SCALE = worldScale;
+        texture.setRegion(0, 0, (int) (obs.width / WORLD_SCALE), (int) texture.getRegionHeight());
+
     }
 
     public void draw(RenderingEngine renderer) {
         {
             Vector2 pos = getPosition();
-            float y_offset = WORLD_SCALE * texture.getRegionHeight() / 2f - getHeight() / 2f;
+            float y_offset = WORLD_SCALE * texture.getRegionHeight() / 2f;
             renderer.draw(texture, pos.x, pos.y + y_offset);
         }
     }
