@@ -35,11 +35,9 @@ public class HealthBar implements Renderable {
   public void update(int currHealth) {
     //    System.out.println(currHealth);
     if (currHealth > textures.size || currHealth < 1) {
-      System.out.println("health low");
       this.texture = textures.get(0);
       return;
     }
-    System.out.println(currHealth);
     this.texture = textures.get(currHealth);
   }
 
