@@ -527,7 +527,6 @@ public class PlayerModel extends ComplexModel implements Renderable {
 
   public boolean isDead() {
     if (getHealth() <= 0) {
-      setAlwaysAnimate(true);
       getBodyModel().markRemoved(true);
     }
     return getHealth() <= 0;

@@ -127,7 +127,6 @@ public class GameplayController implements Screen {
     this.bossControllers = new Array<>();
     this.inputController = new InputController(viewport);
     this.renderEngine = new RenderingEngine(worldWidth, worldHeight, viewport, worldScale);
-    pauseController = new PauseController(renderEngine, physicsEngine);
 
     setupGameplay();
   }
@@ -198,6 +197,7 @@ public class GameplayController implements Screen {
     // Initialize physics engine
     physicsEngine = new PhysicsEngine(bounds, world);
     physicsEngine.addObject(player);
+
     // Load fish bullets builder
     fishBulletBuilder =
         BulletModel.Builder.newInstance().setFishTexture(new Texture("bullet/yellowfish_east.png"));
@@ -268,6 +268,9 @@ public class GameplayController implements Screen {
     playerController = new PlayerController(physicsEngine, player);
     inputController.add(playerController);
 
+    // Initialize pause controller
+    pauseController = new PauseController(renderEngine, physicsEngine, playerController);
+
     // Load UI
     renderEngine.addUI(playerController.getHealthBar());
 
@@ -310,8 +313,8 @@ public class GameplayController implements Screen {
 
     // Check if the player is dead, end the game
     if (playerController.isDead()) {
-      playerController.update();
       pauseController.pauseGame();
+      playerController.update();
       gameState = GameState.OVER;
     }
 

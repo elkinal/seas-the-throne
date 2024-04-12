@@ -208,6 +208,15 @@ public class PlayerController implements Controllable {
     return this.healthBar;
   }
 
+  /**
+   * Set the player to always animate.
+   *
+   * @param b true if should always animate
+   */
+  public void setAlwaysAnimate(boolean b) {
+    player.setAlwaysAnimate(b);
+  }
+
   public void update() {
     healthBar.update(player.getHealth());
 
