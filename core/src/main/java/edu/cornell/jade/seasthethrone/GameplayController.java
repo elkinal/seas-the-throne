@@ -289,7 +289,6 @@ public class GameplayController implements Screen {
 
   public void update(float delta) {
     viewport.apply();
-
     inputController.update();
 
     // Update entity controllers and camera if the game is not over
@@ -311,6 +310,7 @@ public class GameplayController implements Screen {
 
     // Check if the player is dead, end the game
     if (playerController.isDead()) {
+      playerController.update();
       pauseController.pauseGame();
       gameState = GameState.OVER;
     }

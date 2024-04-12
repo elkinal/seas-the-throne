@@ -33,10 +33,13 @@ public class HealthBar implements Renderable {
 
   /** Updates the texture of this health bar to match player health */
   public void update(int currHealth) {
+    //    System.out.println(currHealth);
     if (currHealth > textures.size || currHealth < 1) {
+      System.out.println("health low");
       this.texture = textures.get(0);
       return;
     }
+    System.out.println(currHealth);
     this.texture = textures.get(currHealth);
   }
 
