@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.viewport.*;
 
 import edu.cornell.jade.seasthethrone.ai.BossController;
@@ -102,7 +103,10 @@ public class GameplayController implements Screen {
   private final Vector2 updateCameraCache = new Vector2();
 
   /** Used to smooth camera movement. higher = more snappy camera */
-  private final float cameraSmoothness = 0.12f;
+  private final float CAMERA_SMOOTHNESS = 0.2f;
+
+  /** Distance at which point the camera will snap to the player */
+  private final float CAMERA_SNAP_DISTANCE = 0.1f;
 
   /** fish bullet builder */
   BulletModel.Builder fishBulletBuilder;
@@ -384,12 +388,16 @@ public class GameplayController implements Screen {
     updateCameraCache.set(viewport.getCamera().position.x, viewport.getCamera().position.y);
     Vector2 cameraPos = viewport.unproject(updateCameraCache);
 
-    Vector2 targetPos = playerPos.cpy()
-            .sub(viewport.getWorldWidth() / 2, -viewport.getWorldHeight() / 2);
+    Vector2 diff = playerPos
+      .sub(cameraPos)
+      .sub(viewport.getWorldWidth() / 2, -viewport.getWorldHeight() / 2);
 
-    Vector2 diff = targetPos.sub(cameraPos).scl(cameraSmoothness);
-
-    viewport.getCamera().position.add(diff.x, diff.y, 0);
+    if (diff.len() < CAMERA_SNAP_DISTANCE) {
+      viewport.getCamera().translate(diff.x, diff.y, 0);
+    } else {
+      diff.scl(CAMERA_SMOOTHNESS);
+      viewport.getCamera().translate(diff.x, diff.y, 0);
+    }
   }
 
   /**
