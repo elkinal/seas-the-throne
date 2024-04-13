@@ -133,8 +133,14 @@ public class CrabBossController implements BossController {
           state = State.ATTACK;
           attackPattern = attack1;
         }
+        if (boss.isDead()) {
+          state = State.DEAD;
+        }
         break;
       case ATTACK:
+        if (boss.isDead()) {
+          state = State.DEAD;
+        }
         break;
       case MOVE:
         break;
