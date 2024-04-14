@@ -1823,8 +1823,8 @@
                  "type":"",
                  "visible":true,
                  "width":20,
-                 "x":880,
-                 "y":1240
+                 "x":587.735386769339,
+                 "y":2176.29681484074
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1861,8 +1861,8 @@
                  "type":"",
                  "visible":true,
                  "width":20,
-                 "x":940,
-                 "y":1260
+                 "x":766.741337066853,
+                 "y":761.225061253063
                 }, 
                 {
                  "height":18.6875,
@@ -1891,6 +1891,8 @@
                  "x":753.404,
                  "y":473.341
                 }],
+         "offsetx":-18.3049606443345,
+         "offsety":0,
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -1913,7 +1915,7 @@
          "margin":0,
          "name":"boss-room-tileset",
          "spacing":0,
-         "tilecount":324,
+         "tilecount":0,
          "tileheight":20,
          "tilewidth":20
         }],

@@ -333,12 +333,12 @@
                         {
                          "name":"playerX",
                          "type":"float",
-                         "value":925
+                         "value":600
                         }, 
                         {
                          "name":"playerY",
                          "type":"float",
-                         "value":1250
+                         "value":2200
                         }, 
                         {
                          "name":"target",
@@ -374,7 +374,7 @@
          "margin":0,
          "name":"boss-room-tileset",
          "spacing":0,
-         "tilecount":324,
+         "tilecount":0,
          "tileheight":20,
          "tilewidth":20
         }],
