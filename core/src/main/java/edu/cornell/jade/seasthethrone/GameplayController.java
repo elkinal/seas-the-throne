@@ -386,13 +386,11 @@ public class GameplayController implements Screen {
     }
 
     // Draw reset and debug screen for wins and losses
-    if (BuildConfig.DEBUG) {
-      if (gameState == GameState.OVER || gameState == GameState.WIN) {
-        if (inputController.didReset()) {
-          setupGameplay();
-        } else {
-          renderEngine.drawGameState(gameState);
-        }
+    if (gameState == GameState.OVER || gameState == GameState.WIN) {
+      if (inputController.didReset()) {
+        setupGameplay();
+      } else {
+        renderEngine.drawGameState(gameState);
       }
     }
   }
