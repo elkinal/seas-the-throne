@@ -95,7 +95,6 @@ public class PhysicsEngine implements ContactListener {
   public void update(float delta) {
     // turn the physics engine crank
     world.step(delta, 8, 4);
-
     // Garbage collect the deleted objects.
     // Note how we use the linked list nodes to delete O(1) in place.
     // This is O(n) without copying.
