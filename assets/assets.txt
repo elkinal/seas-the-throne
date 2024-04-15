@@ -41,6 +41,7 @@ levels/gate.png
 levels/hub_world.json
 levels/pinkdemonstatue.png
 levels/portal.png
+levels/shallowbiomemap2.png
 levels/shallowmap1.png
 levels/shallow_map.json
 levels/tablet_room.json

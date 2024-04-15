@@ -112,6 +112,11 @@ public class GameplayController implements Screen {
   /** Listener that will update the player mode when we are done */
   private ScreenListener listener;
 
+  /** Whether the game is done loading */
+  private boolean loading;
+
+  private int loadCount;
+
   protected GameplayController() {
     gameState = GameState.PLAY;
 
@@ -126,6 +131,8 @@ public class GameplayController implements Screen {
     bounds = new Rectangle(0, 0, worldWidth, worldHeight);
 
     active = false;
+    loading = true;
+    loadCount = 0;
 
     this.bossControllers = new Array<>();
     this.inputController = new InputController(viewport);
@@ -141,6 +148,8 @@ public class GameplayController implements Screen {
   public void setupGameplay() {
     dispose();
     gameState = GameState.PLAY;
+    loading = true;
+    loadCount = 0;
 
     World world = new World(new Vector2(0, 0), false);
 
@@ -308,8 +317,11 @@ public class GameplayController implements Screen {
   }
 
   public void draw(float delta) {
-    renderEngine.drawRenderables();
-    renderEngine.drawUI();
+    // Testing out draw load screen on frame 1
+    if (!loading) {
+      renderEngine.drawRenderables();
+      renderEngine.drawUI();
+    }
   }
 
   public void update(float delta) {
@@ -396,6 +408,8 @@ public class GameplayController implements Screen {
         }
       }
     }
+    loadCount += 1;
+    loading = loadCount < 5;
   }
 
   /** Changes the current level to the one specified by the physics engine target. */

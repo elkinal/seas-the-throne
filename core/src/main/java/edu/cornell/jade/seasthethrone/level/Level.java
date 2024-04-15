@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.viewport.*;
+import edu.cornell.jade.seasthethrone.BuildConfig;
 import edu.cornell.jade.seasthethrone.gamemodel.*;
 import edu.cornell.jade.seasthethrone.util.JsonHandler;
 import com.badlogic.gdx.math.Vector2;
@@ -70,7 +71,7 @@ public class Level {
     this.viewport = new ExtendViewport(DEFAULT_WIDTH, DEFAULT_HEIGHT);
     tempPos = new Vector2();
     this.name = parseName(fileName);
-    System.out.println(this.name);
+    if (BuildConfig.DEBUG) {System.out.println("Loading level:"+this.name);}
 
     // Load JSON to map
     HashMap<String, Object> levelMap = JsonHandler.jsonToMap(fileName);
@@ -359,7 +360,6 @@ public class Level {
 
       String texturePath = JsonHandler.getString(gateWrapper, "name");
       if (!texturePath.isEmpty()) {
-        System.out.println("text path: "+texturePath);
         thisObject.texture = new TextureRegion(new Texture(texturePath));
       }
 

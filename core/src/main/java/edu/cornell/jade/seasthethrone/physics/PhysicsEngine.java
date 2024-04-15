@@ -286,9 +286,9 @@ public class PhysicsEngine implements ContactListener {
 
   /** Handle collision between player body and boss */
   public void handleCollision(PlayerBodyModel pb, BossModel b, Contact c) {
-    if (BuildConfig.DEBUG) System.out.println(pb.isInvincible());
+    if (BuildConfig.DEBUG) System.out.println("player invincible: "+pb.isInvincible());
 
-    if (!pb.isInvincible()) {
+    if (!pb.isInvincible() && !b.isDead()) {
       pb.setHit(true);
       pb.setInvincible();
       pb.setKnockedBack(b.getPosition(), b.getBodyKnockbackForce());

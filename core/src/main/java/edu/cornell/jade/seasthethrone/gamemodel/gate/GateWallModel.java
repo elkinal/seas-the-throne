@@ -21,10 +21,23 @@ public class GateWallModel extends BoxModel implements Renderable {
     }
 
     public void draw(RenderingEngine renderer) {
-        {
-            Vector2 pos = getPosition();
-            float y_offset = WORLD_SCALE * texture.getRegionHeight() / 2f;
-            renderer.draw(texture, pos.x, pos.y + y_offset);
+        if (getWidth() > getHeight()) {
+            drawHorizontal(renderer);
+        } else {
+            drawVertical(renderer);
         }
+
+    }
+
+    private void drawHorizontal(RenderingEngine renderer) {
+        Vector2 pos = getPosition();
+        float y_offset = WORLD_SCALE * texture.getRegionHeight() / 2f;
+        renderer.draw(texture, pos.x, pos.y + y_offset);
+    }
+
+    private void drawVertical(RenderingEngine renderer) {
+        Vector2 pos = getPosition();
+
+        renderer.draw(texture, pos.x, pos.y);
     }
 }
