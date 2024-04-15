@@ -303,9 +303,11 @@ public class PhysicsEngine implements ContactListener {
 
   /** Handle collision between player spear and boss */
   public void handleCollision(PlayerSpearModel ps, BossModel b) {
-    b.decrementHealth(ps.getDamage());
-    ps.getMainBody().setKnockbackTime(15);
-    ps.getMainBody().setKnockedBack(b.getPosition(), b.getSpearKnockbackForce());
+    if(!b.isDead()){
+      b.decrementHealth(ps.getDamage());
+      ps.getMainBody().setKnockbackTime(15);
+      ps.getMainBody().setKnockedBack(b.getPosition(), b.getSpearKnockbackForce());
+    }
   }
 
   /** Handle collision between player bullet and boss */
