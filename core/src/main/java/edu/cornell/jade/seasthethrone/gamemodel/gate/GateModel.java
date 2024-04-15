@@ -69,6 +69,8 @@ public class GateModel extends ComplexModel implements Renderable {
     @Override
     public void update(float delta) {
         super.update(delta);
+        System.out.println("num bosses: "+bosses.size);
+
         // If a sensor has been activated by the player, activate this gate
         for (GateSensorModel sensor : sensors) {
             if (sensor.isRaised()) {

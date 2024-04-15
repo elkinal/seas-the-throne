@@ -211,6 +211,7 @@ public class GameplayController implements Screen {
       .setFishTexture(new Texture("bullet/yellowfish_east.png"));
 
     // Load bosses
+    bossControllers.clear();
     for (int i = 0; i < level.getBosses().size; i++) {
       // TODO: set everything below here based on bossName, load from assets.json
       LevelObject bossContainer = level.getBosses().get(i);
