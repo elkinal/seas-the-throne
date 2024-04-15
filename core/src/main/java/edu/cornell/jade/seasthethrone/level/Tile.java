@@ -1,5 +1,6 @@
 package edu.cornell.jade.seasthethrone.level;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import com.badlogic.gdx.math.Vector2;
@@ -18,8 +19,28 @@ public class Tile implements Renderable {
     texture = tex;
   }
 
+  @Override
   public void draw(RenderingEngine renderer) {
     renderer.draw(getTexture(), getPosition().x, getPosition().y);
+  }
+
+  @Override
+  public FilmStrip progressFrame() {
+    return null;
+  }
+
+  @Override
+  public void alwaysUpdate() {}
+
+  @Override
+  public void neverUpdate() {}
+
+  @Override
+  public void setAlwaysAnimate(boolean animate) {}
+
+  @Override
+  public boolean alwaysAnimate() {
+    return false;
   }
 
   public Vector2 getPosition() {
@@ -38,8 +59,7 @@ public class Tile implements Renderable {
     return 0;
   }
 
-  public void setFrameNumber(int frameNumber) {
-  }
+  public void setFrameNumber(int frameNumber) {}
 
   public FilmStrip getFilmStrip() {
     return null;

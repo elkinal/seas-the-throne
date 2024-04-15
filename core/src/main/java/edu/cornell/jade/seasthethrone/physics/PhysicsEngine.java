@@ -30,7 +30,9 @@ public class PhysicsEngine implements ContactListener {
 
   private Array<BossModel> bosses = new Array<>();
 
-  /** Filepath to the JSON of the level to switch to. Should be null unless the player is on a portal */
+  /**
+   * Filepath to the JSON of the level to switch to. Should be null unless the player is on a portal
+   */
   private String target;
 
   /** The location to spawn in the player when the level is loaded */
@@ -52,7 +54,7 @@ public class PhysicsEngine implements ContactListener {
 
   public void dispose() {
     objects.clear();
-//    world.dispose();
+    //    world.dispose();
   }
 
   /**
@@ -64,19 +66,20 @@ public class PhysicsEngine implements ContactListener {
 
   /**
    * Spawns a single bullet given a position and velocity
-   * 
-   * @param pos   starting position of bullet
-   * @param vel   velocity of bullet
+   *
+   * @param pos starting position of bullet
+   * @param vel velocity of bullet
    * @param speed speed of bullet
    */
   public void spawnBullet(Vector2 pos, Vector2 vel, float speed, boolean shotByPlayer) {
-    BulletModel bullet = BulletModel.Builder.newInstance()
-        .setX(pos.x)
-        .setY(pos.y)
-        .setFishTexture(new Texture("bullet/yellowfish_east.png"))
-        .setRadius(0.5f)
-        .setShotByPlayer(shotByPlayer)
-        .build();
+    BulletModel bullet =
+        BulletModel.Builder.newInstance()
+            .setX(pos.x)
+            .setY(pos.y)
+            .setFishTexture(new Texture("bullet/yellowfish_east.png"))
+            .setRadius(0.5f)
+            .setShotByPlayer(shotByPlayer)
+            .build();
     bullet.setVX(speed * vel.x);
     bullet.setVY(speed * vel.y);
     addObject(bullet);
@@ -85,9 +88,7 @@ public class PhysicsEngine implements ContactListener {
   /**
    * The core gameplay loop of this world.
    *
-   * <p>
-   * This method is called after input is read, but before collisions are
-   * resolved. The very last
+   * <p>This method is called after input is read, but before collisions are resolved. The very last
    * thing that it should do is apply forces to the appropriate objects.
    *
    * @param delta Number of seconds since last animation frame
@@ -116,12 +117,10 @@ public class PhysicsEngine implements ContactListener {
             applyKnockback(body, body.getKnockingBodyPos(), body.getKnockbackForce());
             body.setJustKnocked(false);
           }
-      }
+        }
         obj.update(delta);
       }
     }
-
-
 
     // Try to collide with the boss again (if player is not invincible)
     // I'm not a fan of this workaround but I couldn't figure anything else out
@@ -147,8 +146,7 @@ public class PhysicsEngine implements ContactListener {
   /**
    * Returns true if the object is in bounds.
    *
-   * <p>
-   * This assertion is useful for debugging the physics.
+   * <p>This assertion is useful for debugging the physics.
    *
    * @param obj The object to check.
    * @return true if the object is in bounds.
@@ -162,9 +160,7 @@ public class PhysicsEngine implements ContactListener {
   /**
    * Callback method for the start of a collision
    *
-   * <p>
-   * This method is called when we first get a collision between two objects. We
-   * use this method
+   * <p>This method is called when we first get a collision between two objects. We use this method
    * to test if it is the "right" kind of collision.
    *
    * @param contact The two bodies that collided
@@ -240,22 +236,27 @@ public class PhysicsEngine implements ContactListener {
         ((GateSensorModel) bd1).setRaised(true);
       }
 
-
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
 
   /** Sets the target for screen transition */
-  public void setTarget(String target) { this.target = target; }
+  public void setTarget(String target) {
+    this.target = target;
+  }
+
+  public String getTarget() {
+    return target;
+  }
 
   public void setSpawnPoint(Vector2 spawn) {this.spawnPoint = spawn;}
 
   public Vector2 getSpawnPoint() {return spawnPoint;}
 
-  public String getTarget() { return target; }
-
-  public boolean hasTarget() { return this.target != null; }
+  public boolean hasTarget() {
+    return this.target != null;
+  }
 
   /** Helper function to apply a knockback on the player body. */
   public void applyKnockback(PlayerBodyModel pb, Vector2 bd2Pos, float knockbackForce) {
@@ -297,7 +298,6 @@ public class PhysicsEngine implements ContactListener {
         playerBossCollision = Optional.of(c);
       }
     }
-
   }
 
   /** Handle collision between player spear and boss */
@@ -316,14 +316,11 @@ public class PhysicsEngine implements ContactListener {
   }
 
   @Override
-  public void endContact(Contact contact) {
-  }
+  public void endContact(Contact contact) {}
 
   @Override
-  public void preSolve(Contact contact, Manifold oldManifold) {
-  }
+  public void preSolve(Contact contact, Manifold oldManifold) {}
 
   @Override
-  public void postSolve(Contact contact, ContactImpulse impulse) {
-  }
+  public void postSolve(Contact contact, ContactImpulse impulse) {}
 }

@@ -13,9 +13,7 @@ import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 
 import java.util.Random;
 
-/**
- * A controller defining the behavior of a jelly boss.
- */
+/** A controller defining the behavior of a jelly boss. */
 public class JellyBossController implements BossController {
   /** Enumeration of AI states. */
   private static enum State {
@@ -89,23 +87,27 @@ public class JellyBossController implements BossController {
   /**
    * Constructs a crab boss controller
    *
-   * @param boss          crab model being mutated
-   * @param player        player model being attacked
-   * @param builder       a builder to create bullet models
+   * @param boss crab model being mutated
+   * @param player player model being attacked
+   * @param builder a builder to create bullet models
    * @param physicsEngine physics engine to add bullet attack to
    */
-  public JellyBossController(JellyBossModel boss, PlayerModel player, BulletModel.Builder builder,
-                             PhysicsEngine physicsEngine) {
+  public JellyBossController(
+      JellyBossModel boss,
+      PlayerModel player,
+      BulletModel.Builder builder,
+      PhysicsEngine physicsEngine) {
     this.boss = boss;
     this.player = player;
     this.state = State.IDLE;
 
     this.attack1 = new RingAttack(boss, RING_DELAY, RING_SHOTS, builder, physicsEngine);
-    this.attack2 = new TrackingSpiralAttack(boss, SPIRAL_DELAY, SPIRAL_SHOTS, builder, physicsEngine);
+    this.attack2 =
+        new TrackingSpiralAttack(boss, SPIRAL_DELAY, SPIRAL_SHOTS, builder, physicsEngine);
 
     this.goalPos = new Vector2();
     this.rand = new Random();
-    this.bounds = new Rectangle(boss.getX()-10, boss.getY()-15, 20, 30);
+    this.bounds = new Rectangle(boss.getX() - 10, boss.getY() - 15, 20, 30);
   }
 
   /** Returns the boss of this controller */
@@ -121,12 +123,14 @@ public class JellyBossController implements BossController {
    *
    * @return if the jelly this controller controls is dead
    */
-  public boolean isTerminated() {
+  public boolean isDead() {
     return boss.isDead();
   }
 
   @Override
-  public void dispose() {attackPattern.cleanup();}
+  public void dispose() {
+    attackPattern.cleanup();
+  }
 
   /** Marks the boss for removal from the physics engine. */
   public void remove() {
@@ -134,8 +138,7 @@ public class JellyBossController implements BossController {
   }
 
   /**
-   * Called every tick. Updates the state of the model based on the controller
-   * state.
+   * Called every tick. Updates the state of the model based on the controller state.
    *
    * @param delta time since update was last called
    */
@@ -177,7 +180,7 @@ public class JellyBossController implements BossController {
         }
         break;
       case MOVE:
-        if (boss.getPosition().sub(goalPos).dot(boss.getLinearVelocity()) > 0){
+        if (boss.getPosition().sub(goalPos).dot(boss.getLinearVelocity()) > 0) {
           boss.setVX(0);
           boss.setVY(0);
           if (rand.nextBoolean()) {
@@ -215,12 +218,14 @@ public class JellyBossController implements BossController {
   }
 
   /** Helper function to generate new goal position & set boss velocity */
-  private void findNewGoalPos(){
-    goalPos.set(rand.nextFloat(bounds.getX(), bounds.getX()+bounds.getWidth()),
-            rand.nextFloat(bounds.getY(), bounds.getY()+bounds.getHeight()));
+  private void findNewGoalPos() {
+    goalPos.set(
+        rand.nextFloat(bounds.getX(), bounds.getX() + bounds.getWidth()),
+        rand.nextFloat(bounds.getY(), bounds.getY() + bounds.getHeight()));
     while (boss.getPosition().dst(goalPos) < 8) {
-      goalPos.set(rand.nextFloat(bounds.getX(), bounds.getX()+bounds.getWidth()),
-              rand.nextFloat(bounds.getY(), bounds.getY()+bounds.getHeight()));
+      goalPos.set(
+          rand.nextFloat(bounds.getX(), bounds.getX() + bounds.getWidth()),
+          rand.nextFloat(bounds.getY(), bounds.getY() + bounds.getHeight()));
     }
     boss.setLinearVelocity(boss.getPosition().sub(goalPos).nor().scl(-5));
   }

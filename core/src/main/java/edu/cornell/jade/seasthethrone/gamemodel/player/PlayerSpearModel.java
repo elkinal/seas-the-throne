@@ -11,8 +11,7 @@ import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
 /**
- * Model for the player spear. When the spear is extended, it will have an
- * active hitbox that will
+ * Model for the player spear. When the spear is extended, it will have an active hitbox that will
  * allow the spear to pierce through enemies.
  */
 public class PlayerSpearModel extends BoxModel implements Renderable {
@@ -47,9 +46,9 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
   /**
    * The size is expressed in physics units NOT pixels.
    *
-   * @param x      Initial x position of the spear center
-   * @param y      Initial y position of the spear center
-   * @param width  spear width in physics units
+   * @param x Initial x position of the spear center
+   * @param y Initial y position of the spear center
+   * @param width spear width in physics units
    * @param height spear width in physics units
    */
   public PlayerSpearModel(float x, float y, float width, float height, Texture texture) {
@@ -60,9 +59,7 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
     damage = 20;
   }
 
-  /**
-   * Create new player body at position (x,y)
-   */
+  /** Create new player body at position (x,y) */
   public PlayerSpearModel(float x, float y, Texture texture, PlayerBodyModel mainBody) {
     this(x, y, SPEAR_WIDTH, SPEAR_LENGTH, texture);
     this.mainBody = mainBody;
@@ -74,14 +71,17 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
   }
 
   /** Returns the spear damage number */
-  public int getDamage() { return damage; }
+  public int getDamage() {
+    return damage;
+  }
 
   /** Returns main body attached to the spear */
-  public PlayerBodyModel getMainBody() { return mainBody; }
+  public PlayerBodyModel getMainBody() {
+    return mainBody;
+  }
 
   /**
-   * Extend or retract spear, activating or deactivating
-   * the spear hitbox
+   * Extend or retract spear, activating or deactivating the spear hitbox
    *
    * @param value If the spear should be extended
    */
@@ -93,7 +93,7 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
   /**
    * Update the spear mode
    *
-   * @param bodyPosition  Vector representing the position of the player's body
+   * @param bodyPosition Vector representing the position of the player's body
    * @param dashDirection Vector representing the direction of the dash
    */
   public void updateSpear(Vector2 bodyPosition, Vector2 dashDirection) {
@@ -117,7 +117,7 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
 
   /**
    * Decrement spear counter.
-   * 
+   *
    * @pre spear counter is above 0
    */
   public void decrementSpear() {
@@ -132,10 +132,7 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
   // return numSpeared == 0;
   // }
 
-  /**
-   * Overriding the current activatePhysics method to start the body off as
-   * inactive
-   */
+  /** Overriding the current activatePhysics method to start the body off as inactive */
   @Override
   public boolean activatePhysics(World world) {
     // Make a body, if possible
@@ -158,17 +155,36 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
     float angle = directionCache.angleRad();
     float mag = 3f;
 
-    renderer.draw(SPEAR_TEXTURE_REGION,
-            getX()+(float)(mag*Math.cos(angle)), getY()+(float)(mag*Math.sin(angle)));
+    renderer.draw(
+        SPEAR_TEXTURE_REGION,
+        getX() + (float) (mag * Math.cos(angle)),
+        getY() + (float) (mag * Math.sin(angle)));
+  }
+
+  @Override
+  public FilmStrip progressFrame() {
+    return null;
+  }
+
+  @Override
+  public void alwaysUpdate() {}
+
+  @Override
+  public void neverUpdate() {}
+
+  @Override
+  public void setAlwaysAnimate(boolean animate) {}
+
+  @Override
+  public boolean alwaysAnimate() {
+    return false;
   }
 
   public int getFrameNumber() {
     return 0;
   }
 
-  public void setFrameNumber(int frameNumber) {
-
-  }
+  public void setFrameNumber(int frameNumber) {}
 
   public FilmStrip getFilmStrip() {
     return null;

@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
+import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
 
 public class HealthBar implements Renderable {
@@ -62,5 +63,30 @@ public class HealthBar implements Renderable {
                 0.9f*height,
                 SCALE*aspectRatio,
                 SCALE);
+    }
+
+    @Override
+    public FilmStrip progressFrame() {
+        return null;
+    }
+
+    @Override
+    public void alwaysUpdate() {
+
+    }
+
+    @Override
+    public void neverUpdate() {
+
+    }
+
+    @Override
+    public void setAlwaysAnimate(boolean animate) {
+
+    }
+
+    @Override
+    public boolean alwaysAnimate() {
+        return false;
     }
 }

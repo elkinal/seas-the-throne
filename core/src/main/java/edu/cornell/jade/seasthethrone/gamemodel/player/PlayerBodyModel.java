@@ -40,14 +40,14 @@ public class PlayerBodyModel extends PolygonModel {
     health = 5;
     iframeCounter = 0;
     iframeLimit = 70;
-    knockbackTime = iframeLimit/10;
+    knockbackTime = iframeLimit / 10;
     justKnocked = false;
   }
 
   /** Create new player body at position (x,y) */
-  public PlayerBodyModel(float x, float y){
+  public PlayerBodyModel(float x, float y) {
     // Make a triangle for now
-    this(new float[]{-0.5f, -1, 0.5f, -1, 0, 1}, x, y);
+    this(new float[] {-0.5f, -1, 0.5f, -1, 0, 1}, x, y);
   }
 
   /** Returns if the player body was hit */
@@ -55,9 +55,7 @@ public class PlayerBodyModel extends PolygonModel {
     return isHit;
   }
 
-  /** Sets if the player body was hit
-   *  If health drops to 0, will remove body from the world
-   * */
+  /** Sets if the player body was hit If health drops to 0, will remove body from the world */
   public void setHit(boolean hit) {
     isHit = hit;
     health -= 1;
@@ -76,14 +74,18 @@ public class PlayerBodyModel extends PolygonModel {
   }
 
   /** Returns if the player is stunned (during iframes) */
-  public boolean isKnockedBack(){
+  public boolean isKnockedBack() {
     return knockbackTime > 0;
   }
 
   /** Returns if the player is flagged for knockback application */
-  public boolean isJustKnoocked() { return justKnocked; }
+  public boolean isJustKnoocked() {
+    return justKnocked;
+  }
 
-  public void setJustKnocked(boolean b) { justKnocked = b; }
+  public void setJustKnocked(boolean b) {
+    justKnocked = b;
+  }
 
   public Vector2 getKnockingBodyPos() {
     return knockingBodyPos;
@@ -99,20 +101,21 @@ public class PlayerBodyModel extends PolygonModel {
     this.knockbackForce = force;
   }
 
-
   /** Sets the player invincible according to the iframe limit */
-  public void setInvincible(){
-    iframeCounter  = iframeLimit;
-    knockbackTime = iframeLimit/10;
+  public void setInvincible() {
+    iframeCounter = iframeLimit;
+    knockbackTime = iframeLimit / 10;
   }
 
-  public void setKnockbackTime(int time) { knockbackTime = time; }
+  public void setKnockbackTime(int time) {
+    knockbackTime = time;
+  }
 
   @Override
-  public void update(float delta){
-    if (isInvincible()){
+  public void update(float delta) {
+    if (isInvincible()) {
       iframeCounter -= 1;
     }
-    knockbackTime = Math.max(0, knockbackTime-1);
+    knockbackTime = Math.max(0, knockbackTime - 1);
   }
 }

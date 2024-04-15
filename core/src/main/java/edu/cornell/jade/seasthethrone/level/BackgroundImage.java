@@ -26,8 +26,28 @@ public class BackgroundImage implements Renderable {
     this.width = width;
   }
 
+  @Override
   public void draw(RenderingEngine renderer) {
     renderer.draw(getTexture(), getPosition().x, getPosition().y);
+  }
+
+  @Override
+  public FilmStrip progressFrame() {
+    return null;
+  }
+
+  @Override
+  public void alwaysUpdate() {}
+
+  @Override
+  public void neverUpdate() {}
+
+  @Override
+  public void setAlwaysAnimate(boolean animate) {}
+
+  @Override
+  public boolean alwaysAnimate() {
+    return false;
   }
 
   public Vector2 getPosition() {
@@ -50,9 +70,7 @@ public class BackgroundImage implements Renderable {
    * Returns the layer with the given name
    *
    * @param propName the name of the layer to return
-   *
    * @return the layer with the given name
-   *
    * @throws Error if the provided name doesn't match any layer in the level
    */
   private HashMap<String, Object> getProperty(String propName) {
@@ -68,9 +86,7 @@ public class BackgroundImage implements Renderable {
     return 0;
   }
 
-  public void setFrameNumber(int frameNumber) {
-
-  }
+  public void setFrameNumber(int frameNumber) {}
 
   public FilmStrip getFilmStrip() {
     return null;

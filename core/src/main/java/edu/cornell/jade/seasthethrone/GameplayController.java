@@ -65,6 +65,9 @@ public class GameplayController implements Screen {
 
   Array<BossController> bossControllers;
 
+  /** Sub-controller for handling pausing the game */
+  PauseController pauseController;
+
   /** Rendering Engine */
   RenderingEngine renderEngine;
 
@@ -222,9 +225,10 @@ public class GameplayController implements Screen {
     // Initialize physics engine
     physicsEngine = new PhysicsEngine(bounds, world);
     physicsEngine.addObject(player);
+
     // Load fish bullets builder
-    fishBulletBuilder = BulletModel.Builder.newInstance()
-      .setFishTexture(new Texture("bullet/yellowfish_east.png"));
+    fishBulletBuilder =
+        BulletModel.Builder.newInstance().setFishTexture(new Texture("bullet/yellowfish_east.png"));
 
     // Load bosses
     bossControllers.clear();
@@ -244,16 +248,15 @@ public class GameplayController implements Screen {
           frameSize = 0;
           return;
       }
-      BossModel boss = BossModel.Builder.newInstance()
+      BossModel boss =
+          BossModel.Builder.newInstance()
               .setX(bossContainer.x)
               .setY(bossContainer.y)
               .setType(name)
               .setHealth(100)
-
               .setHitbox(name)
 //              .setHitbox(new float[]{-3, -3, -3, 3, 3, 3, 3, -3})
               .setHealthThresholds(new int[]{70, 30})
-
               .setFrameSize(frameSize)
               .setFalloverAnimation(new Texture("bosses/" + name + "/fallover.png"))
               .setFrameDelay(12)
@@ -309,6 +312,9 @@ public class GameplayController implements Screen {
     playerController = new PlayerController(physicsEngine, player);
     inputController.add(playerController);
 
+    // Initialize pause controller
+    pauseController = new PauseController(renderEngine, physicsEngine, playerController);
+
     // Load UI
     renderEngine.addUI(playerController.getHealthBar());
 
@@ -333,31 +339,34 @@ public class GameplayController implements Screen {
 
   public void update(float delta) {
     viewport.apply();
-
     inputController.update();
 
     // Update entity controllers and camera if the game is not over
     if (gameState != GameState.OVER) {
       playerController.update();
       for (BossController bc : bossControllers) {
-        if (!bc.isTerminated()) {
+        if (!bc.isDead()) {
           bc.update(delta);
         }
       }
 
-      physicsEngine.update(delta);
+      if (!pauseController.getPaused()) {
+        physicsEngine.update(delta);
+      }
 
       // Update camera
       updateCamera();
     }
 
     // Check if the player is dead, end the game
-    if (playerController.isTerminated()) {
+    if (playerController.isDead()) {
+      pauseController.pauseGame();
+      playerController.update();
       gameState = GameState.OVER;
     }
 
     // Check if the player is alive and all bosses are dead, if so the player wins
-    if (!bossControllers.isEmpty() && allBossesDefeated() && !playerController.isTerminated()) {
+    if (!bossControllers.isEmpty() && allBossesDefeated() && !playerController.isDead()) {
       gameState = GameState.WIN;
       for (BossController bc : bossControllers) {
         bc.remove();
@@ -402,7 +411,8 @@ public class GameplayController implements Screen {
     // Draw the rendereables
     draw(delta);
     if (BuildConfig.DEBUG) {
-      debugRenderer.render(physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
+      debugRenderer.render(
+          physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
     }
 
     // Draw reset and debug screen for wins and losses
@@ -410,6 +420,7 @@ public class GameplayController implements Screen {
       if (gameState == GameState.OVER || gameState == GameState.WIN) {
         if (inputController.didReset()) {
           setupGameplay();
+          pauseController.continueGame();
         } else {
           renderEngine.drawGameState(gameState);
         }
@@ -465,9 +476,8 @@ public class GameplayController implements Screen {
     updateCameraCache.set(viewport.getCamera().position.x, viewport.getCamera().position.y);
     Vector2 cameraPos = viewport.unproject(updateCameraCache);
 
-    Vector2 diff = playerPos
-      .sub(cameraPos)
-      .sub(viewport.getWorldWidth() / 2, -viewport.getWorldHeight() / 2);
+    Vector2 diff =
+        playerPos.sub(cameraPos).sub(viewport.getWorldWidth() / 2, -viewport.getWorldHeight() / 2);
 
     if (diff.len() < CAMERA_SNAP_DISTANCE) {
       viewport.getCamera().translate(diff.x, diff.y, 0);
@@ -486,11 +496,9 @@ public class GameplayController implements Screen {
     this.listener = listener;
   }
 
-  public void pause() {
-  }
+  public void pause() {}
 
-  public void resume() {
-  }
+  public void resume() {}
 
   public void hide() {
     active = false;
@@ -501,10 +509,16 @@ public class GameplayController implements Screen {
   }
 
   public boolean allBossesDefeated() {
-    for (BossController bc : bossControllers)
-      if (!bc.isTerminated())
-        return false;
+    for (BossController bc : bossControllers) if (!bc.isDead()) return false;
     return true;
+  }
+
+
+  /** Compares Models based on height in the world */
+  public void disposeBosses() {
+    for (BossController boss : bossControllers) {
+      boss.dispose();
+    }
   }
 
   /**

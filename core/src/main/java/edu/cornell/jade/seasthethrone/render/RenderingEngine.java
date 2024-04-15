@@ -47,8 +47,7 @@ public class RenderingEngine {
     canvas = new GameCanvas();
 
     /** LOADING IN FONT, might be better to have an AssetDirectory later */
-    FreeTypeFontGenerator generator =
-        new FreeTypeFontGenerator(Gdx.files.internal("Alagard.ttf"));
+    FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Alagard.ttf"));
     FreeTypeFontGenerator.FreeTypeFontParameter parameter =
         new FreeTypeFontGenerator.FreeTypeFontParameter();
     parameter.size = 50; // font size
@@ -64,10 +63,28 @@ public class RenderingEngine {
    * @param r The renderable to be added
    */
   public void addRenderable(Renderable r) {
-    if (r != null) { renderables.add(r); }
+    if (r != null) {
+      renderables.add(r);
+    }
   }
 
-  public void setBackground(BackgroundImage bg) { BACKGROUND = bg;}
+  /** Disable animation of all renderables in render engine (make them not updateable). */
+  public void disableAnimation() {
+    for (Renderable r : renderables) {
+      if (!r.alwaysAnimate()) r.neverUpdate();
+    }
+  }
+
+  /** Enable animation of all renderables in render engine (make them all updateable). */
+  public void enableAnimation() {
+    for (Renderable r : renderables) {
+      r.alwaysUpdate();
+    }
+  }
+
+  public void setBackground(BackgroundImage bg) {
+    BACKGROUND = bg;
+  }
 
   /** Draw the background for the game */
   public void drawBackground() {
@@ -103,7 +120,9 @@ public class RenderingEngine {
     ui_elements.add(r);
   }
 
-  public Array<Renderable> getUI() { return this.ui_elements; }
+  public Array<Renderable> getUI() {
+    return this.ui_elements;
+  }
 
   public void drawRenderLayers() {
     canvas.clear();
@@ -117,17 +136,19 @@ public class RenderingEngine {
     canvas.end();
   }
 
-  public void setNumLayers(int n) { renderLayers.ensureCapacity(n); }
+  public void setNumLayers(int n) {
+    renderLayers.ensureCapacity(n);
+  }
 
   /** Gets the viewport of the render engine */
   public Viewport getViewport() {
     return viewport;
   }
 
-  //Temporary for prototype
+  // Temporary for prototype
   public void drawGameState(GameplayController.GameState gs) {
     canvas.begin();
-    switch(gs) {
+    switch (gs) {
       case WIN:
         canvas.drawTextCentered("YOU WIN!", textFont, 60f);
         break;
@@ -151,12 +172,14 @@ public class RenderingEngine {
 
     canvas.draw(filmStrip, Color.WHITE, oy, ox, x, y, 0, worldScale, worldScale);
   }
+
   public void draw(FilmStrip filmStrip, float x, float y, Color color, float angle) {
     float ox = filmStrip.getRegionWidth() / 2f;
     float oy = filmStrip.getRegionHeight() / 2f;
 
     canvas.draw(filmStrip, color, oy, ox, x, y, angle, worldScale, worldScale);
   }
+
   public void draw(FilmStrip filmStrip, float x, float y, boolean rot, float angle) {
     float ox = filmStrip.getRegionWidth() / 2f;
     float oy = filmStrip.getRegionHeight() / 2f;
@@ -177,6 +200,7 @@ public class RenderingEngine {
 
     canvas.draw(filmStrip, Color.WHITE, oy, ox, x, y, 0, scale, scale);
   }
+
   public void draw(FilmStrip filmStrip, float x, float y, float scale, Color color) {
     float ox = filmStrip.getRegionWidth() / 2f;
     float oy = filmStrip.getRegionHeight() / 2f;

@@ -49,6 +49,12 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   /** Death animation countdown */
   private int deathCount;
 
+  /** Whether the boss should continue being animated. */
+  private boolean shouldUpdate;
+
+  /** Whether the player should always be animated regardless of game state. */
+  private boolean alwaysAnimate;
+
   /** Health threshold numbers */
   private int[] healthThresholds;
 
@@ -74,8 +80,9 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     frameDelay = builder.frameDelay;
     health = builder.health;
     deathCount = frameDelay * 16;
+    shouldUpdate = true;
+    alwaysAnimate = false;
     roomId = builder.roomId;
-
     bodyKnockbackForce = 70f;
     spearKnockbackForce = 130f;
     healthThresholds = builder.healthThresholds;
@@ -83,7 +90,18 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     setBodyType(BodyDef.BodyType.KinematicBody);
   }
 
+  @Override
   public void draw(RenderingEngine renderer) {
+    FilmStrip currentStrip = filmStrip;
+    if (shouldUpdate) {
+      currentStrip = progressFrame();
+    }
+    Vector2 pos = getPosition();
+    renderer.draw(currentStrip, pos.x, pos.y, 0.16f);
+  }
+
+  @Override
+  public FilmStrip progressFrame() {
     int frame = getFrameNumber();
     if (isDead()) {
       filmStrip = falloverAnimation;
@@ -91,8 +109,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
       filmStrip = shootAnimation;
     }
     filmStrip.setFrame(frame);
-    Vector2 pos = getPosition();
-    renderer.draw(filmStrip, pos.x, pos.y, 0.16f);
+
     if (isDead()) {
       if (frameCounter % frameDelay == 0 && getFrameNumber() < getFramesInAnimation() - 1) {
         setFrameNumber(getFrameNumber() + 1);
@@ -107,6 +124,27 @@ public abstract class BossModel extends EnemyModel implements Renderable {
       }
     }
     frameCounter += 1;
+    return filmStrip;
+  }
+
+  @Override
+  public void alwaysUpdate() {
+    shouldUpdate = true;
+  }
+
+  @Override
+  public void neverUpdate() {
+    shouldUpdate = false;
+  }
+
+  @Override
+  public void setAlwaysAnimate(boolean animate) {
+    alwaysAnimate = animate;
+  }
+
+  @Override
+  public boolean alwaysAnimate() {
+    return alwaysAnimate;
   }
 
   public float getBodyKnockbackForce() {
@@ -119,10 +157,6 @@ public abstract class BossModel extends EnemyModel implements Renderable {
 
   public boolean isDead() {
     return health <= 0;
-  }
-
-  public boolean isTerminated() {
-    return deathCount <= 0;
   }
 
   /** Get remaining health points of the boss */
@@ -142,7 +176,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     health -= damage;
     if (isDead()) {
       filmStrip = falloverAnimation;
-      //TODO: kinda hard-coded in right now, find a way to make body inactive
+      // TODO: kinda hard-coded in right now, find a way to make body inactive
       setVX(0);
       setVY(0);
     }
@@ -169,14 +203,13 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   }
 
   /**
-   * Returns if the boss's health reached under a certain
-   * health threshold.
+   * Returns if the boss's health reached under a certain health threshold.
    *
    * @return True if the health threshold was reach, false otherwise
    */
-  public boolean reachedHealthThreshold(){
+  public boolean reachedHealthThreshold() {
     if (thresholdPointer < healthThresholds.length
-            && health <= healthThresholds[thresholdPointer]) {
+        && health <= healthThresholds[thresholdPointer]) {
       thresholdPointer++;
       return true;
     } else {
@@ -224,8 +257,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
       return new Builder();
     }
 
-    private Builder() {
-    }
+    private Builder() {}
 
     public Builder setX(float x) {
       this.x = x;
@@ -278,7 +310,6 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     public Builder setIdleAnimation(Texture texture) {
       int width = texture.getWidth();
       idleAnimation = new FilmStrip(texture, 1, width / frameSize);
-      ;
       return this;
     }
 
@@ -324,7 +355,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
           return new CrabBossModel(this);
         case "jelly":
           return new JellyBossModel(this);
-        // Should not get here
+          // Should not get here
         default:
           return new CrabBossModel(this);
       }

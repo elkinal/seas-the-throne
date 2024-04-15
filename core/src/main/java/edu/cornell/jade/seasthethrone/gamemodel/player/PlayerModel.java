@@ -12,20 +12,20 @@ import edu.cornell.jade.seasthethrone.util.FilmStrip;
 import com.badlogic.gdx.graphics.Color;
 
 /**
- * Model for the main player object of the game. This class extends
- * {@link ComplexModel} to support
- * multiple joints and bodies for flexible collision control and movement
- * display.
+ * Model for the main player object of the game. This class extends {@link ComplexModel} to support
+ * multiple joints and bodies for flexible collision control and movement display.
  */
 public class PlayerModel extends ComplexModel implements Renderable {
   /** FIXME: stop hardcoding textures */
   /** Frame is player animation */
   private int framesInAnimation;
+
   private int framesInAnimationDash;
 
   private int framesInAnimationDashDiagonal;
   private int framesInAnimationShoot;
   private int framesInAnimationDeath;
+
   /** Player texture when facing up */
   public Texture playerTextureUp;
 
@@ -37,6 +37,7 @@ public class PlayerModel extends ComplexModel implements Renderable {
 
   /** Player texture when facing right */
   public Texture playerTextureRight;
+
   /** Player texture when dashing up */
   public Texture playerTextureUpDash;
 
@@ -48,54 +49,74 @@ public class PlayerModel extends ComplexModel implements Renderable {
 
   /** Player texture when dashing right */
   public Texture playerTextureRightDash;
-  /** Player dashes when dashing diagonally*/
+
+  /** Player dashes when dashing diagonally */
   public Texture playerTextureNEDash;
+
   public Texture playerTextureNWDash;
   public Texture playerTextureSEDash;
   public Texture playerTextureSWDash;
 
   /** Player texture for the das indicator */
   private Texture dashIndicatorTexture;
+
   /** Player texture for idle left */
   private Texture idleLeft;
+
   /** Player texture for idle right */
   private Texture idleRight;
+
   /** Player texture for idle up */
   private Texture idleUp;
+
   /** Player texture for idle down */
   private Texture idleDown;
+
   /** Player texture for shooting up */
   private Texture shootUp;
+
   /** Player texture for shooting down */
   private Texture shootDown;
+
   /** Player texture for shooting left */
   private Texture shootLeft;
+
   /** Player texture for shooting right */
   private Texture shootRight;
+
   /** Player texture for dying up */
   private Texture dieUp;
+
   /** Player texture for dying down */
   private Texture dieDown;
+
   /** Player texture for dying left */
   private Texture dieLeft;
+
   /** Player texture for dying right */
   private Texture dieRight;
 
   /** FilmStrip cache object */
   public FilmStrip filmStrip;
+
   /** FilmStrip cache object for dash up and down */
   public FilmStrip filmStripDashUD;
-  /** FilmStrip cache object for dash left and right */
 
+  /** FilmStrip cache object for dash left and right */
   public FilmStrip filmStripDashLR;
+
   /** Filmstrip cache object for dash diagonal */
   public FilmStrip filmStripDashDiagonal;
+
   /** FilmStrip cache object for idle */
   public FilmStrip filmStripIdle;
+
   /** FilmStrip cache object for shoot */
   public FilmStrip filmStripShoot;
+
   /** FilmStrip cache object for dying */
   public FilmStrip filmStripDeath;
+
   /** current animation frame */
   private int animationFrame;
 
@@ -103,14 +124,14 @@ public class PlayerModel extends ComplexModel implements Renderable {
   private int frameDelay;
 
   /**
-   * Counter for the number of frames that have been drawn to the screen
-   * This is separate from the position in the player filmstrip.
+   * Counter for the number of frames that have been drawn to the screen This is separate from the
+   * position in the player filmstrip.
    */
   private int frameCounter;
+
   /**
-   * Counter for the number of frames that have been drawn to the screen when
-   * dashing
-   * This is separate from the position in the player filmstrip.
+   * Counter for the number of frames that have been drawn to the screen when dashing This is
+   * separate from the position in the player filmstrip.
    */
   private int dashFrameCounter;
 
@@ -118,9 +139,8 @@ public class PlayerModel extends ComplexModel implements Renderable {
   private Direction faceDirection;
 
   /**
-   * Frame counter for between dashing/shooting. Tracks how long until the player
-   * can
-   * dash/shoot again.
+   * Frame counter for between dashing/shooting. Tracks how long until the player can dash/shoot
+   * again.
    */
   private int cooldownCounter;
 
@@ -130,9 +150,7 @@ public class PlayerModel extends ComplexModel implements Renderable {
   /** Whether the player is dashing */
   private boolean isDashing;
 
-  /**
-   * Frame counter for dashing. Tracks how long the player has been dashing for.
-   */
+  /** Frame counter for dashing. Tracks how long the player has been dashing for. */
   private int dashCounter;
 
   /** The number of frames a dash lasts */
@@ -152,12 +170,21 @@ public class PlayerModel extends ComplexModel implements Renderable {
 
   /** Scaling factor for player movement */
   private float moveSpeed;
+
   /** Initial frame delay */
   private int initFrameDelay;
+
   /** Shoot timer for player */
   private int shootTime;
+
   /** Death animation countdown */
   private int deathCount;
+
+  /** Whether the player should continue being animated. */
+  private boolean shouldUpdate;
+
+  /** Whether the player should always be animated regardless of game state. */
+  private boolean alwaysAnimate;
 
   /**
    * {@link PlayerModel} constructor using an x and y coordinate.
@@ -180,6 +207,7 @@ public class PlayerModel extends ComplexModel implements Renderable {
     dashCounter = 0;
     dashLength = builder.dashLength;
     isDashing = false;
+    shouldUpdate = true;
     frameCounter = 1;
     dashFrameCounter = 1;
     initFrameDelay = builder.frameDelay;
@@ -219,7 +247,8 @@ public class PlayerModel extends ComplexModel implements Renderable {
     PlayerBodyModel playerBody = new PlayerBodyModel(builder.x, builder.y);
     bodies.add(playerBody);
 
-    PlayerSpearModel playerSpear = new PlayerSpearModel(builder.x, builder.y, dashIndicatorTexture, playerBody);
+    PlayerSpearModel playerSpear =
+        new PlayerSpearModel(builder.x, builder.y, dashIndicatorTexture, playerBody);
     bodies.add(playerSpear);
 
     PlayerShadowModel playerShadow = new PlayerShadowModel(builder.x, builder.y - 1.6f);
@@ -236,141 +265,112 @@ public class PlayerModel extends ComplexModel implements Renderable {
 
   @Override
   public void draw(RenderingEngine renderer) {
-    FilmStrip filmStrip = getFilmStrip();
-    if (!isDashing()){
-      switch (direction()) {
-        case UP:
-          if (isDead())
-            filmStrip.setTexture(getDieUp());
-          else if (isShootingAnimated()) {
-            filmStrip.setTexture(getShootUp());
-          } else if (isIdle())
-            filmStrip.setTexture(getIdleUp());
-          else
-            filmStrip.setTexture(getTextureUp());
-          break;
-        case DOWN:
-          if (isDead())
-            filmStrip.setTexture(getDieDown());
-          else if (isShootingAnimated())
-            filmStrip.setTexture(getShootDown());
-          else if (isIdle())
-            filmStrip.setTexture(getIdleDown());
-          else
-            filmStrip.setTexture(getTextureDown());
-          break;
-        case LEFT:
-          if (isDead())
-            filmStrip.setTexture(getDieLeft());
-          else if (isShootingAnimated())
-            filmStrip.setTexture(getShootLeft());
-          else if (isIdle())
-            filmStrip.setTexture(getIdleLeft());
-          else
-            filmStrip.setTexture(getTextureLeft());
-          break;
-        case RIGHT:
-          if (isDead())
-            filmStrip.setTexture(getDieRight());
-          else if (isShootingAnimated())
-            filmStrip.setTexture(getShootRight());
-          else if (isIdle())
-            filmStrip.setTexture(getIdleRight());
-          else
-            filmStrip.setTexture(getTextureRight());
-          break;
-      }
+    FilmStrip currentStrip = filmStrip;
+    if (shouldUpdate) {
+      currentStrip = progressFrame();
     }
-    else{
-      switch(direction()){
-        case UP:
-          filmStrip.setTexture(getTextureUpDash());
-          break;
-        case DOWN:
-          filmStrip.setTexture(getTextureDownDash());
-          break;
-        case LEFT:
-          filmStrip.setTexture(getTextureLeftDash());
-          break;
-        case RIGHT:
-          filmStrip.setTexture(getTextureRightDash());
-          break;
-        case NE:
-          filmStrip.setTexture(getTextureNEDash());
-          break;
-        case NW:
-          filmStrip.setTexture(getTextureNWDash());
-          break;
-        case SE:
-          filmStrip.setTexture(getTextureSEDash());
-          break;
-        case SW:
-          filmStrip.setTexture(getTextureSWDash());
-          break;
-      }
+    Vector2 pos = getPosition();
+    if (isInvincible() && !isDead()) renderer.draw(filmStrip, pos.x, pos.y, 0.12f, Color.RED);
+    else renderer.draw(currentStrip, pos.x, pos.y, 0.12f);
+    getSpearModel().draw(renderer);
+  }
+
+  @Override
+  public FilmStrip progressFrame() {
+    FilmStrip strip = getFilmStrip();
+    switch (direction()) {
+      case UP:
+        if (isDead()) strip.setTexture(getDieUp());
+        else if (isDashing()) {
+          strip.setTexture(getTextureUpDash());
+        } else if (isShootingAnimated()) {
+          strip.setTexture(getShootUp());
+        } else if (isIdle()) strip.setTexture(getIdleUp());
+        else strip.setTexture(getTextureUp());
+        break;
+      case DOWN:
+        if (isDead()) strip.setTexture(getDieDown());
+        else if (isDashing()) strip.setTexture(getTextureDownDash());
+        else if (isShootingAnimated()) strip.setTexture(getShootDown());
+        else if (isIdle()) strip.setTexture(getIdleDown());
+        else strip.setTexture(getTextureDown());
+        break;
+      case LEFT:
+        if (isDead()) strip.setTexture(getDieLeft());
+        else if (isDashing()) strip.setTexture(getTextureLeftDash());
+        else if (isShootingAnimated()) strip.setTexture(getShootLeft());
+        else if (isIdle()) strip.setTexture(getIdleLeft());
+        else strip.setTexture(getTextureLeft());
+        break;
+      case RIGHT:
+        if (isDead()) strip.setTexture(getDieRight());
+        else if (isDashing()) strip.setTexture(getTextureRightDash());
+        else if (isShootingAnimated()) strip.setTexture(getShootRight());
+        else if (isIdle()) strip.setTexture(getIdleRight());
+        else strip.setTexture(getTextureRight());
+        break;
     }
     int frame = getFrameNumber();
-    filmStrip.setFrame(frame);
-
-    Vector2 pos = getPosition();
-    if (isInvincible()&&!isDead())
-      renderer.draw(filmStrip, pos.x, pos.y, 0.12f, Color.RED);
-    else
-      renderer.draw(filmStrip, pos.x, pos.y, 0.12f);
-
+    strip.setFrame(frame);
 
     // Only move to next frame of animation every frameDelay number of frames
-    if (isDead()){
-      if (frameCounter % frameDelay == 0 && getFrameNumber()< getFramesInAnimation() - 1) {
+    if (isDead()) {
+      if (frameCounter % frameDelay == 0 && getFrameNumber() < getFramesInAnimation() - 1) {
         setFrameNumber(getFrameNumber() + 1);
-      }
-      else
-        setFrameNumber(getFrameNumber());
+      } else setFrameNumber(getFrameNumber());
       frameCounter += 1;
-    }
-    else if (isDashing) {
+    } else if (isDashing) {
       if (dashFrameCounter % frameDelay == 0) {
         setFrameNumber((getFrameNumber() + 1) % getFramesInAnimation());
       }
       dashFrameCounter += 1;
-    }
-    else if (isShootingAnimated()){
+    } else if (isShootingAnimated()) {
       if (frameCounter % frameDelay == 0) {
         setFrameNumber((getFrameNumber() + 1) % getFramesInAnimation());
       }
       frameCounter += 1;
-    }
-    else if (isIdle()){
+    } else if (isIdle()) {
       setFrameNumber(getFrameNumber());
-    }
-    else {
+    } else {
       if (frameCounter % frameDelay == 0) {
         setFrameNumber((getFrameNumber() + 1) % getFramesInAnimation());
       }
       frameCounter += 1;
     }
+    return strip;
+  }
 
-    getSpearModel().draw(renderer);
+  @Override
+  public void alwaysUpdate() {
+    shouldUpdate = true;
+  }
+
+  @Override
+  public void neverUpdate() {
+    shouldUpdate = false;
+  }
+
+  @Override
+  public void setAlwaysAnimate(boolean animate) {
+    alwaysAnimate = animate;
+  }
+
+  @Override
+  public boolean alwaysAnimate() {
+    return alwaysAnimate;
   }
 
   public FilmStrip getFilmStrip() {
-    if (isDead())
-      return filmStripDeath;
+    if (isDead()) return filmStripDeath;
     else if (isDashing) {
-      if (faceDirection == Direction.DOWN || faceDirection == Direction.UP)
-        return filmStripDashUD;
+      if (faceDirection == Direction.DOWN || faceDirection == Direction.UP) return filmStripDashUD;
       else if (faceDirection == Direction.RIGHT || faceDirection == Direction.LEFT)
         return filmStripDashLR;
-      else
-        return filmStripDashDiagonal;
-    }
-    else if (isShootingAnimated()) {
+      else return filmStripDashDiagonal;
+    } else if (isShootingAnimated()) {
       return filmStripShoot;
-    }
-    else if (isIdle())
-      return filmStripIdle;
-    else
-      return filmStrip;
+    } else if (isIdle()) return filmStripIdle;
+    else return filmStrip;
   }
 
   public int getFrameNumber() {
@@ -382,16 +382,11 @@ public class PlayerModel extends ComplexModel implements Renderable {
   }
 
   public int getFramesInAnimation() {
-    if (isDead())
-      return framesInAnimationDeath;
-    else if (isDashing)
-      return framesInAnimationDash;
-    else if (isShootingAnimated())
-      return framesInAnimationShoot;
-    else if (isIdle())
-      return 1;
-    else
-      return framesInAnimation;
+    if (isDead()) return framesInAnimationDeath;
+    else if (isDashing) return framesInAnimationDash;
+    else if (isShootingAnimated()) return framesInAnimationShoot;
+    else if (isIdle()) return 1;
+    else return framesInAnimation;
   }
 
   public Texture getTextureUp() {
@@ -425,23 +420,38 @@ public class PlayerModel extends ComplexModel implements Renderable {
   public Texture getTextureRightDash() {
     return playerTextureRightDash;
   }
-  public Texture getTextureNEDash(){
+
+  public Texture getTextureNEDash() {
     return playerTextureNEDash;
   }
-  public Texture getTextureNWDash(){
+
+  public Texture getTextureNWDash() {
     return playerTextureNWDash;
   }
-  public Texture getTextureSWDash(){
+
+  public Texture getTextureSWDash() {
     return playerTextureSWDash;
   }
-  public Texture getTextureSEDash(){
+
+  public Texture getTextureSEDash() {
     return playerTextureSEDash;
   }
-  public Texture getIdleLeft() {return idleLeft; }
 
-  public Texture getIdleRight() {return idleRight; }
-  public Texture getIdleUp() {return idleUp; }
-  public Texture getIdleDown() {return idleDown; }
+  public Texture getIdleLeft() {
+    return idleLeft;
+  }
+
+  public Texture getIdleRight() {
+    return idleRight;
+  }
+
+  public Texture getIdleUp() {
+    return idleUp;
+  }
+
+  public Texture getIdleDown() {
+    return idleDown;
+  }
 
   public Texture getShootUp() {
     return shootUp;
@@ -458,20 +468,22 @@ public class PlayerModel extends ComplexModel implements Renderable {
   public Texture getShootLeft() {
     return shootLeft;
   }
-  public Texture getDieUp(){
+
+  public Texture getDieUp() {
     return dieUp;
   }
-  public Texture getDieDown(){
+
+  public Texture getDieDown() {
     return dieDown;
   }
-  public Texture getDieLeft(){
+
+  public Texture getDieLeft() {
     return dieLeft;
   }
-  public Texture getDieRight(){
+
+  public Texture getDieRight() {
     return dieRight;
   }
-
-
 
   /**
    * Returns player's move speed.
@@ -499,30 +511,27 @@ public class PlayerModel extends ComplexModel implements Renderable {
   public boolean isDashing() {
     return isDashing;
   }
+
   /**
    * Returns true if the player is idle.
    *
    * @return true if the player is idle.
    */
   public boolean isIdle() {
-    return getVX() <= 0.1 && getVY() <= 0.1 && getVX()>=-0.1 && getVY()>=-0.1;
+    return getVX() <= 0.1 && getVY() <= 0.1 && getVX() >= -0.1 && getVY() >= -0.1;
   }
 
   public boolean isShootingAnimated() {
     return shootTime > 0;
   }
 
-  public boolean isDead(){
-    return getHealth()<=0;
-  }
-  public boolean isTerminated(){
-    if (isDead() && deathCount <= 0) {
+  public boolean isDead() {
+    if (getHealth() <= 0) {
       getBodyModel().markRemoved(true);
-      return true;
     }
-    else
-      return false;
+    return getHealth() <= 0;
   }
+
   /** Returns if the player can dash */
   public boolean canDash() {
     return !isDashing && !isShooting && !isInvincible() && cooldownCounter == 0;
@@ -530,8 +539,11 @@ public class PlayerModel extends ComplexModel implements Renderable {
 
   /** Returns if the player can be set to shooting */
   public boolean canShoot() {
-    return !isDashing && !isShooting && !isInvincible()
-        && cooldownCounter == 0 && getSpearModel().getNumSpeared() > 0;
+    return !isDashing
+        && !isShooting
+        && !isInvincible()
+        && cooldownCounter == 0
+        && getSpearModel().getNumSpeared() > 0;
   }
 
   /** Returns if the player can shoot one bullet. */
@@ -599,7 +611,7 @@ public class PlayerModel extends ComplexModel implements Renderable {
     animationFrame = 0;
     frameCounter = 1;
     dashFrameCounter = 1;
-    frameDelay = shootCooldownLimit/framesInAnimationShoot;
+    frameDelay = shootCooldownLimit / framesInAnimationShoot;
   }
 
   /** Sets the player to not shooting */
@@ -609,13 +621,12 @@ public class PlayerModel extends ComplexModel implements Renderable {
     animationFrame = 0;
     frameCounter = 1;
     dashFrameCounter = 1;
-    if (isDashing)
-      frameDelay = dashLength/framesInAnimationDash;
-    else
-      frameDelay = initFrameDelay;
+    if (isDashing) frameDelay = dashLength / framesInAnimationDash;
+    else frameDelay = initFrameDelay;
   }
+
   /** Initialize dying process */
-  public void startDying(){
+  public void startDying() {
     animationFrame = 0;
     frameCounter = 1;
     dashFrameCounter = 1;
@@ -668,35 +679,29 @@ public class PlayerModel extends ComplexModel implements Renderable {
   /**
    * Updates the object's physics state (NOT GAME LOGIC).
    *
-   * Use this for cooldown checking/resetting.
+   * <p>Use this for cooldown checking/resetting.
    */
   @Override
   public void update(float delta) {
-    if (shootTime > 0)
-      shootTime -= 1;
-    if (isDead()){
-      if (deathCount == framesInAnimationDeath * initFrameDelay)
-        startDying();
+    if (shootTime > 0) shootTime -= 1;
+    if (isDead()) {
+      if (deathCount == framesInAnimationDeath * initFrameDelay) startDying();
       deathCount = Math.max(0, deathCount - 1);
-    }
-    else if (isDashing()) {
+    } else if (isDashing()) {
       dashCounter -= 1;
       if (dashCounter <= 0) {
         // exit dash
         stopDashing();
         cooldownCounter = cooldownLimit;
       }
-    }
-    else if (isShooting()) {
+    } else if (isShooting()) {
       shootCounter = Math.max(0, shootCounter - 1);
-    }
-    else if (isIdle()){
+    } else if (isIdle()) {
       animationFrame = 0;
       frameCounter = 1;
       dashFrameCounter = 1;
       cooldownCounter = Math.max(0, cooldownCounter - 1);
-    }
-    else {
+    } else {
       cooldownCounter = Math.max(0, cooldownCounter - 1);
     }
 
@@ -721,53 +726,34 @@ public class PlayerModel extends ComplexModel implements Renderable {
 
     if (!isDashing()) {
       if (Math.abs(vx) > Math.abs(vy)) {
-        if (vx > 0)
-          faceDirection = Direction.RIGHT;
-        else
-          faceDirection = Direction.LEFT;
+        if (vx > 0) faceDirection = Direction.RIGHT;
+        else faceDirection = Direction.LEFT;
       } else if (Math.abs(vx) < Math.abs(vy)) {
-        if (vy > 0)
-          faceDirection = Direction.UP;
-        else
-          faceDirection = Direction.DOWN;
+        if (vy > 0) faceDirection = Direction.UP;
+        else faceDirection = Direction.DOWN;
       }
-    }
-    else{
+    } else {
       if (Math.abs(vx) > Math.abs(vy)) {
         final boolean nonDiagonalX = 0.414 * Math.abs(vx) > Math.abs(vy);
         if (vx > 0) {
-          if (nonDiagonalX)
-            faceDirection = Direction.RIGHT;
-          else if (vy>0)
-            faceDirection = Direction.NE;
-          else
-            faceDirection = Direction.SE;
-        }
-        else{
-          if (nonDiagonalX)
-            faceDirection = Direction.LEFT;
-          else if (vy>0)
-            faceDirection = Direction.NW;
-          else
-            faceDirection = Direction.SW;
+          if (nonDiagonalX) faceDirection = Direction.RIGHT;
+          else if (vy > 0) faceDirection = Direction.NE;
+          else faceDirection = Direction.SE;
+        } else {
+          if (nonDiagonalX) faceDirection = Direction.LEFT;
+          else if (vy > 0) faceDirection = Direction.NW;
+          else faceDirection = Direction.SW;
         }
       } else if (Math.abs(vx) < Math.abs(vy)) {
         final boolean nonDiagonalY = 0.414 * Math.abs(vy) > Math.abs(vx);
         if (vy > 0) {
-          if (nonDiagonalY)
-            faceDirection = Direction.UP;
-          else if (vx>0)
-            faceDirection = Direction.NE;
-          else
-            faceDirection = Direction.NW;
-        }
-        else {
-          if (nonDiagonalY)
-            faceDirection = Direction.DOWN;
-          else if (vx>0)
-            faceDirection = Direction.SE;
-          else
-            faceDirection = Direction.SW;
+          if (nonDiagonalY) faceDirection = Direction.UP;
+          else if (vx > 0) faceDirection = Direction.NE;
+          else faceDirection = Direction.NW;
+        } else {
+          if (nonDiagonalY) faceDirection = Direction.DOWN;
+          else if (vx > 0) faceDirection = Direction.SE;
+          else faceDirection = Direction.SW;
         }
       }
     }
@@ -776,10 +762,13 @@ public class PlayerModel extends ComplexModel implements Renderable {
   public static class Builder {
     /** player x position */
     private float x;
+
     /** player y position */
     private float y;
+
     /** Frame is player animation */
     private int framesInAnimation;
+
     private int framesInAnimationDash;
     private int framesInAnimationDashDiagonal;
     private int framesInAnimationShoot;
@@ -796,6 +785,7 @@ public class PlayerModel extends ComplexModel implements Renderable {
 
     /** Player texture when facing right */
     private Texture playerTextureRight;
+
     /** Player texture when dashing up */
     private Texture playerTextureUpDash;
 
@@ -807,34 +797,48 @@ public class PlayerModel extends ComplexModel implements Renderable {
 
     /** Player texture when dashing right */
     private Texture playerTextureRightDash;
-    /** Player dashes when dashing diagonally*/
+
+    /** Player dashes when dashing diagonally */
     public Texture playerTextureNEDash;
+
     public Texture playerTextureNWDash;
     public Texture playerTextureSEDash;
     public Texture playerTextureSWDash;
     private Texture dashIndicatorTexture;
+
     /** player texture for idle left */
     private Texture idleLeft;
+
     /** Player texture for idle right */
     private Texture idleRight;
+
     /** Player texture for idle up */
     private Texture idleUp;
+
     /** Player texture for idle down */
     private Texture idleDown;
+
     /** Player texture for shooting up */
     private Texture shootUp;
+
     /** Player texture for shooting down */
     private Texture shootDown;
+
     /** Player texture for shooting left */
     private Texture shootLeft;
+
     /** Player texture for shooting right */
     private Texture shootRight;
+
     /** Player texture for dying up */
     private Texture dieUp;
+
     /** Player texture for dying down */
     private Texture dieDown;
+
     /** Player texture for dying left */
     private Texture dieLeft;
+
     /** Player texture for dying right */
     private Texture dieRight;
 
@@ -858,158 +862,194 @@ public class PlayerModel extends ComplexModel implements Renderable {
     }
 
     private Builder() {}
+
     public Builder setX(float x) {
       this.x = x;
       return this;
     }
+
     public Builder setY(float y) {
       this.y = y;
       return this;
     }
+
     public Builder setFramesInAnimation(int frames) {
       framesInAnimation = frames;
       return this;
     }
+
     public Builder setFramesInAnimationDash(int frames) {
       framesInAnimationDash = frames;
       return this;
     }
+
     public Builder setFramesInAnimationDashDiagonal(int frames) {
       framesInAnimationDashDiagonal = frames;
       return this;
     }
-    public Builder setFramesInAnimationShoot(int frames){
+
+    public Builder setFramesInAnimationShoot(int frames) {
       framesInAnimationShoot = frames;
       return this;
     }
-    public Builder setFramesInAnimationDeath(int frames){
+
+    public Builder setFramesInAnimationDeath(int frames) {
       framesInAnimationDeath = frames;
       return this;
     }
-    public Builder setTextureUp(Texture texture){
+
+    public Builder setTextureUp(Texture texture) {
       playerTextureUp = texture;
       return this;
     }
+
     public Builder setTextureDown(Texture texture) {
       playerTextureDown = texture;
       return this;
     }
+
     public Builder setTextureLeft(Texture texture) {
       playerTextureLeft = texture;
       return this;
     }
+
     public Builder setTextureRight(Texture texture) {
       playerTextureRight = texture;
       return this;
     }
+
     public Builder setTextureUpDash(Texture texture) {
       playerTextureUpDash = texture;
       return this;
     }
+
     public Builder setTextureDownDash(Texture texture) {
       playerTextureDownDash = texture;
       return this;
     }
+
     public Builder setTextureLeftDash(Texture texture) {
       playerTextureLeftDash = texture;
       return this;
     }
+
     public Builder setTextureRightDash(Texture texture) {
       playerTextureRightDash = texture;
       return this;
     }
-    public Builder setTextureNEDash(Texture texture){
+
+    public Builder setTextureNEDash(Texture texture) {
       playerTextureNEDash = texture;
       return this;
     }
-    public Builder setTextureNWDash(Texture texture){
+
+    public Builder setTextureNWDash(Texture texture) {
       playerTextureNWDash = texture;
       return this;
     }
-    public Builder setTextureSEDash(Texture texture){
+
+    public Builder setTextureSEDash(Texture texture) {
       playerTextureSEDash = texture;
       return this;
     }
-    public Builder setTextureSWDash(Texture texture){
+
+    public Builder setTextureSWDash(Texture texture) {
       playerTextureSWDash = texture;
       return this;
     }
+
     public Builder setDashIndicatorTexture(Texture texture) {
       dashIndicatorTexture = texture;
       return this;
     }
-    public Builder setIdleLeft(Texture texture){
+
+    public Builder setIdleLeft(Texture texture) {
       idleLeft = texture;
       return this;
     }
-    public Builder setIdleRight(Texture texture){
+
+    public Builder setIdleRight(Texture texture) {
       idleRight = texture;
       return this;
     }
-    public Builder setIdleUp(Texture texture){
+
+    public Builder setIdleUp(Texture texture) {
       idleUp = texture;
       return this;
     }
-    public Builder setIdleDown(Texture texture){
+
+    public Builder setIdleDown(Texture texture) {
       idleDown = texture;
       return this;
     }
-    public Builder setShootUp(Texture texture){
+
+    public Builder setShootUp(Texture texture) {
       shootUp = texture;
       return this;
     }
-    public Builder setShootDown(Texture texture){
+
+    public Builder setShootDown(Texture texture) {
       shootDown = texture;
       return this;
     }
-    public Builder setShootLeft(Texture texture){
+
+    public Builder setShootLeft(Texture texture) {
       shootLeft = texture;
       return this;
     }
-    public Builder setShootRight(Texture texture){
+
+    public Builder setShootRight(Texture texture) {
       shootRight = texture;
       return this;
     }
-    public Builder setDeathLeft(Texture texture){
+
+    public Builder setDeathLeft(Texture texture) {
       dieLeft = texture;
       return this;
     }
-    public Builder setDeathRight(Texture texture){
+
+    public Builder setDeathRight(Texture texture) {
       dieRight = texture;
       return this;
     }
-    public Builder setDeathUp(Texture texture){
+
+    public Builder setDeathUp(Texture texture) {
       dieUp = texture;
       return this;
     }
-    public Builder setDeathDown(Texture texture){
+
+    public Builder setDeathDown(Texture texture) {
       dieDown = texture;
       return this;
     }
 
-    public Builder setFrameDelay(int frameDelay){
+    public Builder setFrameDelay(int frameDelay) {
       this.frameDelay = frameDelay;
       return this;
     }
+
     public Builder setCooldownLimit(int cooldownLimit) {
       this.cooldownLimit = cooldownLimit;
       return this;
     }
+
     public Builder setDashLength(int dashLength) {
       this.dashLength = dashLength;
       return this;
     }
+
     public Builder setShootCooldownLimit(int shootCooldownLimit) {
       this.shootCooldownLimit = shootCooldownLimit;
       return this;
     }
+
     public Builder setMoveSpeed(float moveSpeed) {
       this.moveSpeed = moveSpeed;
       return this;
     }
+
     public PlayerModel build() {
       return new PlayerModel(this);
     }
   }
-
 }

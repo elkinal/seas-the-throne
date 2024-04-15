@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
+import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
 public class AmmoBar implements Renderable {
 
@@ -43,5 +44,30 @@ public class AmmoBar implements Renderable {
     @Override
     public void draw(RenderingEngine renderer) {
         renderer.draw(new TextureRegion(texture), playerPos.x, playerPos.y - 2.5f);
+    }
+
+    @Override
+    public FilmStrip progressFrame() {
+        return null;
+    }
+
+    @Override
+    public void alwaysUpdate() {
+
+    }
+
+    @Override
+    public void neverUpdate() {
+
+    }
+
+    @Override
+    public void setAlwaysAnimate(boolean animate) {
+
+    }
+
+    @Override
+    public boolean alwaysAnimate() {
+        return false;
     }
 }

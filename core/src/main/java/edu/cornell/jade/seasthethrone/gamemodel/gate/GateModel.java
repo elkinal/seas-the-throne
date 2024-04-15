@@ -9,6 +9,7 @@ import edu.cornell.jade.seasthethrone.model.ComplexModel;
 import com.badlogic.gdx.utils.Array;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
+import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
 
 public class GateModel extends ComplexModel implements Renderable {
@@ -64,6 +65,31 @@ public class GateModel extends ComplexModel implements Renderable {
                 wall.draw(renderer);
             }
         }
+    }
+
+    @Override
+    public FilmStrip progressFrame() {
+        return null;
+    }
+
+    @Override
+    public void alwaysUpdate() {
+
+    }
+
+    @Override
+    public void neverUpdate() {
+
+    }
+
+    @Override
+    public void setAlwaysAnimate(boolean animate) {
+
+    }
+
+    @Override
+    public boolean alwaysAnimate() {
+        return false;
     }
 
     @Override

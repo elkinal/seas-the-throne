@@ -9,9 +9,7 @@ import edu.cornell.jade.seasthethrone.gamemodel.boss.CrabBossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 
-/**
- * A controller defining the bahavior of a crab boss.
- */
+/** A controller defining the bahavior of a crab boss. */
 public class CrabBossController implements BossController {
   /** Enumeration of AI states. */
   private static enum State {
@@ -71,20 +69,30 @@ public class CrabBossController implements BossController {
   /**
    * Constructs a crab boss controller
    *
-   * @param boss          crab model being mutated
-   * @param player        player model being attacked
-   * @param builder       a builder to create bullet models
+   * @param boss crab model being mutated
+   * @param player player model being attacked
+   * @param builder a builder to create bullet models
    * @param physicsEngine physics engine to add bullet attack to
    */
-  public CrabBossController(CrabBossModel boss, PlayerModel player, BulletModel.Builder builder,
+  public CrabBossController(
+      CrabBossModel boss,
+      PlayerModel player,
+      BulletModel.Builder builder,
       PhysicsEngine physicsEngine) {
     this.boss = boss;
     this.player = player;
     this.state = State.IDLE;
 
     System.out.println(boss.getX() + " " + boss.getY());
-    this.attack1 = new ArcsAcrossTheTopAttack(boss.getX() + X_OFFSET, boss.getY() + Y_OFFSET, ARC_LINE_LENGTH,
-        ARC_PERIOD, ARC_SHOTS, builder, physicsEngine);
+    this.attack1 =
+        new ArcsAcrossTheTopAttack(
+            boss.getX() + X_OFFSET,
+            boss.getY() + Y_OFFSET,
+            ARC_LINE_LENGTH,
+            ARC_PERIOD,
+            ARC_SHOTS,
+            builder,
+            physicsEngine);
   }
 
   /**
@@ -92,8 +100,9 @@ public class CrabBossController implements BossController {
    *
    * @return if the crab this controller controls is dead
    */
-  public boolean isTerminated() {
-    return boss.isTerminated();
+  @Override
+  public boolean isDead() {
+    return boss.isDead();
   }
 
   /** Loads in the boss's previous state */
@@ -102,6 +111,7 @@ public class CrabBossController implements BossController {
   }
 
   /** Marks the boss for removal from the physics engine. */
+  @Override
   public void remove() {
     boss.markRemoved(true);
   }
@@ -115,11 +125,11 @@ public class CrabBossController implements BossController {
   public BossModel getBoss() {return boss;}
 
   /**
-   * Called every tick. Updates the state of the model based on the controller
-   * state.
+   * Called every tick. Updates the state of the model based on the controller state.
    *
    * @param delta time since update was last called
    */
+  @Override
   public void update(float delta) {
     nextState();
     act();
