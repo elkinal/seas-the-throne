@@ -24,4 +24,11 @@ public interface BossController {
 
   /** Cleans up this bosses attack patterns */
   public void dispose();
+
+  /** Returns the boss of this controller */
+  public BossModel getBoss();
+
+  /** Loads in the boss's previous state */
+  public void transferState(int storedHp);
+
 }

@@ -96,6 +96,11 @@ public class CrabBossController implements BossController {
     return boss.isTerminated();
   }
 
+  /** Loads in the boss's previous state */
+  public void transferState(int storedHp) {
+    this.boss.setHealth(storedHp);
+  }
+
   /** Marks the boss for removal from the physics engine. */
   public void remove() {
     boss.markRemoved(true);
@@ -105,6 +110,9 @@ public class CrabBossController implements BossController {
   public void dispose() {
     attackPattern.cleanup();
   }
+
+  /** Returns the boss of this controller */
+  public BossModel getBoss() {return boss;}
 
   /**
    * Called every tick. Updates the state of the model based on the controller
@@ -125,8 +133,14 @@ public class CrabBossController implements BossController {
           state = State.ATTACK;
           attackPattern = attack1;
         }
+        if (boss.isDead()) {
+          state = State.DEAD;
+        }
         break;
       case ATTACK:
+        if (boss.isDead()) {
+          state = State.DEAD;
+        }
         break;
       case MOVE:
         break;

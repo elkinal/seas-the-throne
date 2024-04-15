@@ -331,6 +331,16 @@
                  "name":"levels\/portal.png",
                  "properties":[
                         {
+                         "name":"playerX",
+                         "type":"float",
+                         "value":2780
+                        }, 
+                        {
+                         "name":"playerY",
+                         "type":"float",
+                         "value":200
+                        }, 
+                        {
                          "name":"target",
                          "type":"string",
                          "value":"levels\/shallow_map.json"

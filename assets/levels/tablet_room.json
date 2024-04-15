@@ -4,7 +4,7 @@
  "layers":[
         {
          "id":9,
-         "image":"levels/tablet_room.png",
+         "image":"..\/..\/..\/Desktop\/seas-the-throne\/assets\/levels\/tablet_room.png",
          "name":"background",
          "opacity":1,
          "properties":[
@@ -63,8 +63,8 @@
                  "type":"",
                  "visible":true,
                  "width":20,
-                 "x":109.454545454545,
-                 "y":278.363636363636
+                 "x":109.455,
+                 "y":278.364
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -201,7 +201,19 @@
          "draworder":"topdown",
          "id":5,
          "name":"bosses",
-         "objects":[],
+         "objects":[
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":16,
+                 "name":"jelly",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":100,
+                 "y":180
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -241,6 +253,16 @@
                  "name":"",
                  "properties":[
                         {
+                         "name":"playerX",
+                         "type":"float",
+                         "value":760
+                        }, 
+                        {
+                         "name":"playerY",
+                         "type":"float",
+                         "value":502
+                        }, 
+                        {
                          "name":"target",
                          "type":"string",
                          "value":"levels\/shallow_map.json"
@@ -259,7 +281,7 @@
          "y":0
         }],
  "nextlayerid":10,
- "nextobjectid":16,
+ "nextobjectid":17,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

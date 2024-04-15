@@ -4,17 +4,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import edu.cornell.jade.seasthethrone.gamemodel.ObstacleModel;
+import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
 public class LevelObject implements Renderable {
-  public enum LevelObjType {
-    PORTAL,
-    WALL,
-    OBSTACLE,
-    BOSS
-  }
 
   public float x;
   public float y;
@@ -24,8 +20,7 @@ public class LevelObject implements Renderable {
   public String target;
   public String bossName;
 
-  /** The type of object in the level this container represents */
-  public LevelObjType type;
+  public Vector2 playerLoc;
 
   /** Vertices for the polygonModel if this is representing a wall */
   public Array<Float> vertices = new Array<>();
@@ -34,6 +29,14 @@ public class LevelObject implements Renderable {
   private final TextureRegion DEFAULT_TEXTURE = new TextureRegion(new Texture("empty.png"));
 
   public Vector2 pos;
+
+  // GateModel state
+  public Array<LevelObject> sensors = new Array<>();
+  public Array<LevelObject> walls = new Array<>();
+
+  public int id;
+
+  public LevelObject() {}
 
   public LevelObject(float x, float y) {
     this.x = x;
@@ -58,13 +61,14 @@ public class LevelObject implements Renderable {
     this.height = height;
   }
 
+  public LevelObject(float x, float y, float width, float height, Vector2 playerLoc) {
+    this(x, y, width, height);
+    this.playerLoc = playerLoc;
+  }
+
   public LevelObject(float x, float y, float width, float height, TextureRegion texture) {
     this(x, y, width, height);
     this.texture = texture;
-  }
-
-  public void setType(LevelObjType type) {
-    this.type = type;
   }
 
   public void setTarget(String target) {
