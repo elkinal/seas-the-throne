@@ -40,8 +40,8 @@ public class PauseController {
    * flag.
    */
   public void pauseGame() {
-    renderEngine.disableAnimation();
     playerController.setAlwaysAnimate(true);
+    renderEngine.disableAnimation();
     isPaused = true;
   }
 
