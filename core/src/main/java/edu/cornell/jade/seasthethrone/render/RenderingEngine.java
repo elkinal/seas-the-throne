@@ -90,16 +90,8 @@ public class RenderingEngine {
   public void drawBackground() {
     canvas.clear();
     canvas.begin();
-    canvas.draw(
-        BACKGROUND.getTexture(),
-        Color.WHITE,
-        BACKGROUND.getPosition().x,
-        BACKGROUND.getPosition().y,
-        0,
-        0,
-        0,
-        4f,
-        4f);
+    canvas.draw(BACKGROUND.getTexture(), Color.BLACK, BACKGROUND.getPosition().x, BACKGROUND.getPosition().y,
+            0, 0, 0, 8f, 8f);
     canvas.end();
   }
 
@@ -218,6 +210,7 @@ public class RenderingEngine {
 
   public void clear() {
     renderables.clear();
+    ui_elements.clear();
   }
 
   /** Returns the gameCanvas */

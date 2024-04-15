@@ -66,6 +66,8 @@ public class PlayerBodyModel extends PolygonModel {
     return health;
   }
 
+  public void setHealth(int health) {this.health = health;}
+
   /** Returns if the player is currently invincible */
   public boolean isInvincible() {
     return iframeCounter > 0;

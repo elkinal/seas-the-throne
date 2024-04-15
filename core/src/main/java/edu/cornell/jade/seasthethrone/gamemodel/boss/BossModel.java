@@ -61,6 +61,9 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   /** Keeps track of currently tracked threshold */
   private int thresholdPointer;
 
+  /** The ID number of the room this boss is associated with */
+  private int roomId;
+
   /**
    * {@link BossModel} constructor using an x and y coordinate.
    *
@@ -79,6 +82,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     deathCount = frameDelay * 16;
     shouldUpdate = true;
     alwaysAnimate = false;
+    roomId = builder.roomId;
     bodyKnockbackForce = 70f;
     spearKnockbackForce = 130f;
     healthThresholds = builder.healthThresholds;
@@ -160,7 +164,14 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     return health;
   }
 
-  /** Reduce boss HP by a specified amount If the boss dies, mark boss as removed */
+  public void setHealth(int health) {this.health = health;}
+
+  /** Returns the room this boss is in */
+  public int getRoomId() { return roomId; }
+  /**
+   * Reduce boss HP by a specified amount
+   * If the boss dies, mark boss as removed
+   */
   public void decrementHealth(int damage) {
     health -= damage;
     if (isDead()) {
@@ -239,6 +250,9 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     /** Health threshold numbers */
     private int[] healthThresholds;
 
+    /** ID for the room this boss is in */
+    private int roomId;
+
     public static Builder newInstance() {
       return new Builder();
     }
@@ -260,7 +274,18 @@ public abstract class BossModel extends EnemyModel implements Renderable {
       return this;
     }
 
-    public Builder setHitbox(float[] hitbox) {
+    public Builder setHitbox(String type) {
+      float[] hitbox;
+      switch (type) {
+        case "crab":
+          hitbox = new float[]{-4, -7, -4, 7, 4, 7, 4, -7};
+          break;
+        case "jelly":
+          hitbox = new float[]{-3, -3, -3, 3,3, 3, 3, -3};
+          break;
+        default:
+          hitbox = new float[]{-4, -7, -4, 7, 4, 7, 4, -7};
+      }
       this.hitbox = hitbox;
       return this;
     }
@@ -311,6 +336,11 @@ public abstract class BossModel extends EnemyModel implements Renderable {
 
     public Builder setFrameDelay(int frameDelay) {
       this.frameDelay = frameDelay;
+      return this;
+    }
+
+    public Builder setRoomId(int id) {
+      this.roomId = id;
       return this;
     }
 

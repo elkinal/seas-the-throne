@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import edu.cornell.jade.seasthethrone.gamemodel.*;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
+import edu.cornell.jade.seasthethrone.gamemodel.gate.GateSensorModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.*;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.model.Model;
@@ -33,6 +34,9 @@ public class PhysicsEngine implements ContactListener {
    * Filepath to the JSON of the level to switch to. Should be null unless the player is on a portal
    */
   private String target;
+
+  /** The location to spawn in the player when the level is loaded */
+  private Vector2 spawnPoint;
 
   /** To keep track of the continuous player-boss collision */
   private Optional<Contact> playerBossCollision;
@@ -166,6 +170,8 @@ public class PhysicsEngine implements ContactListener {
     Fixture fix1 = contact.getFixtureA();
     Fixture fix2 = contact.getFixtureB();
 
+    if (fix1 == null || fix2 == null) {return;}
+
     Body body1 = fix1.getBody();
     Body body2 = fix2.getBody();
 
@@ -212,10 +218,22 @@ public class PhysicsEngine implements ContactListener {
         if (BuildConfig.DEBUG) System.out.println("portal detected");
 
         setTarget(((PortalModel) bd1).getTarget());
+        setSpawnPoint(((PortalModel) bd1).getPlayerLoc());
       } else if (bd2 instanceof PortalModel && bd1 instanceof PlayerShadowModel) {
         if (BuildConfig.DEBUG) System.out.println("portal detected");
 
         setTarget(((PortalModel) bd2).getTarget());
+        setSpawnPoint(((PortalModel) bd2).getPlayerLoc());
+      }
+      // Handle gate sensors
+      else if (bd1 instanceof PlayerShadowModel && bd2 instanceof GateSensorModel) {
+        if (BuildConfig.DEBUG) System.out.println("gate detected");
+
+        ((GateSensorModel) bd2).setRaised(true);
+      } else if (bd2 instanceof PlayerShadowModel && bd1 instanceof GateSensorModel) {
+        if (BuildConfig.DEBUG) System.out.println("gate detected");
+
+        ((GateSensorModel) bd1).setRaised(true);
       }
 
     } catch (Exception e) {
@@ -231,6 +249,10 @@ public class PhysicsEngine implements ContactListener {
   public String getTarget() {
     return target;
   }
+
+  public void setSpawnPoint(Vector2 spawn) {this.spawnPoint = spawn;}
+
+  public Vector2 getSpawnPoint() {return spawnPoint;}
 
   public boolean hasTarget() {
     return this.target != null;
@@ -264,9 +286,9 @@ public class PhysicsEngine implements ContactListener {
 
   /** Handle collision between player body and boss */
   public void handleCollision(PlayerBodyModel pb, BossModel b, Contact c) {
-    if (BuildConfig.DEBUG) System.out.println(pb.isInvincible());
+    if (BuildConfig.DEBUG) System.out.println("player invincible: "+pb.isInvincible());
 
-    if (!pb.isInvincible()) {
+    if (!pb.isInvincible() && !b.isDead()) {
       pb.setHit(true);
       pb.setInvincible();
       pb.setKnockedBack(b.getPosition(), b.getBodyKnockbackForce());
@@ -280,9 +302,11 @@ public class PhysicsEngine implements ContactListener {
 
   /** Handle collision between player spear and boss */
   public void handleCollision(PlayerSpearModel ps, BossModel b) {
-    b.decrementHealth(ps.getDamage());
-    ps.getMainBody().setKnockbackTime(15);
-    ps.getMainBody().setKnockedBack(b.getPosition(), b.getSpearKnockbackForce());
+    if(!b.isDead()){
+      b.decrementHealth(ps.getDamage());
+      ps.getMainBody().setKnockbackTime(15);
+      ps.getMainBody().setKnockedBack(b.getPosition(), b.getSpearKnockbackForce());
+    }
   }
 
   /** Handle collision between player bullet and boss */

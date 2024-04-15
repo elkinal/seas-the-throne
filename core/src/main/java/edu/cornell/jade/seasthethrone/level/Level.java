@@ -3,7 +3,9 @@ package edu.cornell.jade.seasthethrone.level;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.viewport.*;
+import edu.cornell.jade.seasthethrone.BuildConfig;
 import edu.cornell.jade.seasthethrone.gamemodel.*;
 import edu.cornell.jade.seasthethrone.util.JsonHandler;
 import com.badlogic.gdx.math.Vector2;
@@ -11,6 +13,9 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.HashMap;
 
 public class Level {
+  /** Name of this level */
+  public String name;
+
   private final Array<HashMap<String, Object>> layers;
 
   private Vector2 playerLoc;
@@ -24,6 +29,8 @@ public class Level {
   private final Array<LevelObject> obstacles = new Array<>();
 
   private final Array<LevelObject> portals = new Array<>();
+
+  private final Array<LevelObject> gates = new Array<>();
 
   private BackgroundImage background;
 
@@ -63,6 +70,8 @@ public class Level {
   public Level(String fileName) {
     this.viewport = new ExtendViewport(DEFAULT_WIDTH, DEFAULT_HEIGHT);
     tempPos = new Vector2();
+    this.name = parseName(fileName);
+    if (BuildConfig.DEBUG) {System.out.println("Loading level:"+this.name);}
 
     // Load JSON to map
     HashMap<String, Object> levelMap = JsonHandler.jsonToMap(fileName);
@@ -87,6 +96,7 @@ public class Level {
 
     parseBackgroundLayer(getLayer("background"));
     parsePlayerLayer(getLayer("player"));
+    parseGatesLayer(getLayer("gates"));
     parseTileLayer(getLayer("tiles"));
     parseBossLayer(getLayer("bosses"));
     parseWallLayer(getLayer("walls"));
@@ -111,7 +121,8 @@ public class Level {
         return layer;
       }
     }
-    throw new Error("No layer with name " + layerName);
+    return new HashMap<>();
+//    throw new Error("No layer with name " + layerName);
   }
 
   public BackgroundImage getBackground() {
@@ -146,15 +157,17 @@ public class Level {
     return portals;
   }
 
+  public Array<LevelObject> getGates() { return gates; }
+
   private void parseBackgroundLayer(HashMap<String, Object> bgLayer) {
     int width;
     try {
-      width = Integer.parseInt((String) JsonHandler.getProperty(bgLayer, "width"));
+      width = JsonHandler.getIntProperty(bgLayer, "width");
     } catch (Error e) {
       return;
     }
 
-    int height = Integer.parseInt((String) JsonHandler.getProperty(bgLayer, "height"));
+    int height = JsonHandler.getIntProperty(bgLayer, "height");
     TextureRegion texture = new TextureRegion(new Texture(JsonHandler.getString(bgLayer, "image")));
 
     float x, y;
@@ -236,10 +249,18 @@ public class Level {
       float x = JsonHandler.getFloat(bossWrapper, "x");
       float y = JsonHandler.getFloat(bossWrapper, "y");
       String name = JsonHandler.getString(bossWrapper, "name");
+      int id;
+      try {
+        id = JsonHandler.getIntProperty(bossWrapper, "id");
+      } catch (Error e) {
+        id = -1;
+      }
+
       Vector2 pos = tiledToWorldCoords(new Vector2(x, y));
 
       LevelObject boss = new LevelObject(pos.x, pos.y);
       boss.setBossName(name);
+      boss.id = id;
 
       bosses.add(boss);
     }
@@ -308,6 +329,70 @@ public class Level {
   }
 
   /**
+   * Extracts gates objects from JSON gates layer
+   * */
+  private void parseGatesLayer(HashMap<String, Object> gatesLayer) {
+    if (gatesLayer.isEmpty()) {
+      return;
+    }
+    Array<HashMap<String, Object>> gateWrapperList = (Array<HashMap<String, Object>>) gatesLayer.get("objects");
+
+    
+    // This is a map from IDs to a map of walls and sensors
+    HashMap<Integer, HashMap<String, Array<LevelObject>>> gateGroups = new HashMap<>();
+    Array<Integer> ids = new Array<>();
+
+    // Populate gateGroups
+    for (HashMap<String, Object> gateWrapper : gateWrapperList) {
+      boolean isSensor = JsonHandler.getBoolProperty(gateWrapper, "sensor");
+      int id = JsonHandler.getIntProperty(gateWrapper, "id");
+
+      float width = JsonHandler.getFloat(gateWrapper, "width");
+      float height = JsonHandler.getFloat(gateWrapper, "height");
+      tempPos.set(
+              JsonHandler.getFloat(gateWrapper, "x") + width/2f,
+              JsonHandler.getFloat(gateWrapper, "y") + height/2f);
+      tempPos = tiledToWorldCoords(tempPos);
+
+      LevelObject thisObject = new LevelObject(
+              tempPos.x, tempPos.y, WORLD_SCALE*width, WORLD_SCALE*height
+      );
+
+      String texturePath = JsonHandler.getString(gateWrapper, "name");
+      if (!texturePath.isEmpty()) {
+        thisObject.texture = new TextureRegion(new Texture(texturePath));
+      }
+
+      // If this is the first object of a gateGroup, add it to the map
+      if (!gateGroups.containsKey(id)) {
+        gateGroups.put(id, new HashMap<>());
+        gateGroups.get(id).put("sensors", new Array<>());
+        gateGroups.get(id).put("walls", new Array<>());
+        ids.add(id);
+      }
+
+      if (isSensor) {
+        gateGroups.get(id).get("sensors").add(thisObject);
+      } else {
+        gateGroups.get(id).get("walls").add(thisObject);
+      }
+    }
+
+    // Each gateGroup gets a level object
+    for (int id : ids) {
+      HashMap<String, Array<LevelObject>> thisGateGroup = gateGroups.get(id);
+      LevelObject gateObject = new LevelObject();
+      gateObject.walls = thisGateGroup.get("walls");
+      gateObject.sensors = thisGateGroup.get("sensors");
+      gateObject.id = id;
+
+      this.gates.add(gateObject);
+    }
+
+  }
+
+
+  /**
    * Extracts portal objects from JSON portals layer
    *
    * @param portalLayer JSON object layer containing portals
@@ -334,8 +419,12 @@ public class Level {
       } else {
         portal = new LevelObject(pos.x, pos.y, dims.x, dims.y);
       }
-      portal.setType(LevelObject.LevelObjType.PORTAL);
-      portal.setTarget((String) JsonHandler.getProperty(portWrapper, "target"));
+      portal.setTarget(JsonHandler.getStringProperty(portWrapper, "target"));
+
+      Vector2 playerLoc = new Vector2(
+              JsonHandler.getFloatProperty(portWrapper, "playerX"),
+              JsonHandler.getFloatProperty(portWrapper, "playerY"));
+      portal.playerLoc = playerLoc;
       portals.add(portal);
     }
   }
@@ -349,7 +438,7 @@ public class Level {
    *
    * @return the vector position in physics world coordinates
    */
-  private Vector2 tiledToWorldCoords(Vector2 tiledCoords) {
+  public Vector2 tiledToWorldCoords(Vector2 tiledCoords) {
     float x = tiledCoords.x - (TILED_WORLD_WIDTH * TILE_SIZE) / 2f;
     float y = -(tiledCoords.y - (TILED_WORLD_HEIGHT * TILE_SIZE) / 2f);
 
@@ -398,5 +487,16 @@ public class Level {
     int y = TILE_SIZE * (index / TILED_WORLD_WIDTH) + TILE_SIZE / 2;
     tempPos.set(x, y);
     return tempPos;
+  }
+
+  /**
+   * Returns the name of the JSON used to load this level.
+   *
+   * "levels/name.json" -> "name"
+   * */
+  private String parseName(String fileName) {
+    int start = fileName.indexOf("/") + 1;
+    int end = fileName.indexOf(".");
+    return fileName.substring(start, end);
   }
 }
