@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.viewport.*;
 
 import edu.cornell.jade.seasthethrone.ai.BossController;
@@ -103,6 +104,12 @@ public class GameplayController implements Screen {
 
   /** Temporary cache used by updateCamera */
   private final Vector2 updateCameraCache = new Vector2();
+
+  /** Used to smooth camera movement. higher = more snappy camera */
+  private final float CAMERA_SMOOTHNESS = 0.2f;
+
+  /** Distance at which point the camera will snap to the player */
+  private final float CAMERA_SNAP_DISTANCE = 0.1f;
 
   /** fish bullet builder */
   BulletModel.Builder fishBulletBuilder;
@@ -397,7 +404,12 @@ public class GameplayController implements Screen {
     Vector2 diff =
         playerPos.sub(cameraPos).sub(viewport.getWorldWidth() / 2, -viewport.getWorldHeight() / 2);
 
-    viewport.getCamera().translate(diff.x, diff.y, 0);
+    if (diff.len() < CAMERA_SNAP_DISTANCE) {
+      viewport.getCamera().translate(diff.x, diff.y, 0);
+    } else {
+      diff.scl(CAMERA_SMOOTHNESS);
+      viewport.getCamera().translate(diff.x, diff.y, 0);
+    }
   }
 
   /**
