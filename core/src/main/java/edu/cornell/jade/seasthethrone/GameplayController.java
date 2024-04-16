@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.viewport.*;
 import edu.cornell.jade.seasthethrone.ai.BossController;
 import edu.cornell.jade.seasthethrone.ai.CrabBossController;
 import edu.cornell.jade.seasthethrone.ai.JellyBossController;
+import edu.cornell.jade.seasthethrone.gamemodel.CheckpointModel;
 import edu.cornell.jade.seasthethrone.gamemodel.PortalModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.ObstacleModel;
@@ -89,8 +90,8 @@ public class GameplayController implements Screen {
   /** The level currently loaded */
   protected Level level;
 
-  /** Map of previously visited rooms and levels */
-  protected HashMap<String, LevelState> storedLevels;
+  /** Sub-controller for saving/loading the game */
+  protected StateController stateController;
 
   /** The boundary of the world */
   protected Rectangle bounds;
@@ -131,7 +132,6 @@ public class GameplayController implements Screen {
     gameState = GameState.PLAY;
 
     this.level = new Level("levels/hub_world.json");
-    this.storedLevels = new HashMap<>();
 
     worldHeight = level.DEFAULT_HEIGHT;
     worldWidth = level.DEFAULT_WIDTH;
@@ -144,6 +144,7 @@ public class GameplayController implements Screen {
     loading = true;
     loadCount = 0;
 
+    this.stateController = new StateController();
     this.bossControllers = new Array<>();
     this.inputController = new InputController(viewport);
     this.renderEngine = new RenderingEngine(worldWidth, worldHeight, viewport, worldScale);
@@ -260,7 +261,7 @@ public class GameplayController implements Screen {
               .setFrameSize(frameSize)
               .setFalloverAnimation(new Texture("bosses/" + name + "/fallover.png"))
               .setFrameDelay(12)
-              .setRoomId(bossContainer.id)
+              .setRoomId(bossContainer.roomId)
               .build();
       renderEngine.addRenderable(boss);
       physicsEngine.addObject(boss);
@@ -283,7 +284,9 @@ public class GameplayController implements Screen {
     // Load Obstacles
     for (LevelObject obs : level.getObstacles()) {
       ObstacleModel model = new ObstacleModel(obs, worldScale);
-      model.setBodyType(BodyDef.BodyType.StaticBody);
+      for (Model m : model.getBodies()) {
+        m.setBodyType(BodyDef.BodyType.StaticBody);
+      }
       renderEngine.addRenderable(model);
       physicsEngine.addObject(model);
     }
@@ -297,7 +300,7 @@ public class GameplayController implements Screen {
 
     // Load gates
     for (LevelObject gate : level.getGates()) {
-      int roomId = gate.id;
+      int roomId = gate.roomId;
       GateModel model = new GateModel(gate, level.WORLD_SCALE);
       for (BossController bc : bossControllers) {
         if (bc.getBoss().getRoomId() == roomId) {
@@ -305,6 +308,14 @@ public class GameplayController implements Screen {
         }
       }
       renderEngine.addRenderable(model);
+      physicsEngine.addObject(model);
+    }
+
+    // Load checkpoints
+    for (LevelObject check : level.getCheckpoints()) {
+      CheckpointModel model = new CheckpointModel(check, worldScale);
+      model.setSensor(true);
+//      renderEngine.addRenderable(model);
       physicsEngine.addObject(model);
     }
 
@@ -433,35 +444,27 @@ public class GameplayController implements Screen {
   /** Changes the current level to the one specified by the physics engine target. */
   private void changeLevel() {
     // Save the current level state
-    if (storedLevels.containsKey(level.name)) {
-      storedLevels.get(level.name).update(playerController, bossControllers);
-    } else {
-      storedLevels.put(level.name, new LevelState(playerController, bossControllers));
-    }
-
-    String oldLevelName = level.name;
+    stateController.updateState(level.name, playerController, bossControllers);
 
     listener.exitScreen(this, GDXRoot.EXIT_SWAP);
     level = new Level(physicsEngine.getTarget());
     this.renderEngine.clear();
     bossControllers.clear();
     setupGameplay();
-    transferState(storedLevels.get(oldLevelName), storedLevels.get(level.name));
+    transferState(stateController.getLevel(level.name));
   }
 
   /** Loads the stored state of the target level, if it exists */
-  private void transferState(LevelState oldState, LevelState newState) {
-    playerController.transferState(oldState);
+  private void transferState(LevelState newState) {
+    playerController.transferState(stateController);
 
-    // Load boss state if this is not the first time entering level
+    // Load level state if this is not the first time entering level
     if (newState != null && newState.getBossHps().size > 0) {
       for (int i = 0; i < bossControllers.size; i++) {
         int storedHp = newState.getBossHps().get(i);
         bossControllers.get(i).transferState(storedHp);
       }
-      }
-
-
+    }
   }
 
   public void resize(int width, int height) {

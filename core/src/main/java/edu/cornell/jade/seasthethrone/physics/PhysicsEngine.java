@@ -10,6 +10,7 @@ import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.gate.GateSensorModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.*;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
+import edu.cornell.jade.seasthethrone.model.ComplexModel;
 import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.util.PooledList;
 import edu.cornell.jade.seasthethrone.BuildConfig;
@@ -207,10 +208,20 @@ public class PhysicsEngine implements ContactListener {
       } else if (bd2 instanceof PlayerBulletModel && bd1 instanceof BossModel) {
         handleCollision((PlayerBulletModel) bd2, (BossModel) bd1);
       }
-      // TODO: Change BoxModel to the Obstacle types once we have them defined later
-      else if (bd1 instanceof BulletModel && bd2 instanceof BoxModel) {
+      // Handle checkpoint sensors
+      else if (bd1 instanceof PlayerShadowModel && bd2 instanceof CheckpointModel) {
+        if (BuildConfig.DEBUG) System.out.println("checkpoint detected");
+
+        ((CheckpointModel) bd2).setActivated(true);
+      } else if (bd2 instanceof PlayerShadowModel && bd1 instanceof CheckpointModel) {
+        if (BuildConfig.DEBUG) System.out.println("checkpoint detected");
+
+        ((CheckpointModel) bd2).setActivated(true);
+      }
+      // Handle obstacles
+      else if (bd1 instanceof BulletModel && bd2 instanceof ObstacleModel) {
         bd1.markRemoved(true);
-      } else if (bd2 instanceof BulletModel && bd1 instanceof BoxModel) {
+      } else if (bd2 instanceof BulletModel && bd1 instanceof ObstacleModel) {
         bd2.markRemoved(true);
       }
       // Handle portal sensors

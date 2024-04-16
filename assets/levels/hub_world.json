@@ -44,6 +44,16 @@
          "y":0
         }, 
         {
+         "id":4,
+         "image":"",
+         "name":"background",
+         "opacity":1,
+         "type":"imagelayer",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
          "draworder":"topdown",
          "id":2,
          "name":"player",
@@ -234,30 +244,9 @@
          "y":0
         }, 
         {
-         "id":4,
-         "image":"",
-         "name":"background",
-         "opacity":1,
-         "type":"imagelayer",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
          "draworder":"topdown",
          "id":5,
          "name":"bosses",
-         "objects":[],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "id":6,
-         "name":"enemies",
          "objects":[],
          "opacity":1,
          "type":"objectgroup",
@@ -349,8 +338,67 @@
                  "type":"",
                  "visible":true,
                  "width":20,
+                 "x":360,
+                 "y":220
+                }, 
+                {
+                 "height":20,
+                 "id":18,
+                 "name":"levels\/portal.png",
+                 "properties":[
+                        {
+                         "name":"playerX",
+                         "type":"float",
+                         "value":880
+                        }, 
+                        {
+                         "name":"playerY",
+                         "type":"float",
+                         "value":1220
+                        }, 
+                        {
+                         "name":"target",
+                         "type":"string",
+                         "value":"levels\/shallow_map.json"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
                  "x":220,
                  "y":220
+                }, 
+                {
+                 "height":20,
+                 "id":19,
+                 "name":"levels\/portal.png",
+                 "properties":[
+                        {
+                         "name":"playerX",
+                         "type":"float",
+                         "value":110
+                        }, 
+                        {
+                         "name":"playerY",
+                         "type":"float",
+                         "value":270
+                        }, 
+                        {
+                         "name":"requiredCheckpoint",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"target",
+                         "type":"string",
+                         "value":"levels\/tablet_room.json"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":220,
+                 "y":360
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -359,7 +407,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":18,
+ "nextobjectid":20,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
