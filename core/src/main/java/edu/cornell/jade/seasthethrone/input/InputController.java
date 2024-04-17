@@ -220,5 +220,9 @@ public class InputController {
     dashCoordCache.set(Gdx.input.getX(), Gdx.input.getY());
     viewport.unproject(dashCoordCache);
     obj.updateDirection(dashCoordCache);
+
+    if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+      obj.pressSecondary();
+    }
   }
 }

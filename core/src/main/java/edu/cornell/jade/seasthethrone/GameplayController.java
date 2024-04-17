@@ -384,6 +384,14 @@ public class GameplayController implements Screen {
       }
     }
 
+    // Check which checkpoints are active
+    if (physicsEngine.hasCheckpoint()) {
+      if (BuildConfig.DEBUG) {
+        System.out.println("hasCheckpoint " + physicsEngine.getCheckpointID());
+      }
+      stateController.setCheckpoint(physicsEngine.checkpointID);
+    }
+
     // Load new level if the player has touched a portal, thus setting a target
     if (physicsEngine.hasTarget()) {
       if (BuildConfig.DEBUG) {
@@ -395,6 +403,7 @@ public class GameplayController implements Screen {
     // Reset target so player doesn't teleport again on next frame
     physicsEngine.setTarget(null);
     physicsEngine.setSpawnPoint(null);
+    physicsEngine.setCheckpointID(null);
 
     // Render frame
     renderEngine.clear();

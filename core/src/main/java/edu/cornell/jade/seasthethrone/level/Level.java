@@ -452,7 +452,7 @@ public class Level {
       if (((String) cpWrapper.get("name")).length() > 0) {
         obj.texture = new TextureRegion(new Texture((String) cpWrapper.get("name")));
       }
-      checkpoints.add(new LevelObject(pos.x, pos.y, dims.x, dims.y));
+      checkpoints.add(obj);
     }
   }
 

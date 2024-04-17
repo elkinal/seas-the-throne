@@ -16,7 +16,7 @@ public class RenderingEngine {
   private Array<Renderable> renderables;
 
   /** UI renderable objects */
-  private Array<Renderable> ui_elements = new Array<>();
+  private Array<Renderable> uiElements = new Array<>();
 
   /** Layers of renderables to be rendered in order */
   private Array<Array<Renderable>> renderLayers;
@@ -109,7 +109,7 @@ public class RenderingEngine {
   /** Draws UI elements independent of the camera */
   public void drawUI() {
     canvas.beginUI();
-    for (Renderable r : ui_elements) {
+    for (Renderable r : uiElements) {
       r.draw(this);
     }
     canvas.endUI();
@@ -117,11 +117,11 @@ public class RenderingEngine {
 
   /** Adds UI element to the engine */
   public void addUI(Renderable r) {
-    ui_elements.add(r);
+    uiElements.add(r);
   }
 
   public Array<Renderable> getUI() {
-    return this.ui_elements;
+    return this.uiElements;
   }
 
   public void drawRenderLayers() {
@@ -210,7 +210,7 @@ public class RenderingEngine {
 
   public void clear() {
     renderables.clear();
-    ui_elements.clear();
+    uiElements.clear();
   }
 
   /** Returns the gameCanvas */

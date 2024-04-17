@@ -26,7 +26,7 @@ public class StateController {
 
     public StateController() {
         this.storedLevels = new HashMap<>();
-        this.checkpoint = 0;
+        this.checkpoint = -1;
     }
 
     public void updateState(String levelName, PlayerController player, Array<BossController> bosses) {

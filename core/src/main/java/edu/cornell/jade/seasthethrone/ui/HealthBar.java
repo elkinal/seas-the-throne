@@ -59,7 +59,7 @@ public class HealthBar implements Renderable {
 
         renderer.getGameCanvas().drawUI(
                 texture,
-                10f,
+                30f,
                 0.9f*height,
                 SCALE*aspectRatio,
                 SCALE);
