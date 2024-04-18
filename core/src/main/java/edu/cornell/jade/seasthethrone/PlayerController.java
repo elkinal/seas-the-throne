@@ -149,7 +149,6 @@ public class PlayerController implements Controllable {
       return;
     } else if (player.isDashing()) {
       moveSpeed *= 4;
-      System.out.println(isAimToDashMode);
       if (isAimToDashMode) {
         moveDirection.set(moveSpeed * dashDirection.x, moveSpeed * dashDirection.y);
       } else {

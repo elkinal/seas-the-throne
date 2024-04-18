@@ -682,7 +682,7 @@ public class PlayerModel extends ComplexModel implements Renderable {
 
   /** Update the player's spear model for dashing */
   public void updateSpear(Vector2 dashDirection) {
-    getSpearModel().updateSpear(getPosition(), dashDirection);
+    getSpearModel().updateSpear(dashDirection);
   }
 
   /** Update the player's dash indicator */
