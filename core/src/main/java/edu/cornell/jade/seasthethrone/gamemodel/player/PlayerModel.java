@@ -574,16 +574,17 @@ public class PlayerModel extends ComplexModel implements Renderable {
 
   /** Returns if the player can dash */
   public boolean canDash() {
-    return !isDashing && !isShooting && !isInvincible() && cooldownCounter == 0;
+    return !isDashing
+      && !isShooting
+      && cooldownCounter == 0;
   }
 
   /** Returns if the player can be set to shooting */
   public boolean canShoot() {
     return !isDashing
-        && !isShooting
-        && !isInvincible()
-        && cooldownCounter == 0
-        && getSpearModel().getNumSpeared() > 0;
+      && !isShooting
+      && cooldownCounter == 0
+      && getSpearModel().getNumSpeared() > 0;
   }
 
   /** Returns if the player can shoot one bullet. */

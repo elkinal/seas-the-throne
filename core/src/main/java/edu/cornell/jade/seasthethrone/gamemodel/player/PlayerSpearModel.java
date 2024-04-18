@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
-import edu.cornell.jade.seasthethrone.physics.CollisionMask;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
@@ -16,7 +15,7 @@ import edu.cornell.jade.seasthethrone.util.FilmStrip;
  */
 public class PlayerSpearModel extends BoxModel implements Renderable {
   /** Width of spear */
-  private static float SPEAR_WIDTH = 1.2f;
+  private static float SPEAR_WIDTH = 1.5f;
 
   /** Length of spear */
   private static float SPEAR_LENGTH = 3.2f;
@@ -124,13 +123,6 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
     numSpeared -= 1;
   }
 
-  // /**
-  // * Return if the player is able to spear
-  // * @pre spearExtended is false
-  // * */
-  // public boolean canSpear(){
-  // return numSpeared == 0;
-  // }
 
   /** Overriding the current activatePhysics method to start the body off as inactive */
   @Override
