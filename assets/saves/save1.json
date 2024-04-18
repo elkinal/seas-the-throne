@@ -1,0 +1,12 @@
+{
+"storedLevels": {
+	"tablet_room": {
+		"bossHps": [ 100 ]
+	},
+	"hub_world": {
+		"bossHps": []
+	}
+},
+"playerHealth": 5,
+"checkpoint": 2
+}

@@ -329,6 +329,11 @@ public class GameplayController implements Screen {
     // Load UI
     renderEngine.addUI(playerController.getHealthBar());
 
+    System.out.println("preload: "+stateController.getCheckpoint());
+    stateController.loadGame("levels/save1.json");
+    System.out.println("postload: "+stateController.getCheckpoint());
+
+
     if (BuildConfig.DEBUG) {
       System.out.println("num objects: " + physicsEngine.getObjects().size());
     }

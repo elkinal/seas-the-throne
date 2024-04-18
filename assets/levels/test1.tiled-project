@@ -1,0 +1,24 @@
+{
+    "automappingRulesFile": "",
+    "commands": [
+    ],
+    "compatibilityVersion": 1100,
+    "extensionsPath": "extensions",
+    "folders": [
+        "."
+    ],
+    "properties": [
+    ],
+    "propertyTypes": [
+        {
+            "id": 1,
+            "name": "sprite",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "levels/demonstatuepink"
+            ],
+            "valuesAsFlags": false
+        }
+    ]
+}
