@@ -270,7 +270,7 @@ public class PlayerModel extends ComplexModel implements Renderable {
       currentStrip = progressFrame();
     }
     Vector2 pos = getPosition();
-    if (isInvincible() && !isDead()) renderer.draw(filmStrip, pos.x, pos.y, 0.12f, Color.RED);
+    if (isInvincible() && !isDead()) renderer.draw(currentStrip, pos.x, pos.y, 0.12f, Color.RED);
     else renderer.draw(currentStrip, pos.x, pos.y, 0.12f);
     getSpearModel().draw(renderer);
   }
