@@ -83,8 +83,8 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     shouldUpdate = true;
     alwaysAnimate = false;
     roomId = builder.roomId;
-    bodyKnockbackForce = 70f;
-    spearKnockbackForce = 130f;
+    bodyKnockbackForce = 60f;
+    spearKnockbackForce = 100f;
     healthThresholds = builder.healthThresholds;
     thresholdPointer = 0;
     setBodyType(BodyDef.BodyType.KinematicBody);
