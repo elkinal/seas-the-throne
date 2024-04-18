@@ -45,6 +45,9 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
   /** Amount of damage the spear inflicts */
   private int damage;
 
+  /** If the spear should be set to inactive in the next iteration loop */
+  private boolean flagInactive;
+
   /**
    * The size is expressed in physics units NOT pixels.
    *
@@ -60,6 +63,7 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
     indicatorCache = new Vector2();
     SPEAR_TEXTURE_REGION = new TextureRegion(texture);
     damage = 5;
+    flagInactive = false;
   }
 
   /** Create new player body at position (x,y) */
@@ -96,12 +100,11 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
   /**
    * Update the spear mode
    *
-   * @param bodyPosition Vector representing the position of the player's body
    * @param dashDirection Vector representing the direction of the dash
    */
-  public void updateSpear(Vector2 bodyPosition, Vector2 dashDirection) {
+  public void updateSpear(Vector2 dashDirection) {
     spearDirectionCache.set(dashDirection);
-    setPosition(bodyPosition.add(spearDirectionCache.scl(SPEAR_OFFSET)));
+    setPosition(mainBody.getPosition().add(spearDirectionCache.scl(SPEAR_OFFSET)));
     setAngle(spearDirectionCache.angleRad() + (float) Math.PI / 2);
   }
 
@@ -135,6 +138,10 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
   public void decrementSpear() {
     numSpeared -= 1;
   }
+  /** Mark the spear as inactive in the next frame */
+  public void markInactive() {
+    flagInactive = true;
+  }
 
 
   /** Overriding the current activatePhysics method to start the body off as inactive */
@@ -164,6 +171,19 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
         SPEAR_TEXTURE_REGION,
         getMainBody().getX() + (float) (mag * Math.cos(angle)),
         getMainBody().getY() + (float) (mag * Math.sin(angle)));
+  }
+
+  /**
+   * Updates the object's physics state (NOT GAME LOGIC).
+   *
+   * <p>Use this for cooldown checking/resetting.
+   */
+  @Override
+  public void update(float delta) {
+    if (flagInactive) {
+      setSpear(false);
+      flagInactive = false;
+    }
   }
 
   @Override
