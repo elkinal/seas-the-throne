@@ -166,7 +166,6 @@ public class PlayerController implements Controllable {
     Vector2 startPos = playerPos.add(dashDirection.x * 1.5f, dashDirection.y * 1.5f);
     physicsEngine.spawnBullet(startPos, dashDirection, 16, true);
 
-    player.setShootCounter();
     player.decrementFishCount();
   }
 
@@ -241,6 +240,7 @@ public class PlayerController implements Controllable {
       beginDashing();
     } else if (shootingPressed && player.canShoot()) {
       beginShooting();
+      shoot();
     }
 
     setVelPercentages(hoff, voff);
@@ -248,10 +248,6 @@ public class PlayerController implements Controllable {
     orientPlayer();
 
     player.updateSpear(dashDirection);
-
-    if (player.canShootBullet()) {
-      shoot();
-    }
 
     dashingPressed = false;
     shootingPressed = false;
