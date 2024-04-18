@@ -21,6 +21,8 @@ import edu.cornell.jade.seasthethrone.util.Direction;
 import edu.cornell.jade.seasthethrone.input.Controllable;
 import com.badlogic.gdx.math.MathUtils;
 
+import java.util.jar.JarInputStream;
+
 public class PlayerController implements Controllable {
 
   /** Error value for how close the mouse is to the player for dash to not count */
@@ -47,6 +49,12 @@ public class PlayerController implements Controllable {
   /** If interact pressed in since last update */
   boolean interactPressed;
 
+  /** If the player needs to aim the dash indicator to dash */
+  boolean isAimToDashMode;
+
+  /** How long until the player can toggle dash controls again */
+  int dashToggleCounter;
+
   /**
    * The vector direction of the player for dashing NOTE: this vector will always be normalized, and
    * nonzero
@@ -71,6 +79,8 @@ public class PlayerController implements Controllable {
     moveDirection = new Vector2();
     this.healthBar = new HealthBar();
     this.ammoBar = new AmmoBar();
+    this.isAimToDashMode = true;
+    this.dashToggleCounter = 0;
   }
 
   /**
@@ -100,6 +110,13 @@ public class PlayerController implements Controllable {
 
   public void pressInteract() {
     interactPressed = true;
+  }
+
+  public void toggleDashMode() {
+    if (dashToggleCounter == 0) {
+      isAimToDashMode = !isAimToDashMode;
+      dashToggleCounter = 50;
+    }
   }
 
   public boolean isInteractPressed() {
@@ -132,7 +149,18 @@ public class PlayerController implements Controllable {
       return;
     } else if (player.isDashing()) {
       moveSpeed *= 4;
-      moveDirection.set(moveSpeed * dashDirection.x, moveSpeed * dashDirection.y);
+      System.out.println(isAimToDashMode);
+      if (isAimToDashMode) {
+        moveDirection.set(moveSpeed * dashDirection.x, moveSpeed * dashDirection.y);
+      } else {
+        // If not moving in a direction, just dash in currently facing direction
+        if (xNorm == 0 && yNorm == 0) {
+          moveDirection.set(-MathUtils.sin(player.getAngle()) * moveSpeed,
+                  MathUtils.cos(player.getAngle()) * moveSpeed);
+        } else {
+          moveDirection.set(xNorm * moveSpeed * mag, yNorm * moveSpeed * mag);
+        }
+      }
     } else {
       moveDirection.set(xNorm * moveSpeed * mag, yNorm * moveSpeed * mag);
     }
@@ -247,8 +275,14 @@ public class PlayerController implements Controllable {
     player.setDirection(moveDirection);
     orientPlayer();
 
-    player.updateSpear(dashDirection);
+    player.updateDashIndicator(dashDirection);
+    if (isAimToDashMode) {
+      player.updateSpear(dashDirection);
+    } else {
+      player.updateSpear(moveDirection.nor());
+    }
 
+    dashToggleCounter = Math.max(dashToggleCounter-1, 0);
     dashingPressed = false;
     shootingPressed = false;
   }

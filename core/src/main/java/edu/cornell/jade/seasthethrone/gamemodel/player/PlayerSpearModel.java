@@ -35,7 +35,10 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
   private int numSpeared;
 
   /** Cache for the direction the spear is facing */
-  private Vector2 directionCache;
+  private Vector2 spearDirectionCache;
+
+  /** Cache for the direction the of the shoot indicator */
+  private Vector2 indicatorCache;
 
   private final TextureRegion SPEAR_TEXTURE_REGION;
 
@@ -53,9 +56,10 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
   public PlayerSpearModel(float x, float y, float width, float height, Texture texture) {
     super(x, y, width, height);
     spearExtended = false;
-    directionCache = new Vector2();
+    spearDirectionCache = new Vector2();
+    indicatorCache = new Vector2();
     SPEAR_TEXTURE_REGION = new TextureRegion(texture);
-    damage = 20;
+    damage = 5;
   }
 
   /** Create new player body at position (x,y) */
@@ -96,9 +100,18 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
    * @param dashDirection Vector representing the direction of the dash
    */
   public void updateSpear(Vector2 bodyPosition, Vector2 dashDirection) {
-    directionCache.set(dashDirection);
-    setPosition(bodyPosition.add(directionCache.scl(SPEAR_OFFSET)));
-    setAngle(directionCache.angleRad() + (float) Math.PI / 2);
+    spearDirectionCache.set(dashDirection);
+    setPosition(bodyPosition.add(spearDirectionCache.scl(SPEAR_OFFSET)));
+    setAngle(spearDirectionCache.angleRad() + (float) Math.PI / 2);
+  }
+
+  /**
+   * Update the dash indicator vector
+   *
+   * @param dashDirection Vector representing the direction of the dash
+   */
+  public void updateDashIndicator(Vector2 dashDirection) {
+    indicatorCache.set(dashDirection);
   }
 
   public int getNumSpeared() {
@@ -144,13 +157,13 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
 
   @Override
   public void draw(RenderingEngine renderer) {
-    float angle = directionCache.angleRad();
-    float mag = 3f;
+    float angle = indicatorCache.angleRad();
+    float mag = 3f + SPEAR_OFFSET;
 
     renderer.draw(
         SPEAR_TEXTURE_REGION,
-        getX() + (float) (mag * Math.cos(angle)),
-        getY() + (float) (mag * Math.sin(angle)));
+        getMainBody().getX() + (float) (mag * Math.cos(angle)),
+        getMainBody().getY() + (float) (mag * Math.sin(angle)));
   }
 
   @Override
