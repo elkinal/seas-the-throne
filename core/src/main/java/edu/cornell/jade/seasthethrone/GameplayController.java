@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.viewport.*;
 
 import edu.cornell.jade.seasthethrone.ai.BossController;
@@ -33,7 +32,6 @@ import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 
 import java.io.FileNotFoundException;
 import java.util.Comparator;
-import java.util.HashMap;
 
 /**
  * The primary controller class for the game.
@@ -69,6 +67,9 @@ public class GameplayController implements Screen {
 
   /** Sub-controller for handling pausing the game */
   PauseController pauseController;
+
+  /** Sub-controller for portals */
+  PortalController portalController;
 
   /** Rendering Engine */
   RenderingEngine renderEngine;
@@ -148,6 +149,7 @@ public class GameplayController implements Screen {
     this.stateController = new StateController();
     this.bossControllers = new Array<>();
     this.inputController = new InputController(viewport);
+    this.portalController = new PortalController();
     this.renderEngine = new RenderingEngine(worldWidth, worldHeight, viewport, worldScale);
 
     setupGameplay();
@@ -297,6 +299,7 @@ public class GameplayController implements Screen {
       PortalModel model = new PortalModel(portal);
       renderEngine.addRenderable(model);
       physicsEngine.addObject(model);
+      portalController.addPortal(model);
     }
 
     // Load gates
@@ -358,6 +361,7 @@ public class GameplayController implements Screen {
   public void update(float delta) {
     viewport.apply();
     inputController.update();
+    portalController.update(stateController);
 
     // Update entity controllers and camera if the game is not over
     if (gameState != GameState.OVER) {

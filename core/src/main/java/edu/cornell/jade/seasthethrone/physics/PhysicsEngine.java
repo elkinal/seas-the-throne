@@ -233,13 +233,17 @@ public class PhysicsEngine implements ContactListener {
       else if (bd1 instanceof PortalModel && bd2 instanceof PlayerShadowModel) {
         if (BuildConfig.DEBUG) System.out.println("portal detected");
 
+        if (((PortalModel) bd1).isActivated()) {
         setTarget(((PortalModel) bd1).getTarget());
         setSpawnPoint(((PortalModel) bd1).getPlayerLoc());
+        }
       } else if (bd2 instanceof PortalModel && bd1 instanceof PlayerShadowModel) {
         if (BuildConfig.DEBUG) System.out.println("portal detected");
 
-        setTarget(((PortalModel) bd2).getTarget());
-        setSpawnPoint(((PortalModel) bd2).getPlayerLoc());
+        if (((PortalModel) bd2).isActivated()) {
+          setTarget(((PortalModel) bd2).getTarget());
+          setSpawnPoint(((PortalModel) bd2).getPlayerLoc());
+        }
       }
       // Handle gate sensors
       else if (bd1 instanceof PlayerShadowModel && bd2 instanceof GateSensorModel) {

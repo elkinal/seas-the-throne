@@ -422,6 +422,11 @@ public class Level {
       }
       portal.setTarget(JsonHandler.getStringProperty(portWrapper, "target"));
 
+      try {
+      portal.checkpointID = JsonHandler.getIntProperty(portWrapper, "requiredCheckpoint");
+      } catch (Error e) {
+        portal.checkpointID = -1;
+      }
       Vector2 playerLoc = new Vector2(
               JsonHandler.getFloatProperty(portWrapper, "playerX"),
               JsonHandler.getFloatProperty(portWrapper, "playerY"));

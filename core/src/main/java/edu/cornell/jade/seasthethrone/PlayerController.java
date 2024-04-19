@@ -11,8 +11,6 @@
 package edu.cornell.jade.seasthethrone;
 
 import com.badlogic.gdx.math.Vector2;
-import edu.cornell.jade.seasthethrone.level.LevelState;
-import edu.cornell.jade.seasthethrone.level.StateController;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.ui.AmmoBar;

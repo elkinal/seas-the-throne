@@ -1,9 +1,10 @@
-package edu.cornell.jade.seasthethrone.level;
+package edu.cornell.jade.seasthethrone;
 
 import com.badlogic.gdx.utils.*;
 import edu.cornell.jade.seasthethrone.BuildConfig;
 import edu.cornell.jade.seasthethrone.PlayerController;
 import edu.cornell.jade.seasthethrone.ai.BossController;
+import edu.cornell.jade.seasthethrone.level.LevelState;
 
 import java.io.*;
 import java.lang.StringBuilder;
