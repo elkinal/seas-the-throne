@@ -6,22 +6,21 @@ import edu.cornell.jade.seasthethrone.gamemodel.PortalModel;
 import javax.sound.sampled.Port;
 
 public class PortalController {
-    private Array<PortalModel> portals;
+  private Array<PortalModel> portals;
 
-    public PortalController() {
-        this.portals = new Array<>();
+  public PortalController() {
+    this.portals = new Array<>();
+  }
+
+  public void addPortal(PortalModel portal) {
+    this.portals.add(portal);
+  }
+
+  public void update(StateController state) {
+    for (PortalModel portal : portals) {
+      if (state.getCheckpoint() >= portal.getRequiredCheckpoint()) {
+        portal.setActivated(true);
+      }
     }
-
-
-    public void addPortal(PortalModel portal) {
-        this.portals.add(portal);
-    }
-
-    public void update(StateController state) {
-        for (PortalModel portal : portals) {
-            if(state.getCheckpoint() >= portal.getRequiredCheckpoint()) {
-                portal.setActivated(true);
-            }
-        }
-    }
+  }
 }

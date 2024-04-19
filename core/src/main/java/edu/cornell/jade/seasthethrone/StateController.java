@@ -13,134 +13,134 @@ import java.util.Scanner;
 
 public class StateController {
 
-    /** All levels/rooms the player has been in */
-    private HashMap<String, LevelState> storedLevels;
+  /** All levels/rooms the player has been in */
+  private HashMap<String, LevelState> storedLevels;
 
-    /** The level/room the player is currently in */
-    private LevelState currentLevel;
+  /** The level/room the player is currently in */
+  private LevelState currentLevel;
 
-    /** The player's most recently updated ammo count */
-    private int playerAmmo;
+  /** The player's most recently updated ammo count */
+  private int playerAmmo;
 
-    /** The player's most recently updated hp */
-    private int playerHealth;
+  /** The player's most recently updated hp */
+  private int playerHealth;
 
-    /** The ID of the player's most recent checkpoint */
-    private int checkpoint;
+  /** The ID of the player's most recent checkpoint */
+  private int checkpoint;
 
-    /** The index of the current save file */
-    private int saveIndex;
+  /** The index of the current save file */
+  private int saveIndex;
 
-    public StateController() {
-        this.storedLevels = new HashMap<>();
-        this.checkpoint = -1;
-        this.saveIndex = 1;
+  public StateController() {
+    this.storedLevels = new HashMap<>();
+    this.checkpoint = -1;
+    this.saveIndex = 1;
+  }
+
+  /** Copies the current in-game state into this controller */
+  public void updateState(String levelName, PlayerController player, Array<BossController> bosses) {
+    // Update player state
+    this.playerAmmo = player.getAmmo();
+    this.playerHealth = player.getHealth();
+
+    // Update level state in stored levels
+    if (storedLevels.containsKey(levelName)) {
+      storedLevels.get(levelName).update(bosses);
+    } else {
+      storedLevels.put(levelName, new LevelState(bosses));
+    }
+  }
+
+  /** Serializes the state of this controller to a json */
+  public void saveGame() {
+    Json json = new Json();
+    json.setOutputType(JsonWriter.OutputType.json);
+    String out = json.prettyPrint(json.toJson(this));
+    if (BuildConfig.DEBUG) {
+      System.out.println("save " + out);
+    }
+    try {
+      File myObj = new File("saves/save" + saveIndex + ".json");
+      if (myObj.createNewFile()) {
+        System.out.println("New save: " + "save" + saveIndex + ".json");
+      }
+    } catch (IOException e) {
+      System.out.println("An error occurred.");
+      e.printStackTrace();
+    }
+    try {
+      FileWriter myWriter = new FileWriter("saves/save" + saveIndex + ".json");
+      myWriter.write(out);
+      myWriter.close();
+      System.out.println("Game saved!");
+    } catch (IOException e) {
+      System.out.println("An error occurred.");
+      e.printStackTrace();
+    }
+  }
+
+  /** Loads in state from a json */
+  public void loadGame(String saveName) throws FileNotFoundException {
+    Scanner input = new Scanner(new File(saveName));
+    java.lang.StringBuilder loadString = new StringBuilder();
+    while (input.hasNext()) {
+      loadString.append(input.next());
     }
 
-    /** Copies the current in-game state into this controller */
-    public void updateState(String levelName, PlayerController player, Array<BossController> bosses) {
-        // Update player state
-        this.playerAmmo = player.getAmmo();
-        this.playerHealth = player.getHealth();
+    String out = loadString.toString();
+    JsonValue loadState = new JsonReader().parse(out);
 
-        // Update level state in stored levels
-        if (storedLevels.containsKey(levelName)) {
-            storedLevels.get(levelName).update(bosses);
-        } else {
-            storedLevels.put(levelName, new LevelState(bosses));
-        }
+    this.checkpoint = loadState.getInt("checkpoint");
+    //        this.currentLevel = loadState.currentLevel;
+    this.playerHealth = loadState.getInt("playerHealth");
+    try {
+      this.playerAmmo = loadState.getInt("playerAmmo");
+    } catch (IllegalArgumentException e) {
+      this.playerAmmo = 0;
     }
 
-    /** Serializes the state of this controller to a json */
-    public void saveGame() {
-        Json json = new Json();
-        json.setOutputType(JsonWriter.OutputType.json);
-        String out = json.prettyPrint(json.toJson(this));
-        if (BuildConfig.DEBUG) {
-          System.out.println("save "+out);
-        }
-        try {
-            File myObj = new File("saves/save"+saveIndex+".json");
-            if (myObj.createNewFile()) {
-                System.out.println("New save: " + "save"+saveIndex+".json");
-            }
-        } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
-        try {
-            FileWriter myWriter = new FileWriter("saves/save"+saveIndex+".json");
-            myWriter.write(out);
-            myWriter.close();
-            System.out.println("Game saved!");
-        } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
-        }
+    JsonValue levelsRoot = loadState.get("storedLevels");
+    this.storedLevels.clear();
+    for (int i = 0; i < levelsRoot.size; i++) {
+      LevelState thisLevel = new LevelState(levelsRoot.get(i).get("bossHps").asIntArray());
+      storedLevels.put(levelsRoot.get(i).name, thisLevel);
     }
+  }
 
-    /** Loads in state from a json */
-    public void loadGame(String saveName) throws FileNotFoundException {
-        Scanner input = new Scanner(new File(saveName));
-        java.lang.StringBuilder loadString = new StringBuilder();
-        while (input.hasNext()) {
-            loadString.append(input.next());
-        }
+  /** Returns if this controller has saved state on the specified level */
+  public boolean hasLevel(String name) {
+    return storedLevels.containsKey(name);
+  }
 
-        String out = loadString.toString();
-        JsonValue loadState = new JsonReader().parse(out);
+  /** Returns the specified level */
+  public LevelState getLevel(String name) {
+    return storedLevels.get(name);
+  }
 
-        this.checkpoint = loadState.getInt("checkpoint");
-//        this.currentLevel = loadState.currentLevel;
-        this.playerHealth = loadState.getInt("playerHealth");
-        try {
-            this.playerAmmo = loadState.getInt("playerAmmo");
-        } catch (IllegalArgumentException e) {
-            this.playerAmmo = 0;
-        }
+  /** Returns the state of level the player is currently in */
+  public LevelState getCurrentLevel() {
+    return currentLevel;
+  }
 
-        JsonValue levelsRoot =  loadState.get("storedLevels");
-        this.storedLevels.clear();
-        for (int i = 0; i < levelsRoot.size; i++) {
-            LevelState thisLevel = new LevelState( levelsRoot.get(i).get("bossHps").asIntArray());
-            storedLevels.put(levelsRoot.get(i).name, thisLevel);
-        }
-    }
+  /** Sets the current level state to a specified stored state */
+  public void setCurrentLevel(String name) {
+    this.currentLevel = storedLevels.get(name);
+  }
 
-    /** Returns if this controller has saved state on the specified level */
-    public boolean hasLevel(String name) {
-        return storedLevels.containsKey(name);
-    }
+  public int getCheckpoint() {
+    return checkpoint;
+  }
 
-    /** Returns the specified level */
-    public LevelState getLevel(String name) {
-        return storedLevels.get(name);
-    }
+  public void setCheckpoint(int checkpoint) {
+    this.checkpoint = Math.max(checkpoint, this.checkpoint);
+    saveGame();
+  }
 
-    /** Returns the state of level the player is currently in */
-    public LevelState getCurrentLevel() {
-        return currentLevel;
-    }
+  public int getPlayerAmmo() {
+    return playerAmmo;
+  }
 
-    /** Sets the current level state to a specified stored state */
-    public void setCurrentLevel(String name) {
-        this.currentLevel = storedLevels.get(name);
-    }
-
-    public int getCheckpoint() {
-        return checkpoint;
-    }
-
-    public void setCheckpoint(int checkpoint) {
-        this.checkpoint = Math.max(checkpoint, this.checkpoint);
-        saveGame();
-    }
-
-    public int getPlayerAmmo() {
-        return playerAmmo;
-    }
-
-    public int getPlayerHealth() {
-        return playerHealth;
-    }
+  public int getPlayerHealth() {
+    return playerHealth;
+  }
 }
