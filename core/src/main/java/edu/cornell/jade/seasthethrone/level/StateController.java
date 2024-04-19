@@ -131,7 +131,7 @@ public class StateController {
     }
 
     public void setCheckpoint(int checkpoint) {
-        this.checkpoint = checkpoint;
+        this.checkpoint = Math.max(checkpoint, this.checkpoint);
         saveGame();
     }
 
