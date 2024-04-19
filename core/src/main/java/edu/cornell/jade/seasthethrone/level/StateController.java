@@ -1,13 +1,14 @@
 package edu.cornell.jade.seasthethrone.level;
 
 import com.badlogic.gdx.utils.*;
+import edu.cornell.jade.seasthethrone.BuildConfig;
 import edu.cornell.jade.seasthethrone.PlayerController;
 import edu.cornell.jade.seasthethrone.ai.BossController;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.lang.StringBuilder;
 import java.util.HashMap;
+import java.util.Scanner;
 
 public class StateController {
 
@@ -17,26 +18,25 @@ public class StateController {
     /** The level/room the player is currently in */
     private LevelState currentLevel;
 
-    /** The player's most recently updated hp */
-    private int playerHealth;
-
     /** The player's most recently updated ammo count */
     private int playerAmmo;
+
+    /** The player's most recently updated hp */
+    private int playerHealth;
 
     /** The ID of the player's most recent checkpoint */
     private int checkpoint;
 
-    /** Json object to serialize */
-    private Json json = new Json();
-
-    /** Json reader to deserialize */
-    JsonReader reader = new JsonReader();
+    /** The index of the current save file */
+    private int saveIndex;
 
     public StateController() {
         this.storedLevels = new HashMap<>();
         this.checkpoint = -1;
+        this.saveIndex = 1;
     }
 
+    /** Copies the current in-game state into this controller */
     public void updateState(String levelName, PlayerController player, Array<BossController> bosses) {
         // Update player state
         this.playerAmmo = player.getAmmo();
@@ -52,19 +52,23 @@ public class StateController {
 
     /** Serializes the state of this controller to a json */
     public void saveGame() {
+        Json json = new Json();
         json.setOutputType(JsonWriter.OutputType.json);
         String out = json.prettyPrint(json.toJson(this));
+        if (BuildConfig.DEBUG) {
+          System.out.println("save "+out);
+        }
         try {
-            File myObj = new File("saves/save1.json");
+            File myObj = new File("saves/save"+saveIndex+".json");
             if (myObj.createNewFile()) {
-                System.out.println("New save created");
+                System.out.println("New save: " + "save"+saveIndex+".json");
             }
         } catch (IOException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
         try {
-            FileWriter myWriter = new FileWriter("saves/save1.json");
+            FileWriter myWriter = new FileWriter("saves/save"+saveIndex+".json");
             myWriter.write(out);
             myWriter.close();
             System.out.println("Game saved!");
@@ -75,15 +79,31 @@ public class StateController {
     }
 
     /** Loads in state from a json */
-    public void loadGame(String saveName) {
-        JsonReader reader = new JsonReader();
-        JsonValue loadState = reader.parse("levels/save1.json");
-//        this.storedLevels = loadState.g;
+    public void loadGame(String saveName) throws FileNotFoundException {
+        Scanner input = new Scanner(new File(saveName));
+        java.lang.StringBuilder loadString = new StringBuilder();
+        while (input.hasNext()) {
+            loadString.append(input.next());
+        }
+
+        String out = loadString.toString();
+        JsonValue loadState = new JsonReader().parse(out);
+
         this.checkpoint = loadState.getInt("checkpoint");
 //        this.currentLevel = loadState.currentLevel;
         this.playerHealth = loadState.getInt("playerHealth");
-//        this.playerAmmo = loadState.playerAmmo;
+        try {
+            this.playerAmmo = loadState.getInt("playerAmmo");
+        } catch (IllegalArgumentException e) {
+            this.playerAmmo = 0;
+        }
 
+        JsonValue levelsRoot =  loadState.get("storedLevels");
+        this.storedLevels.clear();
+        for (int i = 0; i < levelsRoot.size; i++) {
+            LevelState thisLevel = new LevelState( levelsRoot.get(i).get("bossHps").asIntArray());
+            storedLevels.put(levelsRoot.get(i).name, thisLevel);
+        }
     }
 
     /** Returns if this controller has saved state on the specified level */

@@ -15,6 +15,12 @@ public class LevelState {
         }
     }
 
+    public LevelState(int[] hps) {
+        for (int hp : hps) {
+            this.bossHps.add(hp);
+        }
+    }
+
     public void update(Array<BossController> bossControllers) {
         this.getBossHps().clear();
         for (BossController bc : bossControllers) {

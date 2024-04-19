@@ -31,6 +31,7 @@ import edu.cornell.jade.seasthethrone.gamemodel.boss.CrabBossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.JellyBossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 
+import java.io.FileNotFoundException;
 import java.util.Comparator;
 import java.util.HashMap;
 
@@ -329,10 +330,11 @@ public class GameplayController implements Screen {
     // Load UI
     renderEngine.addUI(playerController.getHealthBar());
 
-    System.out.println("preload: "+stateController.getCheckpoint());
-    stateController.loadGame("levels/save1.json");
-    System.out.println("postload: "+stateController.getCheckpoint());
-
+//     Load save state
+    try {stateController.loadGame("saves/save1.json");}
+    catch (FileNotFoundException e) {
+      System.out.println("Save not found");
+    }
 
     if (BuildConfig.DEBUG) {
       System.out.println("num objects: " + physicsEngine.getObjects().size());
@@ -394,6 +396,7 @@ public class GameplayController implements Screen {
       if (BuildConfig.DEBUG) {
         System.out.println("hasCheckpoint " + physicsEngine.getCheckpointID());
       }
+      stateController.updateState(level.name, playerController, bossControllers);
       stateController.setCheckpoint(physicsEngine.checkpointID);
     }
 
