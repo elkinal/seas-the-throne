@@ -261,6 +261,7 @@ public class GameplayController implements Screen {
               .setFalloverAnimation(new Texture("bosses/" + name + "/fallover.png"))
               .setShootAnimation(new Texture("bosses/" + name + "/shoot.png"))
               .setGetHitAnimation(new Texture("bosses/" + name + "/hurt.png"))
+              .setDeathAnimation(new Texture("bosses/" + name + "/death.png"))
               .setFrameDelay(12)
               .setRoomId(bossContainer.id)
               .build();

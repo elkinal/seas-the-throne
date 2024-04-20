@@ -4,13 +4,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import edu.cornell.jade.seasthethrone.gamemodel.EnemyModel;
-import edu.cornell.jade.seasthethrone.physics.CollisionMask;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
-
-import java.util.Arrays;
-import java.util.Iterator;
 
 public abstract class BossModel extends EnemyModel implements Renderable {
 
@@ -22,6 +18,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
 
   private FilmStrip falloverAnimation;
   private FilmStrip getHitAnimation;
+  private FilmStrip deathAnimation;
 
   /** The current filmstrip being used */
   public FilmStrip filmStrip;
@@ -36,6 +33,8 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   protected int animationFrame;
 
   protected float scale;
+  /** Flag for executing the boss */
+  private boolean isExecute;
 
   /** Amount of knockback force applied to player on body collision */
   private float bodyKnockbackForce;
@@ -51,6 +50,8 @@ public abstract class BossModel extends EnemyModel implements Renderable {
 
   /** Death animation countdown */
   private int deathCount;
+  /** Execute animation countdown */
+  private int executeCount;
 
   /** Whether the boss should continue being animated. */
   private boolean shouldUpdate;
@@ -77,7 +78,8 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     frameSize = builder.frameSize;
     moveAnimation = builder.moveAnimation;
     getHitAnimation = builder.getHitAnimation;
-    falloverAnimation = builder.dieAnimation;
+    falloverAnimation = builder.falloverAnimation;
+    deathAnimation = builder.deathAnimation;
     this.filmStrip = shootAnimation;
     frameCounter = 1;
     frameDelay = builder.frameDelay;
@@ -91,6 +93,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     spearKnockbackForce = 130f;
     healthThresholds = builder.healthThresholds;
     thresholdPointer = 0;
+    isExecute = false;
     setBodyType(BodyDef.BodyType.KinematicBody);
   }
 
@@ -116,7 +119,10 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   public FilmStrip progressFrame() {
     int frame = getFrameNumber();
     if (isDead()) {
-      filmStrip = falloverAnimation;
+      if (isExecute)
+        filmStrip = deathAnimation;
+      else
+        filmStrip = falloverAnimation;
     } else if (isHit()){
       filmStrip = getHitAnimation;
     } else {
@@ -244,6 +250,16 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     }
   }
 
+  /**
+   * Lets the player execute the boss
+   */
+
+  public void executeBoss(){
+    setFrameNumber(0);
+    executeCount = frameDelay * deathAnimation.getSize();
+    isExecute = true;
+  }
+
   public static class Builder {
     /** boss x position */
     private float x;
@@ -261,7 +277,8 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     private FilmStrip moveAnimation;
 
     private FilmStrip getHitAnimation;
-    private FilmStrip dieAnimation;
+    private FilmStrip falloverAnimation;
+    private FilmStrip deathAnimation;
     private FilmStrip shootAnimation;
     private FilmStrip idleAnimation;
 
@@ -356,7 +373,13 @@ public abstract class BossModel extends EnemyModel implements Renderable {
 
     public Builder setFalloverAnimation(Texture texture) {
       int width = texture.getWidth();
-      dieAnimation = new FilmStrip(texture, 1, width / frameSize);
+      falloverAnimation = new FilmStrip(texture, 1, width / frameSize);
+      ;
+      return this;
+    }
+    public Builder setDeathAnimation(Texture texture){
+      int width = texture.getWidth();
+      deathAnimation = new FilmStrip(texture, 1, width / frameSize);
       ;
       return this;
     }
