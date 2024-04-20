@@ -105,7 +105,9 @@ public class GameCanvas {
   }
 
   /** Returns the UI sprite batch */
-  public SpriteBatch getUiBatch() { return uiBatch; }
+  public SpriteBatch getUiBatch() {
+    return uiBatch;
+  }
 
   /**
    * Creates a new GameCanvas determined by the application configuration.
@@ -334,8 +336,8 @@ public class GameCanvas {
   /** Clear the screen so we can start a new animation frame */
   public void clear() {
     // Clear the screen
-//    Gdx.gl.glClearColor(0.39f, 0.58f, 0.93f, 1.0f); // Homage to the XNA years
-    Gdx.gl.glClearColor(0,0,0,0);
+    //    Gdx.gl.glClearColor(0.39f, 0.58f, 0.93f, 1.0f); // Homage to the XNA years
+    Gdx.gl.glClearColor(0, 0, 0, 0);
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
   }
 
@@ -625,26 +627,28 @@ public class GameCanvas {
    * <p>Unless otherwise transformed by the global transform (@see begin(Affine2)), the texture will
    * be unscaled. The bottom left of the texture will be positioned at the given coordinates.
    *
-   * @param region   The texture to draw
-   * @param tint     The color tint
-   * @param ox       The x-coordinate of texture origin (in pixels)
-   * @param oy       The y-coordinate of texture origin (in pixels)
-   * @param x        The x-coordinate of the texture origin (on screen)
-   * @param y        The y-coordinate of the texture origin (on screen)
-   * @param width    The texture width
-   * @param height   The texture height
+   * @param region The texture to draw
+   * @param tint The color tint
+   * @param ox The x-coordinate of texture origin (in pixels)
+   * @param oy The y-coordinate of texture origin (in pixels)
+   * @param x The x-coordinate of the texture origin (on screen)
+   * @param y The y-coordinate of the texture origin (on screen)
+   * @param width The texture width
+   * @param height The texture height
    * @param scale
    * @param rotation
    */
   public void draw(
-          TextureRegion region,
-          Color tint,
-          float ox,
-          float oy,
-          float x,
-          float y,
-          float width,
-          float height, float scale, float rotation) {
+      TextureRegion region,
+      Color tint,
+      float ox,
+      float oy,
+      float x,
+      float y,
+      float width,
+      float height,
+      float scale,
+      float rotation) {
     if (active != DrawPass.STANDARD) {
       Gdx.app.error(
           "GameCanvas", "Cannot draw without active begin()", new IllegalStateException());
@@ -959,10 +963,11 @@ public class GameCanvas {
   }
 
   /** Draws UI textures independent of the primary sprite batch */
-  public void drawUI(TextureRegion texture, Color tint, float x, float y, float width, float height) {
+  public void drawUI(
+      TextureRegion texture, Color tint, float x, float y, float width, float height) {
     if (active != DrawPass.STANDARD) {
       Gdx.app.error(
-              "GameCanvas", "Cannot draw without active begin()", new IllegalStateException());
+          "GameCanvas", "Cannot draw without active begin()", new IllegalStateException());
       return;
     }
 
@@ -975,14 +980,16 @@ public class GameCanvas {
   public void drawUI(TextureRegion texture, float x, float y, float width, float height) {
     if (active != DrawPass.STANDARD) {
       Gdx.app.error(
-              "GameCanvas", "Cannot draw without active begin()", new IllegalStateException());
+          "GameCanvas", "Cannot draw without active begin()", new IllegalStateException());
       return;
     }
 
     // Unlike Lab 1, we can shortcut without a master drawing method
+
     uiBatch.setColor(Color.WHITE);
-    uiBatch.draw(texture, x,y,0, 0, width, height, 1, 1, 0);
+    uiBatch.draw(texture, x, y, 0, 0, width, height, 1, 1, 0);
   }
+
   /**
    * Draws text on the screen.
    *
