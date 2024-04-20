@@ -326,7 +326,6 @@ public class GameplayController implements Screen {
     // Load UI
     uiController =
         new UIController(playerController, renderEngine, renderEngine.getGameCanvas(), uiViewport);
-
     if (BuildConfig.DEBUG) {
       System.out.println("num objects: " + physicsEngine.getObjects().size());
     }
@@ -373,7 +372,7 @@ public class GameplayController implements Screen {
     // Check if the player is dead, end the game
     if (playerController.isDead()) {
       pauseController.pauseGame();
-      playerController.update();
+      uiController.update();
       gameState = GameState.OVER;
     }
 
@@ -400,6 +399,7 @@ public class GameplayController implements Screen {
     // Render frame
     renderEngine.clear();
     renderEngine.addRenderable(level.getBackground());
+    renderEngine.addRenderable(uiController.getAmmoBar());
 
     for (Tile tile : level.getTiles()) {
       renderEngine.addRenderable(tile);

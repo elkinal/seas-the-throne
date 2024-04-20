@@ -7,6 +7,7 @@ import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
+/** A model representing the player's health bar. The bar is updated in UIController. */
 public class HealthBar implements Renderable {
 
   /** Current texture for the healthbar */
@@ -23,6 +24,7 @@ public class HealthBar implements Renderable {
 
   private float height;
 
+  /** Creates a new Health Bar */
   public HealthBar() {
     this.textures = new Array<>(6);
     textures.add(new TextureRegion(new Texture("ui/health_v3_0.png")));
@@ -37,13 +39,18 @@ public class HealthBar implements Renderable {
     height = 0;
   }
 
-  /** Updates the texture of this health bar to match player health */
-  public void update(int currHealth) {
-    if (currHealth < 0) {
-      this.texture = textures.get(0);
-      return;
-    }
-    this.texture = textures.get(currHealth);
+  /** Updates the texture of this health bar to be zero (player is dead) */
+  protected void makeHPEmpty() {
+    texture = textures.get(0);
+  }
+
+  /**
+   * Updates the texture of this health bar to match player health
+   *
+   * @param currHealth the player's current health
+   */
+  protected void changeHP(int currHealth) {
+    texture = textures.get(currHealth);
   }
 
   @Override
@@ -51,7 +58,6 @@ public class HealthBar implements Renderable {
     if (height == 0) {
       height = renderer.getGameCanvas().getHeight();
     }
-
     renderer.getGameCanvas().drawUI(texture, 10f, 0.9f * height, SCALE * aspectRatio, SCALE);
   }
 

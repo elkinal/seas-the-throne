@@ -30,15 +30,31 @@ public class AmmoBar implements Renderable {
     this.texture = textures.get(textures.size - 1);
   }
 
-  /** Updates the texture of this health bar to match player health */
-  public void update(int currAmmo, Vector2 pos) {
-    if (currAmmo > textures.size || currAmmo < 1) {
-      this.texture = textures.get(0);
-      return;
-    }
+  /** Updates the texture of this health bar to be zero (player is dead) */
+  protected void makeHPEmpty() {
+    texture = textures.get(0);
+  }
 
-    this.texture = textures.get(currAmmo);
-    this.playerPos = pos;
+  /**
+   * Updates the texture of this health bar to match player health
+   *
+   * @param currHealth the player's current health
+   */
+  protected void changeHP(int currHealth) {
+    texture = textures.get(currHealth);
+  }
+
+  protected void changePlayerPos(Vector2 position) {
+    playerPos = position;
+  }
+
+  /**
+   * Returns the number of textures in the AmmoBar. There is one for each bullet.
+   *
+   * @return the number of textures in the AmmoBar
+   */
+  public int numTextures() {
+    return textures.size;
   }
 
   @Override

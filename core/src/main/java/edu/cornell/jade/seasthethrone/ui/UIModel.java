@@ -7,73 +7,55 @@ import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
+/**
+ * This is a model class that combines all UI objects into one, and contains all of them in one
+ * place so they are able to be updated all at once by UIController.
+ */
 public class UIModel implements Renderable {
-  /** UI renderable objects */
-  private Array<Renderable> uiElements;
+  // UI renderable objects
+  /** The health bar of the player */
+  private HealthBar health;
 
-  /** Constructs a new UIModel. It initially has no renderable UI elements */
+  /** The ammo bar of the player */
+  private AmmoBar ammo;
+
+  /** Constructs a new UIModel. All UI elements are initially empty. */
   public UIModel() {
-    uiElements = new Array<>();
-
-    // add health bar and ammo to render list
-    uiElements.add(new HealthBar());
-    uiElements.add(new AmmoBar());
+    health = new HealthBar();
+    ammo = new AmmoBar();
   }
 
-  /** Adds UI element to the model */
-  public void add(Renderable r) {
-    uiElements.add(r);
+  /** Returns the AmmoBar */
+  public AmmoBar getAmmoBar() {
+    return ammo;
   }
 
   /**
-   * Gets the HealthBar model for the player from the list of models
+   * Updates the texture of the health bar to match player health
    *
-   * @return Renderable that is the HealthBar
+   * @param currHealth the current HP of the player
    */
-  private HealthBar getHealthBar() {
-    for (Renderable r : uiElements) {
-      if (r instanceof HealthBar) {
-        return (HealthBar) r;
-      }
+  public void update(int currHealth) {
+    if (currHealth < 0) {
+      health.makeHPEmpty();
+      return;
     }
-    return null;
+    health.changeHP(currHealth);
   }
 
-  /**
-   * Gets the AmmoBar model from the list of models
-   *
-   * @return Renderable that is the AmmoBar
-   */
-  private AmmoBar getAmmoBar() {
-    for (Renderable r : uiElements) {
-      if (r instanceof AmmoBar) {
-        return (AmmoBar) r;
-      }
+  /** Updates the texture of the ammo bar to match ammo count */
+  public void update(int currAmmo, Vector2 pos) {
+    if (currAmmo > ammo.numTextures() || currAmmo < 1) {
+      ammo.makeHPEmpty();
+      return;
     }
-    return null;
-  }
-
-  /**
-   * Update the health bar
-   *
-   * @param health the health of the player
-   */
-  public void update(int health) {
-    assert getHealthBar() != null;
-    getHealthBar().update(health);
-  }
-
-  /** Update the bullet counter for the player */
-  public void update(int numSpeared, Vector2 position) {
-    assert getAmmoBar() != null;
-    getAmmoBar().update(numSpeared, position);
+    ammo.changeHP(currAmmo);
+    ammo.changePlayerPos(pos);
   }
 
   @Override
   public void draw(RenderingEngine renderer) {
-    for (Renderable r : uiElements) {
-      r.draw(renderer);
-    }
+    health.draw(renderer);
   }
 
   @Override
@@ -95,7 +77,8 @@ public class UIModel implements Renderable {
     return true;
   }
 
+  /** Clears the UIModel of all elements */
   public void clear() {
-    uiElements.clear();
+    health = null;
   }
 }
