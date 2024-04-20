@@ -1,5 +1,6 @@
 package edu.cornell.jade.seasthethrone.ui;
 
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import edu.cornell.jade.seasthethrone.PlayerController;
 import edu.cornell.jade.seasthethrone.ai.BossController;
@@ -34,17 +35,8 @@ public class UIController {
     viewport = view;
     boss = null;
 
-    uiModel = new UIModel();
     this.canvas = canvas;
-  }
-
-  /**
-   * Returns the UIModel
-   *
-   * @return the UIModel containing all elements that are rendered
-   */
-  public UIModel getUI() {
-    return uiModel;
+    uiModel = new UIModel();
   }
 
   /** Adds boss once player encounters it */

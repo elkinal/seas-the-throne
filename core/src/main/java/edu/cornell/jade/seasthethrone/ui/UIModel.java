@@ -2,6 +2,7 @@ package edu.cornell.jade.seasthethrone.ui;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import edu.cornell.jade.seasthethrone.render.GameCanvas;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
@@ -13,6 +14,8 @@ public class UIModel implements Renderable {
   /** Constructs a new UIModel. It initially has no renderable UI elements */
   public UIModel() {
     uiElements = new Array<>();
+
+    // add health bar and ammo to render list
     uiElements.add(new HealthBar());
     uiElements.add(new AmmoBar());
   }
@@ -41,7 +44,7 @@ public class UIModel implements Renderable {
    *
    * @return Renderable that is the AmmoBar
    */
-  private AmmoBar getBulletCount() {
+  private AmmoBar getAmmoBar() {
     for (Renderable r : uiElements) {
       if (r instanceof AmmoBar) {
         return (AmmoBar) r;
@@ -62,8 +65,8 @@ public class UIModel implements Renderable {
 
   /** Update the bullet counter for the player */
   public void update(int numSpeared, Vector2 position) {
-    assert getBulletCount() != null;
-    getBulletCount().update(numSpeared, position);
+    assert getAmmoBar() != null;
+    getAmmoBar().update(numSpeared, position);
   }
 
   @Override

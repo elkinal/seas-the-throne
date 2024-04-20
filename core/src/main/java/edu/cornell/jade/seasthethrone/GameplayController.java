@@ -425,21 +425,13 @@ public class GameplayController implements Screen {
           physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
     }
 
-    System.out.println(gameState);
-
     // Draw reset and debug screen for wins and losses
 
     if (gameState == GameState.OVER || gameState == GameState.WIN) {
-      if (BuildConfig.DEBUG) {
-        System.out.println("game over");
-      }
       if (inputController.didReset()) {
         setupGameplay();
         pauseController.continueGame();
       } else {
-        if (BuildConfig.DEBUG) {
-          System.out.println("game over printed");
-        }
         renderEngine.drawGameState(gameState);
       }
     }
