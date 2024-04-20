@@ -56,9 +56,12 @@ public class UIController {
 
   /** Draws UI elements */
   public void drawUI() {
+    canvas.begin();
     canvas.beginUI();
+    canvas.getUiBatch().setProjectionMatrix(viewport.getCamera().combined);
     uiModel.draw(render);
     canvas.endUI();
+    canvas.end();
   }
 
   /** Updates states of all UI */

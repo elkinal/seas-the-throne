@@ -125,6 +125,7 @@ public class GameCanvas {
     camera = new OrthographicCamera(getWidth(), getHeight());
     camera.setToOrtho(false);
     spriteBatch.setProjectionMatrix(camera.combined);
+    uiBatch.setProjectionMatrix(camera.combined);
     debugRender.setProjectionMatrix(camera.combined);
 
     // Initialize the cache objects
@@ -290,6 +291,7 @@ public class GameCanvas {
   public void resize() {
     // Resizing screws up the spriteBatch projection matrix
     spriteBatch.getProjectionMatrix().setToOrtho2D(0, 0, getWidth(), getHeight());
+    uiBatch.getProjectionMatrix().setToOrtho2D(0, 0, getWidth(), getHeight());
   }
 
   /**
