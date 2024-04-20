@@ -19,6 +19,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   private FilmStrip falloverAnimation;
   private FilmStrip getHitAnimation;
   private FilmStrip deathAnimation;
+  private FilmStrip attackAnimation;
 
   /** The current filmstrip being used */
   public FilmStrip filmStrip;
@@ -35,6 +36,8 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   protected float scale;
   /** Flag for executing the boss */
   private boolean isExecute;
+  /** Flag for the boss attack*/
+  private boolean isAttack;
 
   /** Amount of knockback force applied to player on body collision */
   private float bodyKnockbackForce;
@@ -52,7 +55,6 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   private int deathCount;
   /** Execute animation countdown */
   private int executeCount;
-
   /** Whether the boss should continue being animated. */
   private boolean shouldUpdate;
 
@@ -80,6 +82,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     getHitAnimation = builder.getHitAnimation;
     falloverAnimation = builder.falloverAnimation;
     deathAnimation = builder.deathAnimation;
+    attackAnimation = builder.attackAnimation;
     this.filmStrip = shootAnimation;
     frameCounter = 1;
     frameDelay = builder.frameDelay;
@@ -126,7 +129,10 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     } else if (isHit()){
       filmStrip = getHitAnimation;
     } else {
-      filmStrip = shootAnimation;
+      if (isAttack)
+        filmStrip = attackAnimation;
+      else
+        filmStrip = shootAnimation;
     }
     filmStrip.setFrame(frame);
 
@@ -260,6 +266,14 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     isExecute = true;
   }
 
+  /**
+   * Lets the boss attack
+   */
+  public void bossAttack(){
+    setFrameNumber(0);
+    isAttack = true;
+  }
+
   public static class Builder {
     /** boss x position */
     private float x;
@@ -281,6 +295,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     private FilmStrip deathAnimation;
     private FilmStrip shootAnimation;
     private FilmStrip idleAnimation;
+    private FilmStrip attackAnimation;
 
     /** The number of frames between animation updates */
     private int frameDelay;
@@ -380,6 +395,12 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     public Builder setDeathAnimation(Texture texture){
       int width = texture.getWidth();
       deathAnimation = new FilmStrip(texture, 1, width / frameSize);
+      ;
+      return this;
+    }
+    public Builder setAttackAnimation(Texture texture){
+      int width = texture.getWidth();
+      attackAnimation = new FilmStrip(texture, 1, width / frameSize);
       ;
       return this;
     }

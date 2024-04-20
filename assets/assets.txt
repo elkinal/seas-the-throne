@@ -7,6 +7,7 @@ bosses/crab/fallover.png
 bosses/crab/hurt.png
 bosses/crab/idle.png
 bosses/crab/shoot.png
+bosses/jelly/attack.png
 bosses/jelly/death.png
 bosses/jelly/fallover.png
 bosses/jelly/hurt.png
