@@ -259,6 +259,8 @@ public class GameplayController implements Screen {
               .setHealthThresholds(new int[]{70, 30})
               .setFrameSize(frameSize)
               .setFalloverAnimation(new Texture("bosses/" + name + "/fallover.png"))
+              .setShootAnimation(new Texture("bosses/" + name + "/shoot.png"))
+              .setGetHitAnimation(new Texture("bosses/" + name + "/hurt.png"))
               .setFrameDelay(12)
               .setRoomId(bossContainer.id)
               .build();

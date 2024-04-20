@@ -46,6 +46,9 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   /** Number of health points the boss has */
   protected int health;
 
+  /** Hit animation countdown */
+  private int hitCount;
+
   /** Death animation countdown */
   private int deathCount;
 
@@ -80,6 +83,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     frameDelay = builder.frameDelay;
     health = builder.health;
     deathCount = frameDelay * 16;
+    hitCount = 0;
     shouldUpdate = true;
     alwaysAnimate = false;
     roomId = builder.roomId;
@@ -100,11 +104,21 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     renderer.draw(currentStrip, pos.x, pos.y, 0.16f);
   }
 
+  private boolean isHit(){
+    if (hitCount > 0){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
   @Override
   public FilmStrip progressFrame() {
     int frame = getFrameNumber();
     if (isDead()) {
       filmStrip = falloverAnimation;
+    } else if (isHit()){
+      filmStrip = getHitAnimation;
     } else {
       filmStrip = shootAnimation;
     }
@@ -117,6 +131,17 @@ public abstract class BossModel extends EnemyModel implements Renderable {
       } else {
         setFrameNumber(getFrameNumber());
         deathCount -= 1;
+      }
+    } else if (isHit()){
+      if (frameCounter % frameDelay == 0 && getFrameNumber() < getFramesInAnimation() - 1) {
+        setFrameNumber(getFrameNumber() + 1);
+        hitCount -= 1;
+      } else {
+        setFrameNumber(getFrameNumber());
+        hitCount -= 1;
+      }
+      if (hitCount == 0){
+        setFrameNumber(0);
       }
     } else {
       if (frameCounter % frameDelay == 0) {
@@ -173,6 +198,8 @@ public abstract class BossModel extends EnemyModel implements Renderable {
    * If the boss dies, mark boss as removed
    */
   public void decrementHealth(int damage) {
+    hitCount = frameDelay * getHitAnimation.getSize();
+    setFrameNumber(0);
     health -= damage;
     if (isDead()) {
       filmStrip = falloverAnimation;

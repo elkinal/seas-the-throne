@@ -1,6 +1,7 @@
 Alagard.ttf
 assets.json
 bosses/crab/attack.png
+bosses/crab/crab_shoot_filmstip.png
 bosses/crab/death.png
 bosses/crab/fallover.png
 bosses/crab/hurt.png
@@ -22,11 +23,6 @@ bullet/yellowfish_SW.png
 bullet/yellowfish_west.png
 EBGaramond.ttf
 empty.png
-hs_err_pid12260.log
-hs_err_pid12828.log
-hs_err_pid14432.log
-hs_err_pid3232.log
-hs_err_pid4460.log
 legacy/bullet_test.png
 legacy/spear_left_right.png
 legacy/spear_up_down.png
