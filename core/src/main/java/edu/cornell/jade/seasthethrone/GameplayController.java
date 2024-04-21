@@ -334,10 +334,12 @@ public class GameplayController implements Screen {
     renderEngine.addUI(playerController.getHealthBar());
 
 //     Load save state
-    try {stateController.loadGame("saves/save1.json");}
+    try {stateController.loadState("saves/save1.json");}
     catch (FileNotFoundException e) {
       System.out.println("Save not found");
     }
+
+    System.out.println("post setup ammo: "+playerController.getAmmo());
 
     if (BuildConfig.DEBUG) {
       System.out.println("num objects: " + physicsEngine.getObjects().size());
@@ -466,6 +468,7 @@ public class GameplayController implements Screen {
   private void changeLevel() {
     // Save the current level state
     stateController.updateState(level.name, playerController, bossControllers);
+    System.out.println("player ammo pre portal: "+playerController.getAmmo());
 
     listener.exitScreen(this, GDXRoot.EXIT_SWAP);
     level = new Level(physicsEngine.getTarget());

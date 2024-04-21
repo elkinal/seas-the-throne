@@ -5,6 +5,7 @@ import edu.cornell.jade.seasthethrone.BuildConfig;
 import edu.cornell.jade.seasthethrone.PlayerController;
 import edu.cornell.jade.seasthethrone.ai.BossController;
 import edu.cornell.jade.seasthethrone.level.LevelState;
+import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 
 import java.io.*;
 import java.lang.StringBuilder;
@@ -15,6 +16,9 @@ public class StateController {
 
   /** All levels/rooms the player has been in */
   private HashMap<String, LevelState> storedLevels;
+
+  /** Reference to physics engine */
+  PhysicsEngine physicsEngine;
 
   /** The level/room the player is currently in */
   private LevelState currentLevel;
@@ -80,7 +84,7 @@ public class StateController {
   }
 
   /** Loads in state from a json */
-  public void loadGame(String saveName) throws FileNotFoundException {
+  public void loadState(String saveName) throws FileNotFoundException {
     Scanner input = new Scanner(new File(saveName));
     java.lang.StringBuilder loadString = new StringBuilder();
     while (input.hasNext()) {
@@ -95,6 +99,7 @@ public class StateController {
     this.playerHealth = loadState.getInt("playerHealth");
     try {
       this.playerAmmo = loadState.getInt("playerAmmo");
+      System.out.println("loaded ammo: "+this.playerAmmo);
     } catch (IllegalArgumentException e) {
       this.playerAmmo = 0;
     }
