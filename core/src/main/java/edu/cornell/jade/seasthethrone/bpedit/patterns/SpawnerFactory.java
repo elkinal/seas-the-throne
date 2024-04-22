@@ -7,6 +7,8 @@ import edu.cornell.jade.seasthethrone.bpedit.Spawner.BulletFamily;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
+import edu.cornell.jade.seasthethrone.bpedit.Spawner.DelayedTarget;
+import edu.cornell.jade.seasthethrone.bpedit.Spawner.DelayedSpeedChange;
 
 /**
  * Contains factory methods for some common and even some not so common
@@ -24,7 +26,7 @@ public final class SpawnerFactory {
    * @param physicsEngine {@link PhysicsEngine} to add bullets to
    */
   public static Spawner constructRepeatingRing(int dups, int delay, BulletModel.Builder builder,
-                                                         PhysicsEngine physicsEngine) {
+      PhysicsEngine physicsEngine) {
     Spawner out = new Spawner(builder, physicsEngine);
     BulletFamily f = new BulletFamily(1f, 0f, 8f, 0f, 0.5f, 0);
     f.addEffect(new Arc(0, MathUtils.PI * 2, dups));
@@ -42,7 +44,7 @@ public final class SpawnerFactory {
    * @param physicsEngine {@link PhysicsEngine} to add bullets to
    */
   public static Spawner constructTrackingRepeatingBullet(int delay, BulletModel.Builder builder,
-                                                         PhysicsEngine physicsEngine) {
+      PhysicsEngine physicsEngine) {
     Spawner out = new Spawner(builder, physicsEngine);
     BulletFamily f = new BulletFamily(-1f, 0f, -8f, -0f, 0.5f, 0);
     f.addEffect(new Periodic(delay));
@@ -50,6 +52,35 @@ public final class SpawnerFactory {
 
     f = new BulletFamily(1f, 0f, 8f, -0f, 0.5f, 0);
     f.addEffect(new Periodic(delay));
+    out.addFamily(f);
+    return out;
+  }
+
+  /**
+   * Constructs a single repeatedly shooting bullet whose origin changes based on
+   * the tracked model which will reangle to home in on the player after a given
+   * amount of time.
+   *
+   * @param delay         delay in between firings
+   * @param homingDelay   delay in between initial firing and homing change
+   * @param newSpeed      speed after homing occurs
+   * @param builder       a builder to create bullet models
+   * @param physicsEngine {@link PhysicsEngine} to add bullets to
+   */
+  public static Spawner constructTrackingHomingRepeatingBullet(int delay, int homingDelay, float newSpeed,
+      BulletModel.Builder builder,
+      PhysicsEngine physicsEngine) {
+    Spawner out = new Spawner(builder, physicsEngine);
+    BulletFamily f = new BulletFamily(-1f, 0f, -8f, -0f, 0.5f, 0);
+    f.addEffect(new Periodic(delay));
+    f.addDelayedAction(new DelayedTarget(homingDelay));
+    f.addDelayedAction(new DelayedSpeedChange(newSpeed, homingDelay));
+    out.addFamily(f);
+
+    f = new BulletFamily(1f, 0f, 8f, -0f, 0.5f, 0);
+    f.addEffect(new Periodic(delay));
+    f.addDelayedAction(new DelayedTarget(homingDelay));
+    f.addDelayedAction(new DelayedSpeedChange(newSpeed, homingDelay));
     out.addFamily(f);
     return out;
   }

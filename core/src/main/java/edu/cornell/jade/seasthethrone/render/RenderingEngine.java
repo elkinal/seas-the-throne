@@ -15,9 +15,6 @@ public class RenderingEngine {
   /** The Renderable objects for rendering */
   private Array<Renderable> renderables;
 
-  /** UI renderable objects */
-  private Array<Renderable> uiElements = new Array<>();
-
   /** Layers of renderables to be rendered in order */
   private Array<Array<Renderable>> renderLayers;
 
@@ -90,8 +87,16 @@ public class RenderingEngine {
   public void drawBackground() {
     canvas.clear();
     canvas.begin();
-    canvas.draw(BACKGROUND.getTexture(), Color.BLACK, BACKGROUND.getPosition().x, BACKGROUND.getPosition().y,
-            0, 0, 0, 8f, 8f);
+    canvas.draw(
+        BACKGROUND.getTexture(),
+        Color.BLACK,
+        BACKGROUND.getPosition().x,
+        BACKGROUND.getPosition().y,
+        0,
+        0,
+        0,
+        8f,
+        8f);
     canvas.end();
   }
 
@@ -104,24 +109,6 @@ public class RenderingEngine {
       r.draw(this);
     }
     canvas.end();
-  }
-
-  /** Draws UI elements independent of the camera */
-  public void drawUI() {
-    canvas.beginUI();
-    for (Renderable r : uiElements) {
-      r.draw(this);
-    }
-    canvas.endUI();
-  }
-
-  /** Adds UI element to the engine */
-  public void addUI(Renderable r) {
-    uiElements.add(r);
-  }
-
-  public Array<Renderable> getUI() {
-    return this.uiElements;
   }
 
   public void drawRenderLayers() {
@@ -210,7 +197,6 @@ public class RenderingEngine {
 
   public void clear() {
     renderables.clear();
-    uiElements.clear();
   }
 
   /** Returns the gameCanvas */

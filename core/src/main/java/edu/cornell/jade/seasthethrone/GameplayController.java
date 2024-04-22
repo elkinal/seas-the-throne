@@ -25,6 +25,7 @@ import edu.cornell.jade.seasthethrone.model.PolygonModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
+import edu.cornell.jade.seasthethrone.ui.UIController;
 import edu.cornell.jade.seasthethrone.util.ScreenListener;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.CrabBossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.JellyBossModel;
@@ -71,6 +72,9 @@ public class GameplayController implements Screen {
   /** Sub-controller for portals */
   PortalController portalController;
 
+  /** Sub-controller for collecting input */
+  UIController uiController;
+
   /** Rendering Engine */
   RenderingEngine renderEngine;
 
@@ -100,6 +104,9 @@ public class GameplayController implements Screen {
 
   /** Viewport maintaining relation between screen and world coordinates */
   private ExtendViewport viewport;
+
+  /** UI viewport maintaining relation between screen and world coordinates */
+  private ScreenViewport uiViewport;
 
   /** If the screen and world should be updated */
   protected boolean active;
@@ -139,6 +146,7 @@ public class GameplayController implements Screen {
     worldWidth = level.DEFAULT_WIDTH;
     worldScale = level.WORLD_SCALE;
     this.viewport = level.getViewport();
+    uiViewport = new ScreenViewport();
 
     bounds = new Rectangle(0, 0, worldWidth, worldHeight);
 
@@ -259,10 +267,14 @@ public class GameplayController implements Screen {
               .setType(name)
               .setHealth(100)
               .setHitbox(name)
-//              .setHitbox(new float[]{-3, -3, -3, 3, 3, 3, 3, -3})
-              .setHealthThresholds(new int[]{70, 30})
+              //              .setHitbox(new float[]{-3, -3, -3, 3, 3, 3, 3, -3})
+              .setHealthThresholds(new int[] {70, 30})
               .setFrameSize(frameSize)
               .setFalloverAnimation(new Texture("bosses/" + name + "/fallover.png"))
+              .setShootAnimation(new Texture("bosses/" + name + "/shoot.png"))
+              .setGetHitAnimation(new Texture("bosses/" + name + "/hurt.png"))
+              .setDeathAnimation(new Texture("bosses/" + name + "/death.png"))
+              .setAttackAnimation(new Texture("bosses/" + name + "/attack.png"))
               .setFrameDelay(12)
               .setRoomId(bossContainer.roomId)
               .build();
@@ -329,9 +341,6 @@ public class GameplayController implements Screen {
     // Initialize pause controller
     pauseController = new PauseController(renderEngine, physicsEngine, playerController);
 
-    // Load UI
-    renderEngine.addUI(playerController.getHealthBar());
-
     // Load Save State
     try {
       stateController.loadState("saves/save1.json");
@@ -340,7 +349,11 @@ public class GameplayController implements Screen {
     }
 
     if (BuildConfig.DEBUG) 
-      System.out.println("post setup ammo: "+playerController.getAmmo());
+      System.out.println("post setup ammo: " + playerController.getAmmo());
+
+    // Load UI
+    uiController =
+        new UIController(playerController, renderEngine, renderEngine.getGameCanvas(), uiViewport);
 
     if (BuildConfig.DEBUG) {
       System.out.println("num objects: " + physicsEngine.getObjects().size());
@@ -357,18 +370,21 @@ public class GameplayController implements Screen {
     // Testing out draw load screen on frame 1
     if (!loading) {
       renderEngine.drawRenderables();
-      renderEngine.drawUI();
+      uiController.drawUI();
     }
   }
 
   public void update(float delta) {
     viewport.apply();
+    uiViewport.apply();
     inputController.update();
     portalController.update(stateController);
 
     // Update entity controllers and camera if the game is not over
     if (gameState != GameState.OVER) {
       playerController.update();
+      uiController.update();
+
       for (BossController bc : bossControllers) {
         if (!bc.isDead()) {
           bc.update(delta);
@@ -386,7 +402,7 @@ public class GameplayController implements Screen {
     // Check if the player is dead, end the game
     if (playerController.isDead()) {
       pauseController.pauseGame();
-      playerController.update();
+      uiController.update();
       gameState = GameState.OVER;
     }
 
@@ -423,8 +439,7 @@ public class GameplayController implements Screen {
     // Render frame
     renderEngine.clear();
     renderEngine.addRenderable(level.getBackground());
-    renderEngine.addRenderable(playerController.getAmmoBar());
-    renderEngine.addUI(playerController.getHealthBar());
+    renderEngine.addRenderable(uiController.getAmmoBar());
 
     for (Tile tile : level.getTiles()) {
       renderEngine.addRenderable(tile);
@@ -451,14 +466,13 @@ public class GameplayController implements Screen {
     }
 
     // Draw reset and debug screen for wins and losses
-    if (BuildConfig.DEBUG) {
-      if (gameState == GameState.OVER || gameState == GameState.WIN) {
-        if (inputController.didReset()) {
-          setupGameplay();
-          pauseController.continueGame();
-        } else {
-          renderEngine.drawGameState(gameState);
-        }
+
+    if (gameState == GameState.OVER || gameState == GameState.WIN) {
+      if (inputController.didReset()) {
+        setupGameplay();
+        pauseController.continueGame();
+      } else {
+        renderEngine.drawGameState(gameState);
       }
     }
     loadCount += 1;
@@ -496,6 +510,7 @@ public class GameplayController implements Screen {
 
   public void resize(int width, int height) {
     viewport.update(width, height);
+    uiViewport.update(width, height, true);
     renderEngine.getGameCanvas().resize();
   }
 
@@ -543,7 +558,6 @@ public class GameplayController implements Screen {
     return true;
   }
 
-
   /** Compares Models based on height in the world */
   public void disposeBosses() {
     for (BossController boss : bossControllers) {
@@ -551,9 +565,7 @@ public class GameplayController implements Screen {
     }
   }
 
-  /**
-   * Compares Models based on height in the world
-   */
+  /** Compares Models based on height in the world */
   class HeightComparator implements Comparator<Model> {
     @Override
     public int compare(Model o1, Model o2) {

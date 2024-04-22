@@ -4,13 +4,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import edu.cornell.jade.seasthethrone.gamemodel.EnemyModel;
-import edu.cornell.jade.seasthethrone.physics.CollisionMask;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
-
-import java.util.Arrays;
-import java.util.Iterator;
 
 public abstract class BossModel extends EnemyModel implements Renderable {
 
@@ -22,6 +18,8 @@ public abstract class BossModel extends EnemyModel implements Renderable {
 
   private FilmStrip falloverAnimation;
   private FilmStrip getHitAnimation;
+  private FilmStrip deathAnimation;
+  private FilmStrip attackAnimation;
 
   /** The current filmstrip being used */
   public FilmStrip filmStrip;
@@ -36,6 +34,10 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   protected int animationFrame;
 
   protected float scale;
+  /** Flag for executing the boss */
+  private boolean isExecute;
+  /** Flag for the boss attack*/
+  private boolean isAttack;
 
   /** Amount of knockback force applied to player on body collision */
   private float bodyKnockbackForce;
@@ -46,9 +48,13 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   /** Number of health points the boss has */
   protected int health;
 
+  /** Hit animation countdown */
+  private int hitCount;
+
   /** Death animation countdown */
   private int deathCount;
-
+  /** Execute animation countdown */
+  private int executeCount;
   /** Whether the boss should continue being animated. */
   private boolean shouldUpdate;
 
@@ -74,12 +80,15 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     frameSize = builder.frameSize;
     moveAnimation = builder.moveAnimation;
     getHitAnimation = builder.getHitAnimation;
-    falloverAnimation = builder.dieAnimation;
+    falloverAnimation = builder.falloverAnimation;
+    deathAnimation = builder.deathAnimation;
+    attackAnimation = builder.attackAnimation;
     this.filmStrip = shootAnimation;
     frameCounter = 1;
     frameDelay = builder.frameDelay;
     health = builder.health;
     deathCount = frameDelay * 16;
+    hitCount = 0;
     shouldUpdate = true;
     alwaysAnimate = false;
     roomId = builder.roomId;
@@ -87,6 +96,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     spearKnockbackForce = 130f;
     healthThresholds = builder.healthThresholds;
     thresholdPointer = 0;
+    isExecute = false;
     setBodyType(BodyDef.BodyType.KinematicBody);
   }
 
@@ -100,13 +110,29 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     renderer.draw(currentStrip, pos.x, pos.y, 0.16f);
   }
 
+  private boolean isHit(){
+    if (hitCount > 0){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
   @Override
   public FilmStrip progressFrame() {
     int frame = getFrameNumber();
     if (isDead()) {
-      filmStrip = falloverAnimation;
+      if (isExecute)
+        filmStrip = deathAnimation;
+      else
+        filmStrip = falloverAnimation;
+    } else if (isHit()){
+      filmStrip = getHitAnimation;
     } else {
-      filmStrip = shootAnimation;
+      if (isAttack)
+        filmStrip = attackAnimation;
+      else
+        filmStrip = shootAnimation;
     }
     filmStrip.setFrame(frame);
 
@@ -117,6 +143,17 @@ public abstract class BossModel extends EnemyModel implements Renderable {
       } else {
         setFrameNumber(getFrameNumber());
         deathCount -= 1;
+      }
+    } else if (isHit()){
+      if (frameCounter % frameDelay == 0 && getFrameNumber() < getFramesInAnimation() - 1) {
+        setFrameNumber(getFrameNumber() + 1);
+        hitCount -= 1;
+      } else {
+        setFrameNumber(getFrameNumber());
+        hitCount -= 1;
+      }
+      if (hitCount == 0){
+        setFrameNumber(0);
       }
     } else {
       if (frameCounter % frameDelay == 0) {
@@ -173,6 +210,8 @@ public abstract class BossModel extends EnemyModel implements Renderable {
    * If the boss dies, mark boss as removed
    */
   public void decrementHealth(int damage) {
+    hitCount = frameDelay * getHitAnimation.getSize();
+    setFrameNumber(0);
     health -= damage;
     if (isDead()) {
       filmStrip = falloverAnimation;
@@ -217,6 +256,24 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     }
   }
 
+  /**
+   * Lets the player execute the boss
+   */
+
+  public void executeBoss(){
+    setFrameNumber(0);
+    executeCount = frameDelay * deathAnimation.getSize();
+    isExecute = true;
+  }
+
+  /**
+   * Lets the boss attack
+   */
+  public void bossAttack(){
+    setFrameNumber(0);
+    isAttack = true;
+  }
+
   public static class Builder {
     /** boss x position */
     private float x;
@@ -234,9 +291,11 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     private FilmStrip moveAnimation;
 
     private FilmStrip getHitAnimation;
-    private FilmStrip dieAnimation;
+    private FilmStrip falloverAnimation;
+    private FilmStrip deathAnimation;
     private FilmStrip shootAnimation;
     private FilmStrip idleAnimation;
+    private FilmStrip attackAnimation;
 
     /** The number of frames between animation updates */
     private int frameDelay;
@@ -329,7 +388,19 @@ public abstract class BossModel extends EnemyModel implements Renderable {
 
     public Builder setFalloverAnimation(Texture texture) {
       int width = texture.getWidth();
-      dieAnimation = new FilmStrip(texture, 1, width / frameSize);
+      falloverAnimation = new FilmStrip(texture, 1, width / frameSize);
+      ;
+      return this;
+    }
+    public Builder setDeathAnimation(Texture texture){
+      int width = texture.getWidth();
+      deathAnimation = new FilmStrip(texture, 1, width / frameSize);
+      ;
+      return this;
+    }
+    public Builder setAttackAnimation(Texture texture){
+      int width = texture.getWidth();
+      attackAnimation = new FilmStrip(texture, 1, width / frameSize);
       ;
       return this;
     }
