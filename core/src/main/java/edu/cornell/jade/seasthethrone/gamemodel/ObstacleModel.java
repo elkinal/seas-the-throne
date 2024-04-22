@@ -11,30 +11,55 @@ import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
-public class ObstacleModel extends ComplexModel implements Renderable {
+public class ObstacleModel extends BoxModel implements Renderable {
   private TextureRegion texture;
 
+  private FilmStrip filmStrip;
+
+  private int framesInAnimation;
+
+  private int frameCounter;
+
+  private int frameDelay;
+
+  private int animationFrame;
   private final float WORLD_SCALE;
 
   public ObstacleModel(LevelObject obs, float scale) {
     // TODO: extend for generic model, not just BoxModel
-    super(obs.x, obs.y);
+    super(obs.x, obs.y, obs.width, obs.height);
     this.texture = obs.texture;
     this.WORLD_SCALE = scale;
-    BoxModel hitbox = new BoxModel(obs.x, obs.y, obs.width, obs.height);
-    bodies.add(hitbox);
+    this.framesInAnimation = obs.framesInAnimation;
+    System.out.println("texture "+this.texture);
+    System.out.println("frames: "+this.framesInAnimation);
+    this.animationFrame = 0;
+    this.frameDelay = 10;
+
+    this.filmStrip = new FilmStrip(this.texture.getTexture(), 1, framesInAnimation);
   }
 
   @Override
   public void draw(RenderingEngine renderer) {
+    FilmStrip currentStrip = progressFrame();
     Vector2 pos = getPosition();
-    float y_offset = WORLD_SCALE * texture.getRegionHeight() / 2f - getModel().getHeight() / 2f;
-    renderer.draw(texture, pos.x, pos.y + y_offset);
+
+    float y_offset = WORLD_SCALE * texture.getRegionHeight() / 2f - getHeight() / 2f;
+    renderer.draw(currentStrip, pos.x, pos.y + y_offset);
   }
 
   @Override
   public FilmStrip progressFrame() {
-    return null;
+    FilmStrip filmStrip = getFilmStrip();
+    int frame = getFrameNumber();
+    filmStrip.setFrame(frame);
+
+    if (frameCounter % frameDelay == 0) {
+      setFrameNumber((getFrameNumber() + 1) % getFramesInAnimation());
+    }
+    frameCounter += 1;
+
+    return filmStrip;
   }
 
   @Override
@@ -51,29 +76,20 @@ public class ObstacleModel extends ComplexModel implements Renderable {
     return false;
   }
 
-  public BoxModel getModel() {
-    return (BoxModel) bodies.get(0);
+  public void setFrameNumber(int frameNumber) {
+    this.animationFrame = frameNumber;
   }
-
-  public int getFrameNumber() {
-    return 0;
-  }
-
-  public void setFrameNumber(int frameNumber) {}
 
   public FilmStrip getFilmStrip() {
-    return null;
+    return filmStrip;
   }
 
-  public int getFramesInAnimation() {
-    return 0;
+  private int getFrameNumber() {
+    return animationFrame;
   }
 
-  protected boolean createJoints(World world) {
-    return true;
+  private int getFramesInAnimation() {
+    return framesInAnimation;
   }
 
-  protected void createFixtures() {}
-
-  protected void releaseFixtures() {}
 }
