@@ -73,8 +73,7 @@ public class PortalModel extends BoxModel implements Renderable {
   }
 
   @Override
-  public FilmStrip progressFrame() {
-    return null;
+  public void progressFrame() {
   }
 
   @Override
