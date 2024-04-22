@@ -79,6 +79,11 @@ public class Spawner {
       this.delay = delay;
     }
 
+    /*
+     * Given a delayed action, returns a new identical object
+     */
+    public abstract DelayedAction clone();
+
     /**
      * Applies the given effect to the bullet model or does nothing if the bullet
      * model is <code>null</code>.
@@ -105,6 +110,11 @@ public class Spawner {
     public DelayedVelocityRotate(float theta, int delay) {
       super(delay);
       this.theta = theta;
+    }
+
+    @Override
+    public DelayedVelocityRotate clone() {
+      return new DelayedVelocityRotate(theta, delay);
     }
 
     @Override
@@ -140,11 +150,18 @@ public class Spawner {
     }
 
     @Override
+    public DelayedSpeedChange clone() {
+      return new DelayedSpeedChange(speed, delay);
+    }
+
+    @Override
     public void apply(float px, float py) {
       if (model == null)
         return;
 
-      float mag = model.getLinearVelocity().len();
+      float ovx = model.getVX();
+      float ovy = model.getVY();
+      float mag = (float) Math.sqrt(ovx * ovx + ovy * ovy);
       float s = speed / mag;
       float vx = model.getVX() * s;
       float vy = model.getVY() * s;
@@ -167,13 +184,20 @@ public class Spawner {
     }
 
     @Override
+    public DelayedTarget clone() {
+      return new DelayedTarget(delay);
+    }
+
+    @Override
     public void apply(float px, float py) {
       if (model == null)
         return;
 
       float dx = px - model.getX();
       float dy = py - model.getY();
-      float mag = model.getLinearVelocity().len();
+      float ovx = model.getVX();
+      float ovy = model.getVY();
+      float mag = (float) Math.sqrt(ovx * ovx + ovy * ovy);
       if ((dx < MathUtils.FLOAT_ROUNDING_ERROR && dy < MathUtils.FLOAT_ROUNDING_ERROR)
           || mag < MathUtils.FLOAT_ROUNDING_ERROR) {
         model.setVX(0);
@@ -387,6 +411,8 @@ public class Spawner {
       BulletFamily newFamily = BulletFamily.construct(bx, by, bvx, bvy, radius, timestamp, familyPool);
       for (Effect e : effect)
         newFamily.addEffect(e);
+      for (DelayedAction a : delayedActions)
+        newFamily.addDelayedAction(a.clone());
       return newFamily;
     }
 
@@ -509,7 +535,7 @@ public class Spawner {
    * @param py player y position
    */
   private void applyDelayedActions(float px, float py) {
-    while (!delayedActions.isEmpty() && -delayedActions.peek().getValue() < timer) {
+    while (!delayedActions.isEmpty() && delayedActions.peek().getValue() < timer) {
       delayedActions.pop().apply(px, py);
     }
   }
@@ -626,17 +652,17 @@ public class Spawner {
     BulletFamily f = curBullets.pop();
     f.rotate(rotation, 0, 0);
     bulletBuilder
-      .setX(f.bx + x)
-      .setY(f.by + y)
-      .setVX(f.bvx)
-      .setVY(f.bvy)
-      .setShotByPlayer(false)
-      .setRadius(f.radius);
+        .setX(f.bx + x)
+        .setY(f.by + y)
+        .setVX(f.bvx)
+        .setVY(f.bvy)
+        .setShotByPlayer(false)
+        .setRadius(f.radius);
     BulletModel m = BulletModel.construct(bulletBuilder, bulletBasePool);
 
     for (DelayedAction a : f.delayedActions) {
       a.setModel(m);
-      delayedActions.add(a, -(a.delay + f.timestamp));
+      delayedActions.add(a, a.delay + f.timestamp);
       delayedActionsList.add(a);
     }
 

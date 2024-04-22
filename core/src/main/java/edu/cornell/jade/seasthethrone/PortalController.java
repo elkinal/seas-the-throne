@@ -3,8 +3,6 @@ package edu.cornell.jade.seasthethrone;
 import com.badlogic.gdx.utils.Array;
 import edu.cornell.jade.seasthethrone.gamemodel.PortalModel;
 
-import javax.sound.sampled.Port;
-
 public class PortalController {
   private Array<PortalModel> portals;
 

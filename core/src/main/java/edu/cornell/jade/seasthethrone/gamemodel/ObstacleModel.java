@@ -41,15 +41,15 @@ public class ObstacleModel extends BoxModel implements Renderable {
 
   @Override
   public void draw(RenderingEngine renderer) {
-    FilmStrip currentStrip = progressFrame();
+    progressFrame();
     Vector2 pos = getPosition();
 
     float y_offset = WORLD_SCALE * texture.getRegionHeight() / 2f - getHeight() / 2f;
-    renderer.draw(currentStrip, pos.x, pos.y + y_offset);
+    renderer.draw(filmStrip, pos.x, pos.y + y_offset);
   }
 
   @Override
-  public FilmStrip progressFrame() {
+  public void progressFrame() {
     FilmStrip filmStrip = getFilmStrip();
     int frame = getFrameNumber();
     filmStrip.setFrame(frame);
@@ -58,8 +58,6 @@ public class ObstacleModel extends BoxModel implements Renderable {
       setFrameNumber((getFrameNumber() + 1) % getFramesInAnimation());
     }
     frameCounter += 1;
-
-    return filmStrip;
   }
 
   @Override

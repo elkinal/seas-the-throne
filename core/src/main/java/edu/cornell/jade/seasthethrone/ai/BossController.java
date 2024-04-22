@@ -27,7 +27,9 @@ public interface BossController {
   /** Returns the boss of this controller */
   public BossModel getBoss();
 
+  /** Gets the health of the boss */
+  public int getHealth();
+
   /** Loads in the boss's previous state */
   public void transferState(int storedHp);
-
 }

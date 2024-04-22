@@ -111,11 +111,18 @@ public class JellyBossController implements BossController {
   }
 
   /** Returns the boss of this controller */
-  public BossModel getBoss() {return boss;}
+  public BossModel getBoss() {
+    return boss;
+  }
 
   /** Loads in the boss's previous state */
   public void transferState(int storedHp) {
     this.boss.setHealth(storedHp);
+  }
+
+  @Override
+  public int getHealth() {
+    return boss.getHealth();
   }
 
   /**

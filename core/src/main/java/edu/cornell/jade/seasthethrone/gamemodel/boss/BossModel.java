@@ -3,25 +3,27 @@ package edu.cornell.jade.seasthethrone.gamemodel.boss;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+
+import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import edu.cornell.jade.seasthethrone.gamemodel.EnemyModel;
-import edu.cornell.jade.seasthethrone.physics.CollisionMask;
+import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
+import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
-
-import java.util.Arrays;
-import java.util.Iterator;
+import edu.cornell.jade.seasthethrone.ai.BossController;
+import edu.cornell.jade.seasthethrone.ai.CrabBossController;
+import edu.cornell.jade.seasthethrone.ai.JellyBossController;
 
 public abstract class BossModel extends EnemyModel implements Renderable {
-
-  /** Number of frames in boss animation */
-  private int frameSize;
 
   /** Boss-unique move animation TODO: make left right up down filmstrips */
   private FilmStrip moveAnimation;
 
   private FilmStrip falloverAnimation;
   private FilmStrip getHitAnimation;
+  private FilmStrip deathAnimation;
+  private FilmStrip attackAnimation;
 
   /** The current filmstrip being used */
   public FilmStrip filmStrip;
@@ -36,6 +38,10 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   protected int animationFrame;
 
   protected float scale;
+  /** Flag for executing the boss */
+  private boolean isExecute;
+  /** Flag for the boss attack*/
+  private boolean isAttack;
 
   /** Amount of knockback force applied to player on body collision */
   private float bodyKnockbackForce;
@@ -46,9 +52,13 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   /** Number of health points the boss has */
   protected int health;
 
+  /** Hit animation countdown */
+  private int hitCount;
+
   /** Death animation countdown */
   private int deathCount;
-
+  /** Execute animation countdown */
+  private int executeCount;
   /** Whether the boss should continue being animated. */
   private boolean shouldUpdate;
 
@@ -71,15 +81,17 @@ public abstract class BossModel extends EnemyModel implements Renderable {
    */
   public BossModel(Builder builder) {
     super(builder.x, builder.y, builder.hitbox, builder.type, builder.frameSize);
-    frameSize = builder.frameSize;
     moveAnimation = builder.moveAnimation;
     getHitAnimation = builder.getHitAnimation;
-    falloverAnimation = builder.dieAnimation;
+    falloverAnimation = builder.falloverAnimation;
+    deathAnimation = builder.deathAnimation;
+    attackAnimation = builder.attackAnimation;
     this.filmStrip = shootAnimation;
     frameCounter = 1;
     frameDelay = builder.frameDelay;
     health = builder.health;
     deathCount = frameDelay * 16;
+    hitCount = 0;
     shouldUpdate = true;
     alwaysAnimate = false;
     roomId = builder.roomId;
@@ -87,26 +99,42 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     spearKnockbackForce = 130f;
     healthThresholds = builder.healthThresholds;
     thresholdPointer = 0;
+    isExecute = false;
     setBodyType(BodyDef.BodyType.KinematicBody);
   }
 
   @Override
   public void draw(RenderingEngine renderer) {
-    FilmStrip currentStrip = filmStrip;
     if (shouldUpdate) {
-      currentStrip = progressFrame();
+      progressFrame();
     }
     Vector2 pos = getPosition();
-    renderer.draw(currentStrip, pos.x, pos.y, 0.16f);
+    renderer.draw(filmStrip, pos.x, pos.y, 0.16f);
   }
 
+  private boolean isHit(){
+    if (hitCount > 0){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
   @Override
-  public FilmStrip progressFrame() {
+  public void progressFrame() {
     int frame = getFrameNumber();
     if (isDead()) {
-      filmStrip = falloverAnimation;
+      if (isExecute)
+        filmStrip = deathAnimation;
+      else
+        filmStrip = falloverAnimation;
+    } else if (isHit()){
+      filmStrip = getHitAnimation;
     } else {
-      filmStrip = shootAnimation;
+      if (isAttack)
+        filmStrip = attackAnimation;
+      else
+        filmStrip = shootAnimation;
     }
     filmStrip.setFrame(frame);
 
@@ -118,13 +146,23 @@ public abstract class BossModel extends EnemyModel implements Renderable {
         setFrameNumber(getFrameNumber());
         deathCount -= 1;
       }
+    } else if (isHit()){
+      if (frameCounter % frameDelay == 0 && getFrameNumber() < getFramesInAnimation() - 1) {
+        setFrameNumber(getFrameNumber() + 1);
+        hitCount -= 1;
+      } else {
+        setFrameNumber(getFrameNumber());
+        hitCount -= 1;
+      }
+      if (hitCount == 0){
+        setFrameNumber(0);
+      }
     } else {
       if (frameCounter % frameDelay == 0) {
         setFrameNumber((getFrameNumber() + 1) % getFramesInAnimation());
       }
     }
     frameCounter += 1;
-    return filmStrip;
   }
 
   @Override
@@ -173,6 +211,8 @@ public abstract class BossModel extends EnemyModel implements Renderable {
    * If the boss dies, mark boss as removed
    */
   public void decrementHealth(int damage) {
+    hitCount = frameDelay * getHitAnimation.getSize();
+    setFrameNumber(0);
     health -= damage;
     if (isDead()) {
       filmStrip = falloverAnimation;
@@ -217,6 +257,24 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     }
   }
 
+  /**
+   * Lets the player execute the boss
+   */
+
+  public void executeBoss(){
+    setFrameNumber(0);
+    executeCount = frameDelay * deathAnimation.getSize();
+    isExecute = true;
+  }
+
+  /**
+   * Lets the boss attack
+   */
+  public void bossAttack(){
+    setFrameNumber(0);
+    isAttack = true;
+  }
+
   public static class Builder {
     /** boss x position */
     private float x;
@@ -234,9 +292,11 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     private FilmStrip moveAnimation;
 
     private FilmStrip getHitAnimation;
-    private FilmStrip dieAnimation;
+    private FilmStrip falloverAnimation;
+    private FilmStrip deathAnimation;
     private FilmStrip shootAnimation;
     private FilmStrip idleAnimation;
+    private FilmStrip attackAnimation;
 
     /** The number of frames between animation updates */
     private int frameDelay;
@@ -295,11 +355,6 @@ public abstract class BossModel extends EnemyModel implements Renderable {
       return this;
     }
 
-    public Builder setFrameSize(int frameSize) {
-      this.frameSize = frameSize;
-      return this;
-    }
-
     public Builder setShootAnimation(Texture texture) {
       int width = texture.getWidth();
       shootAnimation = new FilmStrip(texture, 1, width / frameSize);
@@ -329,7 +384,19 @@ public abstract class BossModel extends EnemyModel implements Renderable {
 
     public Builder setFalloverAnimation(Texture texture) {
       int width = texture.getWidth();
-      dieAnimation = new FilmStrip(texture, 1, width / frameSize);
+      falloverAnimation = new FilmStrip(texture, 1, width / frameSize);
+      ;
+      return this;
+    }
+    public Builder setDeathAnimation(Texture texture){
+      int width = texture.getWidth();
+      deathAnimation = new FilmStrip(texture, 1, width / frameSize);
+      ;
+      return this;
+    }
+    public Builder setAttackAnimation(Texture texture){
+      int width = texture.getWidth();
+      attackAnimation = new FilmStrip(texture, 1, width / frameSize);
       ;
       return this;
     }
@@ -349,15 +416,35 @@ public abstract class BossModel extends EnemyModel implements Renderable {
       return this;
     }
 
+    public Builder setFrameSize() {
+      switch (type) {
+        case "crab":
+          frameSize = 110;
+        default:
+          // there are a lot of jellies so they are just a default case
+          frameSize = 45;
+      }
+      return this;
+    }
+
     public BossModel build() {
       switch (type) {
         case "crab":
           return new CrabBossModel(this);
-        case "jelly":
-          return new JellyBossModel(this);
-          // Should not get here
         default:
-          return new CrabBossModel(this);
+          // there are a lot of jellies so they are just a default case
+          return new JellyBossModel(this);
+      }
+    }
+    public BossController buildController(BossModel model, PlayerModel player, BulletModel.Builder bulletBuilder, 
+        PhysicsEngine physicsEngine) {
+      switch (type) {
+        case "crab":
+          return new CrabBossController((CrabBossModel) model, player, bulletBuilder, physicsEngine);
+        case "jelly":
+          return new JellyBossController((JellyBossModel) model, player, bulletBuilder, physicsEngine);
+        default: 
+          throw new RuntimeException("boss type not supported");
       }
     }
   }
