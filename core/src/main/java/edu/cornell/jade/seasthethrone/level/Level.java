@@ -423,7 +423,7 @@ public class Level {
       portal.setTarget(JsonHandler.getStringProperty(portWrapper, "target"));
 
       try {
-      portal.checkpointID = JsonHandler.getIntProperty(portWrapper, "requiredCheckpoint");
+        portal.checkpointID = JsonHandler.getIntProperty(portWrapper, "requiredCheckpoint");
       } catch (Error e) {
         portal.checkpointID = -1;
       }
