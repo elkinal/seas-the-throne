@@ -141,8 +141,7 @@ public class BulletModel extends SimpleModel implements Renderable {
   }
 
   @Override
-  public FilmStrip progressFrame() {
-    return filmStrip;
+  public void progressFrame() {
   }
 
   @Override

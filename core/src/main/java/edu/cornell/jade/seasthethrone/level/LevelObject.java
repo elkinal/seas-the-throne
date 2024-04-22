@@ -93,8 +93,7 @@ public class LevelObject implements Renderable {
   }
 
   @Override
-  public FilmStrip progressFrame() {
-    return null;
+  public void progressFrame() {
   }
 
   @Override

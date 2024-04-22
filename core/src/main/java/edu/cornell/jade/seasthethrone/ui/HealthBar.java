@@ -62,8 +62,7 @@ public class HealthBar implements Renderable {
   }
 
   @Override
-  public FilmStrip progressFrame() {
-    return null;
+  public void progressFrame() {
   }
 
   @Override
