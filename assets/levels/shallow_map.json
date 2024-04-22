@@ -4732,71 +4732,157 @@
                 }, 
                 {
                  "height":10.6667,
-                 "id":201,
+                 "id":218,
                  "name":"levels\/kelplight_filmstrip2.png",
                  "properties":[
                         {
                          "name":"framesInAnimation",
                          "type":"int",
                          "value":22
+                        }, 
+                        {
+                         "name":"texture",
+                         "type":"string",
+                         "value":"levels\/kelplight_filmstrip2.png"
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":10.6667,
-                 "x":2764.67,
-                 "y":344
+                 "x":1701,
+                 "y":721.333
                 }, 
                 {
                  "height":10.6667,
-                 "id":202,
+                 "id":219,
                  "name":"levels\/kelplight_filmstrip2.png",
                  "properties":[
                         {
                          "name":"framesInAnimation",
                          "type":"int",
                          "value":22
+                        }, 
+                        {
+                         "name":"texture",
+                         "type":"string",
+                         "value":"levels\/kelplight_filmstrip2.png"
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":10.6667,
-                 "x":2773.99998333333,
-                 "y":297.999983333333
+                 "x":1856,
+                 "y":529.333
                 }, 
                 {
                  "height":10.6667,
-                 "id":203,
+                 "id":220,
                  "name":"levels\/kelplight_filmstrip2.png",
                  "properties":[
                         {
                          "name":"framesInAnimation",
                          "type":"int",
                          "value":22
+                        }, 
+                        {
+                         "name":"texture",
+                         "type":"string",
+                         "value":"levels\/kelplight_filmstrip2.png"
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":10.6667,
-                 "x":2714.66665,
-                 "y":336.66665
+                 "x":2142.67,
+                 "y":542.667
                 }, 
                 {
                  "height":10.6667,
-                 "id":204,
+                 "id":221,
                  "name":"levels\/kelplight_filmstrip2.png",
                  "properties":[
                         {
                          "name":"framesInAnimation",
                          "type":"int",
                          "value":22
+                        }, 
+                        {
+                         "name":"texture",
+                         "type":"string",
+                         "value":"levels\/kelplight_filmstrip2.png"
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":10.6667,
-                 "x":2661.99998333333,
-                 "y":364.66665
+                 "x":1752,
+                 "y":618.667
+                }, 
+                {
+                 "height":10.6667,
+                 "id":222,
+                 "name":"levels\/kelplight_filmstrip2.png",
+                 "properties":[
+                        {
+                         "name":"framesInAnimation",
+                         "type":"int",
+                         "value":22
+                        }, 
+                        {
+                         "name":"texture",
+                         "type":"string",
+                         "value":"levels\/kelplight_filmstrip2.png"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":10.6667,
+                 "x":2346.67,
+                 "y":513.333
+                }, 
+                {
+                 "height":10.6667,
+                 "id":223,
+                 "name":"levels\/kelplight_filmstrip2.png",
+                 "properties":[
+                        {
+                         "name":"framesInAnimation",
+                         "type":"int",
+                         "value":22
+                        }, 
+                        {
+                         "name":"texture",
+                         "type":"string",
+                         "value":"levels\/kelplight_filmstrip2.png"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":10.6667,
+                 "x":2608,
+                 "y":476
+                }, 
+                {
+                 "height":10.6667,
+                 "id":224,
+                 "name":"levels\/kelplight_filmstrip2.png",
+                 "properties":[
+                        {
+                         "name":"framesInAnimation",
+                         "type":"int",
+                         "value":22
+                        }, 
+                        {
+                         "name":"texture",
+                         "type":"string",
+                         "value":"levels\/kelplight_filmstrip2.png"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":10.6667,
+                 "x":2825.33,
+                 "y":368
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -5194,7 +5280,7 @@
          "y":0
         }],
  "nextlayerid":15,
- "nextobjectid":205,
+ "nextobjectid":225,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
