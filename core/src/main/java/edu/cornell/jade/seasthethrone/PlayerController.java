@@ -56,12 +56,6 @@ public class PlayerController implements Controllable {
   /** The vector direction the player is moving */
   Vector2 moveDirection;
 
-  /** The health bar UI element associated with this player */
-  HealthBar healthBar;
-
-  /** The ammo bar UI element associated with this player */
-  AmmoBar ammoBar;
-
   /** Constructs PlayerController */
   public PlayerController(PhysicsEngine physicsEngine, PlayerModel player) {
     this.physicsEngine = physicsEngine;
@@ -69,8 +63,6 @@ public class PlayerController implements Controllable {
     // start dash indicator down
     dashDirection = new Vector2(0, -1);
     moveDirection = new Vector2();
-    this.healthBar = new HealthBar();
-    this.ammoBar = new AmmoBar();
   }
 
   /**
@@ -218,14 +210,18 @@ public class PlayerController implements Controllable {
   public void setAlwaysAnimate(boolean b) {
     player.setAlwaysAnimate(b);
   }
-  public void setPlayerLocation(Vector2 loc) {player.setPosition(loc);}
 
-  public int getHealth() {return player.getHealth();}
+  public void setPlayerLocation(Vector2 loc) {
+    player.setPosition(loc);
+  }
 
-  public int getAmmo() {return player.getSpearModel().getNumSpeared();}
+  public int getHealth() {
+    return player.getHealth();
+  }
 
-  public Renderable getHealthBar() { return this.healthBar; }
-  public Renderable getAmmoBar() { return this.ammoBar; }
+  public int getAmmo() {
+    return player.getSpearModel().getNumSpeared();
+  }
 
   public void transferState(LevelState state) {
     player.getBodyModel().setHealth(state.getPlayerHealth());
@@ -233,9 +229,6 @@ public class PlayerController implements Controllable {
   }
 
   public void update() {
-    healthBar.update(player.getHealth());
-    ammoBar.update(player.getSpearModel().getNumSpeared(), player.getPosition());
-
     if (dashingPressed && player.canDash()) {
       // TODO: what happens if you get hit while dashing? (during iframes)
       beginDashing();
