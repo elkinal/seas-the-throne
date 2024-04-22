@@ -1,11 +1,13 @@
 Alagard.ttf
 assets.json
 bosses/crab/attack.png
+bosses/crab/crab_shoot_filmstip.png
 bosses/crab/death.png
 bosses/crab/fallover.png
 bosses/crab/hurt.png
 bosses/crab/idle.png
 bosses/crab/shoot.png
+bosses/jelly/attack.png
 bosses/jelly/death.png
 bosses/jelly/fallover.png
 bosses/jelly/hurt.png
