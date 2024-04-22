@@ -23,6 +23,12 @@ public class PortalModel extends BoxModel implements Renderable {
   /** Default to transparent texture if none is specified */
   private final TextureRegion DEFUALT_TEXTURE = new TextureRegion(new Texture("empty.png"));
 
+  /** Checkpoint required for this portal to be active */
+  private int requiredCheckpoint;
+
+  /** If this portal is activated */
+  private boolean activated;
+
   /**
    * Constructs a PortalModel
    *
@@ -38,6 +44,7 @@ public class PortalModel extends BoxModel implements Renderable {
     this.target = target;
     this.texture = DEFUALT_TEXTURE;
     this.playerLoc = playerLoc;
+    this.activated = false;
   }
 
   /**
@@ -52,13 +59,15 @@ public class PortalModel extends BoxModel implements Renderable {
    */
 
   public PortalModel(float x, float y, float width, float height, String target,
-                     Vector2 playerLoc, TextureRegion texture) {
+                     Vector2 playerLoc, TextureRegion texture, int checkpointID) {
     this(x, y, width, height, target, playerLoc);
     this.texture = texture;
+    this.requiredCheckpoint = checkpointID;
   }
 
   public PortalModel(LevelObject portal) {
-    this(portal.x, portal.y, portal.width, portal.height, portal.target, portal.playerLoc, portal.texture);
+    this(portal.x, portal.y, portal.width, portal.height,
+            portal.target, portal.playerLoc, portal.texture, portal.checkpointID);
   }
 
   public String getTarget() {
@@ -67,9 +76,16 @@ public class PortalModel extends BoxModel implements Renderable {
 
   public Vector2 getPlayerLoc() { return playerLoc; }
 
+  public void setActivated(boolean activated) { this.activated = activated; }
+
+  public boolean isActivated() { return activated; }
+  public int getRequiredCheckpoint() { return requiredCheckpoint; }
+
   @Override
   public void draw(RenderingEngine renderer) {
-    renderer.draw(texture, getX(), getY());
+    if (activated) {
+      renderer.draw(texture, getX(), getY());
+    }
   }
 
   @Override

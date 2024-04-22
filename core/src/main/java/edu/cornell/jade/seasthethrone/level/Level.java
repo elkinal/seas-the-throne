@@ -22,8 +22,6 @@ public class Level {
 
   private final Array<LevelObject> bosses = new Array<>();
 
-  private final Array<EnemyModel> enemies = new Array<>();
-
   private final Array<LevelObject> walls = new Array<>();
 
   private final Array<LevelObject> obstacles = new Array<>();
@@ -31,6 +29,8 @@ public class Level {
   private final Array<LevelObject> portals = new Array<>();
 
   private final Array<LevelObject> gates = new Array<>();
+
+  private final Array<LevelObject> checkpoints = new Array<>();
 
   private BackgroundImage background;
 
@@ -102,8 +102,7 @@ public class Level {
     parseWallLayer(getLayer("walls"));
     parseObstacleLayer(getLayer("obstacles"));
     parsePortalLayer(getLayer("portals"));
-    // enemies = parseEnemyLayer(getLayer("enemies"));
-
+    parseCheckpointLayer(getLayer("checkpoints"));
   }
 
   /**
@@ -158,6 +157,8 @@ public class Level {
   }
 
   public Array<LevelObject> getGates() { return gates; }
+
+  public Array<LevelObject> getCheckpoints() { return checkpoints; }
 
   private void parseBackgroundLayer(HashMap<String, Object> bgLayer) {
     int width;
@@ -260,7 +261,7 @@ public class Level {
 
       LevelObject boss = new LevelObject(pos.x, pos.y);
       boss.setBossName(name);
-      boss.id = id;
+      boss.roomId = id;
 
       bosses.add(boss);
     }
@@ -384,7 +385,7 @@ public class Level {
       LevelObject gateObject = new LevelObject();
       gateObject.walls = thisGateGroup.get("walls");
       gateObject.sensors = thisGateGroup.get("sensors");
-      gateObject.id = id;
+      gateObject.roomId = id;
 
       this.gates.add(gateObject);
     }
@@ -421,11 +422,42 @@ public class Level {
       }
       portal.setTarget(JsonHandler.getStringProperty(portWrapper, "target"));
 
+      try {
+        portal.checkpointID = JsonHandler.getIntProperty(portWrapper, "requiredCheckpoint");
+      } catch (Error e) {
+        portal.checkpointID = -1;
+      }
       Vector2 playerLoc = new Vector2(
               JsonHandler.getFloatProperty(portWrapper, "playerX"),
               JsonHandler.getFloatProperty(portWrapper, "playerY"));
       portal.playerLoc = playerLoc;
       portals.add(portal);
+    }
+  }
+
+  private void parseCheckpointLayer(HashMap<String, Object> checkpointLayer) {
+    if (checkpointLayer.isEmpty()) {
+      return;
+    }
+
+    Array<HashMap<String, Object>> cpWrapperList = (Array<HashMap<String, Object>>) checkpointLayer.get("objects");
+
+    for (HashMap<String, Object> cpWrapper : cpWrapperList) {
+      float x = Float.parseFloat((String) cpWrapper.get("x"));
+      float y = Float.parseFloat((String) cpWrapper.get("y"));
+      float width = Float.parseFloat((String) cpWrapper.get("width"));
+      float height = Float.parseFloat((String) cpWrapper.get("height"));
+      Vector2 pos = tiledToWorldCoords(new Vector2(x + width / 2f, y + height / 2f));
+      Vector2 dims = (new Vector2(width * WORLD_SCALE, height * WORLD_SCALE));
+
+      int cpID = JsonHandler.getIntProperty(cpWrapper, "checkpointID");
+      LevelObject obj = new LevelObject(pos.x, pos.y, dims.x, dims.y);
+      obj.checkpointID = cpID;
+
+      if (((String) cpWrapper.get("name")).length() > 0) {
+        obj.texture = new TextureRegion(new Texture((String) cpWrapper.get("name")));
+      }
+      checkpoints.add(obj);
     }
   }
 

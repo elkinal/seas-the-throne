@@ -10,31 +10,34 @@ import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
-public class LevelObject implements Renderable {
+public class LevelObject {
 
   public float x;
   public float y;
   public float width;
   public float height;
   public TextureRegion texture;
-  public String target;
-  public String bossName;
 
-  public Vector2 playerLoc;
-
-  /** Vertices for the polygonModel if this is representing a wall */
-  public Array<Float> vertices = new Array<>();
-
-  /** Default to transparent texture if none is specified */
   private final TextureRegion DEFAULT_TEXTURE = new TextureRegion(new Texture("empty.png"));
 
+  public String bossName;
+
   public Vector2 pos;
+
+  // Portal state
+  public String target;
+  public Vector2 playerLoc;
+
+  // Wall state
+  public Array<Float> vertices = new Array<>();
 
   // GateModel state
   public Array<LevelObject> sensors = new Array<>();
   public Array<LevelObject> walls = new Array<>();
+  public int roomId;
 
-  public int id;
+  // Checkpoint state
+  public int checkpointID;
 
   public LevelObject() {}
 
@@ -85,29 +88,6 @@ public class LevelObject implements Renderable {
 
   public Vector2 getPosition() {
     return pos;
-  }
-
-  @Override
-  public void draw(RenderingEngine renderer) {
-    renderer.draw(texture, getPosition().x, getPosition().y);
-  }
-
-  @Override
-  public void progressFrame() {
-  }
-
-  @Override
-  public void alwaysUpdate() {}
-
-  @Override
-  public void neverUpdate() {}
-
-  @Override
-  public void setAlwaysAnimate(boolean animate) {}
-
-  @Override
-  public boolean alwaysAnimate() {
-    return false;
   }
 
   public void setTexture(TextureRegion texture) {
