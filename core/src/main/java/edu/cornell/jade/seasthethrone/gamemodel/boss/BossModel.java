@@ -3,15 +3,19 @@ package edu.cornell.jade.seasthethrone.gamemodel.boss;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+
+import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import edu.cornell.jade.seasthethrone.gamemodel.EnemyModel;
+import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
+import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
+import edu.cornell.jade.seasthethrone.ai.BossController;
+import edu.cornell.jade.seasthethrone.ai.CrabBossController;
+import edu.cornell.jade.seasthethrone.ai.JellyBossController;
 
 public abstract class BossModel extends EnemyModel implements Renderable {
-
-  /** Number of frames in boss animation */
-  private int frameSize;
 
   /** Boss-unique move animation TODO: make left right up down filmstrips */
   private FilmStrip moveAnimation;
@@ -77,7 +81,6 @@ public abstract class BossModel extends EnemyModel implements Renderable {
    */
   public BossModel(Builder builder) {
     super(builder.x, builder.y, builder.hitbox, builder.type, builder.frameSize);
-    frameSize = builder.frameSize;
     moveAnimation = builder.moveAnimation;
     getHitAnimation = builder.getHitAnimation;
     falloverAnimation = builder.falloverAnimation;
@@ -352,11 +355,6 @@ public abstract class BossModel extends EnemyModel implements Renderable {
       return this;
     }
 
-    public Builder setFrameSize(int frameSize) {
-      this.frameSize = frameSize;
-      return this;
-    }
-
     public Builder setShootAnimation(Texture texture) {
       int width = texture.getWidth();
       shootAnimation = new FilmStrip(texture, 1, width / frameSize);
@@ -418,15 +416,35 @@ public abstract class BossModel extends EnemyModel implements Renderable {
       return this;
     }
 
+    public Builder setFrameSize() {
+      switch (type) {
+        case "crab":
+          frameSize = 110;
+        default:
+          // there are a lot of jellies so they are just a default case
+          frameSize = 45;
+      }
+      return this;
+    }
+
     public BossModel build() {
       switch (type) {
         case "crab":
           return new CrabBossModel(this);
-        case "jelly":
-          return new JellyBossModel(this);
-          // Should not get here
         default:
-          return new CrabBossModel(this);
+          // there are a lot of jellies so they are just a default case
+          return new JellyBossModel(this);
+      }
+    }
+    public BossController buildController(BossModel model, PlayerModel player, BulletModel.Builder bulletBuilder, 
+        PhysicsEngine physicsEngine) {
+      switch (type) {
+        case "crab":
+          return new CrabBossController((CrabBossModel) model, player, bulletBuilder, physicsEngine);
+        case "jelly":
+          return new JellyBossController((JellyBossModel) model, player, bulletBuilder, physicsEngine);
+        default: 
+          throw new RuntimeException("boss type not supported");
       }
     }
   }

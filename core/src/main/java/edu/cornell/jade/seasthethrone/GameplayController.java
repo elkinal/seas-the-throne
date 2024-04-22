@@ -248,45 +248,28 @@ public class GameplayController implements Screen {
       // TODO: set everything below here based on bossName, load from assets.json
       LevelObject bossContainer = level.getBosses().get(i);
       String name = bossContainer.bossName;
-      int frameSize;
-      switch (name) {
-        case "crab":
-          frameSize = 110;
-          break;
-        case "jelly":
-          frameSize = 45;
-          break;
-        default:
-          frameSize = 0;
-          return;
-      }
-      BossModel boss =
+      var bossBuilder =
           BossModel.Builder.newInstance()
+              .setType(name)
+              .setFrameSize()
               .setX(bossContainer.x)
               .setY(bossContainer.y)
-              .setType(name)
               .setHealth(100)
               .setHitbox(name)
               //              .setHitbox(new float[]{-3, -3, -3, 3, 3, 3, 3, -3})
               .setHealthThresholds(new int[] {70, 30})
-              .setFrameSize(frameSize)
               .setFalloverAnimation(new Texture("bosses/" + name + "/fallover.png"))
               .setShootAnimation(new Texture("bosses/" + name + "/shoot.png"))
               .setGetHitAnimation(new Texture("bosses/" + name + "/hurt.png"))
               .setDeathAnimation(new Texture("bosses/" + name + "/death.png"))
               .setAttackAnimation(new Texture("bosses/" + name + "/attack.png"))
               .setFrameDelay(12)
-              .setRoomId(bossContainer.roomId)
-              .build();
+              .setRoomId(bossContainer.roomId);
+      BossModel boss = bossBuilder.build();
+      BossController bossController = bossBuilder.buildController(boss, player, fishBulletBuilder, physicsEngine);
       renderEngine.addRenderable(boss);
       physicsEngine.addObject(boss);
-      if (boss instanceof CrabBossModel b) {
-        bossControllers.add(new CrabBossController(b, player, fishBulletBuilder, physicsEngine));
-      } else if (boss instanceof JellyBossModel b) {
-        bossControllers.add(new JellyBossController(b, player, fishBulletBuilder, physicsEngine));
-      } else {
-        // log an error
-      }
+      bossControllers.add(bossController);
     }
 
     // Load walls
