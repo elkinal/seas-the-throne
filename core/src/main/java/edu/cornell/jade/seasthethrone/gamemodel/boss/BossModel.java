@@ -102,12 +102,11 @@ public abstract class BossModel extends EnemyModel implements Renderable {
 
   @Override
   public void draw(RenderingEngine renderer) {
-    FilmStrip currentStrip = filmStrip;
     if (shouldUpdate) {
-      currentStrip = progressFrame();
+      progressFrame();
     }
     Vector2 pos = getPosition();
-    renderer.draw(currentStrip, pos.x, pos.y, 0.16f);
+    renderer.draw(filmStrip, pos.x, pos.y, 0.16f);
   }
 
   private boolean isHit(){
@@ -119,7 +118,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     }
   }
   @Override
-  public FilmStrip progressFrame() {
+  public void progressFrame() {
     int frame = getFrameNumber();
     if (isDead()) {
       if (isExecute)
@@ -161,7 +160,6 @@ public abstract class BossModel extends EnemyModel implements Renderable {
       }
     }
     frameCounter += 1;
-    return filmStrip;
   }
 
   @Override

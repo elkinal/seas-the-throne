@@ -32,9 +32,7 @@ public class BackgroundImage implements Renderable {
   }
 
   @Override
-  public FilmStrip progressFrame() {
-    return null;
-  }
+  public void progressFrame() {}
 
   @Override
   public void alwaysUpdate() {}
