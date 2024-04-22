@@ -18,6 +18,9 @@ public class AmmoBar implements Renderable {
 
   private Vector2 playerPos;
 
+  /** Offset below the player to display the ammo bar */
+  private final float AMMO_OFFSET = 2.5f;
+
   public AmmoBar() {
     this.textures = new Array<>();
     this.playerPos = new Vector2();
@@ -59,7 +62,7 @@ public class AmmoBar implements Renderable {
 
   @Override
   public void draw(RenderingEngine renderer) {
-    renderer.draw(new TextureRegion(texture), playerPos.x, playerPos.y - 2.5f);
+    renderer.draw(new TextureRegion(texture), playerPos.x, playerPos.y - AMMO_OFFSET);
   }
 
   @Override
