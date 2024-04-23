@@ -296,8 +296,7 @@ public class PhysicsEngine implements ContactListener {
   public void handleCollision(PlayerBodyModel pb, BulletModel b) {
     b.markRemoved(true);
     if (!pb.isInvincible()) {
-      pb.setHit(true);
-      pb.setInvincible();
+      pb.decrementHealth();
       pb.setKnockedBack(b.getPosition(), b.getKnockbackForce());
     }
   }
@@ -313,8 +312,7 @@ public class PhysicsEngine implements ContactListener {
     if (BuildConfig.DEBUG) System.out.println("player invincible: "+pb.isInvincible());
 
     if (!pb.isInvincible() && !b.isDead()) {
-      pb.setHit(true);
-      pb.setInvincible();
+      pb.decrementHealth();
       pb.setKnockedBack(b.getPosition(), b.getBodyKnockbackForce());
       playerBossCollision = Optional.empty();
     } else {
