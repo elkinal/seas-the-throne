@@ -217,7 +217,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   public int getRoomId() { return roomId; }
   /**
    * Reduce boss HP by a specified amount
-   * If the boss dies, mark boss as removed
+   * If the boss dies, play the fallover animation
    */
   public void decrementHealth(int damage) {
     hitCount = frameDelay * getHitAnimation.getSize();
@@ -225,9 +225,6 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     health -= damage;
     if (isDead()) {
       filmStrip = falloverAnimation;
-      // TODO: kinda hard-coded in right now, find a way to make body inactive
-      setVX(0);
-      setVY(0);
     }
   }
 
@@ -285,6 +282,11 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   public void bossAttack(){
     setFrameNumber(0);
     isAttack = true;
+  }
+
+  @Override
+  public void update(float delta) {
+    if (isDead()) setActive(false);
   }
 
   public static class Builder {
