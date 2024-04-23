@@ -15,7 +15,6 @@ ui/health_hori_1.png
 ui/health_hori_3.png
 ui/health_hori_2.png
 ui/darkammo_3_5.png
-shallow_map_full.tmx
 empty.png
 Alagard.ttf
 legacy/spritebox_left.png
@@ -37,7 +36,6 @@ bullet/yellowfish_SW.png
 bullet/yellowfish_north.png
 bullet/yellowfish_SE.png
 bullet/yellowfish_east.png
-boss-room-tileset.tsx
 assets.json
 bosses/crab/fallover.png
 bosses/crab/idle.png
