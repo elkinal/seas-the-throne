@@ -40,6 +40,9 @@ public interface Controllable {
   default public void updateDirection(Vector2 mousePos) {
   }
 
+  /** Updates the pause state of the game */
+  default public void pressPause() {}
+
   /**
    * Returns the current location of the controllable object. This is useful for
    * computing the position of a simulated "mouse" when a controller is used as

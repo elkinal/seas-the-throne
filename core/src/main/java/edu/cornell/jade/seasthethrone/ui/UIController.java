@@ -25,6 +25,10 @@ public class UIController {
   /** A reference to the player */
   PlayerController player;
 
+  /** A reference to the pause menu */
+  PauseMenuController pauseMenuController;
+  PauseMenu pauseMenu;
+
   /** A reference to the current boss that the player is facing */
   BossController boss;
 
@@ -43,8 +47,10 @@ public class UIController {
    * @param view the UI viewport
    */
   public UIController(
-      PlayerController player, RenderingEngine render, GameCanvas canvas, ScreenViewport view) {
+      PlayerController player, PauseMenuController pauseMenuController, RenderingEngine render, GameCanvas canvas, ScreenViewport view) {
     this.player = player;
+    this.pauseMenuController = pauseMenuController;
+    this.pauseMenu = pauseMenuController.getPauseMenu();
     this.render = render;
     viewport = view;
     boss = null;
@@ -75,11 +81,17 @@ public class UIController {
     boss = null;
   }
 
+  /** Returns the pauseMenuController */
+  public PauseMenuController getPauseMenuController() {
+    return pauseMenuController;
+  }
+
   /** Draws UI elements */
   public void drawUI() {
     canvas.beginUI();
     canvas.getUiBatch().setProjectionMatrix(viewport.getCamera().combined);
     uiModel.draw(render);
+    pauseMenu.draw(render);
     canvas.endUI();
   }
 
@@ -88,6 +100,11 @@ public class UIController {
     // update health bar
     uiModel.update(player.getHealth());
     uiModel.update(player.getAmmo(), player.getLocation());
+  }
+
+  /** Runs when the viewport is resized */
+  public void resize(int width, int height) {
+    pauseMenu.resize(width, height);
   }
 
   /** Clears all the UI elements */

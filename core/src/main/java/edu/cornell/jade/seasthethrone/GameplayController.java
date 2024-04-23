@@ -25,6 +25,8 @@ import edu.cornell.jade.seasthethrone.model.PolygonModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
+import edu.cornell.jade.seasthethrone.ui.PauseMenu;
+import edu.cornell.jade.seasthethrone.ui.PauseMenuController;
 import edu.cornell.jade.seasthethrone.ui.UIController;
 import edu.cornell.jade.seasthethrone.util.ScreenListener;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.CrabBossModel;
@@ -334,8 +336,16 @@ public class GameplayController implements Screen {
       System.out.println("post setup ammo: " + playerController.getAmmo());
 
     // Load UI
-    uiController =
-        new UIController(playerController, renderEngine, renderEngine.getGameCanvas(), uiViewport);
+    PauseMenu pauseMenu = new PauseMenu(viewport);
+    PauseMenuController pauseMenuController = new PauseMenuController(pauseMenu);
+    inputController.add(pauseMenuController);
+
+    uiController = new UIController(
+            playerController,
+            pauseMenuController,
+            renderEngine,
+            renderEngine.getGameCanvas(),
+            uiViewport);
 
     if (BuildConfig.DEBUG) {
       System.out.println("num objects: " + physicsEngine.getObjects().size());
@@ -362,8 +372,9 @@ public class GameplayController implements Screen {
     inputController.update();
     portalController.update(stateController);
 
+
     // Update entity controllers and camera if the game is not over
-    if (gameState != GameState.OVER) {
+    if (gameState != GameState.OVER && !uiController.getPauseMenuController().getPauseMenu().isPaused()) {
       playerController.update();
       uiController.update();
 
@@ -494,6 +505,7 @@ public class GameplayController implements Screen {
     viewport.update(width, height);
     uiViewport.update(width, height, true);
     renderEngine.getGameCanvas().resize();
+    uiController.resize(width, height);
   }
 
   /** Updates the camera position to keep the player centered on the screen */
@@ -520,9 +532,13 @@ public class GameplayController implements Screen {
     this.listener = listener;
   }
 
-  public void pause() {}
+  public void pause() {
+    pauseController.pauseGame();
+  }
 
-  public void resume() {}
+  public void resume() {
+    pauseController.continueGame();
+  }
 
   public void hide() {
     active = false;
