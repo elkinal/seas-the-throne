@@ -43,6 +43,9 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   /** Flag for the boss attack*/
   private boolean isAttack;
 
+  /** Array indicating polygon hitbox */
+  protected float[] hitbox;
+
   /** Amount of knockback force applied to player on body collision */
   private float bodyKnockbackForce;
 
@@ -80,7 +83,13 @@ public abstract class BossModel extends EnemyModel implements Renderable {
    * @param builder builder for BossModel
    */
   public BossModel(Builder builder) {
-    super(builder.x, builder.y, builder.hitbox, builder.type, builder.frameSize);
+    super(builder.x, builder.y, builder.type, builder.frameSize);
+
+    // Doing this for now so hitboxes can be defined in subclasses
+    setHitbox();
+    initShapes(this.hitbox);
+    initBounds();
+
     moveAnimation = builder.moveAnimation;
     getHitAnimation = builder.getHitAnimation;
     falloverAnimation = builder.falloverAnimation;
@@ -208,7 +217,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   public int getRoomId() { return roomId; }
   /**
    * Reduce boss HP by a specified amount
-   * If the boss dies, mark boss as removed
+   * If the boss dies, play the fallover animation
    */
   public void decrementHealth(int damage) {
     hitCount = frameDelay * getHitAnimation.getSize();
@@ -216,9 +225,6 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     health -= damage;
     if (isDead()) {
       filmStrip = falloverAnimation;
-      // TODO: kinda hard-coded in right now, find a way to make body inactive
-      setVX(0);
-      setVY(0);
     }
   }
 
@@ -241,6 +247,9 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   public int getFramesInAnimation() {
     return filmStrip.getSize();
   }
+
+  /** Sets the hitbox of the boss */
+  abstract void setHitbox();
 
   /**
    * Returns if the boss's health reached under a certain health threshold.
@@ -275,6 +284,11 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     isAttack = true;
   }
 
+  @Override
+  public void update(float delta) {
+    if (isDead()) setActive(false);
+  }
+
   public static class Builder {
     /** boss x position */
     private float x;
@@ -300,9 +314,6 @@ public abstract class BossModel extends EnemyModel implements Renderable {
 
     /** The number of frames between animation updates */
     private int frameDelay;
-
-    /** Polygon indicating boss hitbox */
-    private float[] hitbox;
 
     /** Number of health points the boss has */
     protected int health;
@@ -331,22 +342,6 @@ public abstract class BossModel extends EnemyModel implements Renderable {
 
     public Builder setType(String type) {
       this.type = type;
-      return this;
-    }
-
-    public Builder setHitbox(String type) {
-      float[] hitbox;
-      switch (type) {
-        case "crab":
-          hitbox = new float[]{-4, -7, -4, 7, 4, 7, 4, -7};
-          break;
-        case "jelly":
-          hitbox = new float[]{-3, -3, -3, 3,3, 3, 3, -3};
-          break;
-        default:
-          hitbox = new float[]{-4, -7, -4, 7, 4, 7, 4, -7};
-      }
-      this.hitbox = hitbox;
       return this;
     }
 
