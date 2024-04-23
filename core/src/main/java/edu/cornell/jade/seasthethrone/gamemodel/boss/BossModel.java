@@ -341,7 +341,14 @@ public abstract class BossModel extends EnemyModel implements Renderable {
           hitbox = new float[]{-4, -7, -4, 7, 4, 7, 4, -7};
           break;
         case "jelly":
-          hitbox = new float[]{-3, -3, -3, 3,3, 3, 3, -3};
+          hitbox = new float[]{
+                  -2,    1.2f,
+                  -0.6f, 2.5f,
+                  1,     2.5f,
+                  2.4f,  1.2f,
+                  2.4f,  -2.5f,
+                  -2,    -2.5f
+          };
           break;
         default:
           hitbox = new float[]{-4, -7, -4, 7, 4, 7, 4, -7};
