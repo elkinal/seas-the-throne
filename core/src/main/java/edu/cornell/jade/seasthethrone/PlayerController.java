@@ -20,9 +20,13 @@ import edu.cornell.jade.seasthethrone.util.Direction;
 import edu.cornell.jade.seasthethrone.input.Controllable;
 import com.badlogic.gdx.math.MathUtils;
 
+import java.util.jar.JarInputStream;
+
 public class PlayerController implements Controllable {
 
-  /** Error value for how close the mouse is to the player for dash to not count */
+  /**
+   * Error value for how close the mouse is to the player for dash to not count
+   */
   private static final float NO_DASH_ERROR = 0.4f;
 
   /** The player */
@@ -46,8 +50,15 @@ public class PlayerController implements Controllable {
   /** If interact pressed in since last update */
   boolean interactPressed;
 
+  /** If the player needs to aim the dash indicator to dash */
+  boolean isAimToDashMode;
+
+  /** How long until the player can toggle dash controls again */
+  int dashToggleCounter;
+
   /**
-   * The vector direction of the player for dashing NOTE: this vector will always be normalized, and
+   * The vector direction of the player for dashing NOTE: this vector will always
+   * be normalized, and
    * nonzero
    */
   Vector2 dashDirection;
@@ -62,6 +73,8 @@ public class PlayerController implements Controllable {
     // start dash indicator down
     dashDirection = new Vector2(0, -1);
     moveDirection = new Vector2();
+    this.isAimToDashMode = true;
+    this.dashToggleCounter = 0;
   }
 
   /**
@@ -93,6 +106,13 @@ public class PlayerController implements Controllable {
     interactPressed = true;
   }
 
+  public void toggleDashMode() {
+    if (dashToggleCounter == 0) {
+      isAimToDashMode = !isAimToDashMode;
+      dashToggleCounter = 50;
+    }
+  }
+
   public boolean isInteractPressed() {
     return interactPressed;
   }
@@ -100,10 +120,12 @@ public class PlayerController implements Controllable {
   /**
    * Move in given direction based on offset
    *
-   * @param x a value from -1 to 1 representing the percentage of movement speed to be at in the
-   *     given direction
-   * @param y a value from -1 to 1 representing the percentage of movement speed to be at in the
-   *     given direction
+   * @param x a value from -1 to 1 representing the percentage of movement speed
+   *          to be at in the
+   *          given direction
+   * @param y a value from -1 to 1 representing the percentage of movement speed
+   *          to be at in the
+   *          given direction
    */
   public void setVelPercentages(float x, float y) {
     float mag = (float) Math.sqrt(x * x + y * y);
@@ -123,7 +145,17 @@ public class PlayerController implements Controllable {
       return;
     } else if (player.isDashing()) {
       moveSpeed *= 4;
-      moveDirection.set(moveSpeed * dashDirection.x, moveSpeed * dashDirection.y);
+      if (isAimToDashMode) {
+        moveDirection.set(moveSpeed * dashDirection.x, moveSpeed * dashDirection.y);
+      } else {
+        // If not moving in a direction, just dash in currently facing direction
+        if (xNorm == 0 && yNorm == 0) {
+          moveDirection.set(-MathUtils.sin(player.getAngle()) * moveSpeed,
+              MathUtils.cos(player.getAngle()) * moveSpeed);
+        } else {
+          moveDirection.set(xNorm * moveSpeed * mag, yNorm * moveSpeed * mag);
+        }
+      }
     } else {
       moveDirection.set(xNorm * moveSpeed * mag, yNorm * moveSpeed * mag);
     }
@@ -157,7 +189,6 @@ public class PlayerController implements Controllable {
     Vector2 startPos = playerPos.add(dashDirection.x * 1.5f, dashDirection.y * 1.5f);
     physicsEngine.spawnBullet(startPos, dashDirection, 16, true);
 
-    player.setShootCounter();
     player.decrementFishCount();
   }
 
@@ -173,10 +204,12 @@ public class PlayerController implements Controllable {
   }
 
   /** Set the player to spearing or shooting, depending on which is applicable. */
-  public void spearOrShoot() {}
+  public void spearOrShoot() {
+  }
 
   /**
-   * Transforms the player and mouse positions to the same, centered coordinate system and sets this
+   * Transforms the player and mouse positions to the same, centered coordinate
+   * system and sets this
    * player's dash direction to the vector difference of those positions.
    *
    * @param mousePos the position of the mouse in screen coordinates
@@ -233,18 +266,21 @@ public class PlayerController implements Controllable {
       beginDashing();
     } else if (shootingPressed && player.canShoot()) {
       beginShooting();
+      shoot();
     }
 
     setVelPercentages(hoff, voff);
     player.setDirection(moveDirection);
     orientPlayer();
 
-    player.updateSpear(dashDirection);
-
-    if (player.canShootBullet()) {
-      shoot();
+    player.updateDashIndicator(dashDirection);
+    if (isAimToDashMode) {
+      player.updateSpear(dashDirection);
+    } else {
+      player.updateSpear(moveDirection.nor());
     }
 
+    dashToggleCounter = Math.max(dashToggleCounter - 1, 0);
     dashingPressed = false;
     shootingPressed = false;
   }

@@ -330,6 +330,9 @@ public class PhysicsEngine implements ContactListener {
       b.decrementHealth(ps.getDamage());
       ps.getMainBody().setKnockbackTime(15);
       ps.getMainBody().setKnockedBack(b.getPosition(), b.getSpearKnockbackForce());
+
+      // Disable spear collision again so it doesn't double count
+      ps.markInactive();
     }
   }
 

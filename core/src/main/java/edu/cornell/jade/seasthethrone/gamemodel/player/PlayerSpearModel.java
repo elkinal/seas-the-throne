@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
-import edu.cornell.jade.seasthethrone.physics.CollisionMask;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
@@ -16,7 +15,7 @@ import edu.cornell.jade.seasthethrone.util.FilmStrip;
  */
 public class PlayerSpearModel extends BoxModel implements Renderable {
   /** Width of spear */
-  private static float SPEAR_WIDTH = 1.2f;
+  private static float SPEAR_WIDTH = 1.5f;
 
   /** Length of spear */
   private static float SPEAR_LENGTH = 3.2f;
@@ -36,12 +35,18 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
   private int numSpeared;
 
   /** Cache for the direction the spear is facing */
-  private Vector2 directionCache;
+  private Vector2 spearDirectionCache;
+
+  /** Cache for the direction the of the shoot indicator */
+  private Vector2 indicatorCache;
 
   private final TextureRegion SPEAR_TEXTURE_REGION;
 
   /** Amount of damage the spear inflicts */
   private int damage;
+
+  /** If the spear should be set to inactive in the next iteration loop */
+  private boolean flagInactive;
 
   /**
    * The size is expressed in physics units NOT pixels.
@@ -54,9 +59,11 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
   public PlayerSpearModel(float x, float y, float width, float height, Texture texture) {
     super(x, y, width, height);
     spearExtended = false;
-    directionCache = new Vector2();
+    spearDirectionCache = new Vector2();
+    indicatorCache = new Vector2();
     SPEAR_TEXTURE_REGION = new TextureRegion(texture);
-    damage = 20;
+    damage = 5;
+    flagInactive = false;
   }
 
   /** Create new player body at position (x,y) */
@@ -93,13 +100,21 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
   /**
    * Update the spear mode
    *
-   * @param bodyPosition Vector representing the position of the player's body
    * @param dashDirection Vector representing the direction of the dash
    */
-  public void updateSpear(Vector2 bodyPosition, Vector2 dashDirection) {
-    directionCache.set(dashDirection);
-    setPosition(bodyPosition.add(directionCache.scl(SPEAR_OFFSET)));
-    setAngle(directionCache.angleRad() + (float) Math.PI / 2);
+  public void updateSpear(Vector2 dashDirection) {
+    spearDirectionCache.set(dashDirection);
+    setPosition(mainBody.getPosition().add(spearDirectionCache.scl(SPEAR_OFFSET)));
+    setAngle(spearDirectionCache.angleRad() + (float) Math.PI / 2);
+  }
+
+  /**
+   * Update the dash indicator vector
+   *
+   * @param dashDirection Vector representing the direction of the dash
+   */
+  public void updateDashIndicator(Vector2 dashDirection) {
+    indicatorCache.set(dashDirection);
   }
 
   public int getNumSpeared() {
@@ -123,14 +138,11 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
   public void decrementSpear() {
     numSpeared -= 1;
   }
+  /** Mark the spear as inactive in the next frame */
+  public void markInactive() {
+    flagInactive = true;
+  }
 
-  // /**
-  // * Return if the player is able to spear
-  // * @pre spearExtended is false
-  // * */
-  // public boolean canSpear(){
-  // return numSpeared == 0;
-  // }
 
   /** Overriding the current activatePhysics method to start the body off as inactive */
   @Override
@@ -152,13 +164,26 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
 
   @Override
   public void draw(RenderingEngine renderer) {
-    float angle = directionCache.angleRad();
-    float mag = 3f;
+    float angle = indicatorCache.angleRad();
+    float mag = 3f + SPEAR_OFFSET;
 
     renderer.draw(
         SPEAR_TEXTURE_REGION,
-        getX() + (float) (mag * Math.cos(angle)),
-        getY() + (float) (mag * Math.sin(angle)));
+        getMainBody().getX() + (float) (mag * Math.cos(angle)),
+        getMainBody().getY() + (float) (mag * Math.sin(angle)));
+  }
+
+  /**
+   * Updates the object's physics state (NOT GAME LOGIC).
+   *
+   * <p>Use this for cooldown checking/resetting.
+   */
+  @Override
+  public void update(float delta) {
+    if (flagInactive) {
+      setSpear(false);
+      flagInactive = false;
+    }
   }
 
   @Override

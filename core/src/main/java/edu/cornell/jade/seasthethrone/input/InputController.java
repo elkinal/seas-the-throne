@@ -145,9 +145,12 @@ public class InputController {
 //      obj.pressPrimary();
       obj.pressSecondary();
     }
-
-    if (xbox.getX()) {
+    // interact
+    if (xbox.getB()) {
       obj.pressInteract();
+    }
+    if (xbox.getX()) {
+      obj.toggleDashMode();
     }
 
     resetPressed = xbox.getY();
@@ -197,6 +200,9 @@ public class InputController {
     }
     if (Gdx.input.isKeyPressed(Input.Keys.E)) {
       obj.pressInteract();
+    }
+    if (Gdx.input.isKeyPressed(Input.Keys.T)) {
+      obj.toggleDashMode();
     }
 
 

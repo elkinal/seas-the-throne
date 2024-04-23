@@ -1,7 +1,6 @@
 package edu.cornell.jade.seasthethrone.gamemodel.player;
 
 import com.badlogic.gdx.math.Vector2;
-import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.model.PolygonModel;
 
 /**
@@ -48,11 +47,6 @@ public class PlayerBodyModel extends PolygonModel {
   public PlayerBodyModel(float x, float y) {
     // Make a triangle for now
     this(new float[] {-0.5f, -1, 0.5f, -1, 0, 1}, x, y);
-  }
-
-  /** Returns if the player body was hit */
-  public boolean isHit() {
-    return isHit;
   }
 
   /** Sets if the player body was hit If health drops to 0, will remove body from the world */

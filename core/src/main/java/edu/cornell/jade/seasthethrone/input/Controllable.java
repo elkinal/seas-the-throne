@@ -32,6 +32,10 @@ public interface Controllable {
   default public void pressInteract() {
   }
 
+  /** Toggles the dash mode of the player. */
+  default public void toggleDashMode() {
+  }
+
   /** Updates the direction the character is pointing for dash/shoot */
   default public void updateDirection(Vector2 mousePos) {
   }

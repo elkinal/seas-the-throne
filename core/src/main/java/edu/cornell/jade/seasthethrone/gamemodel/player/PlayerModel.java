@@ -562,7 +562,7 @@ public class PlayerModel extends ComplexModel implements Renderable {
   }
 
   public boolean isShootingAnimated() {
-    return shootTime > 0;
+    return shootCounter > 0;
   }
 
   public boolean isDead() {
@@ -574,21 +574,17 @@ public class PlayerModel extends ComplexModel implements Renderable {
 
   /** Returns if the player can dash */
   public boolean canDash() {
-    return !isDashing && !isShooting && !isInvincible() && cooldownCounter == 0;
+    return !isDashing
+      && !isShooting
+      && cooldownCounter == 0;
   }
 
   /** Returns if the player can be set to shooting */
   public boolean canShoot() {
     return !isDashing
-        && !isShooting
-        && !isInvincible()
-        && cooldownCounter == 0
-        && getSpearModel().getNumSpeared() > 0;
-  }
-
-  /** Returns if the player can shoot one bullet. */
-  public boolean canShootBullet() {
-    return isShooting() && shootCounter == 0 && getSpearModel().getNumSpeared() > 0;
+      && !isShooting
+      && cooldownCounter == 0
+      && getSpearModel().getNumSpeared() > 0;
   }
 
   /** Returns the number of current health points of the player. */
@@ -630,39 +626,26 @@ public class PlayerModel extends ComplexModel implements Renderable {
     return isShooting;
   }
 
-  /** Sets value for shoot counter to the cooldown limit */
-  public void setShootCounter() {
-    shootCounter = shootCooldownLimit;
-  }
-
-  /** Decrease fish counter. If the counter is sets to 0, stop shooting */
+  /** Decrease fish counter. */
   public void decrementFishCount() {
     getSpearModel().decrementSpear();
-    if (getSpearModel().getNumSpeared() <= 0) {
-      stopShooting();
-    }
   }
 
   /** Sets the player to shooting */
   public void startShooting() {
     isShooting = true;
-    shootTime = shootCooldownLimit * getSpearModel().getNumSpeared();
-    shootCounter = 0;
+    shootCounter = shootCooldownLimit;
     animationFrame = 0;
     frameCounter = 1;
-    dashFrameCounter = 1;
     frameDelay = shootCooldownLimit / framesInAnimationShoot;
   }
 
   /** Sets the player to not shooting */
   public void stopShooting() {
     isShooting = false;
-    cooldownCounter = cooldownLimit;
     animationFrame = 0;
     frameCounter = 1;
-    dashFrameCounter = 1;
-    if (isDashing) frameDelay = dashLength / framesInAnimationDash;
-    else frameDelay = initFrameDelay;
+    frameDelay = initFrameDelay;
   }
 
   /** Initialize dying process */
@@ -697,9 +680,14 @@ public class PlayerModel extends ComplexModel implements Renderable {
     return (PlayerShadowModel) bodies.get(2);
   }
 
-  /** Update the player's spear model when dashing */
+  /** Update the player's spear model for dashing */
   public void updateSpear(Vector2 dashDirection) {
-    getSpearModel().updateSpear(getPosition(), dashDirection);
+    getSpearModel().updateSpear(dashDirection);
+  }
+
+  /** Update the player's dash indicator */
+  public void updateDashIndicator(Vector2 dashDirection) {
+    getSpearModel().updateDashIndicator(dashDirection);
   }
 
   @Override
@@ -723,7 +711,6 @@ public class PlayerModel extends ComplexModel implements Renderable {
    */
   @Override
   public void update(float delta) {
-    if (shootTime > 0) shootTime -= 1;
     if (isDead()) {
       if (deathCount == framesInAnimationDeath * initFrameDelay) startDying();
       deathCount = Math.max(0, deathCount - 1);
@@ -735,7 +722,10 @@ public class PlayerModel extends ComplexModel implements Renderable {
         cooldownCounter = cooldownLimit;
       }
     } else if (isShooting()) {
-      shootCounter = Math.max(0, shootCounter - 1);
+      shootCounter -= 1;
+      if (shootCounter <= 0){
+        stopShooting();
+      }
     } else if (isIdle()) {
       animationFrame = 0;
       frameCounter = 1;
