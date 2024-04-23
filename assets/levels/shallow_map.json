@@ -4872,6 +4872,72 @@
                  "width":2.21836,
                  "x":2199.89,
                  "y":300
+                }, 
+                {
+                 "height":40.6364,
+                 "id":222,
+                 "name":"levels\/gate.png",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":false
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":2.21836,
+                 "x":1715.67529346352,
+                 "y":340.370270907711
+                }, 
+                {
+                 "height":40.6364,
+                 "id":226,
+                 "name":"levels\/gate.png",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":3
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":false
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":2.21836,
+                 "x":2207.42694457548,
+                 "y":300.075060770113
+                }, 
+                {
+                 "height":50.0837590515432,
+                 "id":229,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":3
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":81.9024503567202,
+                 "x":2733.98527669459,
+                 "y":180.48099396156
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -4923,7 +4989,7 @@
                         {
                          "name":"id",
                          "type":"int",
-                         "value":3
+                         "value":-1
                         }],
                  "rotation":0,
                  "type":"",
@@ -4931,24 +4997,6 @@
                  "width":20,
                  "x":2080,
                  "y":1000
-                }, 
-                {
-                 "gid":40,
-                 "height":20,
-                 "id":201,
-                 "name":"arc_jelly",
-                 "properties":[
-                        {
-                         "name":"id",
-                         "type":"int",
-                         "value":0
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":20,
-                 "x":2484.43657697754,
-                 "y":338.978353226785
                 }, 
                 {
                  "gid":40,
@@ -4965,8 +5013,8 @@
                  "type":"",
                  "visible":true,
                  "width":20,
-                 "x":1860.32166700384,
-                 "y":347.070604895812
+                 "x":1856.20361621455,
+                 "y":346.384263097596
                 }, 
                 {
                  "gid":40,
@@ -4983,13 +5031,49 @@
                  "type":"",
                  "visible":true,
                  "width":20,
-                 "x":1965.52093870119,
-                 "y":289.413311753996
+                 "x":1958.65752071903,
+                 "y":285.295260964703
                 }, 
                 {
                  "gid":40,
                  "height":20,
-                 "id":206,
+                 "id":223,
+                 "name":"aimed_jelly",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":3
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":2520.54221002059,
+                 "y":307.776252573782
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":224,
+                 "name":"aimed_jelly",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":3
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":2521.91489361702,
+                 "y":364.056280027454
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":225,
                  "name":"aimed_jelly",
                  "properties":[
                         {
@@ -5001,8 +5085,8 @@
                  "type":"",
                  "visible":true,
                  "width":20,
-                 "x":1966.53247015982,
-                 "y":389.554926158204
+                 "x":1961.17364447495,
+                 "y":392.19629375429
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -5180,7 +5264,7 @@
          "y":0
         }],
  "nextlayerid":15,
- "nextobjectid":217,
+ "nextobjectid":230,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

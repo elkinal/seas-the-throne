@@ -16,7 +16,6 @@ public class AimedSingleBulletJellyBossController extends JellyBossController {
 
   public AimedSingleBulletJellyBossController(JellyBossModel boss, PlayerModel player, BulletModel.Builder builder,
       PhysicsEngine physicsEngine) {
-    super(boss, player, new SingleBulletAttack(PERIOD, boss, builder, physicsEngine),
-        new SingleBulletAttack(PERIOD, boss, builder, physicsEngine), builder, physicsEngine);
+    super(boss, player, new SingleBulletAttack(PERIOD, boss, builder, physicsEngine), builder, physicsEngine);
   }
 }

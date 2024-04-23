@@ -252,14 +252,14 @@ public class GameplayController implements Screen {
       // whatever, should work, no less cursed than what we already have actually
       // despise what I'm about to write, no one do this
       String assetName = name.contains("jelly") ? "jelly" : name;
-
+      int health = name.contains("jelly") ? 50 : 100;
       var bossBuilder =
           BossModel.Builder.newInstance()
               .setType(name)
               .setFrameSize()
               .setX(bossContainer.x)
               .setY(bossContainer.y)
-              .setHealth(100)
+              .setHealth(health)
               //              .setHitbox(new float[]{-3, -3, -3, 3, 3, 3, 3, -3})
               .setHealthThresholds(new int[] {70, 30})
               .setFalloverAnimation(new Texture("bosses/" + assetName + "/fallover.png"))
@@ -504,13 +504,12 @@ public class GameplayController implements Screen {
   /** Updates the camera position to keep the player centered on the screen */
   private void updateCamera() {
     Vector2 playerPos = playerController.getLocation();
-    if (Float.isNaN(playerPos.x) || Float.isNaN(playerPos.y))
 
     updateCameraCache.set(viewport.getCamera().position.x, viewport.getCamera().position.y);
     Vector2 diff = updateCameraCache.sub(playerPos);
 
     if (diff.len() < CAMERA_SNAP_DISTANCE) {
-      viewport.getCamera().translate(-diff.x, -diff.y, 0);
+      viewport.getCamera().position.set(playerPos.x, playerPos.y, 0);
     } else {
       diff.scl(CAMERA_SMOOTHNESS);
       viewport.getCamera().translate(-diff.x, -diff.y, 0);

@@ -46,9 +46,6 @@ abstract class JellyBossController implements BossController {
   /** The player model being attacked */
   private PlayerModel player;
 
-  /** The current attack of the boss. */
-  private AttackPattern attackPattern;
-
   /** The boss's current state */
   private State state;
 
@@ -65,10 +62,7 @@ abstract class JellyBossController implements BossController {
   private Rectangle bounds;
 
   /** The first attack */
-  private final AttackPattern attack1;
-
-  /** The second attack */
-  private final AttackPattern attack2;
+  private final AttackPattern attack;
 
   /**
    * Constructs a crab boss controller
@@ -82,15 +76,13 @@ abstract class JellyBossController implements BossController {
       JellyBossModel boss,
       PlayerModel player,
       AttackPattern attack1,
-      AttackPattern attack2,
       BulletModel.Builder builder,
       PhysicsEngine physicsEngine) {
     this.boss = boss;
     this.player = player;
     this.state = State.IDLE;
 
-    this.attack1 = attack1;
-    this.attack2 = attack2;
+    this.attack = attack1;
 
     this.goalPos = new Vector2();
     this.rand = new Random();
@@ -123,7 +115,7 @@ abstract class JellyBossController implements BossController {
 
   @Override
   public void dispose() {
-    attackPattern.cleanup();
+    attack.cleanup();
   }
 
   /** Marks the boss for removal from the physics engine. */
@@ -147,7 +139,6 @@ abstract class JellyBossController implements BossController {
       case IDLE:
         if (boss.getPosition().dst(player.getPosition()) < AGRO_DISTANCE) {
           state = State.ATTACK;
-          attackPattern = attack1;
           timer = rand.nextInt(240, 480);
         }
         break;
@@ -158,7 +149,6 @@ abstract class JellyBossController implements BossController {
         } else if (timer <= 0) {
           state = State.ATTACK_MOVE;
           findNewGoalPos();
-          attackPattern = attack2;
         }
         break;
       case ATTACK_MOVE:
@@ -166,7 +156,6 @@ abstract class JellyBossController implements BossController {
           boss.setVX(0);
           boss.setVY(0);
           state = State.ATTACK;
-          attackPattern = attack1;
           timer = rand.nextInt(120, 150);
         } else if (boss.reachedHealthThreshold()) {
           state = State.MOVE;
@@ -179,12 +168,10 @@ abstract class JellyBossController implements BossController {
           boss.setVY(0);
           if (rand.nextBoolean()) {
             state = State.ATTACK;
-            attackPattern = attack1;
             timer = rand.nextInt(120, 150);
           } else {
             state = State.ATTACK_MOVE;
             findNewGoalPos();
-            attackPattern = attack2;
           }
         }
       case DEAD:
@@ -198,11 +185,11 @@ abstract class JellyBossController implements BossController {
       case IDLE:
         break;
       case ATTACK:
-        attackPattern.update(player.getX(), player.getY());
+        attack.update(player.getX(), player.getY());
         timer -= 1;
         break;
       case ATTACK_MOVE:
-        attackPattern.update(player.getX(), player.getY());
+        attack.update(player.getX(), player.getY());
         break;
       case MOVE:
         break;
