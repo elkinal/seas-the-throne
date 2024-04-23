@@ -446,6 +446,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
       switch (type) {
         case "crab":
           frameSize = 110;
+          break;
         default:
           // there are a lot of jellies so they are just a default case
           frameSize = 45;
