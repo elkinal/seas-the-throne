@@ -502,16 +502,13 @@ public class GameplayController implements Screen {
     Vector2 playerPos = playerController.getLocation();
 
     updateCameraCache.set(viewport.getCamera().position.x, viewport.getCamera().position.y);
-    Vector2 cameraPos = viewport.unproject(updateCameraCache);
-
-    Vector2 diff =
-        playerPos.sub(cameraPos).sub(viewport.getWorldWidth() / 2, -viewport.getWorldHeight() / 2);
+    Vector2 diff = updateCameraCache.sub(playerPos);
 
     if (diff.len() < CAMERA_SNAP_DISTANCE) {
-      viewport.getCamera().translate(diff.x, diff.y, 0);
+      viewport.getCamera().position.set(playerPos.x, playerPos.y, 0);
     } else {
       diff.scl(CAMERA_SMOOTHNESS);
-      viewport.getCamera().translate(diff.x, diff.y, 0);
+      viewport.getCamera().translate(-diff.x, -diff.y, 0);
     }
   }
 
