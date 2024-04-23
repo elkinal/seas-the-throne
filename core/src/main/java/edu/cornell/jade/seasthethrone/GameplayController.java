@@ -10,7 +10,6 @@ import com.badlogic.gdx.utils.viewport.*;
 
 import edu.cornell.jade.seasthethrone.ai.BossController;
 import edu.cornell.jade.seasthethrone.ai.CrabBossController;
-import edu.cornell.jade.seasthethrone.ai.JellyBossController;
 import edu.cornell.jade.seasthethrone.gamemodel.CheckpointModel;
 import edu.cornell.jade.seasthethrone.gamemodel.PortalModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
@@ -248,6 +247,12 @@ public class GameplayController implements Screen {
       // TODO: set everything below here based on bossName, load from assets.json
       LevelObject bossContainer = level.getBosses().get(i);
       String name = bossContainer.bossName;
+
+      // FIXME: this literly only works because we are dumb it's stupid hack but 
+      // whatever, should work, no less cursed than what we already have actually
+      // despise what I'm about to write, no one do this
+      String assetName = name.contains("jelly") ? "jelly" : name;
+
       var bossBuilder =
           BossModel.Builder.newInstance()
               .setType(name)
@@ -257,11 +262,11 @@ public class GameplayController implements Screen {
               .setHealth(100)
               //              .setHitbox(new float[]{-3, -3, -3, 3, 3, 3, 3, -3})
               .setHealthThresholds(new int[] {70, 30})
-              .setFalloverAnimation(new Texture("bosses/" + name + "/fallover.png"))
-              .setShootAnimation(new Texture("bosses/" + name + "/shoot.png"))
-              .setGetHitAnimation(new Texture("bosses/" + name + "/hurt.png"))
-              .setDeathAnimation(new Texture("bosses/" + name + "/death.png"))
-              .setAttackAnimation(new Texture("bosses/" + name + "/attack.png"))
+              .setFalloverAnimation(new Texture("bosses/" + assetName + "/fallover.png"))
+              .setShootAnimation(new Texture("bosses/" + assetName + "/shoot.png"))
+              .setGetHitAnimation(new Texture("bosses/" + assetName + "/hurt.png"))
+              .setDeathAnimation(new Texture("bosses/" + assetName+ "/death.png"))
+              .setAttackAnimation(new Texture("bosses/" + assetName + "/attack.png"))
               .setFrameDelay(12)
               .setRoomId(bossContainer.roomId);
       BossModel boss = bossBuilder.build();

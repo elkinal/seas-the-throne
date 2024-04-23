@@ -13,7 +13,8 @@ import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 import edu.cornell.jade.seasthethrone.ai.BossController;
 import edu.cornell.jade.seasthethrone.ai.CrabBossController;
-import edu.cornell.jade.seasthethrone.ai.JellyBossController;
+import edu.cornell.jade.seasthethrone.ai.AimedSingleBulletJellyBossController;
+import edu.cornell.jade.seasthethrone.ai.AimedArcJellyBossController;
 
 public abstract class BossModel extends EnemyModel implements Renderable {
 
@@ -437,8 +438,10 @@ public abstract class BossModel extends EnemyModel implements Renderable {
       switch (type) {
         case "crab":
           return new CrabBossController((CrabBossModel) model, player, bulletBuilder, physicsEngine);
-        case "jelly":
-          return new JellyBossController((JellyBossModel) model, player, bulletBuilder, physicsEngine);
+        case "aimed_jelly":
+          return new AimedSingleBulletJellyBossController((JellyBossModel) model, player, bulletBuilder, physicsEngine);
+        case "arc_jelly":
+          return new AimedArcJellyBossController((JellyBossModel) model, player, bulletBuilder, physicsEngine);
         default: 
           throw new RuntimeException("boss type not supported");
       }

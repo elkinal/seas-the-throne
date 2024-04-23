@@ -3,8 +3,6 @@ package edu.cornell.jade.seasthethrone.ai;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import edu.cornell.jade.seasthethrone.bpedit.AttackPattern;
-import edu.cornell.jade.seasthethrone.bpedit.patterns.RingAttack;
-import edu.cornell.jade.seasthethrone.bpedit.patterns.TrackingSpiralAttack;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.JellyBossModel;
@@ -14,7 +12,7 @@ import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import java.util.Random;
 
 /** A controller defining the behavior of a jelly boss. */
-public class JellyBossController implements BossController {
+abstract class JellyBossController implements BossController {
   /** Enumeration of AI states. */
   private static enum State {
     /** The boss is stationary */
@@ -36,18 +34,6 @@ public class JellyBossController implements BossController {
    */
   /** The distance the player must be from the boss before it begins attacking. */
   private static float AGRO_DISTANCE = 35f;
-
-  /** The delay length between successive bullets in the spiral attack */
-  private static int SPIRAL_DELAY = 6;
-
-  /** The number of bullets in a circular spiral shot */
-  private static int SPIRAL_SHOTS = 22;
-
-  /** The delay length between successive bullets in the ring attack */
-  private static int RING_DELAY = 100;
-
-  /** The number of bullets in a circular ring attack */
-  private static int RING_SHOTS = 26;
 
   /*
    * -------------------------------
@@ -95,15 +81,16 @@ public class JellyBossController implements BossController {
   public JellyBossController(
       JellyBossModel boss,
       PlayerModel player,
+      AttackPattern attack1,
+      AttackPattern attack2,
       BulletModel.Builder builder,
       PhysicsEngine physicsEngine) {
     this.boss = boss;
     this.player = player;
     this.state = State.IDLE;
 
-    this.attack1 = new RingAttack(boss, RING_DELAY, RING_SHOTS, builder, physicsEngine);
-    this.attack2 =
-        new TrackingSpiralAttack(boss, SPIRAL_DELAY, SPIRAL_SHOTS, builder, physicsEngine);
+    this.attack1 = attack1;
+    this.attack2 = attack2;
 
     this.goalPos = new Vector2();
     this.rand = new Random();

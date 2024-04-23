@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.MathUtils;
 import edu.cornell.jade.seasthethrone.bpedit.Spawner;
 import edu.cornell.jade.seasthethrone.bpedit.Spawner.BulletFamily;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
-import edu.cornell.jade.seasthethrone.model.Model;
+import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.bpedit.Spawner.DelayedTarget;
 import edu.cornell.jade.seasthethrone.bpedit.Spawner.DelayedSpeedChange;
@@ -62,25 +62,16 @@ public final class SpawnerFactory {
    * amount of time.
    *
    * @param delay         delay in between firings
-   * @param homingDelay   delay in between initial firing and homing change
-   * @param newSpeed      speed after homing occurs
    * @param builder       a builder to create bullet models
    * @param physicsEngine {@link PhysicsEngine} to add bullets to
    */
-  public static Spawner constructTrackingHomingRepeatingBullet(int delay, int homingDelay, float newSpeed,
-      BulletModel.Builder builder,
+  public static Spawner constructRepeatingAimedBullet(int delay, BossModel model, BulletModel.Builder builder,
       PhysicsEngine physicsEngine) {
     Spawner out = new Spawner(builder, physicsEngine);
-    BulletFamily f = new BulletFamily(-1f, 0f, -8f, -0f, 0.5f, 0);
+    BulletFamily f = new BulletFamily(0f, 0f, 8f, -0f, 0.5f, 0);
     f.addEffect(new Periodic(delay));
-    f.addDelayedAction(new DelayedTarget(homingDelay));
-    f.addDelayedAction(new DelayedSpeedChange(newSpeed, homingDelay));
-    out.addFamily(f);
-
-    f = new BulletFamily(1f, 0f, 8f, -0f, 0.5f, 0);
-    f.addEffect(new Periodic(delay));
-    f.addDelayedAction(new DelayedTarget(homingDelay));
-    f.addDelayedAction(new DelayedSpeedChange(newSpeed, homingDelay));
+    f.addDelayedAction(new DelayedTarget(0));
+    f.addDelayedAction(new DelayedSpeedChange(8f, 0));
     out.addFamily(f);
     return out;
   }
@@ -91,15 +82,40 @@ public final class SpawnerFactory {
    * @param dups          number of bullets in the arc
    * @param centralAngle  size of the arc in radians
    * @param delay         delay inbetween firings
+   * @param model         model used to play animations
    * @param builder       a builder to create bullet models
    * @param physicsEngine {@link PhysicsEngine} to add bullets to
    */
-  public static Spawner constructRepeatingDownwardsFacingArc(int dups, float centralAngle, int delay,
+  public static Spawner constructRepeatingDownwardsFacingArc(int dups, float centralAngle, int delay, BossModel model,
       BulletModel.Builder builder, PhysicsEngine physicsEngine) {
     Spawner out = new Spawner(builder, physicsEngine);
     BulletFamily f = new BulletFamily(0f, 0f, 0f, -8f, 0.5f, 0);
     f.addEffect(new Periodic(delay));
     f.addEffect(new Arc(-MathUtils.PI / 6f, MathUtils.PI / 3f, 5));
+    f.addEffect(new PlaysAttackAnimation(model));
+    out.addFamily(f);
+    return out;
+  }
+
+  /**
+   * Constructs an arc pointed to the player
+   *
+   * @param dups          number of bullets in the arc
+   * @param centralAngle  size of the arc in radians
+   * @param delay         delay inbetween firings
+   * @param model         model used to play animations
+   * @param builder       a builder to create bullet models
+   * @param physicsEngine {@link PhysicsEngine} to add bullets to
+   */
+  public static Spawner constructRepeatingAimedArc(int dups, float centralAngle, int delay, BossModel model,
+      BulletModel.Builder builder, PhysicsEngine physicsEngine) {
+    Spawner out = new Spawner(builder, physicsEngine);
+    BulletFamily f = new BulletFamily(0f, 0f, 0f, 8f, 0.5f, 0);
+    f.addEffect(new Periodic(delay));
+    f.addEffect(new Arc(-MathUtils.PI / 6f, MathUtils.PI / 3f, 5));
+    f.addEffect(new PlaysAttackAnimation(model));
+    f.addDelayedAction(new DelayedTarget(0));
+    f.addDelayedAction(new DelayedSpeedChange(8f, 0));
     out.addFamily(f);
     return out;
   }

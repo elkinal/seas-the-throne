@@ -349,12 +349,12 @@
                         {
                          "name":"playerX",
                          "type":"float",
-                         "value":880
+                         "value":2766
                         }, 
                         {
                          "name":"playerY",
                          "type":"float",
-                         "value":1220
+                         "value":210
                         }, 
                         {
                          "name":"target",
@@ -416,7 +416,7 @@
         {
          "columns":18,
          "firstgid":1,
-         "image":"levels\/boss-room-tileset.png",
+         "image":"boss-room-tileset.png",
          "imageheight":360,
          "imagewidth":360,
          "margin":0,

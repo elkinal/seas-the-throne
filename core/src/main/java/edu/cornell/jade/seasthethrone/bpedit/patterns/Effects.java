@@ -4,6 +4,8 @@ import com.badlogic.gdx.math.Vector2;
 import edu.cornell.jade.seasthethrone.bpedit.Spawner.Effect;
 import edu.cornell.jade.seasthethrone.bpedit.Spawner.BulletFamily;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
+import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
+
 import com.badlogic.gdx.utils.*;
 import edu.cornell.jade.seasthethrone.model.Model;
 
@@ -69,5 +71,28 @@ class Periodic implements Effect {
       b.setTimestamp(b.getTimestamp() + ticks);
       bullets.add(b);
     }
+  }
+}
+
+/**
+ * Causes a boss model to play it's attack animation when this effect is applied
+ */
+class PlaysAttackAnimation implements Effect {
+
+  /** model to play attack of */
+  private final BossModel model;
+
+  /**
+   * Constructs a <code>PlaysAttackAnimation</code> {@link Effect}.
+   *
+   * @param model model to play attack animation for
+   */
+  public PlaysAttackAnimation(BossModel model) {
+    this.model = model;
+  }
+
+  @Override
+  public void apply(Array<BulletFamily> bullets, Pool<BulletFamily> familyPool, Pool<BulletModel> basePool) {
+    model.bossAttack();
   }
 }

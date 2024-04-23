@@ -9,7 +9,6 @@ import com.badlogic.gdx.utils.ReflectionPool;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import com.badlogic.gdx.math.MathUtils;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
-import edu.cornell.jade.seasthethrone.physics.CollisionMask;
 import com.badlogic.gdx.utils.ObjectSet;
 
 /**

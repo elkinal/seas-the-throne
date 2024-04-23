@@ -49,6 +49,9 @@ public class EnemyModel extends PolygonModel {
    */
   public EnemyModel(float x, float y, String enemyName, int frameSize) {
     super(x, y);
+    // FIXME: another stupid hack to make multiple named jellies work.
+    // This code is terrible and I hate it with a burning passion
+    enemyName = enemyName.contains("jelly") ? "jelly" : enemyName;
     HashMap<String, Object> bossTextures =
         (HashMap<String, Object>) JsonHandler.jsonToMap("assets.json").get("textures");
     HashMap<String, Object> specificBossTextures =

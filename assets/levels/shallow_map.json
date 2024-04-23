@@ -4,7 +4,7 @@
  "layers":[
         {
          "id":6,
-         "image":"levels/shallowbiomemap3.png",
+         "image":"shallowbiomemap3.png",
          "name":"background",
          "opacity":1,
          "properties":[
@@ -4872,6 +4872,28 @@
                  "width":2.21836,
                  "x":2199.89,
                  "y":300
+                }, 
+                {
+                 "height":40.6364,
+                 "id":216,
+                 "name":"levels\/gate.png",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":false
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":2.21836,
+                 "x":1716.49389176306,
+                 "y":342.758328321252
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -4906,7 +4928,7 @@
                  "gid":41,
                  "height":20,
                  "id":159,
-                 "name":"jelly",
+                 "name":"aimed_jelly",
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -4917,26 +4939,8 @@
                 {
                  "gid":40,
                  "height":20,
-                 "id":170,
-                 "name":"jelly",
-                 "properties":[
-                        {
-                         "name":"id",
-                         "type":"int",
-                         "value":2
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":20,
-                 "x":1960,
-                 "y":340
-                }, 
-                {
-                 "gid":40,
-                 "height":20,
                  "id":171,
-                 "name":"jelly",
+                 "name":"aimed_jelly",
                  "properties":[
                         {
                          "name":"id",
@@ -4949,6 +4953,78 @@
                  "width":20,
                  "x":2080,
                  "y":1000
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":201,
+                 "name":"arc_jelly",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":0
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":2484.43657697754,
+                 "y":338.978353226785
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":202,
+                 "name":"arc_jelly",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":2
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":1860.32166700384,
+                 "y":347.070604895812
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":203,
+                 "name":"aimed_jelly",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":2
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":1965.52093870119,
+                 "y":289.413311753996
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":206,
+                 "name":"aimed_jelly",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":2
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":1966.53247015982,
+                 "y":389.554926158204
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -5126,7 +5202,7 @@
          "y":0
         }],
  "nextlayerid":15,
- "nextobjectid":197,
+ "nextobjectid":217,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
@@ -5135,7 +5211,7 @@
         {
          "columns":18,
          "firstgid":1,
-         "image":"levels/boss-room-tileset.png",
+         "image":"boss-room-tileset.png",
          "imageheight":360,
          "imagewidth":360,
          "margin":0,
