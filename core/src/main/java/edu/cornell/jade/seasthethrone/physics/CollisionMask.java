@@ -6,6 +6,7 @@ import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerBodyModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerBulletModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerShadowModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerSpearModel;
+import edu.cornell.jade.seasthethrone.gamemodel.CheckpointModel;
 import edu.cornell.jade.seasthethrone.model.Model;
 
 /**
@@ -37,6 +38,11 @@ public class CollisionMask {
    * Category bitmask for boss
    */
   private static final short CATEGORY_BOSS = 0x0010;
+
+  /**
+   * Category bitmask for checkpoint
+   */
+  private static final short CATEGORY_CHECKPOINT = 0x0020;
 
 
   /**
@@ -71,6 +77,11 @@ public class CollisionMask {
     // If portal
     else if (model instanceof PortalModel) {
       model.setCategoryBits(CATEGORY_OBSTACLE);
+      model.setMaskBits(CATEGORY_PLAYER_SHADOW);
+    }
+    // If checkping
+    else if (model instanceof CheckpointModel) {
+      model.setCategoryBits(CATEGORY_CHECKPOINT);
       model.setMaskBits(CATEGORY_PLAYER_SHADOW);
     }
   }

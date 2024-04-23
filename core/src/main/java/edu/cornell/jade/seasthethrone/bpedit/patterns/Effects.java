@@ -1,7 +1,9 @@
 package edu.cornell.jade.seasthethrone.bpedit.patterns;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import edu.cornell.jade.seasthethrone.bpedit.Spawner.Effect;
+import edu.cornell.jade.seasthethrone.bpedit.Spawner;
 import edu.cornell.jade.seasthethrone.bpedit.Spawner.BulletFamily;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
@@ -94,5 +96,39 @@ class PlaysAttackAnimation implements Effect {
   @Override
   public void apply(Array<BulletFamily> bullets, Pool<BulletFamily> familyPool, Pool<BulletModel> basePool) {
     model.bossAttack();
+  }
+}
+
+/**
+ * Causes all bullets to target the given model
+ */
+class TargetsModel implements Effect {
+
+  /** model to target */
+  private final Model model;
+
+  /** spawner we are comming from */
+  private final Spawner spawner;
+
+  /**
+   * constructs a targets model
+   *
+   * @param model model to target
+   */
+  public TargetsModel(Spawner spawner, Model model) {
+    this.model = model;
+    this.spawner = spawner;
+  }
+
+  @Override
+  public void apply(Array<BulletFamily> bullets, Pool<BulletFamily> familyPool, Pool<BulletModel> basePool) {
+    float dx = model.getX() - spawner.getX();
+    float dy = model.getY() - spawner.getY();
+    float theta = MathUtils.atan(dy / dx);
+    int numBullets = bullets.size;
+    for (int i = 0; i < numBullets; i++) {
+      BulletFamily orig = bullets.get(i);
+      orig.rotate(theta - (dx < 0 ? -1 : 1) * orig.getDir(), 0, 0);
+    }
   }
 }

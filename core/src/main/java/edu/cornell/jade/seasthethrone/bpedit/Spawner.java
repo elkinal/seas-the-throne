@@ -349,6 +349,14 @@ public class Spawner {
       this.by += y;
     }
 
+    /** Gets direction of velocity of <code>BulletFamily</code>.
+     *
+     * @return direction of veclocity of base bullet
+     */
+    public float getDir() {
+      return MathUtils.atan(bvy / bvx);
+    }
+
     /**
      * Rotate a base bullet around a specified point counter clockwise.
      *
@@ -634,9 +642,28 @@ public class Spawner {
   private void addBullets() {
     while (hasNext()) {
       BulletModel b = next();
+      assert !Float.isNaN(b.getX()) && !Float.isNaN(b.getY());
       physicsEngine.addObject(b);
       added.add(b);
     }
+  }
+
+  /**
+   * Returns x coordinate of the <code>Spawner</code>
+   *
+   * @return x corrdinate of the <code>Spawner</code>
+   */
+  public float getX() {
+    return x;
+  }
+
+  /**
+   * Returns y coordinate of the <code>Spawner</code>
+   *
+   * @return y corrdinate of the <code>Spawner</code>
+   */
+  public float getY() {
+    return y;
   }
 
   /**

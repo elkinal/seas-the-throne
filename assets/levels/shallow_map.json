@@ -4872,28 +4872,6 @@
                  "width":2.21836,
                  "x":2199.89,
                  "y":300
-                }, 
-                {
-                 "height":40.6364,
-                 "id":216,
-                 "name":"levels\/gate.png",
-                 "properties":[
-                        {
-                         "name":"id",
-                         "type":"int",
-                         "value":2
-                        }, 
-                        {
-                         "name":"sensor",
-                         "type":"bool",
-                         "value":false
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":2.21836,
-                 "x":1716.49389176306,
-                 "y":342.758328321252
                 }],
          "opacity":1,
          "type":"objectgroup",

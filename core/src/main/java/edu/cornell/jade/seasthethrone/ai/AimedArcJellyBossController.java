@@ -12,11 +12,11 @@ import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 public class AimedArcJellyBossController extends JellyBossController {
 
   /** Bullet shot period */
-  private static final int PERIOD = 30;
+  private static final int PERIOD = 60;
 
   public AimedArcJellyBossController(JellyBossModel boss, PlayerModel player, BulletModel.Builder builder,
       PhysicsEngine physicsEngine) {
-    super(boss, player, new AimedArcAttack(PERIOD, boss, builder, physicsEngine),
-        new AimedArcAttack(PERIOD, boss, builder, physicsEngine), builder, physicsEngine);
+    super(boss, player, new AimedArcAttack(PERIOD, boss, player, builder, physicsEngine),
+        new AimedArcAttack(PERIOD, boss, player, builder, physicsEngine), builder, physicsEngine);
   }
 }

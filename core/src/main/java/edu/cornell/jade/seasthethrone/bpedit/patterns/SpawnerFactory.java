@@ -6,6 +6,7 @@ import edu.cornell.jade.seasthethrone.bpedit.Spawner;
 import edu.cornell.jade.seasthethrone.bpedit.Spawner.BulletFamily;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
+import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.bpedit.Spawner.DelayedTarget;
 import edu.cornell.jade.seasthethrone.bpedit.Spawner.DelayedSpeedChange;
@@ -70,6 +71,7 @@ public final class SpawnerFactory {
     Spawner out = new Spawner(builder, physicsEngine);
     BulletFamily f = new BulletFamily(0f, 0f, 8f, -0f, 0.5f, 0);
     f.addEffect(new Periodic(delay));
+    f.addEffect(new PlaysAttackAnimation(model));
     f.addDelayedAction(new DelayedTarget(0));
     f.addDelayedAction(new DelayedSpeedChange(8f, 0));
     out.addFamily(f);
@@ -91,8 +93,8 @@ public final class SpawnerFactory {
     Spawner out = new Spawner(builder, physicsEngine);
     BulletFamily f = new BulletFamily(0f, 0f, 0f, -8f, 0.5f, 0);
     f.addEffect(new Periodic(delay));
-    f.addEffect(new Arc(-MathUtils.PI / 6f, MathUtils.PI / 3f, 5));
     f.addEffect(new PlaysAttackAnimation(model));
+    f.addEffect(new Arc(-MathUtils.PI / 6f, MathUtils.PI / 3f, 5));
     out.addFamily(f);
     return out;
   }
@@ -104,18 +106,18 @@ public final class SpawnerFactory {
    * @param centralAngle  size of the arc in radians
    * @param delay         delay inbetween firings
    * @param model         model used to play animations
+   * @param player        player to track
    * @param builder       a builder to create bullet models
    * @param physicsEngine {@link PhysicsEngine} to add bullets to
    */
   public static Spawner constructRepeatingAimedArc(int dups, float centralAngle, int delay, BossModel model,
-      BulletModel.Builder builder, PhysicsEngine physicsEngine) {
+      PlayerModel player, BulletModel.Builder builder, PhysicsEngine physicsEngine) {
     Spawner out = new Spawner(builder, physicsEngine);
     BulletFamily f = new BulletFamily(0f, 0f, 0f, 8f, 0.5f, 0);
     f.addEffect(new Periodic(delay));
-    f.addEffect(new Arc(-MathUtils.PI / 6f, MathUtils.PI / 3f, 5));
+    f.addEffect(new TargetsModel(out, player));
     f.addEffect(new PlaysAttackAnimation(model));
-    f.addDelayedAction(new DelayedTarget(0));
-    f.addDelayedAction(new DelayedSpeedChange(8f, 0));
+    f.addEffect(new Arc(-MathUtils.PI / 6f, MathUtils.PI / 3f, 5));
     out.addFamily(f);
     return out;
   }

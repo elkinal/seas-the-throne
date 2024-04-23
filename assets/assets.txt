@@ -36,8 +36,8 @@ levels/shallowbiomemap3.png
 levels/tablet_room_1.json
 levels/tablet_room_2.json
 levels/test1.tiled-project
-levels/shallow_map.json
 levels/hub_world.json
+levels/shallow_map.json
 bullet/yellowfish_NE.png
 bullet/yellowfish_NW.png
 bullet/yellowfish_SE.png
@@ -118,4 +118,3 @@ ui/health_v3_2.png
 ui/health_v3_3.png
 ui/health_v3_4.png
 ui/health_v3_5.png
-saves/save1.json
