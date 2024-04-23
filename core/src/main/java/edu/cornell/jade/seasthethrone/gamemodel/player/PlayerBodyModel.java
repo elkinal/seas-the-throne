@@ -2,7 +2,6 @@ package edu.cornell.jade.seasthethrone.gamemodel.player;
 
 import com.badlogic.gdx.math.Vector2;
 import edu.cornell.jade.seasthethrone.model.CircleModel;
-import edu.cornell.jade.seasthethrone.model.PolygonModel;
 
 /**
  * Model for the player body. This class extends {@link PlayerModel} for a flexible frame. The

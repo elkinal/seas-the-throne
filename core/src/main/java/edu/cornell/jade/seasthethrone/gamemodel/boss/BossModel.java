@@ -43,6 +43,9 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   /** Flag for the boss attack*/
   private boolean isAttack;
 
+  /** Array indicating polygon hitbox */
+  protected float[] hitbox;
+
   /** Amount of knockback force applied to player on body collision */
   private float bodyKnockbackForce;
 
@@ -80,7 +83,13 @@ public abstract class BossModel extends EnemyModel implements Renderable {
    * @param builder builder for BossModel
    */
   public BossModel(Builder builder) {
-    super(builder.x, builder.y, builder.hitbox, builder.type, builder.frameSize);
+    super(builder.x, builder.y, builder.type, builder.frameSize);
+
+    // Doing this for now so hitboxes can be defined in subclasses
+    setHitbox();
+    initShapes(this.hitbox);
+    initBounds();
+
     moveAnimation = builder.moveAnimation;
     getHitAnimation = builder.getHitAnimation;
     falloverAnimation = builder.falloverAnimation;
@@ -242,6 +251,9 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     return filmStrip.getSize();
   }
 
+  /** Sets the hitbox of the boss */
+  abstract void setHitbox();
+
   /**
    * Returns if the boss's health reached under a certain health threshold.
    *
@@ -301,9 +313,6 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     /** The number of frames between animation updates */
     private int frameDelay;
 
-    /** Polygon indicating boss hitbox */
-    private float[] hitbox;
-
     /** Number of health points the boss has */
     protected int health;
 
@@ -331,50 +340,6 @@ public abstract class BossModel extends EnemyModel implements Renderable {
 
     public Builder setType(String type) {
       this.type = type;
-      return this;
-    }
-
-    public Builder setHitbox(String type) {
-      float[] hitbox;
-      switch (type) {
-        case "crab":
-          hitbox = new float[]{
-                  -6.5f,  7,
-                  -5,     8.5f,
-                  -1.5f,  4,
-                  -0.35f, 4.6f,
-                  0.7f,   4,
-                  1,      5.5f,
-                  4,      7,
-                  5.5f,   7,
-                  5.5f,   5,
-                  6,      4,
-                  5.5f,   -4,
-                  4.5f,   -3,
-                  4,      1.8f,
-                  1,      1.5f,
-                  3,      -3,
-                  2,      -8,
-                  -3,     -7,
-                  -4,     -2,
-                  -3,     0,
-                  -6,     4
-          };
-          break;
-        case "jelly":
-          hitbox = new float[]{
-                  -2,     1.2f,
-                  -0.6f,  2.5f,
-                  1,      2.5f,
-                  2.4f,   1.2f,
-                  2.4f,   -2.5f,
-                  -2,     -2.5f
-          };
-          break;
-        default:
-          hitbox = new float[]{-4, -7, -4, 7, 4, 7, 4, -7};
-      }
-      this.hitbox = hitbox;
       return this;
     }
 
