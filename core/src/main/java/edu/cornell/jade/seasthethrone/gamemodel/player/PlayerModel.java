@@ -326,16 +326,28 @@ public class PlayerModel extends ComplexModel implements Renderable {
     else{
       switch(direction()){
         case UP:
-          currentStrip.setTexture(getTextureUpDash());
+          if (isDead())
+            currentStrip.setTexture(getDieUp());
+          else
+            currentStrip.setTexture(getTextureUpDash());
           break;
         case DOWN:
-          currentStrip.setTexture(getTextureDownDash());
+          if (isDead())
+            currentStrip.setTexture(getDieDown());
+          else
+            currentStrip.setTexture(getTextureDownDash());
           break;
         case LEFT:
-          currentStrip.setTexture(getTextureLeftDash());
+          if (isDead())
+            currentStrip.setTexture(getDieLeft());
+          else
+            currentStrip.setTexture(getTextureLeftDash());
           break;
         case RIGHT:
-          currentStrip.setTexture(getTextureRightDash());
+          if (isDead())
+            currentStrip.setTexture(getDieRight());
+          else
+            currentStrip.setTexture(getTextureRightDash());
           break;
         case NE:
           currentStrip.setTexture(getTextureNEDash());
@@ -754,37 +766,49 @@ public class PlayerModel extends ComplexModel implements Renderable {
     float vx = moveDirection.x;
     float vy = moveDirection.y;
 
-    if (!isDashing()) {
+    if (isDashing()) {
+      if (isDead()) {
+        if (Math.abs(vx) > Math.abs(vy)) {
+          if (vx > 0) faceDirection = Direction.RIGHT;
+          else faceDirection = Direction.LEFT;
+        } else if (Math.abs(vx) < Math.abs(vy)) {
+          if (vy > 0) faceDirection = Direction.UP;
+          else faceDirection = Direction.DOWN;
+        }
+      }
+      else{
+          if (Math.abs(vx) > Math.abs(vy)) {
+          final boolean nonDiagonalX = 0.414 * Math.abs(vx) > Math.abs(vy);
+          if (vx > 0) {
+            if (nonDiagonalX) faceDirection = Direction.RIGHT;
+            else if (vy > 0) faceDirection = Direction.NE;
+            else faceDirection = Direction.SE;
+          } else {
+            if (nonDiagonalX) faceDirection = Direction.LEFT;
+            else if (vy > 0) faceDirection = Direction.NW;
+            else faceDirection = Direction.SW;
+          }
+        } else if (Math.abs(vx) < Math.abs(vy)) {
+          final boolean nonDiagonalY = 0.414 * Math.abs(vy) > Math.abs(vx);
+          if (vy > 0) {
+            if (nonDiagonalY) faceDirection = Direction.UP;
+            else if (vx > 0) faceDirection = Direction.NE;
+            else faceDirection = Direction.NW;
+          } else {
+            if (nonDiagonalY) faceDirection = Direction.DOWN;
+            else if (vx > 0) faceDirection = Direction.SE;
+            else faceDirection = Direction.SW;
+          }
+        }
+      }
+    }
+    else{
       if (Math.abs(vx) > Math.abs(vy)) {
         if (vx > 0) faceDirection = Direction.RIGHT;
         else faceDirection = Direction.LEFT;
       } else if (Math.abs(vx) < Math.abs(vy)) {
         if (vy > 0) faceDirection = Direction.UP;
         else faceDirection = Direction.DOWN;
-      }
-    } else {
-      if (Math.abs(vx) > Math.abs(vy)) {
-        final boolean nonDiagonalX = 0.414 * Math.abs(vx) > Math.abs(vy);
-        if (vx > 0) {
-          if (nonDiagonalX) faceDirection = Direction.RIGHT;
-          else if (vy > 0) faceDirection = Direction.NE;
-          else faceDirection = Direction.SE;
-        } else {
-          if (nonDiagonalX) faceDirection = Direction.LEFT;
-          else if (vy > 0) faceDirection = Direction.NW;
-          else faceDirection = Direction.SW;
-        }
-      } else if (Math.abs(vx) < Math.abs(vy)) {
-        final boolean nonDiagonalY = 0.414 * Math.abs(vy) > Math.abs(vx);
-        if (vy > 0) {
-          if (nonDiagonalY) faceDirection = Direction.UP;
-          else if (vx > 0) faceDirection = Direction.NE;
-          else faceDirection = Direction.NW;
-        } else {
-          if (nonDiagonalY) faceDirection = Direction.DOWN;
-          else if (vx > 0) faceDirection = Direction.SE;
-          else faceDirection = Direction.SW;
-        }
       }
     }
   }
