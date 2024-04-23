@@ -116,6 +116,8 @@ public class PlayerModel extends ComplexModel implements Renderable {
 
   /** FilmStrip cache object for dying */
   public FilmStrip filmStripDeath;
+  /** Current FilmStrip */
+  public FilmStrip currentStrip;
 
   /** current animation frame */
   private int animationFrame;
@@ -265,9 +267,8 @@ public class PlayerModel extends ComplexModel implements Renderable {
 
   @Override
   public void draw(RenderingEngine renderer) {
-    FilmStrip currentStrip = filmStrip;
     if (shouldUpdate) {
-      currentStrip = progressFrame();
+      progressFrame();
     }
     Vector2 pos = getPosition();
     if (isInvincible() && !isDead()) renderer.draw(currentStrip, pos.x, pos.y, 0.12f, Color.RED);
@@ -276,82 +277,82 @@ public class PlayerModel extends ComplexModel implements Renderable {
   }
 
   @Override
-  public FilmStrip progressFrame() {
-    FilmStrip filmStrip = getFilmStrip();
+  public void progressFrame() {
+    currentStrip = getFilmStrip();
     if (!isDashing()){
       switch (direction()) {
         case UP:
           if (isDead())
-            filmStrip.setTexture(getDieUp());
+            currentStrip.setTexture(getDieUp());
           else if (isShootingAnimated()) {
-            filmStrip.setTexture(getShootUp());
+            currentStrip.setTexture(getShootUp());
           } else if (isIdle())
-            filmStrip.setTexture(getIdleUp());
+            currentStrip.setTexture(getIdleUp());
           else
-            filmStrip.setTexture(getTextureUp());
+            currentStrip.setTexture(getTextureUp());
           break;
         case DOWN:
           if (isDead())
-            filmStrip.setTexture(getDieDown());
+            currentStrip.setTexture(getDieDown());
           else if (isShootingAnimated())
-            filmStrip.setTexture(getShootDown());
+            currentStrip.setTexture(getShootDown());
           else if (isIdle())
-            filmStrip.setTexture(getIdleDown());
+            currentStrip.setTexture(getIdleDown());
           else
-            filmStrip.setTexture(getTextureDown());
+            currentStrip.setTexture(getTextureDown());
           break;
         case LEFT:
           if (isDead())
-            filmStrip.setTexture(getDieLeft());
+            currentStrip.setTexture(getDieLeft());
           else if (isShootingAnimated())
-            filmStrip.setTexture(getShootLeft());
+            currentStrip.setTexture(getShootLeft());
           else if (isIdle())
-            filmStrip.setTexture(getIdleLeft());
+            currentStrip.setTexture(getIdleLeft());
           else
-            filmStrip.setTexture(getTextureLeft());
+            currentStrip.setTexture(getTextureLeft());
           break;
         case RIGHT:
           if (isDead())
-            filmStrip.setTexture(getDieRight());
+            currentStrip.setTexture(getDieRight());
           else if (isShootingAnimated())
-            filmStrip.setTexture(getShootRight());
+            currentStrip.setTexture(getShootRight());
           else if (isIdle())
-            filmStrip.setTexture(getIdleRight());
+            currentStrip.setTexture(getIdleRight());
           else
-            filmStrip.setTexture(getTextureRight());
+            currentStrip.setTexture(getTextureRight());
           break;
       }
     }
     else{
       switch(direction()){
         case UP:
-          filmStrip.setTexture(getTextureUpDash());
+          currentStrip.setTexture(getTextureUpDash());
           break;
         case DOWN:
-          filmStrip.setTexture(getTextureDownDash());
+          currentStrip.setTexture(getTextureDownDash());
           break;
         case LEFT:
-          filmStrip.setTexture(getTextureLeftDash());
+          currentStrip.setTexture(getTextureLeftDash());
           break;
         case RIGHT:
-          filmStrip.setTexture(getTextureRightDash());
+          currentStrip.setTexture(getTextureRightDash());
           break;
         case NE:
-          filmStrip.setTexture(getTextureNEDash());
+          currentStrip.setTexture(getTextureNEDash());
           break;
         case NW:
-          filmStrip.setTexture(getTextureNWDash());
+          currentStrip.setTexture(getTextureNWDash());
           break;
         case SE:
-          filmStrip.setTexture(getTextureSEDash());
+          currentStrip.setTexture(getTextureSEDash());
           break;
         case SW:
-          filmStrip.setTexture(getTextureSWDash());
+          currentStrip.setTexture(getTextureSWDash());
           break;
       }
     }
     int frame = getFrameNumber();
-    filmStrip.setFrame(frame);
+    currentStrip.setFrame(frame);
 
     // Only move to next frame of animation every frameDelay number of frames
     if (isDead()) {
@@ -377,7 +378,6 @@ public class PlayerModel extends ComplexModel implements Renderable {
       }
       frameCounter += 1;
     }
-    return filmStrip;
   }
 
   @Override

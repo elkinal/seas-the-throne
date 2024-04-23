@@ -187,8 +187,7 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
   }
 
   @Override
-  public FilmStrip progressFrame() {
-    return null;
+  public void progressFrame() {
   }
 
   @Override

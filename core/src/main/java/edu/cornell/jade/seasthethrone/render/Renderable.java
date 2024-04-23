@@ -11,7 +11,7 @@ public interface Renderable {
   public void draw(RenderingEngine renderer);
 
   /** Progresses the frames of the renderable. The default does nothing (static renderables). */
-  public FilmStrip progressFrame();
+  public void progressFrame();
 
   /** Marks a Renderable as updateable (will continue to be animated). */
   public void alwaysUpdate();

@@ -1,11 +1,13 @@
 Alagard.ttf
 assets.json
 bosses/crab/attack.png
+bosses/crab/crab_shoot_filmstip.png
 bosses/crab/death.png
 bosses/crab/fallover.png
 bosses/crab/hurt.png
 bosses/crab/idle.png
 bosses/crab/shoot.png
+bosses/jelly/attack.png
 bosses/jelly/death.png
 bosses/jelly/fallover.png
 bosses/jelly/hurt.png
@@ -32,6 +34,7 @@ legacy/spritebox_up.png
 legacy/test1.json
 levels/arenamaprough.png
 levels/boss-room-tileset.png
+levels/boss-room-tileset.tsx
 levels/gate.png
 levels/hub_world.json
 levels/pinkdemonstatue.png
@@ -39,8 +42,10 @@ levels/portal.png
 levels/shallowbiomemap2.png
 levels/shallowmap1.png
 levels/shallow_map.json
+levels/shallow_map_full.tmx
 levels/tablet_room.json
 levels/tablet_room.png
+levels/test1.tiled-project
 libgdx.png
 player/dash_indicator.png
 player/player_dash_down.png
@@ -68,6 +73,7 @@ player/player_shoot_left.png
 player/player_shoot_right.png
 player/player_shoot_up.png
 player/playe_idle_left.png
+saves/save1.json
 ui/darkammo_1_5.png
 ui/darkammo_2_5.png
 ui/darkammo_3_5.png

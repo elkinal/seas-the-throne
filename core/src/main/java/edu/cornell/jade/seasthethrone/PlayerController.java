@@ -11,7 +11,6 @@
 package edu.cornell.jade.seasthethrone;
 
 import com.badlogic.gdx.math.Vector2;
-import edu.cornell.jade.seasthethrone.level.LevelState;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.ui.AmmoBar;
@@ -25,7 +24,9 @@ import java.util.jar.JarInputStream;
 
 public class PlayerController implements Controllable {
 
-  /** Error value for how close the mouse is to the player for dash to not count */
+  /**
+   * Error value for how close the mouse is to the player for dash to not count
+   */
   private static final float NO_DASH_ERROR = 0.4f;
 
   /** The player */
@@ -56,19 +57,14 @@ public class PlayerController implements Controllable {
   int dashToggleCounter;
 
   /**
-   * The vector direction of the player for dashing NOTE: this vector will always be normalized, and
+   * The vector direction of the player for dashing NOTE: this vector will always
+   * be normalized, and
    * nonzero
    */
   Vector2 dashDirection;
 
   /** The vector direction the player is moving */
   Vector2 moveDirection;
-
-  /** The health bar UI element associated with this player */
-  HealthBar healthBar;
-
-  /** The ammo bar UI element associated with this player */
-  AmmoBar ammoBar;
 
   /** Constructs PlayerController */
   public PlayerController(PhysicsEngine physicsEngine, PlayerModel player) {
@@ -77,8 +73,6 @@ public class PlayerController implements Controllable {
     // start dash indicator down
     dashDirection = new Vector2(0, -1);
     moveDirection = new Vector2();
-    this.healthBar = new HealthBar();
-    this.ammoBar = new AmmoBar();
     this.isAimToDashMode = true;
     this.dashToggleCounter = 0;
   }
@@ -126,10 +120,12 @@ public class PlayerController implements Controllable {
   /**
    * Move in given direction based on offset
    *
-   * @param x a value from -1 to 1 representing the percentage of movement speed to be at in the
-   *     given direction
-   * @param y a value from -1 to 1 representing the percentage of movement speed to be at in the
-   *     given direction
+   * @param x a value from -1 to 1 representing the percentage of movement speed
+   *          to be at in the
+   *          given direction
+   * @param y a value from -1 to 1 representing the percentage of movement speed
+   *          to be at in the
+   *          given direction
    */
   public void setVelPercentages(float x, float y) {
     float mag = (float) Math.sqrt(x * x + y * y);
@@ -155,7 +151,7 @@ public class PlayerController implements Controllable {
         // If not moving in a direction, just dash in currently facing direction
         if (xNorm == 0 && yNorm == 0) {
           moveDirection.set(-MathUtils.sin(player.getAngle()) * moveSpeed,
-                  MathUtils.cos(player.getAngle()) * moveSpeed);
+              MathUtils.cos(player.getAngle()) * moveSpeed);
         } else {
           moveDirection.set(xNorm * moveSpeed * mag, yNorm * moveSpeed * mag);
         }
@@ -208,10 +204,12 @@ public class PlayerController implements Controllable {
   }
 
   /** Set the player to spearing or shooting, depending on which is applicable. */
-  public void spearOrShoot() {}
+  public void spearOrShoot() {
+  }
 
   /**
-   * Transforms the player and mouse positions to the same, centered coordinate system and sets this
+   * Transforms the player and mouse positions to the same, centered coordinate
+   * system and sets this
    * player's dash direction to the vector difference of those positions.
    *
    * @param mousePos the position of the mouse in screen coordinates
@@ -244,24 +242,25 @@ public class PlayerController implements Controllable {
   public void setAlwaysAnimate(boolean b) {
     player.setAlwaysAnimate(b);
   }
-  public void setPlayerLocation(Vector2 loc) {player.setPosition(loc);}
 
-  public int getHealth() {return player.getHealth();}
+  public void setPlayerLocation(Vector2 loc) {
+    player.setPosition(loc);
+  }
 
-  public int getAmmo() {return player.getSpearModel().getNumSpeared();}
+  public int getHealth() {
+    return player.getHealth();
+  }
 
-  public Renderable getHealthBar() { return this.healthBar; }
-  public Renderable getAmmoBar() { return this.ammoBar; }
+  public int getAmmo() {
+    return player.getSpearModel().getNumSpeared();
+  }
 
-  public void transferState(LevelState state) {
+  public void transferState(StateController state) {
     player.getBodyModel().setHealth(state.getPlayerHealth());
     player.getSpearModel().setNumSpeared(state.getPlayerAmmo());
   }
 
   public void update() {
-    healthBar.update(player.getHealth());
-    ammoBar.update(player.getSpearModel().getNumSpeared(), player.getPosition());
-
     if (dashingPressed && player.canDash()) {
       // TODO: what happens if you get hit while dashing? (during iframes)
       beginDashing();
@@ -281,7 +280,7 @@ public class PlayerController implements Controllable {
       player.updateSpear(moveDirection.nor());
     }
 
-    dashToggleCounter = Math.max(dashToggleCounter-1, 0);
+    dashToggleCounter = Math.max(dashToggleCounter - 1, 0);
     dashingPressed = false;
     shootingPressed = false;
   }

@@ -9,7 +9,6 @@ import edu.cornell.jade.seasthethrone.gamemodel.*;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.gate.GateSensorModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.*;
-import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.util.PooledList;
 import edu.cornell.jade.seasthethrone.BuildConfig;
@@ -40,6 +39,9 @@ public class PhysicsEngine implements ContactListener {
 
   /** To keep track of the continuous player-boss collision */
   private Optional<Contact> playerBossCollision;
+
+  /** Checkpoint ID triggered, should be null unless the player is on a checkpoint */
+  public Integer checkpointID;
 
   public PhysicsEngine(Rectangle bounds, World world) {
     this.world = world;
@@ -207,23 +209,39 @@ public class PhysicsEngine implements ContactListener {
       } else if (bd2 instanceof PlayerBulletModel && bd1 instanceof BossModel) {
         handleCollision((PlayerBulletModel) bd2, (BossModel) bd1);
       }
-      // TODO: Change BoxModel to the Obstacle types once we have them defined later
-      else if (bd1 instanceof BulletModel && bd2 instanceof BoxModel) {
+      // Handle checkpoint sensors
+      else if (bd1 instanceof PlayerShadowModel && bd2 instanceof CheckpointModel) {
+        if (BuildConfig.DEBUG) System.out.println("checkpoint detected");
+
+        ((CheckpointModel) bd2).setActivated(true);
+        setCheckpointID(((CheckpointModel) bd2).getCheckpointID());
+      } else if (bd2 instanceof PlayerShadowModel && bd1 instanceof CheckpointModel) {
+        if (BuildConfig.DEBUG) System.out.println("checkpoint detected");
+
+        ((CheckpointModel) bd1).setActivated(true);
+        setCheckpointID(((CheckpointModel) bd1).getCheckpointID());
+      }
+      // Handle obstacles
+      else if (bd1 instanceof BulletModel && bd2 instanceof ObstacleModel) {
         bd1.markRemoved(true);
-      } else if (bd2 instanceof BulletModel && bd1 instanceof BoxModel) {
+      } else if (bd2 instanceof BulletModel && bd1 instanceof ObstacleModel) {
         bd2.markRemoved(true);
       }
       // Handle portal sensors
       else if (bd1 instanceof PortalModel && bd2 instanceof PlayerShadowModel) {
         if (BuildConfig.DEBUG) System.out.println("portal detected");
 
+        if (((PortalModel) bd1).isActivated()) {
         setTarget(((PortalModel) bd1).getTarget());
         setSpawnPoint(((PortalModel) bd1).getPlayerLoc());
+        }
       } else if (bd2 instanceof PortalModel && bd1 instanceof PlayerShadowModel) {
         if (BuildConfig.DEBUG) System.out.println("portal detected");
 
-        setTarget(((PortalModel) bd2).getTarget());
-        setSpawnPoint(((PortalModel) bd2).getPlayerLoc());
+        if (((PortalModel) bd2).isActivated()) {
+          setTarget(((PortalModel) bd2).getTarget());
+          setSpawnPoint(((PortalModel) bd2).getPlayerLoc());
+        }
       }
       // Handle gate sensors
       else if (bd1 instanceof PlayerShadowModel && bd2 instanceof GateSensorModel) {
@@ -257,6 +275,12 @@ public class PhysicsEngine implements ContactListener {
   public boolean hasTarget() {
     return this.target != null;
   }
+
+  public void setCheckpointID(Integer id) { this.checkpointID = id; }
+
+  public boolean hasCheckpoint() { return this.checkpointID != null; }
+
+  public int getCheckpointID() { return this.checkpointID; }
 
   /** Helper function to apply a knockback on the player body. */
   public void applyKnockback(PlayerBodyModel pb, Vector2 bd2Pos, float knockbackForce) {

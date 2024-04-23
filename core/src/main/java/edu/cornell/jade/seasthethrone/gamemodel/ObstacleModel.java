@@ -22,7 +22,6 @@ public class ObstacleModel extends ComplexModel implements Renderable {
     this.texture = obs.texture;
     this.WORLD_SCALE = scale;
     BoxModel hitbox = new BoxModel(obs.x, obs.y, obs.width, obs.height);
-    hitbox.setBodyType(BodyDef.BodyType.StaticBody);
     bodies.add(hitbox);
   }
 
@@ -34,8 +33,7 @@ public class ObstacleModel extends ComplexModel implements Renderable {
   }
 
   @Override
-  public FilmStrip progressFrame() {
-    return null;
+  public void progressFrame() {
   }
 
   @Override

@@ -95,6 +95,11 @@ public class CrabBossController implements BossController {
             physicsEngine);
   }
 
+  @Override
+  public int getHealth() {
+    return boss.getHealth();
+  }
+
   /**
    * Returns if the crab this model controls is dead.
    *
@@ -122,7 +127,9 @@ public class CrabBossController implements BossController {
   }
 
   /** Returns the boss of this controller */
-  public BossModel getBoss() {return boss;}
+  public BossModel getBoss() {
+    return boss;
+  }
 
   /**
    * Called every tick. Updates the state of the model based on the controller state.
