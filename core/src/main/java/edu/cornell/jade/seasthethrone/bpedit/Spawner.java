@@ -161,6 +161,8 @@ public class Spawner {
       float ovx = model.getVX();
       float ovy = model.getVY();
       float mag = (float) Math.sqrt(ovx * ovx + ovy * ovy);
+      if (mag == 0)
+        return;
       float s = speed / mag;
       float vx = model.getVX() * s;
       float vy = model.getVY() * s;
@@ -194,13 +196,12 @@ public class Spawner {
 
       float dx = px - model.getX();
       float dy = py - model.getY();
+
       float ovx = model.getVX();
       float ovy = model.getVY();
       float mag = (float) Math.sqrt(ovx * ovx + ovy * ovy);
-      if ((dx < MathUtils.FLOAT_ROUNDING_ERROR && dy < MathUtils.FLOAT_ROUNDING_ERROR)
+      if ((Math.abs(dx) < MathUtils.FLOAT_ROUNDING_ERROR && Math.abs(dy) < MathUtils.FLOAT_ROUNDING_ERROR)
           || mag < MathUtils.FLOAT_ROUNDING_ERROR) {
-        model.setVX(0);
-        model.setVY(0);
         return;
       }
       float normScale = (float) Math.sqrt(dx * dx + dy * dy);
@@ -349,7 +350,8 @@ public class Spawner {
       this.by += y;
     }
 
-    /** Gets direction of velocity of <code>BulletFamily</code>.
+    /**
+     * Gets direction of velocity of <code>BulletFamily</code>.
      *
      * @return direction of veclocity of base bullet
      */

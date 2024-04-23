@@ -504,12 +504,13 @@ public class GameplayController implements Screen {
   /** Updates the camera position to keep the player centered on the screen */
   private void updateCamera() {
     Vector2 playerPos = playerController.getLocation();
+    if (Float.isNaN(playerPos.x) || Float.isNaN(playerPos.y))
 
     updateCameraCache.set(viewport.getCamera().position.x, viewport.getCamera().position.y);
     Vector2 diff = updateCameraCache.sub(playerPos);
 
     if (diff.len() < CAMERA_SNAP_DISTANCE) {
-      viewport.getCamera().position.set(playerPos.x, playerPos.y, 0);
+      viewport.getCamera().translate(-diff.x, -diff.y, 0);
     } else {
       diff.scl(CAMERA_SMOOTHNESS);
       viewport.getCamera().translate(-diff.x, -diff.y, 0);

@@ -73,7 +73,6 @@ public final class SpawnerFactory {
     f.addEffect(new Periodic(delay));
     f.addEffect(new PlaysAttackAnimation(model));
     f.addDelayedAction(new DelayedTarget(0));
-    f.addDelayedAction(new DelayedSpeedChange(8f, 0));
     out.addFamily(f);
     return out;
   }
