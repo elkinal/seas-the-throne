@@ -56,7 +56,7 @@ public class CollisionMask {
     // If player bullet
     else if (model instanceof PlayerBulletModel) {
       model.setCategoryBits(CATEGORY_PLAYER);
-      model.setMaskBits((short) (CATEGORY_BOSS | CATEGORY_OBSTACLE));
+      model.setMaskBits((short) (CATEGORY_BOSS ));
     }
     // If enemy bullet
     else if (model instanceof BulletModel) {
