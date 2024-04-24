@@ -5020,7 +5020,7 @@
                  "gid":40,
                  "height":20,
                  "id":203,
-                 "name":"aimed_jelly",
+                 "name":"fixed_clam330",
                  "properties":[
                         {
                          "name":"id",
@@ -5031,50 +5031,14 @@
                  "type":"",
                  "visible":true,
                  "width":20,
-                 "x":1958.65752071903,
-                 "y":285.295260964703
-                }, 
-                {
-                 "gid":40,
-                 "height":20,
-                 "id":223,
-                 "name":"aimed_jelly",
-                 "properties":[
-                        {
-                         "name":"id",
-                         "type":"int",
-                         "value":3
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":20,
-                 "x":2520.54221002059,
-                 "y":307.776252573782
-                }, 
-                {
-                 "gid":40,
-                 "height":20,
-                 "id":224,
-                 "name":"aimed_jelly",
-                 "properties":[
-                        {
-                         "name":"id",
-                         "type":"int",
-                         "value":3
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":20,
-                 "x":2521.91489361702,
-                 "y":364.056280027454
+                 "x":1756.21382162943,
+                 "y":280.503694122346
                 }, 
                 {
                  "gid":40,
                  "height":20,
                  "id":225,
-                 "name":"aimed_jelly",
+                 "name":"fixed_clam30",
                  "properties":[
                         {
                          "name":"id",
@@ -5085,8 +5049,80 @@
                  "type":"",
                  "visible":true,
                  "width":20,
-                 "x":1961.17364447495,
-                 "y":392.19629375429
+                 "x":1753.93837854299,
+                 "y":444.903529020222
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":230,
+                 "name":"fixed_clam320",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":2
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":1845.53425970292,
+                 "y":176.871106851941
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":231,
+                 "name":"fixed_clam40",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":2
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":1837.1490177288,
+                 "y":512.280785816962
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":232,
+                 "name":"fixed_clam330",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":3
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":2271.98370867274,
+                 "y":249.942501197892
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":234,
+                 "name":"fixed_clam30",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":3
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":2262.40057498802,
+                 "y":434.417824628654
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -5264,7 +5300,7 @@
          "y":0
         }],
  "nextlayerid":15,
- "nextobjectid":230,
+ "nextobjectid":235,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

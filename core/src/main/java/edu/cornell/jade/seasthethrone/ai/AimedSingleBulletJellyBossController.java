@@ -12,7 +12,7 @@ import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 public class AimedSingleBulletJellyBossController extends JellyBossController {
 
   /** Bullet shot period */
-  private static final int PERIOD = 60;
+  private static final int PERIOD = 30;
 
   public AimedSingleBulletJellyBossController(JellyBossModel boss, PlayerModel player, BulletModel.Builder builder,
       PhysicsEngine physicsEngine) {

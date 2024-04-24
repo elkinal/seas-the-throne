@@ -1,6 +1,7 @@
 package edu.cornell.jade.seasthethrone.gamemodel.boss;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 
@@ -13,6 +14,7 @@ import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 import edu.cornell.jade.seasthethrone.ai.BossController;
 import edu.cornell.jade.seasthethrone.ai.CrabBossController;
+import edu.cornell.jade.seasthethrone.ai.FixedStreamClamController;
 import edu.cornell.jade.seasthethrone.ai.AimedSingleBulletJellyBossController;
 import edu.cornell.jade.seasthethrone.ai.AimedArcJellyBossController;
 
@@ -413,38 +415,39 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     }
 
     public Builder setFrameSize() {
-      switch (type) {
-        case "crab":
-          frameSize = 110;
-          break;
-        default:
-          // there are a lot of jellies so they are just a default case
-          frameSize = 45;
+      if (type.equals("crab")) {
+        frameSize = 110;
+      } else if (type.contains("clam")) {
+        frameSize = 45;
+      } else {
+        frameSize = 45;
       }
       return this;
     }
 
     public BossModel build() {
-      switch (type) {
-        case "crab":
-          return new CrabBossModel(this);
-        default:
-          // there are a lot of jellies so they are just a default case
-          return new JellyBossModel(this);
+      if (type.equals("crab")) {
+        return new CrabBossModel(this);
+      } else if (type.contains("clam")) {
+        return new JellyBossModel(this);
+      } else {
+        return new JellyBossModel(this);
       }
     }
     public BossController buildController(BossModel model, PlayerModel player, BulletModel.Builder bulletBuilder, 
         PhysicsEngine physicsEngine) {
-      switch (type) {
-        case "crab":
-          return new CrabBossController((CrabBossModel) model, player, bulletBuilder, physicsEngine);
-        case "aimed_jelly":
-          return new AimedSingleBulletJellyBossController((JellyBossModel) model, player, bulletBuilder, physicsEngine);
-        case "arc_jelly":
-          return new AimedArcJellyBossController((JellyBossModel) model, player, bulletBuilder, physicsEngine);
-        default: 
-          throw new RuntimeException("boss type not supported");
+      if (type.equals("crab")) {
+        return new CrabBossController((CrabBossModel) model, player, bulletBuilder, physicsEngine);
+      } else if (type.equals("aimed_jelly")) {
+        return new AimedSingleBulletJellyBossController((JellyBossModel) model, player, bulletBuilder, physicsEngine);
+      } else if (type.equals("arc_jelly")) {
+        return new AimedArcJellyBossController((JellyBossModel) model, player, bulletBuilder, physicsEngine);
+      } else if (type.contains("fixed_clam")) {
+        // invarient, this is a float and won't fail
+        float angle = MathUtils.degRad * Float.parseFloat(type.replaceAll("[^\\d.]", ""));
+        return new FixedStreamClamController(angle, model, player, bulletBuilder, physicsEngine);
       }
+      throw new RuntimeException("boss type not supported");
     }
   }
 }

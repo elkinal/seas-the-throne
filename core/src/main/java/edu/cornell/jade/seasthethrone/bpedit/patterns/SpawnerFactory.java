@@ -9,7 +9,6 @@ import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.bpedit.Spawner.DelayedTarget;
-import edu.cornell.jade.seasthethrone.bpedit.Spawner.DelayedSpeedChange;
 
 /**
  * Contains factory methods for some common and even some not so common
@@ -31,6 +30,23 @@ public final class SpawnerFactory {
     Spawner out = new Spawner(builder, physicsEngine);
     BulletFamily f = new BulletFamily(1f, 0f, 8f, 0f, 0.5f, 0);
     f.addEffect(new Arc(0, MathUtils.PI * 2, dups));
+    f.addEffect(new Periodic(delay));
+    out.addFamily(f);
+    return out;
+  }
+
+  /**
+   * Constructs a single repeatingly sohoting bullet always going in a certain
+   * direction
+   *
+   * @param delay         delay inbetween firing
+   * @param builder       a builder to create bullet models
+   * @param physicsEngine {@link PhysicsEngine} to add bullets to
+   */
+  public static Spawner constructRepeatingLeftFacingStream(int delay, BulletModel.Builder builder,
+      PhysicsEngine physicsEngine) {
+    Spawner out = new Spawner(builder, physicsEngine);
+    BulletFamily f = new BulletFamily(0f, 0f, 14f, 0f, 0.5f, 0);
     f.addEffect(new Periodic(delay));
     out.addFamily(f);
     return out;
@@ -69,7 +85,7 @@ public final class SpawnerFactory {
   public static Spawner constructRepeatingAimedBullet(int delay, BossModel model, BulletModel.Builder builder,
       PhysicsEngine physicsEngine) {
     Spawner out = new Spawner(builder, physicsEngine);
-    BulletFamily f = new BulletFamily(0f, 0f, 8f, -0f, 0.5f, 0);
+    BulletFamily f = new BulletFamily(0f, 0f, 14f, -0f, 0.5f, 0);
     f.addEffect(new Periodic(delay));
     f.addEffect(new PlaysAttackAnimation(model));
     f.addDelayedAction(new DelayedTarget(0));

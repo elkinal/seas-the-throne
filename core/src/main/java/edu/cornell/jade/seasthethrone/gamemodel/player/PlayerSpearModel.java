@@ -18,10 +18,10 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
   private static float SPEAR_WIDTH = 1.5f;
 
   /** Length of spear */
-  private static float SPEAR_LENGTH = 3.2f;
+  private static float SPEAR_LENGTH = 1.2f;
 
   /** Offset length of the spear center from the body center (when extended) */
-  private static float SPEAR_OFFSET = 2.5f;
+  private static float SPEAR_OFFSET = 2.0f;
 
   /** Maximum number of fish that can be speared */
   private static int MAX_SPEAR_CAPACITY = 5;

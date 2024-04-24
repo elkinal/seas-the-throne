@@ -228,7 +228,7 @@ public class GameplayController implements Screen {
             .setFrameDelay(3)
             .setDashLength(20)
             .setMoveSpeed(8f)
-            .setCooldownLimit(30)
+            .setCooldownLimit(10)
             .setShootCooldownLimit(20)
             .build();
     renderEngine.addRenderable(player);
@@ -251,8 +251,27 @@ public class GameplayController implements Screen {
       // FIXME: this literly only works because we are dumb it's stupid hack but 
       // whatever, should work, no less cursed than what we already have actually
       // despise what I'm about to write, no one do this
-      String assetName = name.contains("jelly") ? "jelly" : name;
-      int health = name.contains("jelly") ? 50 : 100;
+      //
+      // okay, so I'm just going to do some ad-hoc string parsing stuff here
+      // a more systematic solution would require more overhall to this structure
+      // which I would do if this were not a project with a due date in 2 weeks
+
+      // jellys are identified by containing the string jelly. They have ad-hoc names determining patterns.
+      // See the buildController method for the case statement defining the behavior.
+      //
+      // clams are similar, but they have a number suffixed determining their angle
+      // this number is in degrees
+      String assetName = name.contains("jelly") 
+        ? "jelly" 
+        : name.contains("clam")
+          ? "jelly"
+          : name;
+      // We will use jelly assets right now while clam assets don't exist
+      int health = name.contains("jelly") 
+        ? 50 
+        : name.contains("clam")
+          ? 10
+          : 100;
       var bossBuilder =
           BossModel.Builder.newInstance()
               .setType(name)
