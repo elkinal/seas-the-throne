@@ -205,6 +205,10 @@ public class InputController {
       obj.toggleDashMode();
     }
 
+    // UI controls
+    if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+      obj.pressPause();
+    }
 
     obj.moveHorizontal(hoff);
     obj.moveVertical(voff);

@@ -1011,6 +1011,24 @@ public class GameCanvas {
   }
 
   /**
+   * Draws text on the screen.
+   *
+   * @param text The string to draw
+   * @param font The font to use
+   * @param x The x-coordinate of the center of the text
+   * @param y The y-coordinate of the center of the text
+   */
+  public void drawTextUI(String text, BitmapFont font, float x, float y) {
+    if (active != DrawPass.STANDARD) {
+      Gdx.app.error(
+              "GameCanvas", "Cannot draw without active begin()", new IllegalStateException());
+      return;
+    }
+    GlyphLayout layout = new GlyphLayout(font, text);
+    font.draw(uiBatch, layout, x-layout.width/2, y-layout.height/2);
+  }
+
+  /**
    * Draws text centered on the screen.
    *
    * @param text The string to draw
