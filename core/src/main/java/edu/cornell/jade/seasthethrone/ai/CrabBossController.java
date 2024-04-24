@@ -91,6 +91,7 @@ public class CrabBossController implements BossController {
             ARC_LINE_LENGTH,
             ARC_PERIOD,
             ARC_SHOTS,
+            boss,
             builder,
             physicsEngine);
   }

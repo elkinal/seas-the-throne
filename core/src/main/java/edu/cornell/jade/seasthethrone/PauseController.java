@@ -1,7 +1,5 @@
 package edu.cornell.jade.seasthethrone;
 
-import edu.cornell.jade.seasthethrone.ai.CrabBossController;
-import edu.cornell.jade.seasthethrone.ai.JellyBossController;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;

@@ -229,14 +229,14 @@ public class PhysicsEngine implements ContactListener {
       }
       // Handle portal sensors
       else if (bd1 instanceof PortalModel && bd2 instanceof PlayerShadowModel) {
-        if (BuildConfig.DEBUG) System.out.println("portal detected");
+        if (BuildConfig.DEBUG) System.out.println("portal detected: " + ((PortalModel) bd1).requiredCheckpoint);
 
         if (((PortalModel) bd1).isActivated()) {
         setTarget(((PortalModel) bd1).getTarget());
         setSpawnPoint(((PortalModel) bd1).getPlayerLoc());
         }
       } else if (bd2 instanceof PortalModel && bd1 instanceof PlayerShadowModel) {
-        if (BuildConfig.DEBUG) System.out.println("portal detected");
+        if (BuildConfig.DEBUG) System.out.println("portal detected: " + ((PortalModel) bd2).requiredCheckpoint);
 
         if (((PortalModel) bd2).isActivated()) {
           setTarget(((PortalModel) bd2).getTarget());
@@ -296,8 +296,7 @@ public class PhysicsEngine implements ContactListener {
   public void handleCollision(PlayerBodyModel pb, BulletModel b) {
     b.markRemoved(true);
     if (!pb.isInvincible()) {
-      pb.setHit(true);
-      pb.setInvincible();
+      pb.decrementHealth();
       pb.setKnockedBack(b.getPosition(), b.getKnockbackForce());
     }
   }
@@ -313,8 +312,7 @@ public class PhysicsEngine implements ContactListener {
     if (BuildConfig.DEBUG) System.out.println("player invincible: "+pb.isInvincible());
 
     if (!pb.isInvincible() && !b.isDead()) {
-      pb.setHit(true);
-      pb.setInvincible();
+      pb.decrementHealth();
       pb.setKnockedBack(b.getPosition(), b.getBodyKnockbackForce());
       playerBossCollision = Optional.empty();
     } else {
@@ -330,6 +328,9 @@ public class PhysicsEngine implements ContactListener {
       b.decrementHealth(ps.getDamage());
       ps.getMainBody().setKnockbackTime(15);
       ps.getMainBody().setKnockedBack(b.getPosition(), b.getSpearKnockbackForce());
+
+      // Disable spear collision again so it doesn't double count
+      ps.markInactive();
     }
   }
 

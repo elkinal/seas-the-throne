@@ -1,6 +1,7 @@
 package edu.cornell.jade.seasthethrone.gamemodel.boss;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 
@@ -13,7 +14,10 @@ import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 import edu.cornell.jade.seasthethrone.ai.BossController;
 import edu.cornell.jade.seasthethrone.ai.CrabBossController;
-import edu.cornell.jade.seasthethrone.ai.JellyBossController;
+import edu.cornell.jade.seasthethrone.ai.FixedStreamClamController;
+import edu.cornell.jade.seasthethrone.ai.OscillatingRingClamController;
+import edu.cornell.jade.seasthethrone.ai.AimedSingleBulletJellyBossController;
+import edu.cornell.jade.seasthethrone.ai.AimedArcJellyBossController;
 
 public abstract class BossModel extends EnemyModel implements Renderable {
 
@@ -42,6 +46,9 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   private boolean isExecute;
   /** Flag for the boss attack*/
   private boolean isAttack;
+
+  /** Array indicating polygon hitbox */
+  protected float[] hitbox;
 
   /** Amount of knockback force applied to player on body collision */
   private float bodyKnockbackForce;
@@ -80,7 +87,13 @@ public abstract class BossModel extends EnemyModel implements Renderable {
    * @param builder builder for BossModel
    */
   public BossModel(Builder builder) {
-    super(builder.x, builder.y, builder.hitbox, builder.type, builder.frameSize);
+    super(builder.x, builder.y, builder.type, builder.frameSize);
+
+    // Doing this for now so hitboxes can be defined in subclasses
+    setHitbox();
+    initShapes(this.hitbox);
+    initBounds();
+
     moveAnimation = builder.moveAnimation;
     getHitAnimation = builder.getHitAnimation;
     falloverAnimation = builder.falloverAnimation;
@@ -95,8 +108,8 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     shouldUpdate = true;
     alwaysAnimate = false;
     roomId = builder.roomId;
-    bodyKnockbackForce = 70f;
-    spearKnockbackForce = 130f;
+    bodyKnockbackForce = 60f;
+    spearKnockbackForce = 100f;
     healthThresholds = builder.healthThresholds;
     thresholdPointer = 0;
     isExecute = false;
@@ -208,7 +221,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   public int getRoomId() { return roomId; }
   /**
    * Reduce boss HP by a specified amount
-   * If the boss dies, mark boss as removed
+   * If the boss dies, play the fallover animation
    */
   public void decrementHealth(int damage) {
     hitCount = frameDelay * getHitAnimation.getSize();
@@ -216,9 +229,6 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     health -= damage;
     if (isDead()) {
       filmStrip = falloverAnimation;
-      // TODO: kinda hard-coded in right now, find a way to make body inactive
-      setVX(0);
-      setVY(0);
     }
   }
 
@@ -241,6 +251,9 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   public int getFramesInAnimation() {
     return filmStrip.getSize();
   }
+
+  /** Sets the hitbox of the boss */
+  abstract void setHitbox();
 
   /**
    * Returns if the boss's health reached under a certain health threshold.
@@ -275,6 +288,11 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     isAttack = true;
   }
 
+  @Override
+  public void update(float delta) {
+    if (isDead()) setActive(false);
+  }
+
   public static class Builder {
     /** boss x position */
     private float x;
@@ -300,9 +318,6 @@ public abstract class BossModel extends EnemyModel implements Renderable {
 
     /** The number of frames between animation updates */
     private int frameDelay;
-
-    /** Polygon indicating boss hitbox */
-    private float[] hitbox;
 
     /** Number of health points the boss has */
     protected int health;
@@ -331,22 +346,6 @@ public abstract class BossModel extends EnemyModel implements Renderable {
 
     public Builder setType(String type) {
       this.type = type;
-      return this;
-    }
-
-    public Builder setHitbox(String type) {
-      float[] hitbox;
-      switch (type) {
-        case "crab":
-          hitbox = new float[]{-4, -7, -4, 7, 4, 7, 4, -7};
-          break;
-        case "jelly":
-          hitbox = new float[]{-3, -3, -3, 3,3, 3, 3, -3};
-          break;
-        default:
-          hitbox = new float[]{-4, -7, -4, 7, 4, 7, 4, -7};
-      }
-      this.hitbox = hitbox;
       return this;
     }
 
@@ -417,36 +416,41 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     }
 
     public Builder setFrameSize() {
-      switch (type) {
-        case "crab":
-          frameSize = 110;
-          break;
-        default:
-          // there are a lot of jellies so they are just a default case
-          frameSize = 45;
+      if (type.equals("crab")) {
+        frameSize = 110;
+      } else if (type.contains("clam")) {
+        frameSize = 45;
+      } else {
+        frameSize = 45;
       }
       return this;
     }
 
     public BossModel build() {
-      switch (type) {
-        case "crab":
-          return new CrabBossModel(this);
-        default:
-          // there are a lot of jellies so they are just a default case
-          return new JellyBossModel(this);
+      if (type.equals("crab")) {
+        return new CrabBossModel(this);
+      } else if (type.contains("clam")) {
+        return new JellyBossModel(this);
+      } else {
+        return new JellyBossModel(this);
       }
     }
     public BossController buildController(BossModel model, PlayerModel player, BulletModel.Builder bulletBuilder, 
         PhysicsEngine physicsEngine) {
-      switch (type) {
-        case "crab":
-          return new CrabBossController((CrabBossModel) model, player, bulletBuilder, physicsEngine);
-        case "jelly":
-          return new JellyBossController((JellyBossModel) model, player, bulletBuilder, physicsEngine);
-        default: 
-          throw new RuntimeException("boss type not supported");
+      if (type.equals("crab")) {
+        return new CrabBossController((CrabBossModel) model, player, bulletBuilder, physicsEngine);
+      } else if (type.equals("aimed_jelly")) {
+        return new AimedSingleBulletJellyBossController((JellyBossModel) model, player, bulletBuilder, physicsEngine);
+      } else if (type.equals("arc_jelly")) {
+        return new AimedArcJellyBossController((JellyBossModel) model, player, bulletBuilder, physicsEngine);
+      } else if (type.contains("fixed_clam")) {
+        // invarient, this is a float and won't fail
+        float angle = MathUtils.degRad * Float.parseFloat(type.replaceAll("[^\\d.]", ""));
+        return new FixedStreamClamController(angle, model, player, bulletBuilder, physicsEngine);
+      } else if (type.equals("oscillating_ring_clam")) {
+        return new OscillatingRingClamController(model, player, bulletBuilder, physicsEngine);
       }
+      throw new RuntimeException("boss type not supported");
     }
   }
 }

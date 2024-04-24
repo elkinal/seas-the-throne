@@ -24,7 +24,7 @@ public class PortalModel extends BoxModel implements Renderable {
   private final TextureRegion DEFUALT_TEXTURE = new TextureRegion(new Texture("empty.png"));
 
   /** Checkpoint required for this portal to be active */
-  private int requiredCheckpoint;
+  public int requiredCheckpoint;
 
   /** If this portal is activated */
   private boolean activated;

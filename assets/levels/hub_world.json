@@ -391,13 +391,45 @@
                         {
                          "name":"target",
                          "type":"string",
-                         "value":"levels\/tablet_room.json"
+                         "value":"levels\/tablet_room_2.json"
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":20,
                  "x":220,
+                 "y":360
+                }, 
+                {
+                 "height":20,
+                 "id":20,
+                 "name":"levels\/portal.png",
+                 "properties":[
+                        {
+                         "name":"playerX",
+                         "type":"float",
+                         "value":2308
+                        }, 
+                        {
+                         "name":"playerY",
+                         "type":"float",
+                         "value":1388
+                        }, 
+                        {
+                         "name":"requiredCheckpoint",
+                         "type":"int",
+                         "value":-1
+                        }, 
+                        {
+                         "name":"target",
+                         "type":"string",
+                         "value":"levels\/shallow_map.json"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":360,
                  "y":360
                 }],
          "opacity":1,
@@ -407,7 +439,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":20,
+ "nextobjectid":21,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
@@ -416,7 +448,7 @@
         {
          "columns":18,
          "firstgid":1,
-         "image":"levels\/boss-room-tileset.png",
+         "image":"boss-room-tileset.png",
          "imageheight":360,
          "imagewidth":360,
          "margin":0,

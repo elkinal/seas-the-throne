@@ -161,8 +161,18 @@ public class PolygonModel extends SimpleModel {
     initBounds();
   }
 
+  /**
+   * Creates a (not necessarily convex) polygon
+   *
+   * @param x Initial x position of the polygon center
+   * @param y Initial y position of the polygon center
+   */
+  public PolygonModel(float x, float y) {
+    super(x, y);
+  }
+
   /** Initializes the bounding box (and drawing scale) for this polygon */
-  private void initBounds() {
+  protected void initBounds() {
     float minx = vertices[0];
     float maxx = vertices[0];
     float miny = vertices[1];
@@ -192,7 +202,7 @@ public class PolygonModel extends SimpleModel {
    *
    * @param points The polygon vertices
    */
-  private void initShapes(float[] points) {
+  protected void initShapes(float[] points) {
     // Triangulate
     ShortArray array = TRIANGULATOR.computeTriangles(points);
     trimColinear(points, array);

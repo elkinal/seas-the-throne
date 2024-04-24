@@ -1,6 +1,5 @@
 package edu.cornell.jade.seasthethrone.ai;
 
-import edu.cornell.jade.seasthethrone.bpedit.AttackPattern;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 
 public interface BossController {

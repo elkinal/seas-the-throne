@@ -84,7 +84,7 @@ public class Level {
     Array<HashMap<String, Object>> tileSetsList = (Array<HashMap<String, Object>>) levelMap.get("tilesets");
     for (HashMap<String, Object> tileSet : tileSetsList) {
       // For each tileSet
-      Texture thisTexture = new Texture((String) tileSet.get("image"));
+      Texture thisTexture = new Texture("levels/" + (String) tileSet.get("image"));
       int thisGid = JsonHandler.getInt(tileSet, "firstgid");
       firstGids.add(thisGid);
       // Split this tileSet up into textures
@@ -169,7 +169,7 @@ public class Level {
     }
 
     int height = JsonHandler.getIntProperty(bgLayer, "height");
-    TextureRegion texture = new TextureRegion(new Texture(JsonHandler.getString(bgLayer, "image")));
+    TextureRegion texture = new TextureRegion(new Texture("levels/" + JsonHandler.getString(bgLayer, "image")));
 
     float x, y;
     if ((String) bgLayer.get("offsetx") == null) {

@@ -9,8 +9,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.*;
 
 import edu.cornell.jade.seasthethrone.ai.BossController;
-import edu.cornell.jade.seasthethrone.ai.CrabBossController;
-import edu.cornell.jade.seasthethrone.ai.JellyBossController;
 import edu.cornell.jade.seasthethrone.gamemodel.CheckpointModel;
 import edu.cornell.jade.seasthethrone.gamemodel.PortalModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
@@ -25,10 +23,10 @@ import edu.cornell.jade.seasthethrone.model.PolygonModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
+import edu.cornell.jade.seasthethrone.ui.PauseMenu;
+import edu.cornell.jade.seasthethrone.ui.PauseMenuController;
 import edu.cornell.jade.seasthethrone.ui.UIController;
 import edu.cornell.jade.seasthethrone.util.ScreenListener;
-import edu.cornell.jade.seasthethrone.gamemodel.boss.CrabBossModel;
-import edu.cornell.jade.seasthethrone.gamemodel.boss.JellyBossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 
 import java.io.FileNotFoundException;
@@ -229,7 +227,7 @@ public class GameplayController implements Screen {
             .setFrameDelay(3)
             .setDashLength(20)
             .setMoveSpeed(8f)
-            .setCooldownLimit(30)
+            .setCooldownLimit(10)
             .setShootCooldownLimit(20)
             .build();
     renderEngine.addRenderable(player);
@@ -248,21 +246,45 @@ public class GameplayController implements Screen {
       // TODO: set everything below here based on bossName, load from assets.json
       LevelObject bossContainer = level.getBosses().get(i);
       String name = bossContainer.bossName;
+
+      // FIXME: this literly only works because we are dumb it's stupid hack but 
+      // whatever, should work, no less cursed than what we already have actually
+      // despise what I'm about to write, no one do this
+      //
+      // okay, so I'm just going to do some ad-hoc string parsing stuff here
+      // a more systematic solution would require more overhall to this structure
+      // which I would do if this were not a project with a due date in 2 weeks
+
+      // jellys are identified by containing the string jelly. They have ad-hoc names determining patterns.
+      // See the buildController method for the case statement defining the behavior.
+      //
+      // clams are similar, but they have a number suffixed determining their angle
+      // this number is in degrees
+      String assetName = name.contains("jelly") 
+        ? "jelly" 
+        : name.contains("clam")
+          ? "jelly"
+          : name;
+      // We will use jelly assets right now while clam assets don't exist
+      int health = name.contains("jelly") 
+        ? 50 
+        : name.contains("clam")
+          ? 10
+          : 100;
       var bossBuilder =
           BossModel.Builder.newInstance()
               .setType(name)
               .setFrameSize()
               .setX(bossContainer.x)
               .setY(bossContainer.y)
-              .setHealth(100)
-              .setHitbox(name)
+              .setHealth(health)
               //              .setHitbox(new float[]{-3, -3, -3, 3, 3, 3, 3, -3})
               .setHealthThresholds(new int[] {70, 30})
-              .setFalloverAnimation(new Texture("bosses/" + name + "/fallover.png"))
-              .setShootAnimation(new Texture("bosses/" + name + "/shoot.png"))
-              .setGetHitAnimation(new Texture("bosses/" + name + "/hurt.png"))
-              .setDeathAnimation(new Texture("bosses/" + name + "/death.png"))
-              .setAttackAnimation(new Texture("bosses/" + name + "/attack.png"))
+              .setFalloverAnimation(new Texture("bosses/" + assetName + "/fallover.png"))
+              .setShootAnimation(new Texture("bosses/" + assetName + "/shoot.png"))
+              .setGetHitAnimation(new Texture("bosses/" + assetName + "/hurt.png"))
+              .setDeathAnimation(new Texture("bosses/" + assetName+ "/death.png"))
+              .setAttackAnimation(new Texture("bosses/" + assetName + "/attack.png"))
               .setFrameDelay(12)
               .setRoomId(bossContainer.roomId);
       BossModel boss = bossBuilder.build();
@@ -333,8 +355,16 @@ public class GameplayController implements Screen {
       System.out.println("post setup ammo: " + playerController.getAmmo());
 
     // Load UI
-    uiController =
-        new UIController(playerController, renderEngine, renderEngine.getGameCanvas(), uiViewport);
+    PauseMenu pauseMenu = new PauseMenu(viewport);
+    PauseMenuController pauseMenuController = new PauseMenuController(pauseMenu);
+    inputController.add(pauseMenuController);
+
+    uiController = new UIController(
+            playerController,
+            pauseMenuController,
+            renderEngine,
+            renderEngine.getGameCanvas(),
+            uiViewport);
 
     if (BuildConfig.DEBUG) {
       System.out.println("num objects: " + physicsEngine.getObjects().size());
@@ -361,8 +391,9 @@ public class GameplayController implements Screen {
     inputController.update();
     portalController.update(stateController);
 
+
     // Update entity controllers and camera if the game is not over
-    if (gameState != GameState.OVER) {
+    if (gameState != GameState.OVER && !uiController.getPauseMenuController().getPauseMenu().isPaused()) {
       playerController.update();
       uiController.update();
 
@@ -493,6 +524,7 @@ public class GameplayController implements Screen {
     viewport.update(width, height);
     uiViewport.update(width, height, true);
     renderEngine.getGameCanvas().resize();
+    uiController.resize(width, height);
   }
 
   /** Updates the camera position to keep the player centered on the screen */
@@ -500,16 +532,13 @@ public class GameplayController implements Screen {
     Vector2 playerPos = playerController.getLocation();
 
     updateCameraCache.set(viewport.getCamera().position.x, viewport.getCamera().position.y);
-    Vector2 cameraPos = viewport.unproject(updateCameraCache);
-
-    Vector2 diff =
-        playerPos.sub(cameraPos).sub(viewport.getWorldWidth() / 2, -viewport.getWorldHeight() / 2);
+    Vector2 diff = updateCameraCache.sub(playerPos);
 
     if (diff.len() < CAMERA_SNAP_DISTANCE) {
-      viewport.getCamera().translate(diff.x, diff.y, 0);
+      viewport.getCamera().position.set(playerPos.x, playerPos.y, 0);
     } else {
       diff.scl(CAMERA_SMOOTHNESS);
-      viewport.getCamera().translate(diff.x, diff.y, 0);
+      viewport.getCamera().translate(-diff.x, -diff.y, 0);
     }
   }
 
@@ -522,9 +551,13 @@ public class GameplayController implements Screen {
     this.listener = listener;
   }
 
-  public void pause() {}
+  public void pause() {
+    pauseController.pauseGame();
+  }
 
-  public void resume() {}
+  public void resume() {
+    pauseController.continueGame();
+  }
 
   public void hide() {
     active = false;

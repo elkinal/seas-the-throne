@@ -24,8 +24,6 @@ public class RingAttack extends AttackPattern {
   /**
    * Constructs the attack
    *
-   * @param ox            x coordinate of the attack origin
-   * @param oy            y coordinate of the attack origin
    * @param delay         the length of time between successive bullets
    * @param shots         the number of bullets in one ring
    * @param builder       a builder to create bullet models

@@ -1,17 +1,16 @@
 package edu.cornell.jade.seasthethrone.gamemodel.player;
 
 import com.badlogic.gdx.math.Vector2;
-import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
-import edu.cornell.jade.seasthethrone.model.PolygonModel;
+import edu.cornell.jade.seasthethrone.model.CircleModel;
 
 /**
  * Model for the player body. This class extends {@link PlayerModel} for a flexible frame. The
  * PlayerBodyModel accounts for the main hitbox of the player.
  */
-public class PlayerBodyModel extends PolygonModel {
+public class PlayerBodyModel extends CircleModel {
 
-  /** Whether the player body has been hit */
-  private boolean isHit;
+  /** Radius of the player */
+  private static float PLAYER_RADIUS = 0.65f;
 
   /** Number of health points the player has */
   private int health;
@@ -34,9 +33,9 @@ public class PlayerBodyModel extends PolygonModel {
   /** If the player is flagged for knockback application */
   private boolean justKnocked;
 
-  public PlayerBodyModel(float[] vertices, float x, float y) {
-    super(vertices, x, y);
-    isHit = false;
+  /** Create new player body at position (x,y) */
+  public PlayerBodyModel(float x, float y) {
+    super(x, y, PLAYER_RADIUS);
     health = 5;
     iframeCounter = 0;
     iframeLimit = 70;
@@ -44,21 +43,11 @@ public class PlayerBodyModel extends PolygonModel {
     justKnocked = false;
   }
 
-  /** Create new player body at position (x,y) */
-  public PlayerBodyModel(float x, float y) {
-    // Make a triangle for now
-    this(new float[] {-0.5f, -1, 0.5f, -1, 0, 1}, x, y);
-  }
 
-  /** Returns if the player body was hit */
-  public boolean isHit() {
-    return isHit;
-  }
-
-  /** Sets if the player body was hit If health drops to 0, will remove body from the world */
-  public void setHit(boolean hit) {
-    isHit = hit;
+  /** Decreases the hitpoints of the player by 1. Also sets the player to invincible. */
+  public void decrementHealth() {
     health -= 1;
+    setInvincible();
   }
 
   /** Number of current health points of the player */

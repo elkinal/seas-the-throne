@@ -37,6 +37,7 @@ levels/boss-room-tileset.png
 levels/boss-room-tileset.tsx
 levels/gate.png
 levels/hub_world.json
+levels/kelpdark_filmstrip2.png
 levels/kelplight_filmstrip2.png
 levels/pinkdemonstatue.png
 levels/portal.png
@@ -83,6 +84,7 @@ ui/darkammo_2_5.png
 ui/darkammo_3_5.png
 ui/darkammo_4_5.png
 ui/darkammo_5_5.png
+ui/darkscreen.png
 ui/health_hori_0.png
 ui/health_hori_1.png
 ui/health_hori_2.png
@@ -95,3 +97,4 @@ ui/health_v3_2.png
 ui/health_v3_3.png
 ui/health_v3_4.png
 ui/health_v3_5.png
+ui/pausescreen.png
