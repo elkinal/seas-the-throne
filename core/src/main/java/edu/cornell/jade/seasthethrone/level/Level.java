@@ -321,11 +321,24 @@ public class Level {
       Vector2 pos = tiledToWorldCoords(new Vector2(x + width / 2f, y + height / 2f));
       Vector2 dims = (new Vector2(width * WORLD_SCALE, height * WORLD_SCALE));
 
-      if (((String) obsWrapper.get("name")).length() > 0) {
-        TextureRegion texture = new TextureRegion(new Texture((String) obsWrapper.get("name")));
-        obstacles.add(new LevelObject(pos.x, pos.y, dims.x, dims.y, texture));
+      LevelObject obs = new LevelObject(pos.x, pos.y, dims.x, dims.y);
+      try {
+        obs.animated = JsonHandler.getBoolProperty(obsWrapper, "animated");
+      } catch (Error e) {
+        obs.animated = false;
       }
-      obstacles.add(new LevelObject(pos.x, pos.y, dims.x, dims.y));
+
+      // get frames in animation if animated
+      try {
+        obs.framesInAnimation = JsonHandler.getIntProperty(obsWrapper, "framesInAnimation");;
+      } catch (Error e) {
+        obs.framesInAnimation = 1;
+      }
+
+      if (((String) obsWrapper.get("name")).length() > 0) {
+        obs.texture = new TextureRegion(new Texture((String) obsWrapper.get("name")));
+      }
+      obstacles.add(obs);
     }
   }
 

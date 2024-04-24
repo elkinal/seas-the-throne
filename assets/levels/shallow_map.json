@@ -4749,185 +4749,14 @@
                 }, 
                 {
                  "height":10.6667,
-                 "id":218,
-                 "name":"levels\/kelplight_filmstrip2.png",
-                 "properties":[
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }, 
-                        {
-                         "name":"texture",
-                         "type":"string",
-                         "value":"levels\/kelplight_filmstrip2.png"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":10.6667,
-                 "x":1701,
-                 "y":721.333
-                }, 
-                {
-                 "height":10.6667,
-                 "id":219,
-                 "name":"levels\/kelplight_filmstrip2.png",
-                 "properties":[
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }, 
-                        {
-                         "name":"texture",
-                         "type":"string",
-                         "value":"levels\/kelplight_filmstrip2.png"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":10.6667,
-                 "x":1856,
-                 "y":529.333
-                }, 
-                {
-                 "height":10.6667,
-                 "id":220,
-                 "name":"levels\/kelplight_filmstrip2.png",
-                 "properties":[
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }, 
-                        {
-                         "name":"texture",
-                         "type":"string",
-                         "value":"levels\/kelplight_filmstrip2.png"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":10.6667,
-                 "x":2142.67,
-                 "y":542.667
-                }, 
-                {
-                 "height":10.6667,
-                 "id":221,
-                 "name":"levels\/kelplight_filmstrip2.png",
-                 "properties":[
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }, 
-                        {
-                         "name":"texture",
-                         "type":"string",
-                         "value":"levels\/kelplight_filmstrip2.png"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":10.6667,
-                 "x":1752,
-                 "y":618.667
-                }, 
-                {
-                 "height":10.6667,
-                 "id":222,
-                 "name":"levels\/kelplight_filmstrip2.png",
-                 "properties":[
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }, 
-                        {
-                         "name":"texture",
-                         "type":"string",
-                         "value":"levels\/kelplight_filmstrip2.png"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":10.6667,
-                 "x":2346.67,
-                 "y":513.333
-                }, 
-                {
-                 "height":10.6667,
-                 "id":223,
-                 "name":"levels\/kelplight_filmstrip2.png",
-                 "properties":[
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }, 
-                        {
-                         "name":"texture",
-                         "type":"string",
-                         "value":"levels\/kelplight_filmstrip2.png"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":10.6667,
-                 "x":2608,
-                 "y":476
-                }, 
-                {
-                 "height":10.6667,
-                 "id":224,
-                 "name":"levels\/kelplight_filmstrip2.png",
-                 "properties":[
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }, 
-                        {
-                         "name":"texture",
-                         "type":"string",
-                         "value":"levels\/kelplight_filmstrip2.png"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":10.6667,
-                 "x":2825.33,
-                 "y":368
-                }, 
-                {
-                 "height":10.6667,
-                 "id":227,
-                 "name":"levels\/kelplight_filmstrip2.png",
-                 "properties":[
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }, 
-                        {
-                         "name":"texture",
-                         "type":"string",
-                         "value":"levels\/kelplight_filmstrip2.png"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":10.6667,
-                 "x":2494.67,
-                 "y":504
-                }, 
-                {
-                 "height":10.6667,
                  "id":228,
                  "name":"levels\/kelplight_filmstrip2.png",
                  "properties":[
+                        {
+                         "name":"animated",
+                         "type":"bool",
+                         "value":true
+                        }, 
                         {
                          "name":"framesInAnimation",
                          "type":"int",
@@ -4947,9 +4776,14 @@
                 }, 
                 {
                  "height":10.6667,
-                 "id":229,
+                 "id":251,
                  "name":"levels\/kelplight_filmstrip2.png",
                  "properties":[
+                        {
+                         "name":"animated",
+                         "type":"bool",
+                         "value":true
+                        }, 
                         {
                          "name":"framesInAnimation",
                          "type":"int",
@@ -4964,14 +4798,19 @@
                  "type":"",
                  "visible":true,
                  "width":10.6667,
-                 "x":2854.67,
-                 "y":316
+                 "x":2527.66665,
+                 "y":530.66665
                 }, 
                 {
                  "height":10.6667,
-                 "id":230,
+                 "id":252,
                  "name":"levels\/kelplight_filmstrip2.png",
                  "properties":[
+                        {
+                         "name":"animated",
+                         "type":"bool",
+                         "value":true
+                        }, 
                         {
                          "name":"framesInAnimation",
                          "type":"int",
@@ -4986,14 +4825,19 @@
                  "type":"",
                  "visible":true,
                  "width":10.6667,
-                 "x":2260,
-                 "y":441.333
+                 "x":2333.66665,
+                 "y":545.66665
                 }, 
                 {
                  "height":10.6667,
-                 "id":231,
+                 "id":253,
                  "name":"levels\/kelplight_filmstrip2.png",
                  "properties":[
+                        {
+                         "name":"animated",
+                         "type":"bool",
+                         "value":true
+                        }, 
                         {
                          "name":"framesInAnimation",
                          "type":"int",
@@ -5008,14 +4852,19 @@
                  "type":"",
                  "visible":true,
                  "width":10.6667,
-                 "x":2276,
-                 "y":536
+                 "x":2877.66665,
+                 "y":427.66665
                 }, 
                 {
                  "height":10.6667,
-                 "id":232,
+                 "id":254,
                  "name":"levels\/kelplight_filmstrip2.png",
                  "properties":[
+                        {
+                         "name":"animated",
+                         "type":"bool",
+                         "value":true
+                        }, 
                         {
                          "name":"framesInAnimation",
                          "type":"int",
@@ -5030,14 +4879,19 @@
                  "type":"",
                  "visible":true,
                  "width":10.6667,
-                 "x":2568,
-                 "y":517.333
+                 "x":2162.66665,
+                 "y":535.66665
                 }, 
                 {
                  "height":10.6667,
-                 "id":233,
+                 "id":255,
                  "name":"levels\/kelplight_filmstrip2.png",
                  "properties":[
+                        {
+                         "name":"animated",
+                         "type":"bool",
+                         "value":true
+                        }, 
                         {
                          "name":"framesInAnimation",
                          "type":"int",
@@ -5052,14 +4906,19 @@
                  "type":"",
                  "visible":true,
                  "width":10.6667,
-                 "x":2452,
-                 "y":530.667
+                 "x":1962.66665,
+                 "y":542.66665
                 }, 
                 {
                  "height":10.6667,
-                 "id":234,
-                 "name":"levels\/kelplight_filmstrip2.png",
+                 "id":256,
+                 "name":"levels\/kelpdark_filmstrip2.png",
                  "properties":[
+                        {
+                         "name":"animated",
+                         "type":"bool",
+                         "value":true
+                        }, 
                         {
                          "name":"framesInAnimation",
                          "type":"int",
@@ -5074,14 +4933,19 @@
                  "type":"",
                  "visible":true,
                  "width":10.6667,
-                 "x":2440,
-                 "y":453.333
+                 "x":2438.66665,
+                 "y":549.66665
                 }, 
                 {
                  "height":10.6667,
-                 "id":235,
-                 "name":"levels\/kelplight_filmstrip2.png",
+                 "id":257,
+                 "name":"levels\/kelpdark_filmstrip2.png",
                  "properties":[
+                        {
+                         "name":"animated",
+                         "type":"bool",
+                         "value":true
+                        }, 
                         {
                          "name":"framesInAnimation",
                          "type":"int",
@@ -5096,14 +4960,19 @@
                  "type":"",
                  "visible":true,
                  "width":10.6667,
-                 "x":2765.33,
-                 "y":456
+                 "x":2226.66665,
+                 "y":561.66665
                 }, 
                 {
                  "height":10.6667,
-                 "id":236,
-                 "name":"levels\/kelplight_filmstrip2.png",
+                 "id":258,
+                 "name":"levels\/kelpdark_filmstrip2.png",
                  "properties":[
+                        {
+                         "name":"animated",
+                         "type":"bool",
+                         "value":true
+                        }, 
                         {
                          "name":"framesInAnimation",
                          "type":"int",
@@ -5118,8 +4987,143 @@
                  "type":"",
                  "visible":true,
                  "width":10.6667,
-                 "x":2862.67,
-                 "y":409.333
+                 "x":2606.66665,
+                 "y":552.66665
+                }, 
+                {
+                 "height":10.6667,
+                 "id":259,
+                 "name":"levels\/kelpdark_filmstrip2.png",
+                 "properties":[
+                        {
+                         "name":"animated",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"framesInAnimation",
+                         "type":"int",
+                         "value":22
+                        }, 
+                        {
+                         "name":"texture",
+                         "type":"string",
+                         "value":"levels\/kelplight_filmstrip2.png"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":10.6667,
+                 "x":2710.66665,
+                 "y":498.66665
+                }, 
+                {
+                 "height":10.6667,
+                 "id":260,
+                 "name":"levels\/kelpdark_filmstrip2.png",
+                 "properties":[
+                        {
+                         "name":"animated",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"framesInAnimation",
+                         "type":"int",
+                         "value":22
+                        }, 
+                        {
+                         "name":"texture",
+                         "type":"string",
+                         "value":"levels\/kelplight_filmstrip2.png"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":10.6667,
+                 "x":2760.66665,
+                 "y":438.66665
+                }, 
+                {
+                 "height":10.6667,
+                 "id":261,
+                 "name":"levels\/kelpdark_filmstrip2.png",
+                 "properties":[
+                        {
+                         "name":"animated",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"framesInAnimation",
+                         "type":"int",
+                         "value":22
+                        }, 
+                        {
+                         "name":"texture",
+                         "type":"string",
+                         "value":"levels\/kelplight_filmstrip2.png"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":10.6667,
+                 "x":2862.66665,
+                 "y":323.66665
+                }, 
+                {
+                 "height":10.6667,
+                 "id":262,
+                 "name":"levels\/kelpdark_filmstrip2.png",
+                 "properties":[
+                        {
+                         "name":"animated",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"framesInAnimation",
+                         "type":"int",
+                         "value":22
+                        }, 
+                        {
+                         "name":"texture",
+                         "type":"string",
+                         "value":"levels\/kelplight_filmstrip2.png"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":10.6667,
+                 "x":2421.66665,
+                 "y":488.66665
+                }, 
+                {
+                 "height":10.6667,
+                 "id":263,
+                 "name":"levels\/kelpdark_filmstrip2.png",
+                 "properties":[
+                        {
+                         "name":"animated",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"framesInAnimation",
+                         "type":"int",
+                         "value":22
+                        }, 
+                        {
+                         "name":"texture",
+                         "type":"string",
+                         "value":"levels\/kelplight_filmstrip2.png"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":10.6667,
+                 "x":2097.66665,
+                 "y":533.66665
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -5718,7 +5722,7 @@
          "y":0
         }],
  "nextlayerid":15,
- "nextobjectid":251,
+ "nextobjectid":264,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

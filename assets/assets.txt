@@ -37,6 +37,8 @@ levels/boss-room-tileset.png
 levels/boss-room-tileset.tsx
 levels/gate.png
 levels/hub_world.json
+levels/kelpdark_filmstrip2.png
+levels/kelplight_filmstrip2.png
 levels/pinkdemonstatue.png
 levels/portal.png
 levels/shallowbiomemap2.png
@@ -76,6 +78,7 @@ player/player_shoot_left.png
 player/player_shoot_right.png
 player/player_shoot_up.png
 player/playe_idle_left.png
+saves/save1.json
 ui/darkammo_1_5.png
 ui/darkammo_2_5.png
 ui/darkammo_3_5.png

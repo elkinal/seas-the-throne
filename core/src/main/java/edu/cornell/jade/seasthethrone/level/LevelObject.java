@@ -24,6 +24,11 @@ public class LevelObject {
 
   public Vector2 pos;
 
+  // Obstacle State
+  public int framesInAnimation;
+
+  public boolean animated;
+
   // Portal state
   public String target;
   public Vector2 playerLoc;
@@ -92,16 +97,6 @@ public class LevelObject {
 
   public void setTexture(TextureRegion texture) {
     this.texture = texture;
-  }
-
-  public int getFrameNumber() {
-    return 0;
-  }
-
-  public void setFrameNumber(int frameNumber) {}
-
-  public int getFramesInAnimation() {
-    return 0;
   }
 
   public void addVertex(float vertex) {

@@ -304,9 +304,7 @@ public class GameplayController implements Screen {
     // Load Obstacles
     for (LevelObject obs : level.getObstacles()) {
       ObstacleModel model = new ObstacleModel(obs, worldScale);
-      for (Model m : model.getBodies()) {
-        m.setBodyType(BodyDef.BodyType.StaticBody);
-      }
+      model.setBodyType(BodyDef.BodyType.StaticBody);
       renderEngine.addRenderable(model);
       physicsEngine.addObject(model);
     }
