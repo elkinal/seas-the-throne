@@ -323,44 +323,25 @@ public class PlayerModel extends ComplexModel implements Renderable {
           break;
       }
     }
-    else{
-      switch(direction()){
-        case UP:
-          if (isDead())
-            currentStrip.setTexture(getDieUp());
-          else
-            currentStrip.setTexture(getTextureUpDash());
-          break;
-        case DOWN:
-          if (isDead())
-            currentStrip.setTexture(getDieDown());
-          else
-            currentStrip.setTexture(getTextureDownDash());
-          break;
-        case LEFT:
-          if (isDead())
-            currentStrip.setTexture(getDieLeft());
-          else
-            currentStrip.setTexture(getTextureLeftDash());
-          break;
-        case RIGHT:
-          if (isDead())
-            currentStrip.setTexture(getDieRight());
-          else
-            currentStrip.setTexture(getTextureRightDash());
-          break;
-        case NE:
-          currentStrip.setTexture(getTextureNEDash());
-          break;
-        case NW:
-          currentStrip.setTexture(getTextureNWDash());
-          break;
-        case SE:
-          currentStrip.setTexture(getTextureSEDash());
-          break;
-        case SW:
-          currentStrip.setTexture(getTextureSWDash());
-          break;
+    else {
+      if (isDead()) {
+        switch (direction()) {
+          case UP -> currentStrip.setTexture(getDieUp());
+          case DOWN -> currentStrip.setTexture(getDieDown());
+          case LEFT -> currentStrip.setTexture(getDieLeft());
+          case RIGHT -> currentStrip.setTexture(getDieRight());
+        }
+      } else{
+        switch (direction()) {
+          case UP -> currentStrip.setTexture(getTextureUpDash());
+          case DOWN -> currentStrip.setTexture(getTextureDownDash());
+          case LEFT -> currentStrip.setTexture(getTextureLeftDash());
+          case RIGHT -> currentStrip.setTexture(getTextureRightDash());
+          case NE -> currentStrip.setTexture(getTextureNEDash());
+          case NW -> currentStrip.setTexture(getTextureNWDash());
+          case SE -> currentStrip.setTexture(getTextureSEDash());
+          case SW -> currentStrip.setTexture(getTextureSWDash());
+        }
       }
     }
     int frame = getFrameNumber();
