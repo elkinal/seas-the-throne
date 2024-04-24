@@ -36,6 +36,40 @@ public final class SpawnerFactory {
   }
 
   /**
+   * Constructs a single repeatedly shooting bullet whose origin
+   * changes based on the tracked model. It will for a time look to rotate
+   * in one direction and then change direction.
+   *
+   * @param dups            number of bullets in the arc
+   * @param delay           delay in between firings (should be less than
+   *                        oscillation delay)
+   * @param oscilationDelay delay in between changing firing directions
+   * @param pauseTime       time inbetween last fired short of one direction and
+   *                        first fired shot of other direction
+   * @param sleepTime       time when no bullets are fired
+   * @param builder         a builder to create bullet models
+   * @param physicsEngine   {@link PhysicsEngine} to add bullets to
+   */
+  public static Spawner constructOscillatingRing(int dups, int delay, int oscilationDelay, int pauseTime, int sleepTime,
+      BulletModel.Builder builder, PhysicsEngine physicsEngine) {
+    Spawner out = new Spawner(builder, physicsEngine);
+    int ringsPerPeriod = oscilationDelay / dups;
+    for (int i = 0; i <= ringsPerPeriod; i++) {
+      BulletFamily f = new BulletFamily(1f, 0f, 5f, 5f, 0.5f, i * delay);
+      f.addEffect(new Arc(0, MathUtils.PI * 2, dups));
+      f.addEffect(new Periodic(2 * oscilationDelay + pauseTime + sleepTime));
+      out.addFamily(f);
+    }
+    for (int i = 0; i <= ringsPerPeriod; i++) {
+      BulletFamily f = new BulletFamily(1f, 0f, 5f, 5f, 0.5f, oscilationDelay + i * delay + pauseTime);
+      f.addEffect(new Arc(0, MathUtils.PI * 2, dups));
+      f.addEffect(new Periodic(2 * oscilationDelay + pauseTime + sleepTime));
+      out.addFamily(f);
+    }
+    return out;
+  }
+
+  /**
    * Constructs a single repeatingly sohoting bullet always going in a certain
    * direction
    *

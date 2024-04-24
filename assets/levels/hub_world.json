@@ -349,12 +349,12 @@
                         {
                          "name":"playerX",
                          "type":"float",
-                         "value":2780
+                         "value":1630
                         }, 
                         {
                          "name":"playerY",
                          "type":"float",
-                         "value":210
+                         "value":410
                         }, 
                         {
                          "name":"target",

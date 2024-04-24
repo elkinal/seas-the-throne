@@ -15,6 +15,7 @@ import edu.cornell.jade.seasthethrone.util.FilmStrip;
 import edu.cornell.jade.seasthethrone.ai.BossController;
 import edu.cornell.jade.seasthethrone.ai.CrabBossController;
 import edu.cornell.jade.seasthethrone.ai.FixedStreamClamController;
+import edu.cornell.jade.seasthethrone.ai.OscillatingRingClamController;
 import edu.cornell.jade.seasthethrone.ai.AimedSingleBulletJellyBossController;
 import edu.cornell.jade.seasthethrone.ai.AimedArcJellyBossController;
 
@@ -446,6 +447,8 @@ public abstract class BossModel extends EnemyModel implements Renderable {
         // invarient, this is a float and won't fail
         float angle = MathUtils.degRad * Float.parseFloat(type.replaceAll("[^\\d.]", ""));
         return new FixedStreamClamController(angle, model, player, bulletBuilder, physicsEngine);
+      } else if (type.equals("oscillating_ring_clam")) {
+        return new OscillatingRingClamController(model, player, bulletBuilder, physicsEngine);
       }
       throw new RuntimeException("boss type not supported");
     }

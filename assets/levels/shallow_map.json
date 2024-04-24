@@ -4938,6 +4938,72 @@
                  "width":81.9024503567202,
                  "x":2733.98527669459,
                  "y":180.48099396156
+                }, 
+                {
+                 "height":188.018546184993,
+                 "id":240,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":5
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":82.6004137542707,
+                 "x":1709.93350184107,
+                 "y":896.121057161837
+                }, 
+                {
+                 "height":116.016549893861,
+                 "id":241,
+                 "name":"levels\/gate.png",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":5
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":false
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":2.21836,
+                 "x":1646.39211654689,
+                 "y":874.231700627901
+                }, 
+                {
+                 "height":37.17109608803,
+                 "id":242,
+                 "name":"levels\/gate.png",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":5
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":false
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":2.21836,
+                 "x":2400.65835454924,
+                 "y":933.197149179049
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -4989,14 +5055,14 @@
                         {
                          "name":"id",
                          "type":"int",
-                         "value":-1
+                         "value":5
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":20,
-                 "x":2080,
-                 "y":1000
+                 "x":2031.60761696284,
+                 "y":994.814562141071
                 }, 
                 {
                  "gid":40,
@@ -5123,6 +5189,60 @@
                  "width":20,
                  "x":2262.40057498802,
                  "y":434.417824628654
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":235,
+                 "name":"oscillating_ring_clam",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":4
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":1589.11868730794,
+                 "y":759.409172609729
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":238,
+                 "name":"oscillating_ring_clam",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":5
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":2011.85868838803,
+                 "y":1195.50375375596
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":239,
+                 "name":"fixed_clam180",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":5
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":2347.33265848412,
+                 "y":1057.94888017209
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -5300,7 +5420,7 @@
          "y":0
         }],
  "nextlayerid":15,
- "nextobjectid":235,
+ "nextobjectid":243,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

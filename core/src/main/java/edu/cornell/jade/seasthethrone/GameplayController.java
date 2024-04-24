@@ -9,7 +9,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.*;
 
 import edu.cornell.jade.seasthethrone.ai.BossController;
-import edu.cornell.jade.seasthethrone.ai.CrabBossController;
 import edu.cornell.jade.seasthethrone.gamemodel.CheckpointModel;
 import edu.cornell.jade.seasthethrone.gamemodel.PortalModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
@@ -26,8 +25,6 @@ import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.ui.UIController;
 import edu.cornell.jade.seasthethrone.util.ScreenListener;
-import edu.cornell.jade.seasthethrone.gamemodel.boss.CrabBossModel;
-import edu.cornell.jade.seasthethrone.gamemodel.boss.JellyBossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 
 import java.io.FileNotFoundException;
