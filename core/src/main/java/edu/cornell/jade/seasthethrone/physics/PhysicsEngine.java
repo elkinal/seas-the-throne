@@ -184,11 +184,6 @@ public class PhysicsEngine implements ContactListener {
       Model bd1 = (Model) body1.getUserData();
       Model bd2 = (Model) body2.getUserData();
 
-      System.out.println("bd1: " + bd1 + " at " + bd1.getPosition() + " with vel " + bd1.getLinearVelocity());
-      System.out.println("bd2: " + bd2 + " at " + bd2.getPosition() + " with vel " + bd2.getLinearVelocity());
-      if (Float.isNaN(bd1.getX()) || Float.isNaN(bd1.getY()) || Float.isNaN(bd2.getY()) || Float.isNaN(bd2.getX()))
-        System.out.println("found a NaN");
-
       if (bd1 instanceof PlayerBodyModel && bd2 instanceof BulletModel) {
         if (BuildConfig.DEBUG) System.out.println("player hit");
 
