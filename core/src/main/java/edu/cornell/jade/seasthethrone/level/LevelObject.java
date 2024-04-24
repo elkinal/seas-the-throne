@@ -24,7 +24,10 @@ public class LevelObject {
 
   public Vector2 pos;
 
+  // Obstacle State
   public int framesInAnimation;
+
+  public boolean animated;
 
   // Portal state
   public String target;

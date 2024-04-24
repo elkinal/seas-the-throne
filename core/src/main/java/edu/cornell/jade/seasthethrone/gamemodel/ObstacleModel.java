@@ -25,14 +25,15 @@ public class ObstacleModel extends BoxModel implements Renderable {
   private int animationFrame;
   private final float WORLD_SCALE;
 
+  private boolean animated;
+
   public ObstacleModel(LevelObject obs, float scale) {
     // TODO: extend for generic model, not just BoxModel
     super(obs.x, obs.y, obs.width, obs.height);
     this.texture = obs.texture;
     this.WORLD_SCALE = scale;
     this.framesInAnimation = obs.framesInAnimation;
-    System.out.println("texture "+this.texture);
-    System.out.println("frames: "+this.framesInAnimation);
+    this.animated = obs.animated;
     this.animationFrame = 0;
     this.frameDelay = 10;
 
@@ -44,8 +45,13 @@ public class ObstacleModel extends BoxModel implements Renderable {
     progressFrame();
     Vector2 pos = getPosition();
 
-    float y_offset = WORLD_SCALE * texture.getRegionHeight() / 2f - getHeight() / 2f;
-    renderer.draw(filmStrip, pos.x, pos.y + y_offset);
+    float y_offset = WORLD_SCALE * texture.getRegionHeight() - 2f*getHeight();
+    float x_offset = WORLD_SCALE * texture.getRegionWidth()/2f - getWidth() / 2f;
+    if (animated) {
+      renderer.draw(filmStrip, pos.x, pos.y);
+    } else {
+      renderer.draw(filmStrip, pos.x + x_offset, pos.y + y_offset);
+    }
   }
 
   @Override

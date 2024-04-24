@@ -322,6 +322,11 @@ public class Level {
       Vector2 dims = (new Vector2(width * WORLD_SCALE, height * WORLD_SCALE));
 
       LevelObject obs = new LevelObject(pos.x, pos.y, dims.x, dims.y);
+      try {
+        obs.animated = JsonHandler.getBoolProperty(obsWrapper, "animated");
+      } catch (Error e) {
+        obs.animated = false;
+      }
 
       // get frames in animation if animated
       try {
