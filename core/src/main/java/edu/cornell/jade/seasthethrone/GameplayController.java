@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.*;
 
 import edu.cornell.jade.seasthethrone.ai.BossController;
+import edu.cornell.jade.seasthethrone.assets.AssetDirectory;
 import edu.cornell.jade.seasthethrone.gamemodel.CheckpointModel;
 import edu.cornell.jade.seasthethrone.gamemodel.PortalModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
@@ -130,11 +131,6 @@ public class GameplayController implements Screen {
   /** Listener that will update the player mode when we are done */
   private ScreenListener listener;
 
-  /** Whether the game is done loading */
-  private boolean loading;
-
-  private int loadCount;
-
   protected GameplayController() {
     gameState = GameState.PLAY;
 
@@ -149,8 +145,6 @@ public class GameplayController implements Screen {
     bounds = new Rectangle(0, 0, worldWidth, worldHeight);
 
     active = false;
-    loading = true;
-    loadCount = 0;
 
     this.stateController = new StateController();
     this.bossControllers = new Array<>();
@@ -168,8 +162,6 @@ public class GameplayController implements Screen {
   public void setupGameplay() {
     dispose();
     gameState = GameState.PLAY;
-    loading = true;
-    loadCount = 0;
 
     World world = new World(new Vector2(0, 0), false);
 
@@ -378,11 +370,8 @@ public class GameplayController implements Screen {
   }
 
   public void draw(float delta) {
-    // Testing out draw load screen on frame 1
-    if (!loading) {
       renderEngine.drawRenderables();
       uiController.drawUI();
-    }
   }
 
   public void update(float delta) {
@@ -487,8 +476,6 @@ public class GameplayController implements Screen {
         renderEngine.drawGameState(gameState);
       }
     }
-    loadCount += 1;
-    loading = loadCount < 5;
   }
 
   /** Changes the current level to the one specified by the physics engine target. */
@@ -518,6 +505,18 @@ public class GameplayController implements Screen {
         bossControllers.get(i).transferState(storedHp);
       }
     }
+  }
+
+  /**
+   * Gather the assets for this controller.
+   *
+   * This method extracts the asset variables from the given asset directory. It
+   * should only be called after the asset directory is completed.
+   *
+   * @param directory	Reference to global asset manager.
+   */
+  public void gatherAssets(AssetDirectory directory) {
+
   }
 
   public void resize(int width, int height) {

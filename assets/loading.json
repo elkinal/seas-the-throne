@@ -1,0 +1,11 @@
+{
+  "textures": {
+    "background": "levels/arenamaprough.png"
+  },
+  "fonts": {
+    "loading:alagard": {
+      "file": "Alagard.ttf",
+      "size": 100
+    }
+  }
+}

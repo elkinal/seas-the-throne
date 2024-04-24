@@ -6,10 +6,15 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import edu.cornell.jade.seasthethrone.assets.AssetDirectory;
 import edu.cornell.jade.seasthethrone.render.GameCanvas;
 import edu.cornell.jade.seasthethrone.util.ScreenListener;
 
 public class LoadScreen implements Screen {
+  /** Internal assets for this loading screen */
+  private AssetDirectory internal;
+  /** The actual assets to be loaded */
+  private AssetDirectory assets;
 
   /** Reference to GameCanvas created by the root */
   private GameCanvas canvas;
@@ -20,10 +25,7 @@ public class LoadScreen implements Screen {
   /** Whether or not this player mode is still active */
   private boolean active;
 
-  /**
-   * The amount of time to devote to loading assets (as opposed to on screen
-   * hints, etc.)
-   */
+  /** The amount of time to devote to loading assets (as opposed to on screen hints, etc.) */
   private int budget;
 
   private int timer;
@@ -37,26 +39,44 @@ public class LoadScreen implements Screen {
   /** Default budget for asset loader (do nothing but load 60 fps) */
   private static int DEFAULT_BUDGET = 100;
 
-  /** The code for the screen this load screen exits to */
   private int exitCode;
 
-  public LoadScreen(int millis, int exitCode) {
-    this.canvas = new GameCanvas();
+  /**
+   * Creates a LoadScreen with the default budget, size and position.
+   *
+   * @param file  	The asset directory to load in the background
+   * @param canvas 	The game canvas to draw to
+   */
+  public LoadScreen(String file, GameCanvas canvas, int exitCode) {
+    this(file, canvas, DEFAULT_BUDGET, exitCode);
+  }
+
+  public LoadScreen(String file, GameCanvas canvas, int millis, int exitCode) {
+    this.canvas = canvas;
     budget = millis;
     timer = 0;
     this.exitCode = exitCode;
 
-    /** LOADING IN FONT, might be better to have an AssetDirectory later */
-    FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Alagard.ttf"));
-    FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-    parameter.size = 100; // font size
-    textFont = generator.generateFont(parameter);
+    internal = new AssetDirectory( "loading.json" );
+    internal.loadAssets();
+    internal.finishLoading();
 
-    this.background = new Texture("levels/arenamaprough.png");
-  }
+    background = internal.getEntry( "background", Texture.class );
 
-  public LoadScreen(GameCanvas canvas, int exitCode) {
-    this(DEFAULT_BUDGET, exitCode);
+
+//    /** LOADING IN FONT, might be better to have an AssetDirectory later */
+//    FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Alagard.ttf"));
+//    FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+//    parameter.size = 100; // font size
+//    textFont = generator.generateFont(parameter);
+
+    textFont = internal.getEntry("loading:alagard", BitmapFont.class);
+
+    // Start loading the real assets
+    assets = new AssetDirectory( file );
+    assets.loadAssets();
+    active = true;
+
   }
 
   /**
