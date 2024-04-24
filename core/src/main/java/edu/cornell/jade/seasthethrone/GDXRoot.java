@@ -9,11 +9,14 @@ import edu.cornell.jade.seasthethrone.assets.AssetDirectory;
 public class GDXRoot extends Game implements ScreenListener {
   private static final int MIN_LOAD_TIME = 50;
   public static final int EXIT_SWAP = 1;
+  public static final int EXIT_TO_GAME = 2;
 
   public static final int EXIT_QUIT = 0;
   private GameplayController controller;
   private LoadScreen loading;
   private GameCanvas canvas;
+
+  private TitleScreen title;
 
   /** AssetManager to load game assets (textures, sounds, etc.) */
   AssetDirectory directory;
@@ -24,9 +27,12 @@ public class GDXRoot extends Game implements ScreenListener {
 
     controller = new GameplayController();
     controller.setScreenListener(this);
+    title = new TitleScreen("loading.json", canvas);
+    title.setScreenListener(this);
     loading = new LoadScreen("assets.json", canvas, MIN_LOAD_TIME, 1);
     loading.setScreenListener(this);
-    setScreen(loading);
+
+    setScreen(title);
   }
 
   @Override
@@ -54,6 +60,12 @@ public class GDXRoot extends Game implements ScreenListener {
    */
   @Override
   public void exitScreen(Screen screen, int exitCode) {
+    if (screen == title && exitCode == EXIT_SWAP) {
+      loading = new LoadScreen("assets.json", canvas, MIN_LOAD_TIME, 1);
+      loading.setScreenListener(this);
+      setScreen(loading);
+    }
+
     if (screen == loading && exitCode == EXIT_SWAP) {
       setScreen(controller);
 

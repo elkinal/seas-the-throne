@@ -1,6 +1,7 @@
 {
   "textures": {
-    "background": "levels/arenamaprough.png"
+    "loading:background": "loading/background.png",
+    "title:background": "title/background.png"
   },
   "fonts": {
     "loading:alagard": {

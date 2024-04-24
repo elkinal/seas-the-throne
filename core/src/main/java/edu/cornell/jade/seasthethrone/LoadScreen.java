@@ -61,7 +61,7 @@ public class LoadScreen implements Screen {
     internal.loadAssets();
     internal.finishLoading();
 
-    background = internal.getEntry( "background", Texture.class );
+    background = internal.getEntry( "loading:background", Texture.class );
 
 
 //    /** LOADING IN FONT, might be better to have an AssetDirectory later */
@@ -142,6 +142,8 @@ public class LoadScreen implements Screen {
   public void setScreenListener(ScreenListener listener) {
     this.listener = listener;
   }
+
+  public AssetDirectory getAssets() { return assets; }
 
   @Override
   public void show() {

@@ -32,7 +32,6 @@ legacy/spritebox_left.png
 legacy/spritebox_right.png
 legacy/spritebox_up.png
 legacy/test1.json
-levels/arenamaprough.png
 levels/boss-room-tileset.png
 levels/boss-room-tileset.tsx
 levels/gate.png
@@ -52,6 +51,7 @@ levels/tablet_room_1.json
 levels/tablet_room_2.json
 levels/test1.tiled-project
 libgdx.png
+loading/background.png
 loading.json
 player/dash_indicator.png
 player/player_dash_down.png
@@ -79,6 +79,7 @@ player/player_shoot_left.png
 player/player_shoot_right.png
 player/player_shoot_up.png
 player/playe_idle_left.png
+title/background.png
 ui/darkammo_1_5.png
 ui/darkammo_2_5.png
 ui/darkammo_3_5.png
