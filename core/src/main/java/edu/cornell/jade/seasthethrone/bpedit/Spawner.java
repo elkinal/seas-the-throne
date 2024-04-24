@@ -9,7 +9,6 @@ import com.badlogic.gdx.utils.ReflectionPool;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import com.badlogic.gdx.math.MathUtils;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
-import edu.cornell.jade.seasthethrone.physics.CollisionMask;
 import com.badlogic.gdx.utils.ObjectSet;
 
 /**
@@ -162,6 +161,8 @@ public class Spawner {
       float ovx = model.getVX();
       float ovy = model.getVY();
       float mag = (float) Math.sqrt(ovx * ovx + ovy * ovy);
+      if (mag == 0)
+        return;
       float s = speed / mag;
       float vx = model.getVX() * s;
       float vy = model.getVY() * s;
@@ -195,13 +196,12 @@ public class Spawner {
 
       float dx = px - model.getX();
       float dy = py - model.getY();
+
       float ovx = model.getVX();
       float ovy = model.getVY();
       float mag = (float) Math.sqrt(ovx * ovx + ovy * ovy);
-      if ((dx < MathUtils.FLOAT_ROUNDING_ERROR && dy < MathUtils.FLOAT_ROUNDING_ERROR)
+      if ((Math.abs(dx) < MathUtils.FLOAT_ROUNDING_ERROR && Math.abs(dy) < MathUtils.FLOAT_ROUNDING_ERROR)
           || mag < MathUtils.FLOAT_ROUNDING_ERROR) {
-        model.setVX(0);
-        model.setVY(0);
         return;
       }
       float normScale = (float) Math.sqrt(dx * dx + dy * dy);
@@ -348,6 +348,15 @@ public class Spawner {
     public void translate(float x, float y) {
       this.bx += x;
       this.by += y;
+    }
+
+    /**
+     * Gets direction of velocity of <code>BulletFamily</code>.
+     *
+     * @return direction of veclocity of base bullet
+     */
+    public float getDir() {
+      return MathUtils.atan(bvy / bvx);
     }
 
     /**
@@ -635,9 +644,28 @@ public class Spawner {
   private void addBullets() {
     while (hasNext()) {
       BulletModel b = next();
+      assert !Float.isNaN(b.getX()) && !Float.isNaN(b.getY());
       physicsEngine.addObject(b);
       added.add(b);
     }
+  }
+
+  /**
+   * Returns x coordinate of the <code>Spawner</code>
+   *
+   * @return x corrdinate of the <code>Spawner</code>
+   */
+  public float getX() {
+    return x;
+  }
+
+  /**
+   * Returns y coordinate of the <code>Spawner</code>
+   *
+   * @return y corrdinate of the <code>Spawner</code>
+   */
+  public float getY() {
+    return y;
   }
 
   /**

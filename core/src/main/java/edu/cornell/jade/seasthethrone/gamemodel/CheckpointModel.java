@@ -3,6 +3,7 @@ package edu.cornell.jade.seasthethrone.gamemodel;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import edu.cornell.jade.seasthethrone.level.LevelObject;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
+import edu.cornell.jade.seasthethrone.physics.CollisionMask;
 
 public class CheckpointModel extends BoxModel implements Interactable {
 
@@ -20,7 +21,7 @@ public class CheckpointModel extends BoxModel implements Interactable {
     super(obs.x, obs.y, obs.width, obs.height);
     this.checkpointID = obs.checkpointID;
     this.WORLD_SCALE = scale;
-
+    CollisionMask.setCategoryMaskBits(this);
   }
 
   public int getCheckpointID() {
