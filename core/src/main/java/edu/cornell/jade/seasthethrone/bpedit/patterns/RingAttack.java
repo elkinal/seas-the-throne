@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.MathUtils;
 import edu.cornell.jade.seasthethrone.bpedit.AttackPattern;
 import edu.cornell.jade.seasthethrone.bpedit.Spawner;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
+import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 
@@ -18,8 +19,8 @@ public class RingAttack extends AttackPattern {
   /** the spawner actually creating the arc */
   private final Spawner spawner;
 
-  /** the model being tracked */
-  private Model toTrack;
+  /** the model of the attacking boss */
+  private final BossModel model;
 
   /**
    * Constructs the attack
@@ -29,18 +30,17 @@ public class RingAttack extends AttackPattern {
    * @param builder       a builder to create bullet models
    * @param physicsEngine {@link PhysicsEngine} to add bullets to
    */
-  public RingAttack(Model toTrack, int delay, int shots,
+  public RingAttack(BossModel model, int delay, int shots,
                     BulletModel.Builder builder, PhysicsEngine physicsEngine) {
 
     this.spawner = SpawnerFactory.constructRepeatingRing(shots, delay, builder, physicsEngine);
-    this.spawner.translate(toTrack.getX(), toTrack.getY());
-    this.toTrack = toTrack;
+    this.model = model;
 
     this.addSpawner(spawner);
   }
 
   @Override
   protected void animateStep() {
-    this.spawner.moveSpawner(toTrack.getX(), toTrack.getY());
+    this.spawner.moveSpawner(model.getX(), model.getY());
   }
 }

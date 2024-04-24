@@ -4,10 +4,10 @@ import com.badlogic.gdx.math.MathUtils;
 import edu.cornell.jade.seasthethrone.bpedit.AttackPattern;
 import edu.cornell.jade.seasthethrone.bpedit.Spawner;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
-import edu.cornell.jade.seasthethrone.model.Model;
+import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 
-public class TrackingSpiralAttack extends AttackPattern {
+public class SpiralAttack extends AttackPattern {
 
   /*
    * -------------------------------
@@ -27,34 +27,33 @@ public class TrackingSpiralAttack extends AttackPattern {
   /** the spawner actually creating the arc */
   private final Spawner spawner;
 
-  /** The model being tracked */
-  private Model toTrack;
+  /** the model of the attacking boss */
+  private final BossModel model;
 
   /**
    * Constructs the attack
    *
-   * @param toTrack       the model to track (to change the spawn point)
+   * @param model         boss shooting the bullet
    * @param delay         the length of time between successive bullets
    * @param shots         the number of bullets in one circular rotation
    * @param builder       a builder to create bullet models
    * @param physicsEngine {@link PhysicsEngine} to add bullets to
    */
-  public TrackingSpiralAttack(Model toTrack, int delay, int shots,
+  public SpiralAttack(BossModel model, int delay, int shots,
                               BulletModel.Builder builder, PhysicsEngine physicsEngine) {
     this.delay = delay;
     this.angle = MathUtils.PI * 2f / shots;
 
     this.stepsTaken = 0;
     this.spawner = SpawnerFactory.constructTrackingRepeatingBullet(delay, builder, physicsEngine);
-    this.spawner.translate(toTrack.getX(), toTrack.getY());
-    this.toTrack = toTrack;
+    this.model = model;
 
     this.addSpawner(spawner);
   }
 
   @Override
   protected void animateStep() {
-    this.spawner.moveSpawner(toTrack.getX(), toTrack.getY());
+    this.spawner.moveSpawner(model.getX(), model.getY());
     if (stepsTaken == delay - 1) {
       spawner.rotates(angle);
       stepsTaken = 0;
