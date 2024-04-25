@@ -5,7 +5,13 @@ import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 
 abstract class ClamController implements BossController {
-
+  /** Enumeration of AI states. */
+  private static enum State {
+    /** The enemy is stationary */
+    IDLE,
+    /** The enemy is attacking */
+    ATTACK,
+  }
   /*
    * -----------------------------------
    * CONSTANTS
@@ -19,6 +25,9 @@ abstract class ClamController implements BossController {
    * STATE
    * -------------------------------
    */
+  /** The boss's current state */
+  private State state;
+
   /** Attack pattern of clam */
   private final AttackPattern attack;
 
@@ -39,12 +48,19 @@ abstract class ClamController implements BossController {
     this.attack = attack;
     this.boss = boss;
     this.player = player;
+    this.state = State.IDLE;
   }
 
   @Override
   public void update(float delta) {
-    if (boss.getPosition().dst(player.getPosition()) < AGRO_DISTANCE) {
-      attack.update(player.getX(), player.getY());
+    switch (state) {
+      case IDLE:
+        if (boss.getPosition().dst(player.getPosition()) < AGRO_DISTANCE) {
+          state = State.ATTACK;
+        }
+        break;
+      case ATTACK:
+        attack.update(player.getX(), player.getY());
     }
   }
 
