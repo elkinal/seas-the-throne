@@ -11,8 +11,6 @@ public class MenuController implements Screen {
 
   private ScreenViewport viewport;
 
-  private GameCanvas canvas;
-
   private TitleScreen titleScreen;
 
   private ScreenListener listener;

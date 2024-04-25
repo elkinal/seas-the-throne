@@ -1,5 +1,9 @@
 Alagard.ttf
 assets.json
+bosses/clam/death.png
+bosses/clam/hurt.png
+bosses/clam/idle.png
+bosses/clam/shoot.png
 bosses/crab/attack.png
 bosses/crab/crab_shoot_filmstip.png
 bosses/crab/death.png
@@ -81,6 +85,7 @@ player/player_shoot_left.png
 player/player_shoot_right.png
 player/player_shoot_up.png
 player/playe_idle_left.png
+saves/save1.json
 title/background.png
 title/play_button.png
 ui/darkammo_1_5.png

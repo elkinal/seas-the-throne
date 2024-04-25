@@ -40,8 +40,6 @@ public class TitleScreen implements Screen, Controllable {
 
   private static final int MENU_SIZE = 3;
 
-  private int exitCode;
-
   public enum TitleSelection {
     PLAY(0, "Play"),
     OPTIONS(1, "Options"),
