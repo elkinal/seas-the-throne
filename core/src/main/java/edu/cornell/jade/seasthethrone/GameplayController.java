@@ -271,7 +271,7 @@ public class GameplayController implements Screen {
         ? 50 
         : name.contains("clam")
           ? 10
-          : 100;
+          : 200;
       var bossBuilder =
           BossModel.Builder.newInstance()
               .setType(name)
@@ -280,7 +280,7 @@ public class GameplayController implements Screen {
               .setY(bossContainer.y)
               .setHealth(health)
               //              .setHitbox(new float[]{-3, -3, -3, 3, 3, 3, 3, -3})
-              .setHealthThresholds(new int[] {70, 30})
+              .setHealthThresholds(new int[] {150, 100, 50})
               .setFalloverAnimation(new Texture("bosses/" + assetName + "/fallover.png"))
               .setShootAnimation(new Texture("bosses/" + assetName + "/shoot.png"))
               .setGetHitAnimation(new Texture("bosses/" + assetName + "/hurt.png"))

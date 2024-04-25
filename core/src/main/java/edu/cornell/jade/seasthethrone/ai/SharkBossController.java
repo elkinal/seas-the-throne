@@ -1,13 +1,17 @@
 package edu.cornell.jade.seasthethrone.ai;
 
-import edu.cornell.jade.seasthethrone.ai.BossController;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import edu.cornell.jade.seasthethrone.bpedit.AttackPattern;
-import edu.cornell.jade.seasthethrone.bpedit.patterns.ArcsAcrossTheTopAttack;
+import edu.cornell.jade.seasthethrone.bpedit.patterns.AimedArcAttack;
+import edu.cornell.jade.seasthethrone.bpedit.patterns.OscillatingRingAttack;
+import edu.cornell.jade.seasthethrone.bpedit.patterns.RingAttack;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
-import edu.cornell.jade.seasthethrone.gamemodel.boss.CrabBossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
+
+import java.util.Random;
 
 /** A controller defining the bahavior of a shark boss. */
 public class SharkBossController implements BossController {
@@ -15,10 +19,16 @@ public class SharkBossController implements BossController {
   private static enum State {
     /** The boss is stationary */
     IDLE,
-    /** The boss is attacking */
-    ATTACK,
-    /** The boss is moving towards a target */
-    MOVE,
+    /** The boss is attacking with aimed arcs */
+    ARC_ATTACK,
+    /** The boss is attacking with oscillating rings */
+    OSC_ATTACK,
+    /** The boss is attacking and moving at the same time */
+    ATTACK_MOVE,
+    /** The boss is moving towards where the player was */
+    CHASE_PLAYER,
+    /** The boss is resetting its position */
+    RESET,
     /** The boss has been defeated */
     DEAD,
   }
@@ -31,20 +41,8 @@ public class SharkBossController implements BossController {
   /** The distance the player must be from the boss before it begins attacking. */
   private static float AGRO_DISTANCE = 30f;
 
-  /** The x offset from the boss arc across the tops left side starts on */
-  private static float X_OFFSET = -30f;
-
-  /** The y offset from the boss arc across the tops left side starts on */
-  private static float Y_OFFSET = 20f;
-
-  /** The length of the arc of bullets */
-  private static float ARC_LINE_LENGTH = 60f;
-
-  /** The ticks in a period of the arc attack */
-  private static int ARC_PERIOD = 60;
-
-  /** The number of arc shots fired in a single period */
-  private static int ARC_SHOTS = 6;
+  /** The minimum distance the boss must move during a movement cycle. */
+  private static float MIN_MOVE_DIST = 15f;
 
   /*
    * -------------------------------
@@ -57,14 +55,29 @@ public class SharkBossController implements BossController {
   /** The player model being attacked */
   private PlayerModel player;
 
-  /** The current attack of the boss. */
-  private AttackPattern attackPattern;
-
   /** The boss's current state */
   private State state;
 
-  /** The first attack */
-  private final AttackPattern attack1;
+  /** The timer for state switching */
+  private int timer;
+
+  /** The current goal position of the boss */
+  private Vector2 goalPos;
+
+  /** Random number generator */
+  private Random rand;
+
+  /** The bounds of which the boss can move */
+  private Rectangle bounds;
+
+  /** The oscillating ring attack */
+  private final AttackPattern oscRingAttack;
+
+  /** The ring attack (acting as fixed angle streams) */
+  private final AttackPattern ringAttack;
+
+  /** The aimed arc attack */
+  private final AttackPattern aimedArcAttack;
 
   /**
    * Constructs a shark boss controller
@@ -83,17 +96,13 @@ public class SharkBossController implements BossController {
     this.player = player;
     this.state = State.IDLE;
 
-    System.out.println(boss.getX() + " " + boss.getY());
-    this.attack1 =
-            new ArcsAcrossTheTopAttack(
-                    boss.getX() + X_OFFSET,
-                    boss.getY() + Y_OFFSET,
-                    ARC_LINE_LENGTH,
-                    ARC_PERIOD,
-                    ARC_SHOTS,
-                    boss,
-                    builder,
-                    physicsEngine);
+    this.goalPos = new Vector2();
+    this.rand = new Random();
+    this.bounds = new Rectangle(boss.getX() - 15, boss.getY() - 15, 30, 30);
+
+    this.oscRingAttack = new OscillatingRingAttack(boss, player, builder, physicsEngine);
+    this.ringAttack = new RingAttack(boss, 20, 5, builder, physicsEngine);
+    this.aimedArcAttack = new AimedArcAttack(60, boss, player, builder, physicsEngine);
   }
 
   @Override
@@ -124,7 +133,9 @@ public class SharkBossController implements BossController {
 
   /** Cleans up this boss's attack pattern */
   public void dispose() {
-    attackPattern.cleanup();
+    oscRingAttack.cleanup();
+    aimedArcAttack.cleanup();
+    ringAttack.cleanup();
   }
 
   /** Returns the boss of this controller */
@@ -145,22 +156,69 @@ public class SharkBossController implements BossController {
 
   /** Progresses to the next state of the controller. */
   private void nextState() {
+    if (boss.isDead()) {
+      state = State.DEAD;
+    } else if (boss.reachedHealthThreshold()){
+      state = State.CHASE_PLAYER;
+      goalPos.set(player.getX(), player.getY());
+      boss.setLinearVelocity(boss.getPosition().sub(goalPos).nor().scl(-15));
+    }
+
     switch (state) {
       case IDLE:
         if (boss.getPosition().dst(player.getPosition()) < AGRO_DISTANCE) {
-          state = State.ATTACK;
-          attackPattern = attack1;
-        }
-        if (boss.isDead()) {
-          state = State.DEAD;
+          state = State.ARC_ATTACK;
+          timer = rand.nextInt(240, 480);
         }
         break;
-      case ATTACK:
-        if (boss.isDead()) {
-          state = State.DEAD;
+      case ARC_ATTACK:
+        if (timer <= 0) {
+          if (rand.nextBoolean()) {
+            state = State.ATTACK_MOVE;
+            findNewGoalPos();
+          } else {
+            state = State.OSC_ATTACK;
+            timer = rand.nextInt(240, 480);
+          }
         }
         break;
-      case MOVE:
+      case OSC_ATTACK:
+        if (timer <= 0) {
+          if (rand.nextBoolean()) {
+            state = State.ATTACK_MOVE;
+            findNewGoalPos();
+          } else {
+            state = State.ARC_ATTACK;
+            timer = rand.nextInt(240, 480);
+          }
+        }
+        break;
+      case ATTACK_MOVE:
+        if (goalPosReached()) {
+          boss.setVX(0);
+          boss.setVY(0);
+          if (rand.nextBoolean()) {
+            state = State.OSC_ATTACK;
+          } else {
+            state = State.ARC_ATTACK;
+          }
+          timer = rand.nextInt(240, 480);
+        }
+        break;
+      case CHASE_PLAYER:
+        if (goalPosReached()) {
+          state = State.RESET;
+          goalPos.set(bounds.getX()+bounds.getWidth()/2, bounds.getY()+bounds.getHeight()/2);
+          boss.setLinearVelocity(boss.getPosition().sub(goalPos).nor().scl(-5));
+        }
+        break;
+      case RESET:
+        if (goalPosReached()) {
+          boss.setVX(0);
+          boss.setVY(0);
+          state = State.ARC_ATTACK;
+          timer = rand.nextInt(240, 480);
+        }
         break;
       case DEAD:
         break;
@@ -172,13 +230,43 @@ public class SharkBossController implements BossController {
     switch (state) {
       case IDLE:
         break;
-      case ATTACK:
-        attackPattern.update(player.getX(), player.getY());
+      case ARC_ATTACK:
+        aimedArcAttack.update(player.getX(), player.getY());
+        ringAttack.update(player.getX(), player.getY());
+        timer -= 1;
         break;
-      case MOVE:
+      case OSC_ATTACK:
+        oscRingAttack.update(player.getX(), player.getY());
+        ringAttack.update(player.getX(), player.getY());
+        timer -= 1;
+        break;
+      case ATTACK_MOVE:
+        aimedArcAttack.update(player.getX(), player.getY());
+        break;
+      case CHASE_PLAYER:
+        break;
+      case RESET:
         break;
       case DEAD:
         break;
     }
+  }
+
+  /** If the goal pos was reached */
+  private boolean goalPosReached(){
+    return boss.getPosition().sub(goalPos).dot(boss.getLinearVelocity()) > 0;
+  }
+
+  /** Helper function to generate new goal position & set boss velocity. * */
+  private void findNewGoalPos() {
+    goalPos.set(
+            rand.nextFloat(bounds.getX(), bounds.getX() + bounds.getWidth()),
+            rand.nextFloat(bounds.getY(), bounds.getY() + bounds.getHeight()));
+    while (boss.getPosition().dst(goalPos) < MIN_MOVE_DIST) {
+      goalPos.set(
+              rand.nextFloat(bounds.getX(), bounds.getX() + bounds.getWidth()),
+              rand.nextFloat(bounds.getY(), bounds.getY() + bounds.getHeight()));
+    }
+    boss.setLinearVelocity(boss.getPosition().sub(goalPos).nor().scl(-6));
   }
 }
