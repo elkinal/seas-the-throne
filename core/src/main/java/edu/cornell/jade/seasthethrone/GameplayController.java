@@ -110,6 +110,9 @@ public class GameplayController implements Screen {
   /** If the screen and world should be updated */
   protected boolean active;
 
+  /** If the game has been flagged to restart at last checkpoint */
+  private boolean restart;
+
   /** Temporary cache to sort physics renderables */
   private final Array<Model> objectCache = new Array<>();
 
@@ -145,6 +148,7 @@ public class GameplayController implements Screen {
     bounds = new Rectangle(0, 0, worldWidth, worldHeight);
 
     active = false;
+    restart = false;
 
     this.stateController = new StateController();
     this.bossControllers = new Array<>();
@@ -337,11 +341,7 @@ public class GameplayController implements Screen {
     pauseController = new PauseController(renderEngine, physicsEngine, playerController);
 
     // Load Save State
-    try {
       stateController.loadState("saves/save1.json");
-    } catch (FileNotFoundException e) {
-      System.out.println("Save not found");
-    }
 
     if (BuildConfig.DEBUG) 
       System.out.println("post setup ammo: " + playerController.getAmmo());
@@ -349,6 +349,7 @@ public class GameplayController implements Screen {
     // Load UI
     PauseMenu pauseMenu = new PauseMenu(viewport);
     PauseMenuController pauseMenuController = new PauseMenuController(pauseMenu);
+    pauseMenuController.setGameplayController(this);
     inputController.add(pauseMenuController);
 
     uiController = new UIController(
@@ -466,6 +467,15 @@ public class GameplayController implements Screen {
           physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
     }
 
+    if (restart) {
+      listener.exitScreen(this, GDXRoot.EXIT_SWAP);
+      this.renderEngine.clear();
+      bossControllers.clear();
+      setupGameplay();
+      transferState(stateController.getLevel(level.name));
+      restart = false;
+    }
+
     // Draw reset and debug screen for wins and losses
 
     if (gameState == GameState.OVER || gameState == GameState.WIN) {
@@ -548,6 +558,10 @@ public class GameplayController implements Screen {
    */
   public void setScreenListener(ScreenListener listener) {
     this.listener = listener;
+  }
+
+  public void setRestart(boolean restart) {
+    this.restart = restart;
   }
 
   public void pause() {

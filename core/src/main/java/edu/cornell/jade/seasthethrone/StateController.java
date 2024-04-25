@@ -84,31 +84,37 @@ public class StateController {
   }
 
   /** Loads in state from a json */
-  public void loadState(String saveName) throws FileNotFoundException {
-    Scanner input = new Scanner(new File(saveName));
-    java.lang.StringBuilder loadString = new StringBuilder();
-    while (input.hasNext()) {
-      loadString.append(input.next());
-    }
-
-    String out = loadString.toString();
-    JsonValue loadState = new JsonReader().parse(out);
-
-    this.checkpoint = loadState.getInt("checkpoint");
-    //        this.currentLevel = loadState.currentLevel;
-    this.playerHealth = loadState.getInt("playerHealth");
+  public void loadState(String saveName) {
     try {
-      this.playerAmmo = loadState.getInt("playerAmmo");
-      System.out.println("loaded ammo: "+this.playerAmmo);
-    } catch (IllegalArgumentException e) {
-      this.playerAmmo = 0;
-    }
+      Scanner input = new Scanner(new File(saveName));
+      java.lang.StringBuilder loadString = new StringBuilder();
+      while (input.hasNext()) {
+        loadString.append(input.next());
+      }
 
-    JsonValue levelsRoot = loadState.get("storedLevels");
-    this.storedLevels.clear();
-    for (int i = 0; i < levelsRoot.size; i++) {
-      LevelState thisLevel = new LevelState(levelsRoot.get(i).get("bossHps").asIntArray());
-      storedLevels.put(levelsRoot.get(i).name, thisLevel);
+      String out = loadString.toString();
+      JsonValue loadState = new JsonReader().parse(out);
+
+      this.checkpoint = loadState.getInt("checkpoint");
+      //        this.currentLevel = loadState.currentLevel;
+      this.playerHealth = loadState.getInt("playerHealth");
+      try {
+        this.playerAmmo = loadState.getInt("playerAmmo");
+        System.out.println("loaded ammo: " + this.playerAmmo);
+      } catch (IllegalArgumentException e) {
+        this.playerAmmo = 0;
+      }
+
+      JsonValue levelsRoot = loadState.get("storedLevels");
+      this.storedLevels.clear();
+      for (int i = 0; i < levelsRoot.size; i++) {
+        LevelState thisLevel = new LevelState(levelsRoot.get(i).get("bossHps").asIntArray());
+        storedLevels.put(levelsRoot.get(i).name, thisLevel);
+      }
+    } catch (Exception e) {
+        this.checkpoint = -1;
+        this.playerHealth = 5;
+        this.playerAmmo = 0;
     }
   }
 
