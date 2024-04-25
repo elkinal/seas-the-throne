@@ -597,6 +597,7 @@ public class PlayerModel extends ComplexModel implements Renderable {
     getSpearModel().setSpear(true);
     animationFrame = 0;
     dashCounter = dashLength;
+    getBodyModel().setInvincible(dashLength);
   }
 
   /** Set dashing to false */

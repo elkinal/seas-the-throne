@@ -187,7 +187,7 @@ public class PlayerController implements Controllable {
     Vector2 playerPos = player.getPosition();
     // TODO: stop hardcoding the offset
     Vector2 startPos = playerPos.add(dashDirection.x * 1.5f, dashDirection.y * 1.5f);
-    physicsEngine.spawnBullet(startPos, dashDirection, 16, true);
+    physicsEngine.spawnBullet(startPos, dashDirection, 30, true);
 
     player.decrementFishCount();
   }

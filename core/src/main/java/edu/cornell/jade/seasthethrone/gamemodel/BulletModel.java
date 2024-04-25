@@ -58,7 +58,7 @@ public class BulletModel extends SimpleModel implements Renderable {
     setVY(builder.vy);
     shape = new CircleShape();
     shape.setRadius(builder.radius);
-    knockbackForce = 30f;
+    knockbackForce = 40f;
     setBodyType(BodyDef.BodyType.DynamicBody);
     setName("bullet");
     fishTexture = builder.FISH_TEXTURE;
