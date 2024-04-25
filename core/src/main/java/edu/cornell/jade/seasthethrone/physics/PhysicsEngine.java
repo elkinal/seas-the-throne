@@ -297,7 +297,8 @@ public class PhysicsEngine implements ContactListener {
     b.markRemoved(true);
     if (!pb.isInvincible()) {
       pb.decrementHealth();
-      pb.setKnockedBack(b.getPosition(), b.getKnockbackForce());
+      pb.setInvincible(pb.getHitIFrames());
+      pb.setKnockedBack(b.getPosition(), b.getKnockbackForce(), 7);
     }
   }
 
@@ -313,7 +314,8 @@ public class PhysicsEngine implements ContactListener {
 
     if (!pb.isInvincible() && !b.isDead()) {
       pb.decrementHealth();
-      pb.setKnockedBack(b.getPosition(), b.getBodyKnockbackForce());
+      pb.setInvincible(pb.getHitIFrames());
+      pb.setKnockedBack(b.getPosition(), b.getBodyKnockbackForce(), 7);
       playerBossCollision = Optional.empty();
     } else {
       if (playerBossCollision.isEmpty() && pb.getHealth() > 0) {
@@ -326,8 +328,7 @@ public class PhysicsEngine implements ContactListener {
   public void handleCollision(PlayerSpearModel ps, BossModel b) {
     if(!b.isDead()){
       b.decrementHealth(ps.getDamage());
-      ps.getMainBody().setKnockbackTime(15);
-      ps.getMainBody().setKnockedBack(b.getPosition(), b.getSpearKnockbackForce());
+      ps.getMainBody().setKnockedBack(b.getPosition(), b.getSpearKnockbackForce(), 15);
 
       // Disable spear collision again so it doesn't double count
       ps.markInactive();

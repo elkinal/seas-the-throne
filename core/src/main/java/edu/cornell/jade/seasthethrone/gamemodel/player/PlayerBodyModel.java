@@ -12,11 +12,11 @@ public class PlayerBodyModel extends CircleModel {
   /** Radius of the player */
   private static float PLAYER_RADIUS = 0.65f;
 
+  /** Number of iFrames of the player on hit */
+  private static int HIT_IFRAMES = 70;
+
   /** Number of health points the player has */
   private int health;
-
-  /** The number of frames an iframe lasts */
-  private int iframeLimit;
 
   /** Frame counter for iframes */
   private int iframeCounter;
@@ -38,16 +38,14 @@ public class PlayerBodyModel extends CircleModel {
     super(x, y, PLAYER_RADIUS);
     health = 5;
     iframeCounter = 0;
-    iframeLimit = 70;
-    knockbackTime = iframeLimit / 10;
+    knockbackTime = 0;
     justKnocked = false;
   }
 
 
-  /** Decreases the hitpoints of the player by 1. Also sets the player to invincible. */
+  /** Decreases the hitpoints of the player by 1. */
   public void decrementHealth() {
     health -= 1;
-    setInvincible();
   }
 
   /** Number of current health points of the player */
@@ -56,6 +54,8 @@ public class PlayerBodyModel extends CircleModel {
   }
 
   public void setHealth(int health) {this.health = health;}
+
+  public int getHitIFrames(){ return HIT_IFRAMES; }
 
   /** Returns if the player is currently invincible */
   public boolean isInvincible() {
@@ -84,20 +84,22 @@ public class PlayerBodyModel extends CircleModel {
     return knockbackForce;
   }
 
-  public void setKnockedBack(Vector2 b2pos, float force) {
+  /** Set the player knocked back
+   *
+   * @param b2pos   The vector of the knockback
+   * @param force   The force of knockback
+   * @param time    The amount of time the knockback is applied
+   */
+  public void setKnockedBack(Vector2 b2pos, float force, int time) {
     this.justKnocked = true;
     this.knockingBodyPos = b2pos;
     this.knockbackForce = force;
+    this.knockbackTime = time;
   }
 
-  /** Sets the player invincible according to the iframe limit */
-  public void setInvincible() {
-    iframeCounter = iframeLimit;
-    knockbackTime = iframeLimit / 10;
-  }
-
-  public void setKnockbackTime(int time) {
-    knockbackTime = time;
+  /** Sets the player invincible for the set period of time */
+  public void setInvincible(int time) {
+    iframeCounter = time;
   }
 
   @Override

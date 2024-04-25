@@ -8,7 +8,7 @@ import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 
 public final class FixedStreamClamController extends ClamController {
   /** Bullet shot period */
-  private static final int PERIOD = 20;
+  private static final int PERIOD = 10;
 
   public FixedStreamClamController(float angle, BossModel boss, PlayerModel player, BulletModel.Builder builder,
       PhysicsEngine physicsEngine) {
