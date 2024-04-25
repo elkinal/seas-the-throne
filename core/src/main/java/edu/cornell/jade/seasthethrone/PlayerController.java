@@ -251,6 +251,8 @@ public class PlayerController implements Controllable {
     return player.getHealth();
   }
 
+  public void setHealth(int hp) {player.setHealth(hp);}
+
   public int getAmmo() {
     return player.getSpearModel().getNumSpeared();
   }

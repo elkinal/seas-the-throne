@@ -423,6 +423,7 @@ public class GameplayController implements Screen {
       if (BuildConfig.DEBUG) {
         System.out.println("hasCheckpoint " + physicsEngine.getCheckpointID());
       }
+      playerController.setHealth(5);
       stateController.updateState(level.name, playerController, bossControllers);
       stateController.setCheckpoint(physicsEngine.checkpointID);
     }
