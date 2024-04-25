@@ -418,7 +418,7 @@ public class Level {
       float y = Float.parseFloat((String) portWrapper.get("y"));
       float width = Float.parseFloat((String) portWrapper.get("width"));
       float height = Float.parseFloat((String) portWrapper.get("height"));
-      Vector2 pos = tiledToWorldCoords(new Vector2(x + width / 2f, y));
+      Vector2 pos = tiledToWorldCoords(new Vector2(x + width / 2f, y + height/2f));
       Vector2 dims = (new Vector2(width * WORLD_SCALE, height * WORLD_SCALE));
 
       LevelObject portal;
