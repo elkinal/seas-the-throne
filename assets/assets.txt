@@ -34,7 +34,7 @@ legacy/spritebox_up.png
 legacy/test1.json
 levels/boss-room-tileset.png
 levels/boss-room-tileset.tsx
-levels/gate.png
+levels/horizontal_gate.png
 levels/hub_world.json
 levels/kelpdark_filmstrip2.png
 levels/kelplight_filmstrip2.png
@@ -51,6 +51,7 @@ levels/tablet_room.png
 levels/tablet_room_1.json
 levels/tablet_room_2.json
 levels/test1.tiled-project
+levels/vertical_gate.png
 libgdx.png
 loading/background.png
 loading.json
