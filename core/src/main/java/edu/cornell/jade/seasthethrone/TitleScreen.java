@@ -115,7 +115,7 @@ public class TitleScreen implements Screen, Controllable {
       if (selection == s) {
         canvas.drawTextCentered(
                 s.optionName,
-                textFont, y_offset-5,
+                textFont, y_offset-6,
                 Color.GRAY);
       }
 
