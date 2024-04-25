@@ -1,5 +1,6 @@
 package edu.cornell.jade.seasthethrone;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.*;
 import edu.cornell.jade.seasthethrone.BuildConfig;
 import edu.cornell.jade.seasthethrone.PlayerController;
@@ -32,6 +33,9 @@ public class StateController {
   /** The ID of the player's most recent checkpoint */
   private int checkpoint;
 
+  /** Where to respawn the player when they die or restart */
+  private Vector2 respawnLoc;
+
   /** The index of the current save file */
   private int saveIndex;
 
@@ -46,6 +50,7 @@ public class StateController {
     // Update player state
     this.playerAmmo = player.getAmmo();
     this.playerHealth = player.getHealth();
+    this.respawnLoc = player.getLocation();
 
     // Update level state in stored levels
     if (storedLevels.containsKey(levelName)) {
@@ -122,6 +127,10 @@ public class StateController {
   public boolean hasLevel(String name) {
     return storedLevels.containsKey(name);
   }
+
+  public void setRespawnLoc(Vector2 respawnLoc) {this.respawnLoc = respawnLoc;}
+
+  public Vector2 getRespawnLoc() {return respawnLoc;}
 
   /** Returns the specified level */
   public LevelState getLevel(String name) {

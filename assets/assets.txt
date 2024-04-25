@@ -44,6 +44,7 @@ levels/shallowbiomemap2.png
 levels/shallowbiomemap3.png
 levels/shallowmap1.png
 levels/shallow_map.json
+levels/shallow_map.tmj
 levels/shallow_map_full.tmx
 levels/tablet_room.json
 levels/tablet_room.png

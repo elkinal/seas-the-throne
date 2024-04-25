@@ -341,7 +341,7 @@ public class GameplayController implements Screen {
     pauseController = new PauseController(renderEngine, physicsEngine, playerController);
 
     // Load Save State
-      stateController.loadState("saves/save1.json");
+    stateController.loadState("saves/save1.json");
 
     if (BuildConfig.DEBUG) 
       System.out.println("post setup ammo: " + playerController.getAmmo());
@@ -431,6 +431,7 @@ public class GameplayController implements Screen {
         System.out.println("hasTarget " + physicsEngine.getTarget());
       }
       changeLevel();
+      stateController.setRespawnLoc(null);
     }
 
     // Reset target so player doesn't teleport again on next frame
@@ -468,11 +469,8 @@ public class GameplayController implements Screen {
     }
 
     if (restart) {
-      listener.exitScreen(this, GDXRoot.EXIT_SWAP);
-      this.renderEngine.clear();
-      bossControllers.clear();
       setupGameplay();
-      transferState(stateController.getLevel(level.name));
+      respawn();
       restart = false;
     }
 
@@ -481,6 +479,7 @@ public class GameplayController implements Screen {
     if (gameState == GameState.OVER || gameState == GameState.WIN) {
       if (inputController.didReset()) {
         setupGameplay();
+        respawn();
         pauseController.continueGame();
       } else {
         renderEngine.drawGameState(gameState);
@@ -514,6 +513,14 @@ public class GameplayController implements Screen {
         int storedHp = newState.getBossHps().get(i);
         bossControllers.get(i).transferState(storedHp);
       }
+    }
+  }
+
+  private void respawn() {
+    try {
+      playerController.setPlayerLocation(stateController.getRespawnLoc());
+    } catch (NullPointerException e) {
+      playerController.setPlayerLocation(level.getPlayerLoc());
     }
   }
 
