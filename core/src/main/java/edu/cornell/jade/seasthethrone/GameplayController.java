@@ -289,6 +289,7 @@ public class GameplayController implements Screen {
               .setRoomId(bossContainer.roomId);
       BossModel boss = bossBuilder.build();
       BossController bossController = bossBuilder.buildController(boss, player, fishBulletBuilder, physicsEngine);
+      System.out.println(bossController.getClass());
       renderEngine.addRenderable(boss);
       physicsEngine.addObject(boss);
       bossControllers.add(bossController);

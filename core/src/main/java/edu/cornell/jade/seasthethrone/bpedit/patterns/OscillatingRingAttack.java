@@ -10,10 +10,10 @@ import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 /** a ring pattern flowing in oscillating directions */
 public final class OscillatingRingAttack extends AttackPattern {
 
-  public static int DELAY = 10;
+  public static int DELAY = 15;
   public static int OSCILLATION_DELAY = 30;
-  public static int PAUSE_TIME = 10;
-  public static int SLEEP_TIME = 60;
+  public static int PAUSE_TIME = 20;
+  public static int SLEEP_TIME = 80;
   public static int DUPS = 11;
   public static float ROTATION_STEP = 0.3f;
 
