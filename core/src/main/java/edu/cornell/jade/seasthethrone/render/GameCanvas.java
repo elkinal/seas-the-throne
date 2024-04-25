@@ -343,6 +343,14 @@ public class GameCanvas {
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
   }
 
+  /** Clear the screen so we can start a new animation frame */
+  public void clear(Color color) {
+    // Clear the screen
+    //    Gdx.gl.glClearColor(0.39f, 0.58f, 0.93f, 1.0f); // Homage to the XNA years
+    Gdx.gl.glClearColor(color.r, color.b, color.g, color.a);
+    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+  }
+
   /**
    * Start a standard drawing sequence.
    *
@@ -1066,10 +1074,10 @@ public class GameCanvas {
       return;
     }
 
+    font.setColor(tint);
     GlyphLayout layout = new GlyphLayout(font, text);
     float x = (getWidth() - layout.width) / 2.0f;
     float y = (getHeight() + layout.height) / 2.0f;
-    font.setColor(tint);
     font.draw(spriteBatch, layout, x, y + offset);
   }
 

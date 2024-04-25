@@ -15,6 +15,8 @@ import edu.cornell.jade.seasthethrone.render.GameCanvas;
 import edu.cornell.jade.seasthethrone.ui.PauseMenu;
 import edu.cornell.jade.seasthethrone.util.ScreenListener;
 
+import javax.swing.text.View;
+
 public class TitleScreen implements Screen, Controllable {
 
   /** Internal assets for this title screen */
@@ -28,6 +30,9 @@ public class TitleScreen implements Screen, Controllable {
 
   /** Background texture for start-up */
   private Texture background;
+
+  /** Logo texture */
+  private Texture logo;
 
   private TitleSelection selection = TitleSelection.PLAY;
 
@@ -70,11 +75,13 @@ public class TitleScreen implements Screen, Controllable {
     internal.finishLoading();
 
     background = internal.getEntry("title:background", Texture.class);
+    logo = internal.getEntry("title:logo", Texture.class);
     textFont = internal.getEntry("loading:alagard", BitmapFont.class);
 
     // Calculating spacings between menu options
     GlyphLayout layout = new GlyphLayout(textFont, "Sample");
     textSpacingY = layout.height + 25;
+    canvas.resize();
   }
 
   /**
@@ -86,11 +93,13 @@ public class TitleScreen implements Screen, Controllable {
     this.listener = listener;
   }
 
-  public void update() {}
+  public void update() {
+    canvas.resize();
+  }
 
   /** Switches to a lower menu item */
   public void cycleDown() {
-    if (selection.optionValue < MENU_SIZE-1) {
+    if (selection.optionValue < MENU_SIZE - 1) {
       selection = selection.cycleDown();
     }
   }
@@ -101,28 +110,33 @@ public class TitleScreen implements Screen, Controllable {
   }
 
   public void draw() {
+    canvas.clear(Color.BLACK);
     canvas.begin();
-    canvas.draw(background, Color.WHITE, 0, 0, canvas.getWidth(), canvas.getHeight());
+    //    canvas.getSpriteBatch().setProjectionMatrix(canvas.getCamera().combined);
+    float ratio = (float) logo.getHeight()/logo.getWidth();
+    float width = canvas.getWidth() / 2f;
+    float height = ratio*width;
+    canvas.draw(
+        logo,
+        Color.WHITE,
+        (canvas.getWidth() - width) / 2f,
+        canvas.getHeight() - 1.1f*height,
+        width,
+        height);
     drawMenu();
     canvas.end();
   }
 
   private void drawMenu() {
-    float y_offset = -150f;
+    float y_offset = -250f;
     for (TitleSelection s : TitleSelection.values()) {
+      canvas.drawTextCentered(s.optionName, textFont, y_offset, Color.WHITE);
+
       if (selection == s) {
-        canvas.drawTextCentered(
-                s.optionName,
-                textFont, y_offset-6,
-                Color.GRAY);
+        canvas.drawTextCentered(s.optionName, textFont, y_offset + 6, Color.GOLDENROD);
       }
 
-      canvas.drawTextCentered(
-              s.optionName,
-              textFont, y_offset,
-              Color.BLACK);
-
-      y_offset -= 120f;
+      y_offset -= 150f;
     }
   }
 
