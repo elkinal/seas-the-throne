@@ -262,15 +262,16 @@ public class GameplayController implements Screen {
       // this number is in degrees
       String assetName = name.contains("jelly") 
         ? "jelly" 
-        : name.contains("clam")
+        : name.contains("clam") || name.contains("shark")
           ? "jelly"
           : name;
+
       // We will use jelly assets right now while clam assets don't exist
       int health = name.contains("jelly") 
         ? 50 
         : name.contains("clam")
           ? 10
-          : 100;
+          : 200;
       var bossBuilder =
           BossModel.Builder.newInstance()
               .setType(name)
@@ -279,7 +280,7 @@ public class GameplayController implements Screen {
               .setY(bossContainer.y)
               .setHealth(health)
               //              .setHitbox(new float[]{-3, -3, -3, 3, 3, 3, 3, -3})
-              .setHealthThresholds(new int[] {70, 30})
+              .setHealthThresholds(new int[] {150, 100, 50})
               .setFalloverAnimation(new Texture("bosses/" + assetName + "/fallover.png"))
               .setShootAnimation(new Texture("bosses/" + assetName + "/shoot.png"))
               .setGetHitAnimation(new Texture("bosses/" + assetName + "/hurt.png"))
@@ -289,6 +290,7 @@ public class GameplayController implements Screen {
               .setRoomId(bossContainer.roomId);
       BossModel boss = bossBuilder.build();
       BossController bossController = bossBuilder.buildController(boss, player, fishBulletBuilder, physicsEngine);
+      System.out.println(bossController.getClass());
       renderEngine.addRenderable(boss);
       physicsEngine.addObject(boss);
       bossControllers.add(bossController);

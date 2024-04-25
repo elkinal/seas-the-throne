@@ -17,7 +17,7 @@ public class CollisionMask {
   /**
    * Category bitmask for wall (also default is 0x0001)
    */
-  private static final short CATEGORY_OBSTACLE = 0x0001;
+  private static final short CATEGORY_WALL = 0x0001;
 
   /**
    * Category bitmask for player
@@ -44,6 +44,11 @@ public class CollisionMask {
    */
   private static final short CATEGORY_CHECKPOINT = 0x0020;
 
+  /**
+   * Category bitmask for obstacle
+   */
+  private static final short CATEGORY_OBSTACLE = 0x0040;
+
 
   /**
    * Set the category and mask bits for a given model
@@ -57,17 +62,17 @@ public class CollisionMask {
     // If player shadow
     else if (model instanceof PlayerShadowModel) {
       model.setCategoryBits(CATEGORY_PLAYER_SHADOW);
-      model.setMaskBits(CATEGORY_OBSTACLE);
+      model.setMaskBits((short) (CATEGORY_WALL | CATEGORY_OBSTACLE | CATEGORY_CHECKPOINT));
     }
     // If player bullet
     else if (model instanceof PlayerBulletModel) {
       model.setCategoryBits(CATEGORY_PLAYER);
-      model.setMaskBits((short) (CATEGORY_BOSS ));
+      model.setMaskBits((short) (CATEGORY_BOSS | CATEGORY_OBSTACLE));
     }
     // If enemy bullet
     else if (model instanceof BulletModel) {
       model.setCategoryBits(CATEGORY_ENEMY_BULLET);
-      model.setMaskBits((short) (CATEGORY_PLAYER));
+      model.setMaskBits((short) (CATEGORY_PLAYER | CATEGORY_OBSTACLE));
     }
     // If boss
     else if (model instanceof BossModel) {
@@ -76,13 +81,18 @@ public class CollisionMask {
     }
     // If portal
     else if (model instanceof PortalModel) {
-      model.setCategoryBits(CATEGORY_OBSTACLE);
+      model.setCategoryBits(CATEGORY_WALL);
       model.setMaskBits(CATEGORY_PLAYER_SHADOW);
     }
-    // If checkping
+    // If checkpoint
     else if (model instanceof CheckpointModel) {
       model.setCategoryBits(CATEGORY_CHECKPOINT);
       model.setMaskBits(CATEGORY_PLAYER_SHADOW);
+    }
+    // If obstacle
+    else if (model instanceof ObstacleModel) {
+      model.setCategoryBits(CATEGORY_OBSTACLE);
+      model.setMaskBits((short) (CATEGORY_PLAYER_SHADOW | CATEGORY_PLAYER | CATEGORY_ENEMY_BULLET));
     }
   }
 }

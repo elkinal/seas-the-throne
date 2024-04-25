@@ -5,6 +5,20 @@ import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 
 abstract class ClamController implements BossController {
+
+  /*
+   * -----------------------------------
+   * CONSTANTS
+   * -----------------------------------
+   */
+  /** The distance the player must be from the boss before it begins attacking. */
+  private static float AGRO_DISTANCE = 50f;
+
+  /*
+   * -------------------------------
+   * STATE
+   * -------------------------------
+   */
   /** Attack pattern of clam */
   private final AttackPattern attack;
 
@@ -29,7 +43,9 @@ abstract class ClamController implements BossController {
 
   @Override
   public void update(float delta) {
-    attack.update(player.getX(), player.getY());
+    if (boss.getPosition().dst(player.getPosition()) < AGRO_DISTANCE) {
+      attack.update(player.getX(), player.getY());
+    }
   }
 
   @Override

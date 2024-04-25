@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 
+import edu.cornell.jade.seasthethrone.ai.*;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import edu.cornell.jade.seasthethrone.gamemodel.EnemyModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
@@ -12,12 +13,6 @@ import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
-import edu.cornell.jade.seasthethrone.ai.BossController;
-import edu.cornell.jade.seasthethrone.ai.CrabBossController;
-import edu.cornell.jade.seasthethrone.ai.FixedStreamClamController;
-import edu.cornell.jade.seasthethrone.ai.OscillatingRingClamController;
-import edu.cornell.jade.seasthethrone.ai.AimedSingleBulletJellyBossController;
-import edu.cornell.jade.seasthethrone.ai.AimedArcJellyBossController;
 
 public abstract class BossModel extends EnemyModel implements Renderable {
 
@@ -439,6 +434,8 @@ public abstract class BossModel extends EnemyModel implements Renderable {
         PhysicsEngine physicsEngine) {
       if (type.equals("crab")) {
         return new CrabBossController((CrabBossModel) model, player, bulletBuilder, physicsEngine);
+      } else if (type.equals("shark")) {
+        return new SharkBossController(model, player, bulletBuilder, physicsEngine);
       } else if (type.equals("aimed_jelly")) {
         return new AimedSingleBulletJellyBossController((JellyBossModel) model, player, bulletBuilder, physicsEngine);
       } else if (type.equals("arc_jelly")) {
