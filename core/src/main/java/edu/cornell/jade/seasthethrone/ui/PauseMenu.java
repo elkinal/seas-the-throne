@@ -50,11 +50,11 @@ public class PauseMenu implements Renderable {
         }
 
         public MenuSelection cycleUp() {
-            return values()[(optionValue > 0 ? optionValue - 1 : optionValue)];
+            return values()[(optionValue > 0 ? optionValue - 1 : values().length-1)];
         }
 
         public MenuSelection cycleDown() {
-            return values()[(optionValue < 3 ? optionValue + 1 : optionValue)];
+            return values()[(optionValue < 3 ? optionValue + 1 : 0)];
         }
     }
 
@@ -119,14 +119,14 @@ public class PauseMenu implements Renderable {
 
     /** Switches to a lower menu item */
     public void cycleDown() {
-        if (paused && selection.optionValue < 3) {
+        if (paused) {
             selection = selection.cycleDown();
         }
     }
 
     /** Switches to a higher menu item */
     public void cycleUp() {
-        if (paused && selection.optionValue > 0)
+        if (paused)
             selection = selection.cycleUp();
     }
 

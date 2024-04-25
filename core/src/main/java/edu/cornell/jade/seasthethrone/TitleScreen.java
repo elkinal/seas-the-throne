@@ -59,11 +59,11 @@ public class TitleScreen implements Screen, Controllable {
     }
 
     public TitleSelection cycleUp() {
-      return values()[(optionValue > 0 ? optionValue - 1 : optionValue)];
+      return values()[(optionValue > 0 ? optionValue - 1 : TitleSelection.values().length-1)];
     }
 
     public TitleSelection cycleDown() {
-      return values()[(optionValue < 3 ? optionValue + 1 : optionValue)];
+      return values()[(optionValue < 2 ? optionValue + 1 : 0)];
     }
   }
 
@@ -99,14 +99,12 @@ public class TitleScreen implements Screen, Controllable {
 
   /** Switches to a lower menu item */
   public void cycleDown() {
-    if (selection.optionValue < MENU_SIZE - 1) {
       selection = selection.cycleDown();
-    }
   }
 
   /** Switches to a higher menu item */
   public void cycleUp() {
-    if (selection.optionValue > 0) selection = selection.cycleUp();
+    selection = selection.cycleUp();
   }
 
   public void draw() {
