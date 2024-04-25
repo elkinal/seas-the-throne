@@ -40,7 +40,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   /** Flag for executing the boss */
   private boolean isExecute;
   /** Flag for the boss attack*/
-  private boolean isAttack;
+  private int attackCount;
 
   /** Array indicating polygon hitbox */
   protected float[] hitbox;
@@ -99,6 +99,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     frameDelay = builder.frameDelay;
     health = builder.health;
     deathCount = frameDelay * 16;
+    attackCount = 0;
     hitCount = 0;
     shouldUpdate = true;
     alwaysAnimate = false;
@@ -139,7 +140,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     } else if (isHit()){
       filmStrip = getHitAnimation;
     } else {
-      if (isAttack)
+      if (isAttack())
         filmStrip = attackAnimation;
       else
         filmStrip = shootAnimation;
@@ -168,6 +169,10 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     } else {
       if (frameCounter % frameDelay == 0) {
         setFrameNumber((getFrameNumber() + 1) % getFramesInAnimation());
+        if (isAttack()){
+          attackCount -= 1;
+          System.out.println(getFrameNumber());
+        }
       }
     }
     frameCounter += 1;
@@ -204,6 +209,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   public boolean isDead() {
     return health <= 0;
   }
+  public boolean isAttack() {return attackCount > 0; }
 
   /** Get remaining health points of the boss */
   public int getHealth() {
@@ -279,8 +285,10 @@ public abstract class BossModel extends EnemyModel implements Renderable {
    * Lets the boss attack
    */
   public void bossAttack(){
-    setFrameNumber(0);
-    isAttack = true;
+    if (attackCount == 0) {
+      setFrameNumber(0);
+      attackCount = frameDelay * attackAnimation.getSize();
+    }
   }
 
   @Override
@@ -379,6 +387,9 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     public Builder setFalloverAnimation(Texture texture) {
       int width = texture.getWidth();
       falloverAnimation = new FilmStrip(texture, 1, width / frameSize);
+      if (type.equals("crab")){
+        falloverAnimation = new FilmStrip(texture, 1, 16);
+      }
       ;
       return this;
     }
