@@ -2,6 +2,7 @@ package edu.cornell.jade.seasthethrone;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
+import edu.cornell.jade.seasthethrone.input.InputController;
 import edu.cornell.jade.seasthethrone.render.GameCanvas;
 import edu.cornell.jade.seasthethrone.util.ScreenListener;
 import edu.cornell.jade.seasthethrone.assets.AssetDirectory;
@@ -15,9 +16,7 @@ public class GDXRoot extends Game implements ScreenListener {
   private GameplayController controller;
   private LoadScreen loading;
   private GameCanvas canvas;
-
-  private TitleScreen title;
-
+  private MenuController menus;
   /** AssetManager to load game assets (textures, sounds, etc.) */
   AssetDirectory directory;
 
@@ -27,12 +26,14 @@ public class GDXRoot extends Game implements ScreenListener {
 
     controller = new GameplayController();
     controller.setScreenListener(this);
-    title = new TitleScreen("loading.json", canvas);
-    title.setScreenListener(this);
+
     loading = new LoadScreen("assets.json", canvas, MIN_LOAD_TIME, 1);
     loading.setScreenListener(this);
 
-    setScreen(title);
+    menus = new MenuController(canvas);
+    menus.setScreenListener(this);
+
+    setScreen(menus);
   }
 
   @Override
@@ -60,7 +61,7 @@ public class GDXRoot extends Game implements ScreenListener {
    */
   @Override
   public void exitScreen(Screen screen, int exitCode) {
-    if (screen == title && exitCode == EXIT_SWAP) {
+    if (screen instanceof TitleScreen && exitCode == EXIT_SWAP) {
       loading = new LoadScreen("assets.json", canvas, MIN_LOAD_TIME, 1);
       loading.setScreenListener(this);
       setScreen(loading);

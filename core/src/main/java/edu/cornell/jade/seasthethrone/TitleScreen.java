@@ -38,6 +38,8 @@ public class TitleScreen implements Screen, Controllable {
 
   private boolean toggle;
 
+  private static final int MENU_SIZE = 3;
+
   private int exitCode;
 
   public enum TitleSelection {
@@ -90,7 +92,7 @@ public class TitleScreen implements Screen, Controllable {
 
   /** Switches to a lower menu item */
   public void cycleDown() {
-    if (selection.optionValue < 3) {
+    if (selection.optionValue < MENU_SIZE-1) {
       selection = selection.cycleDown();
     }
   }
@@ -118,9 +120,10 @@ public class TitleScreen implements Screen, Controllable {
       }
 
       canvas.drawTextCentered(
-          s.optionName,
-          textFont, y_offset,
-          Color.BLACK);
+              s.optionName,
+              textFont, y_offset,
+              Color.BLACK);
+
       y_offset -= 120f;
     }
   }
