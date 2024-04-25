@@ -7,6 +7,10 @@
     "loading:alagard": {
       "file": "Alagard.ttf",
       "size": 100
+    },
+    "title:alagard": {
+      "file": "Alagard.ttf",
+      "size": 100
     }
   }
 }

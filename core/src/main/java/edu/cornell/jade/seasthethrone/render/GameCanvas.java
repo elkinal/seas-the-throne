@@ -1010,6 +1010,17 @@ public class GameCanvas {
     font.draw(spriteBatch, layout, x, y);
   }
 
+  public void drawText(String text, BitmapFont font, float x, float y, Color tint) {
+    if (active != DrawPass.STANDARD) {
+      Gdx.app.error(
+              "GameCanvas", "Cannot draw without active begin()", new IllegalStateException());
+      return;
+    }
+    GlyphLayout layout = new GlyphLayout(font, text);
+    font.setColor(tint);
+    font.draw(spriteBatch, layout, x, y);
+  }
+
   /**
    * Draws text on the screen.
    *
@@ -1047,6 +1058,21 @@ public class GameCanvas {
     float y = (getHeight() + layout.height) / 2.0f;
     font.draw(spriteBatch, layout, x, y + offset);
   }
+
+  public void drawTextCentered(String text, BitmapFont font, float offset, Color tint) {
+    if (active != DrawPass.STANDARD) {
+      Gdx.app.error(
+              "GameCanvas", "Cannot draw without active begin()", new IllegalStateException());
+      return;
+    }
+
+    GlyphLayout layout = new GlyphLayout(font, text);
+    float x = (getWidth() - layout.width) / 2.0f;
+    float y = (getHeight() + layout.height) / 2.0f;
+    font.setColor(tint);
+    font.draw(spriteBatch, layout, x, y + offset);
+  }
+
 
   /**
    * Start the debug drawing sequence.
