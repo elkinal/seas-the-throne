@@ -171,7 +171,6 @@ public abstract class BossModel extends EnemyModel implements Renderable {
         setFrameNumber((getFrameNumber() + 1) % getFramesInAnimation());
         if (isAttack()){
           attackCount -= 1;
-          System.out.println(getFrameNumber());
         }
       }
     }
