@@ -35,6 +35,9 @@ abstract class JellyBossController implements BossController {
   /** The distance the player must be from the boss before it begins attacking. */
   private static float AGRO_DISTANCE = 35f;
 
+  /** The minimum distance the boss must move during a movement cycle. */
+  private static float MIN_MOVE_DIST = 8f;
+
   /*
    * -------------------------------
    * STATE
@@ -198,15 +201,15 @@ abstract class JellyBossController implements BossController {
     }
   }
 
-  /** Helper function to generate new goal position & set boss velocity */
+  /** Helper function to generate new goal position & set boss velocity. * */
   private void findNewGoalPos() {
     goalPos.set(
-        rand.nextFloat(bounds.getX(), bounds.getX() + bounds.getWidth()),
-        rand.nextFloat(bounds.getY(), bounds.getY() + bounds.getHeight()));
-    while (boss.getPosition().dst(goalPos) < 8) {
+            rand.nextFloat(bounds.getX(), bounds.getX() + bounds.getWidth()),
+            rand.nextFloat(bounds.getY(), bounds.getY() + bounds.getHeight()));
+    while (boss.getPosition().dst(goalPos) < MIN_MOVE_DIST) {
       goalPos.set(
-          rand.nextFloat(bounds.getX(), bounds.getX() + bounds.getWidth()),
-          rand.nextFloat(bounds.getY(), bounds.getY() + bounds.getHeight()));
+              rand.nextFloat(bounds.getX(), bounds.getX() + bounds.getWidth()),
+              rand.nextFloat(bounds.getY(), bounds.getY() + bounds.getHeight()));
     }
     boss.setLinearVelocity(boss.getPosition().sub(goalPos).nor().scl(-5));
   }
