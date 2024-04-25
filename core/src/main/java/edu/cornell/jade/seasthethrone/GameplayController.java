@@ -262,10 +262,11 @@ public class GameplayController implements Screen {
       // this number is in degrees
       String assetName = name.contains("jelly") 
         ? "jelly" 
-        : name.contains("clam") || name.contains("shark")
-          ? "jelly"
-          : name;
-
+        : name.contains("clam")
+          ? "clam"
+          : name.contains("shark")
+            ? "jelly"
+            : name;
       // We will use jelly assets right now while clam assets don't exist
       int health = name.contains("jelly") 
         ? 50 

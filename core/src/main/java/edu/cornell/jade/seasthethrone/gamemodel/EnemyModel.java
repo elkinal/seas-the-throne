@@ -53,9 +53,11 @@ public class EnemyModel extends PolygonModel {
     // This code is terrible and I hate it with a burning passion
     enemyName = enemyName.contains("jelly") 
       ? "jelly" 
-      : enemyName.contains("clam") || enemyName.contains("shark")
-        ? "jelly"
-        : enemyName;
+      : enemyName.contains("clam")
+        ? "clam"
+        : enemyName.contains("shark")
+          ? "jelly"
+          : enemyName;
     HashMap<String, Object> bossTextures =
         (HashMap<String, Object>) JsonHandler.jsonToMap("assets.json").get("textures");
     HashMap<String, Object> specificBossTextures =

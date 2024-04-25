@@ -424,7 +424,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
       if (type.equals("crab")) {
         frameSize = 110;
       } else if (type.contains("clam")) {
-        frameSize = 45;
+        frameSize = 60;
       } else {
         frameSize = 45;
       }
@@ -435,7 +435,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
       if (type.equals("crab")) {
         return new CrabBossModel(this);
       } else if (type.contains("clam")) {
-        return new JellyBossModel(this);
+        return new ClamModel(this);
       } else {
         return new JellyBossModel(this);
       }
