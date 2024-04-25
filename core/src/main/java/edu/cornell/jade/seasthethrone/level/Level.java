@@ -372,11 +372,6 @@ public class Level {
               tempPos.x, tempPos.y, WORLD_SCALE*width, WORLD_SCALE*height
       );
 
-      String texturePath = JsonHandler.getString(gateWrapper, "name");
-      if (!texturePath.isEmpty()) {
-        thisObject.texture = new TextureRegion(new Texture(texturePath));
-      }
-
       // If this is the first object of a gateGroup, add it to the map
       if (!gateGroups.containsKey(id)) {
         gateGroups.put(id, new HashMap<>());
@@ -423,7 +418,7 @@ public class Level {
       float y = Float.parseFloat((String) portWrapper.get("y"));
       float width = Float.parseFloat((String) portWrapper.get("width"));
       float height = Float.parseFloat((String) portWrapper.get("height"));
-      Vector2 pos = tiledToWorldCoords(new Vector2(x + width / 2f, y));
+      Vector2 pos = tiledToWorldCoords(new Vector2(x + width / 2f, y + height/2f));
       Vector2 dims = (new Vector2(width * WORLD_SCALE, height * WORLD_SCALE));
 
       LevelObject portal;

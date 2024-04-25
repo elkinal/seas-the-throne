@@ -1,12 +1,15 @@
 package edu.cornell.jade.seasthethrone.ui;
 
 import com.badlogic.gdx.math.Vector2;
+import edu.cornell.jade.seasthethrone.GameplayController;
 import edu.cornell.jade.seasthethrone.input.Controllable;
 
 public class PauseMenuController implements Controllable {
 
     private PauseMenu pauseMenu;
     private boolean toggle;
+
+    private GameplayController gameplayController;
 
     public PauseMenuController(PauseMenu pauseMenu) {
         this.pauseMenu = pauseMenu;
@@ -22,6 +25,10 @@ public class PauseMenuController implements Controllable {
         return pauseMenu;
     }
 
+    public void setGameplayController(GameplayController gameplayController) {
+        this.gameplayController = gameplayController;
+    }
+
     /** Shows / hides the pause menu */
     @Override
     public void pressPause() {
@@ -30,7 +37,15 @@ public class PauseMenuController implements Controllable {
 
     /** Clicks on a pause menu item*/
     @Override
-    public void pressPrimary() { pauseMenu.clicked(); }
+    public void pressInteract() {
+            //TODO: create actions
+            switch (pauseMenu.getSelection()) {
+                case RESUME -> pauseMenu.setPaused(false);
+                case RESTART -> gameplayController.setRestart(true);
+                case HELP -> System.out.println("Help");
+                case QUIT -> System.exit(0);
+            }
+    }
 
     /** Selects between menu options */
     @Override

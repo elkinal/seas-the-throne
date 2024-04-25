@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.*;
 
 import edu.cornell.jade.seasthethrone.ai.BossController;
+import edu.cornell.jade.seasthethrone.assets.AssetDirectory;
 import edu.cornell.jade.seasthethrone.gamemodel.CheckpointModel;
 import edu.cornell.jade.seasthethrone.gamemodel.PortalModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
@@ -109,6 +110,9 @@ public class GameplayController implements Screen {
   /** If the screen and world should be updated */
   protected boolean active;
 
+  /** If the game has been flagged to restart at last checkpoint */
+  private boolean restart;
+
   /** Temporary cache to sort physics renderables */
   private final Array<Model> objectCache = new Array<>();
 
@@ -130,11 +134,6 @@ public class GameplayController implements Screen {
   /** Listener that will update the player mode when we are done */
   private ScreenListener listener;
 
-  /** Whether the game is done loading */
-  private boolean loading;
-
-  private int loadCount;
-
   protected GameplayController() {
     gameState = GameState.PLAY;
 
@@ -149,8 +148,7 @@ public class GameplayController implements Screen {
     bounds = new Rectangle(0, 0, worldWidth, worldHeight);
 
     active = false;
-    loading = true;
-    loadCount = 0;
+    restart = false;
 
     this.stateController = new StateController();
     this.bossControllers = new Array<>();
@@ -168,8 +166,6 @@ public class GameplayController implements Screen {
   public void setupGameplay() {
     dispose();
     gameState = GameState.PLAY;
-    loading = true;
-    loadCount = 0;
 
     World world = new World(new Vector2(0, 0), false);
 
@@ -347,11 +343,7 @@ public class GameplayController implements Screen {
     pauseController = new PauseController(renderEngine, physicsEngine, playerController);
 
     // Load Save State
-    try {
-      stateController.loadState("saves/save1.json");
-    } catch (FileNotFoundException e) {
-      System.out.println("Save not found");
-    }
+    stateController.loadState("saves/save1.json");
 
     if (BuildConfig.DEBUG) 
       System.out.println("post setup ammo: " + playerController.getAmmo());
@@ -359,6 +351,7 @@ public class GameplayController implements Screen {
     // Load UI
     PauseMenu pauseMenu = new PauseMenu(viewport);
     PauseMenuController pauseMenuController = new PauseMenuController(pauseMenu);
+    pauseMenuController.setGameplayController(this);
     inputController.add(pauseMenuController);
 
     uiController = new UIController(
@@ -380,11 +373,8 @@ public class GameplayController implements Screen {
   }
 
   public void draw(float delta) {
-    // Testing out draw load screen on frame 1
-    if (!loading) {
       renderEngine.drawRenderables();
       uiController.drawUI();
-    }
   }
 
   public void update(float delta) {
@@ -433,6 +423,7 @@ public class GameplayController implements Screen {
       if (BuildConfig.DEBUG) {
         System.out.println("hasCheckpoint " + physicsEngine.getCheckpointID());
       }
+      playerController.setHealth(5);
       stateController.updateState(level.name, playerController, bossControllers);
       stateController.setCheckpoint(physicsEngine.checkpointID);
     }
@@ -443,6 +434,7 @@ public class GameplayController implements Screen {
         System.out.println("hasTarget " + physicsEngine.getTarget());
       }
       changeLevel();
+      stateController.setRespawnLoc(null);
     }
 
     // Reset target so player doesn't teleport again on next frame
@@ -479,18 +471,23 @@ public class GameplayController implements Screen {
           physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
     }
 
+    if (restart) {
+      setupGameplay();
+      respawn();
+      restart = false;
+    }
+
     // Draw reset and debug screen for wins and losses
 
     if (gameState == GameState.OVER || gameState == GameState.WIN) {
       if (inputController.didReset()) {
         setupGameplay();
+        respawn();
         pauseController.continueGame();
       } else {
         renderEngine.drawGameState(gameState);
       }
     }
-    loadCount += 1;
-    loading = loadCount < 5;
   }
 
   /** Changes the current level to the one specified by the physics engine target. */
@@ -522,6 +519,26 @@ public class GameplayController implements Screen {
     }
   }
 
+  private void respawn() {
+    try {
+      playerController.setPlayerLocation(stateController.getRespawnLoc());
+    } catch (NullPointerException e) {
+      playerController.setPlayerLocation(level.getPlayerLoc());
+    }
+  }
+
+  /**
+   * Gather the assets for this controller.
+   *
+   * This method extracts the asset variables from the given asset directory. It
+   * should only be called after the asset directory is completed.
+   *
+   * @param directory	Reference to global asset manager.
+   */
+  public void gatherAssets(AssetDirectory directory) {
+
+  }
+
   public void resize(int width, int height) {
     viewport.update(width, height);
     uiViewport.update(width, height, true);
@@ -551,6 +568,10 @@ public class GameplayController implements Screen {
    */
   public void setScreenListener(ScreenListener listener) {
     this.listener = listener;
+  }
+
+  public void setRestart(boolean restart) {
+    this.restart = restart;
   }
 
   public void pause() {
