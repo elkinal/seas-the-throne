@@ -7,8 +7,6 @@ import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 
-import java.util.Random;
-
 /** An attack spawning random stream attack at a given angle */
 public final class RandomStreamAttack extends AttackPattern {
   /** the spawner actually creating the stream */
@@ -16,15 +14,6 @@ public final class RandomStreamAttack extends AttackPattern {
 
   /** the model of the attacking boss */
   private final BossModel model;
-
-  /** The random number generator */
-  private final Random rand;
-
-  /** the central angle of the attack */
-  private final float angle;
-
-  /** the full angle the spawner can spray in */
-  private final float angleRange;
 
   /**
    * Constructs the attack
@@ -39,20 +28,14 @@ public final class RandomStreamAttack extends AttackPattern {
    */
   public RandomStreamAttack(float angle, float angleRange, int period, BossModel model, PlayerModel player,
                                 BulletModel.Builder builder, PhysicsEngine physicsEngine) {
-    this.spawner = SpawnerFactory.constructRepeatingLeftFacingStream(period, builder, physicsEngine);
+    this.spawner = SpawnerFactory.constructRepeatingRandomStream(angleRange, period, builder, physicsEngine);
     this.model = model;
-    this.rand = new Random();
-
-    this.angle = angle;
-    this.angleRange = angleRange;
+    this.spawner.rotates(angle);
 
     this.addSpawner(spawner);
   }
 
   @Override
-  protected void animateStep() {
-    this.spawner.moveSpawner(model.getX(), model.getY());
-    this.spawner.setAngle(rand.nextFloat(angle-angleRange/2, angle+angleRange/2));
-  }
+  protected void animateStep() { this.spawner.moveSpawner(model.getX(), model.getY()); }
 }
 
