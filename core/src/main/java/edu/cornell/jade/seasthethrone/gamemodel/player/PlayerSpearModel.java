@@ -18,7 +18,7 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
   private static float SPEAR_WIDTH = 1.5f;
 
   /** Length of spear */
-  private static float SPEAR_LENGTH = 1.2f;
+  private static float SPEAR_LENGTH = 1.5f;
 
   /** Offset length of the spear center from the body center (when extended) */
   private static float SPEAR_OFFSET = 2.0f;
