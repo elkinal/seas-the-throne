@@ -10,12 +10,12 @@ public class JellyBossModel extends BossModel{
   @Override
   void setHitbox() {
     hitbox = new float[]{
-            -2,     1.2f,
-            -0.6f,  2.5f,
-            1,      2.5f,
-            2.4f,   1.2f,
-            2.4f,   -2.5f,
-            -2,     -2.5f
+            -1.7f,  1.2f,
+            -0.6f,  2.2f,
+            1,      2.2f,
+            2.1f,   1.2f,
+            2.4f,   -2.3f,
+            -2,     -2.3f
     };
   }
 }
