@@ -63,6 +63,7 @@ public class GameplayController implements Screen {
   /** Sub-controller for handling updating physics engine based on input */
   PlayerController playerController;
 
+  /** The array of all bosses in a level */
   Array<BossController> bossControllers;
 
   /** Sub-controller for handling pausing the game */
@@ -243,7 +244,7 @@ public class GameplayController implements Screen {
       LevelObject bossContainer = level.getBosses().get(i);
       String name = bossContainer.bossName;
 
-      // FIXME: this literly only works because we are dumb it's stupid hack but 
+      // FIXME: this literly only works because we are dumb it's stupid hack but
       // whatever, should work, no less cursed than what we already have actually
       // despise what I'm about to write, no one do this
       //
@@ -251,23 +252,19 @@ public class GameplayController implements Screen {
       // a more systematic solution would require more overhall to this structure
       // which I would do if this were not a project with a due date in 2 weeks
 
-      // jellys are identified by containing the string jelly. They have ad-hoc names determining patterns.
+      // jellys are identified by containing the string jelly. They have ad-hoc names determining
+      // patterns.
       // See the buildController method for the case statement defining the behavior.
       //
       // clams are similar, but they have a number suffixed determining their angle
       // this number is in degrees
-      String assetName = name.contains("jelly") 
-        ? "jelly" 
-        : name.contains("clam") || name.contains("shark")
-          ? "jelly"
-          : name;
+      String assetName =
+          name.contains("jelly")
+              ? "jelly"
+              : name.contains("clam") || name.contains("shark") ? "jelly" : name;
 
       // We will use jelly assets right now while clam assets don't exist
-      int health = name.contains("jelly") 
-        ? 50 
-        : name.contains("clam")
-          ? 10
-          : 200;
+      int health = name.contains("jelly") ? 50 : name.contains("clam") ? 10 : 200;
       var bossBuilder =
           BossModel.Builder.newInstance()
               .setType(name)
@@ -280,12 +277,13 @@ public class GameplayController implements Screen {
               .setFalloverAnimation(new Texture("bosses/" + assetName + "/fallover.png"))
               .setShootAnimation(new Texture("bosses/" + assetName + "/shoot.png"))
               .setGetHitAnimation(new Texture("bosses/" + assetName + "/hurt.png"))
-              .setDeathAnimation(new Texture("bosses/" + assetName+ "/death.png"))
+              .setDeathAnimation(new Texture("bosses/" + assetName + "/death.png"))
               .setAttackAnimation(new Texture("bosses/" + assetName + "/attack.png"))
               .setFrameDelay(12)
               .setRoomId(bossContainer.roomId);
       BossModel boss = bossBuilder.build();
-      BossController bossController = bossBuilder.buildController(boss, player, fishBulletBuilder, physicsEngine);
+      BossController bossController =
+          bossBuilder.buildController(boss, player, fishBulletBuilder, physicsEngine);
       System.out.println(bossController.getClass());
       renderEngine.addRenderable(boss);
       physicsEngine.addObject(boss);
@@ -345,8 +343,7 @@ public class GameplayController implements Screen {
     // Load Save State
     stateController.loadState("saves/save1.json");
 
-    if (BuildConfig.DEBUG) 
-      System.out.println("post setup ammo: " + playerController.getAmmo());
+    if (BuildConfig.DEBUG) System.out.println("post setup ammo: " + playerController.getAmmo());
 
     // Load UI
     PauseMenu pauseMenu = new PauseMenu(viewport);
@@ -354,13 +351,13 @@ public class GameplayController implements Screen {
     pauseMenuController.setGameplayController(this);
     inputController.add(pauseMenuController);
 
-    uiController = new UIController(
+    uiController =
+        new UIController(
             playerController,
             pauseMenuController,
             renderEngine,
             renderEngine.getGameCanvas(),
             uiViewport);
-
     if (BuildConfig.DEBUG) {
       System.out.println("num objects: " + physicsEngine.getObjects().size());
     }
@@ -373,8 +370,8 @@ public class GameplayController implements Screen {
   }
 
   public void draw(float delta) {
-      renderEngine.drawRenderables();
-      uiController.drawUI();
+    renderEngine.drawRenderables();
+    uiController.drawUI();
   }
 
   public void update(float delta) {
@@ -383,11 +380,11 @@ public class GameplayController implements Screen {
     inputController.update();
     portalController.update(stateController);
 
-
     // Update entity controllers and camera if the game is not over
-    if (gameState != GameState.OVER && !uiController.getPauseMenuController().getPauseMenu().isPaused()) {
+    if (gameState != GameState.OVER
+        && !uiController.getPauseMenuController().getPauseMenu().isPaused()) {
       playerController.update();
-      uiController.update();
+      uiController.update(bossControllers);
 
       for (BossController bc : bossControllers) {
         if (!bc.isDead()) {
@@ -406,7 +403,7 @@ public class GameplayController implements Screen {
     // Check if the player is dead, end the game
     if (playerController.isDead()) {
       pauseController.pauseGame();
-      uiController.update();
+      uiController.update(bossControllers);
       gameState = GameState.OVER;
     }
 
@@ -530,14 +527,12 @@ public class GameplayController implements Screen {
   /**
    * Gather the assets for this controller.
    *
-   * This method extracts the asset variables from the given asset directory. It
-   * should only be called after the asset directory is completed.
+   * <p>This method extracts the asset variables from the given asset directory. It should only be
+   * called after the asset directory is completed.
    *
-   * @param directory	Reference to global asset manager.
+   * @param directory Reference to global asset manager.
    */
-  public void gatherAssets(AssetDirectory directory) {
-
-  }
+  public void gatherAssets(AssetDirectory directory) {}
 
   public void resize(int width, int height) {
     viewport.update(width, height);

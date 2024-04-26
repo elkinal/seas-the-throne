@@ -89,6 +89,8 @@ saves/save1.json
 title/background.png
 title/logo.png
 title/play_button.png
+ui/boss_hp_empty.png
+ui/boss_hp_full.png
 ui/darkammo_1_5.png
 ui/darkammo_2_5.png
 ui/darkammo_3_5.png
@@ -108,3 +110,4 @@ ui/health_v3_3.png
 ui/health_v3_4.png
 ui/health_v3_5.png
 ui/pausescreen.png
+watergradient.png

@@ -111,6 +111,11 @@ public class CrabBossController implements BossController {
     return boss.isDead();
   }
 
+  @Override
+  public boolean isBoss() {
+    return true;
+  }
+
   /** Loads in the boss's previous state */
   public void transferState(int storedHp) {
     this.boss.setHealth(storedHp);
