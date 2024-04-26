@@ -1,6 +1,8 @@
 Alagard.ttf
 assets.json
+bosses/clam/attack.png
 bosses/clam/death.png
+bosses/clam/fallover.png
 bosses/clam/hurt.png
 bosses/clam/idle.png
 bosses/clam/shoot.png

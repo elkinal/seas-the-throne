@@ -26,6 +26,8 @@ public class PlayerModel extends ComplexModel implements Renderable {
   private int framesInAnimationShoot;
   private int framesInAnimationDeath;
 
+  /** Previous frame health */
+  private int prevHealth;
   /** Player texture when facing up */
   public Texture playerTextureUp;
 
@@ -181,6 +183,8 @@ public class PlayerModel extends ComplexModel implements Renderable {
 
   /** Death animation countdown */
   private int deathCount;
+  /** Get hit animation countdown */
+  private int hitCount;
 
   /** Whether the player should continue being animated. */
   private boolean shouldUpdate;
@@ -242,6 +246,7 @@ public class PlayerModel extends ComplexModel implements Renderable {
 
     shootCooldownLimit = builder.shootCooldownLimit;
     shootCounter = 0;
+    hitCount = 0;
     isShooting = false;
     shootTime = 0;
     deathCount = framesInAnimationDeath * initFrameDelay;
@@ -263,6 +268,7 @@ public class PlayerModel extends ComplexModel implements Renderable {
     filmStripIdle = new FilmStrip(idleDown, 1, 1);
     filmStripShoot = new FilmStrip(shootDown, 1, framesInAnimationShoot);
     filmStripDeath = new FilmStrip(dieDown, 1, framesInAnimationDeath);
+    prevHealth = playerBody.getHealth();
   }
 
   @Override
@@ -271,9 +277,27 @@ public class PlayerModel extends ComplexModel implements Renderable {
       progressFrame();
     }
     Vector2 pos = getPosition();
-    if (isInvincible() && !isDead()) renderer.draw(currentStrip, pos.x, pos.y, 0.12f, Color.RED);
+    if (isHit() && !isDead()) {
+      renderer.draw(currentStrip, pos.x, pos.y, 0.12f, Color.RED);
+      hitCount -=1;
+    }
     else renderer.draw(currentStrip, pos.x, pos.y, 0.12f);
     getSpearModel().draw(renderer);
+  }
+
+  public boolean isHit(){
+    int curHealth = getHealth();
+    if (curHealth == prevHealth){
+      if(hitCount > 0)
+        return true;
+      else
+        return false;
+    }
+    else{
+      prevHealth = curHealth;
+      hitCount = dashLength;
+      return true;
+    }
   }
 
   @Override
