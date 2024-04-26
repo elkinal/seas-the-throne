@@ -179,7 +179,7 @@ public class Level {
     int height = JsonHandler.getIntProperty(bgLayer, "height");
     TextureRegion texture =
         new TextureRegion(new Texture("levels/" + JsonHandler.getString(bgLayer, "image")));
-    TextureRegion gTexture = new TextureRegion(new Texture("watergradient.png"));
+
     float x, y;
     if ((String) bgLayer.get("offsetx") == null) {
       x = width / 2f;
@@ -190,12 +190,10 @@ public class Level {
     }
 
     Vector2 pos = tiledToWorldCoords(new Vector2(x, y));
+
     background =
         new BackgroundImage(
             pos, (int) (width * WORLD_SCALE), (int) (height * WORLD_SCALE), texture, 100);
-    gradient =
-        new BackgroundImage(
-            pos, (int) (width * WORLD_SCALE), (int) (height * WORLD_SCALE), gTexture, 50);
   }
 
   /**

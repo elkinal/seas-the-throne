@@ -26,11 +26,15 @@ public class UIModel implements Renderable {
   /** Whether the player is fighting a boss (need to render HP bar) */
   private boolean isBoss;
 
+  /** The gradient for water */
+  private Gradient gradient;
+
   /** Constructs a new UIModel. All UI elements are initially empty. */
   public UIModel() {
-    health = new HealthBar();
     ammo = new AmmoBar();
     boss = new BossHealthBar();
+    gradient = new Gradient();
+    health = new HealthBar();
     isBoss = false;
   }
 
@@ -76,9 +80,18 @@ public class UIModel implements Renderable {
     }
   }
 
+  public void draw(RenderingEngine renderer, int finishAnimate) {
+    health.draw(renderer);
+    //    gradient.draw(renderer);
+    if (isBoss && finishAnimate > 0) {
+      boss.draw(renderer);
+    }
+  }
+
   @Override
   public void draw(RenderingEngine renderer) {
     health.draw(renderer);
+    //    gradient.draw(renderer);
     if (isBoss) {
       boss.draw(renderer);
     }

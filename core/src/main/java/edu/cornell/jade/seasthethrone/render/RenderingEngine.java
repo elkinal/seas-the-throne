@@ -108,7 +108,6 @@ public class RenderingEngine {
     for (Renderable r : renderables) {
       if (r instanceof BackgroundImage) {
         BackgroundImage b = (BackgroundImage) r;
-        System.out.println(b.getOpacity());
       }
       r.draw(this);
     }

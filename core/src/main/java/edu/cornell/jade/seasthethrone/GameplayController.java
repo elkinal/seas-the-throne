@@ -170,10 +170,6 @@ public class GameplayController implements Screen {
 
     World world = new World(new Vector2(0, 0), false);
 
-    // Load foreground (water gradient)
-    renderEngine.addRenderable(level.getGradient());
-    System.out.println(level.getGradient() + "added gradient");
-
     // Load background
     renderEngine.addRenderable(level.getBackground());
 
@@ -477,6 +473,9 @@ public class GameplayController implements Screen {
       respawn();
       restart = false;
     }
+
+    // Load foreground (water gradient)
+    renderEngine.addRenderable(level.getGradient());
 
     // Draw reset and debug screen for wins and losses
 

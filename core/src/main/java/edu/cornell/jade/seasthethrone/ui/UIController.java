@@ -71,11 +71,6 @@ public class UIController {
     return uiModel.getAmmoBar();
   }
 
-  /** Removes boss once player defeats it */
-  public void removeBoss() {
-    boss = null;
-  }
-
   /** Returns the pauseMenuController */
   public PauseMenuController getPauseMenuController() {
     return pauseMenuController;
@@ -85,7 +80,12 @@ public class UIController {
   public void drawUI() {
     canvas.beginUI();
     canvas.getUiBatch().setProjectionMatrix(viewport.getCamera().combined);
-    uiModel.draw(render);
+    if (boss != null) {
+      uiModel.draw(render, boss.getBoss().getDeathCount());
+    } else {
+      uiModel.draw(render);
+    }
+
     pauseMenu.draw(render);
     canvas.endUI();
   }
