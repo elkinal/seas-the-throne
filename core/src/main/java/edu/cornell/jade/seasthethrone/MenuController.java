@@ -19,7 +19,7 @@ public class MenuController implements Screen {
   public MenuController(GameCanvas canvas) {
     viewport = new ScreenViewport();
     inputController = new InputController(viewport);
-    titleScreen = new TitleScreen("loading.json", canvas);
+    titleScreen = new TitleScreen("loading.json", canvas, viewport);
 
     inputController.add(titleScreen);
 
@@ -42,7 +42,7 @@ public class MenuController implements Screen {
   @Override
   public void render(float v) {
     update();
-    titleScreen.draw();
+    titleScreen.render(v);
   }
 
   @Override
