@@ -11,16 +11,14 @@
 package edu.cornell.jade.seasthethrone;
 
 import com.badlogic.gdx.math.Vector2;
+import edu.cornell.jade.seasthethrone.gamemodel.EnemyModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
-import edu.cornell.jade.seasthethrone.ui.AmmoBar;
-import edu.cornell.jade.seasthethrone.ui.HealthBar;
-import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.util.Direction;
 import edu.cornell.jade.seasthethrone.input.Controllable;
 import com.badlogic.gdx.math.MathUtils;
 
-import java.util.jar.JarInputStream;
+import java.util.Optional;
 
 public class PlayerController implements Controllable {
 
@@ -28,6 +26,9 @@ public class PlayerController implements Controllable {
    * Error value for how close the mouse is to the player for dash to not count
    */
   private static final float NO_DASH_ERROR = 0.4f;
+
+  /** The maximum distance an enemy can be from the player for aim assist to lock on. */
+  private static final float AIM_ASSIST_RANGE = 40f;
 
   /** The player */
   private PlayerModel player;
@@ -46,6 +47,9 @@ public class PlayerController implements Controllable {
 
   /** If shooting pressed in since last update */
   boolean shootingPressed;
+
+  /** If assisted shooting pressed in since last update */
+  boolean assistedShootingPressed;
 
   /** If interact pressed in since last update */
   boolean interactPressed;
@@ -97,9 +101,9 @@ public class PlayerController implements Controllable {
     dashingPressed = true;
   }
 
-  public void pressSecondary() {
-    shootingPressed = true;
-  }
+  public void pressSecondary() { shootingPressed = true; }
+
+  public void pressTertiary() { assistedShootingPressed = true; }
 
   public void pressInteract() {
     interactPressed = true;
@@ -220,6 +224,27 @@ public class PlayerController implements Controllable {
     }
   }
 
+  /**
+   * Sets the {@link #indicatorDirection} field to point in the direction
+   * of the nearest enemy. If no enemies are close enough, this method will
+   * not do anything.
+   */
+  public void pointToClosestEnemy() {
+    EnemyModel closestEnemy = null;
+    float closestDist = Float.MAX_VALUE;
+    for (EnemyModel b : physicsEngine.getEnemies()) {
+      if (!b.isActive()) continue;
+      float dist = player.getPosition().dst(b.getPosition());
+      if (dist < closestDist) {
+        closestEnemy = b;
+        closestDist = dist;
+      }
+    }
+    if (closestDist < AIM_ASSIST_RANGE) {
+      indicatorDirection.set(closestEnemy.getPosition().sub(player.getPosition())).nor();
+    }
+  }
+
   @Override
   public Vector2 getLocation() {
     return player.getPosition();
@@ -254,9 +279,18 @@ public class PlayerController implements Controllable {
   }
 
   public void update() {
+    if (isAimToDashMode) {
+      player.updateSpear(indicatorDirection);
+    } else {
+      player.updateSpear(moveDirection.nor());
+    }
+
+    if (assistedShootingPressed) { pointToClosestEnemy(); }
+    player.updateDashIndicator(indicatorDirection);
+
     if (dashingPressed && player.canDash()) {
       beginDashing();
-    } else if (shootingPressed && player.canShoot()) {
+    } else if ((shootingPressed || assistedShootingPressed) && player.canShoot()) {
       beginShooting();
     }
 
@@ -264,15 +298,9 @@ public class PlayerController implements Controllable {
     player.setDirection(moveDirection);
     orientPlayer();
 
-    player.updateDashIndicator(indicatorDirection);
-    if (isAimToDashMode) {
-      player.updateSpear(indicatorDirection);
-    } else {
-      player.updateSpear(moveDirection.nor());
-    }
-
     dashToggleCounter = Math.max(dashToggleCounter - 1, 0);
     dashingPressed = false;
     shootingPressed = false;
+    assistedShootingPressed = false;
   }
 }

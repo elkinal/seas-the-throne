@@ -137,13 +137,15 @@ public class InputController {
 
     // dashing
     if (xbox.getRightTrigger() > 0.6f) {
-//      obj.pressSecondary();
       obj.pressPrimary();
     }
     // shooting
     if (xbox.getLeftTrigger() > 0.6f) {
-//      obj.pressPrimary();
       obj.pressSecondary();
+    }
+    // assisted shooting
+    if (xbox.getLBumper()) {
+      obj.pressTertiary();
     }
     // interact
     if (xbox.getB()) {
@@ -233,6 +235,9 @@ public class InputController {
 
     if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
       obj.pressSecondary();
+    }
+    if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
+      obj.pressTertiary();
     }
   }
 }

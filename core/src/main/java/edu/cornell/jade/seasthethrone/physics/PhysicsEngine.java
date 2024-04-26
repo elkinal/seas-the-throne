@@ -27,7 +27,7 @@ public class PhysicsEngine implements ContactListener {
   /** The boundary of the world */
   private Rectangle bounds;
 
-  private Array<BossModel> bosses = new Array<>();
+  private Array<EnemyModel> enemies = new Array<>();
 
   /**
    * Filepath to the JSON of the level to switch to. Should be null unless the player is on a portal
@@ -52,6 +52,10 @@ public class PhysicsEngine implements ContactListener {
 
   public PooledList<Model> getObjects() {
     return objects;
+  }
+
+  public Array<EnemyModel> getEnemies() {
+    return enemies;
   }
 
   public void dispose() {
@@ -107,8 +111,8 @@ public class PhysicsEngine implements ContactListener {
       Model obj = entry.getValue();
       if (obj.isRemoved()) {
         obj.deactivatePhysics(world);
-        if (obj instanceof BossModel) {
-          bosses.removeValue((BossModel) obj, true);
+        if (obj instanceof EnemyModel) {
+          enemies.removeValue((EnemyModel) obj, true);
         }
         entry.remove();
       } else {
@@ -140,8 +144,8 @@ public class PhysicsEngine implements ContactListener {
     assert inBounds(obj) : "Object is not in bounds";
     objects.add(obj);
     obj.activatePhysics(world);
-    if (obj instanceof BossModel) {
-      bosses.add((BossModel) obj);
+    if (obj instanceof EnemyModel) {
+      enemies.add((EnemyModel) obj);
     }
   }
 
