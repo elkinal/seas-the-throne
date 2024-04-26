@@ -456,6 +456,9 @@ public abstract class BossModel extends EnemyModel implements Renderable {
         return new FixedStreamClamController(angle, model, player, bulletBuilder, physicsEngine);
       } else if (type.equals("oscillating_ring_clam")) {
         return new OscillatingRingClamController(model, player, bulletBuilder, physicsEngine);
+      } else if (type.contains("random_stream_clam")) {
+        float angle = MathUtils.degRad * Float.parseFloat(type.replaceAll("[^\\d.]", ""));
+        return new RandomStreamClamController(angle, model, player, bulletBuilder, physicsEngine);
       }
       throw new RuntimeException("boss type not supported");
     }

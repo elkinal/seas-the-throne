@@ -5239,7 +5239,7 @@
                  "width":20,
                  "x":1742.70242348681,
                  "y":451.457836136327
-                },
+                }, 
                 {
                  "gid":40,
                  "height":20,
@@ -5257,7 +5257,7 @@
                  "width":20,
                  "x":2269.98370867274,
                  "y":226.942501197892
-                },
+                }, 
                 {
                  "gid":40,
                  "height":20,
@@ -5347,6 +5347,42 @@
                  "width":20,
                  "x":2718,
                  "y":1200
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":249,
+                 "name":"random_stream_clam35",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":5
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":1810.90985475933,
+                 "y":1558.839274997
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":250,
+                 "name":"random_stream_clam90",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":5
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":1936.9451446405,
+                 "y":1712.48229504261
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -5524,7 +5560,7 @@
          "y":0
         }],
  "nextlayerid":15,
- "nextobjectid":249,
+ "nextobjectid":251,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
