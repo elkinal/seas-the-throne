@@ -57,6 +57,12 @@ public class BossHealthBar implements Renderable {
     }
   }
 
+  /**
+   * Draws the health bar with the health drawn separately from the base bar. The bars are centered
+   * at the center of the screen.
+   *
+   * @param renderer the render engine
+   */
   @Override
   public void draw(RenderingEngine renderer) {
     resize(renderer.getGameCanvas().getWidth(), renderer.getGameCanvas().getHeight());
@@ -64,6 +70,12 @@ public class BossHealthBar implements Renderable {
     renderer.getGameCanvas().drawUI(foreground, centerX - width / 2, 0.1f * height, hWidth, 30);
   }
 
+  /**
+   * Resizes the health bar to fit the screen
+   *
+   * @param canvasWidth the width of the canvas
+   * @param canvasHeight the height of the canvas
+   */
   public void resize(int canvasWidth, int canvasHeight) {
     // Compute the drawing scale
     float sx = ((float) canvasWidth) / STANDARD_WIDTH;

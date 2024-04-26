@@ -34,8 +34,6 @@ public class Level {
 
   private BackgroundImage background;
 
-  private BackgroundImage gradient;
-
   private final Array<Tile> tiles = new Array<>();
 
   /** The array of tileSets, each tileSet being a nested list of textures representing tiles */
@@ -126,10 +124,6 @@ public class Level {
 
   public BackgroundImage getBackground() {
     return background;
-  }
-
-  public BackgroundImage getGradient() {
-    return gradient;
   }
 
   public Vector2 getPlayerLoc() {

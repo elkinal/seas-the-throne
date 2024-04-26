@@ -60,7 +60,7 @@ public class UIController {
     boss = null;
 
     this.canvas = canvas;
-    uiModel = new UIModel();
+    uiModel = new UIModel(viewport.getScreenWidth(), viewport.getScreenHeight());
   }
 
   /**
@@ -85,7 +85,6 @@ public class UIController {
     } else {
       uiModel.draw(render);
     }
-
     pauseMenu.draw(render);
     canvas.endUI();
   }

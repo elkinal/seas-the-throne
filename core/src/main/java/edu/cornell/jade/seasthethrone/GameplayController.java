@@ -30,7 +30,6 @@ import edu.cornell.jade.seasthethrone.ui.UIController;
 import edu.cornell.jade.seasthethrone.util.ScreenListener;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 
-import java.io.FileNotFoundException;
 import java.util.Comparator;
 
 /**
@@ -461,7 +460,7 @@ public class GameplayController implements Screen {
       renderEngine.addRenderable((Renderable) r);
     }
 
-    // Draw the rendereables
+    // Draw the renderables
     draw(delta);
     if (BuildConfig.DEBUG) {
       debugRenderer.render(
@@ -475,7 +474,6 @@ public class GameplayController implements Screen {
     }
 
     // Load foreground (water gradient)
-    renderEngine.addRenderable(level.getGradient());
 
     // Draw reset and debug screen for wins and losses
 

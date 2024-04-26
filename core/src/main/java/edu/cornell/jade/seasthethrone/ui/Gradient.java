@@ -2,7 +2,6 @@ package edu.cornell.jade.seasthethrone.ui;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.utils.Array;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 
@@ -10,17 +9,27 @@ public class Gradient implements Renderable {
   /** Texture for the gradient */
   private TextureRegion texture;
 
-  /** Scale of health bar on the screen */
-  private final float SCALE = 100f;
+  // origin is always 0,0
+  private int originX;
+  private int originY;
 
   /** Creates a new Gradient */
   public Gradient() {
     texture = new TextureRegion(new Texture("watergradient.png"));
+    originX = 0;
+    originY = 0;
   }
 
   @Override
   public void draw(RenderingEngine renderer) {
-    renderer.draw(texture, 0, 0);
+    renderer
+        .getGameCanvas()
+        .drawUI(
+            texture,
+            originX,
+            originY,
+            renderer.getGameCanvas().getWidth(),
+            renderer.getGameCanvas().getHeight());
   }
 
   @Override
