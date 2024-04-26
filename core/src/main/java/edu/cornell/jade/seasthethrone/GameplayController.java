@@ -383,6 +383,7 @@ public class GameplayController implements Screen {
     if (gameState != GameState.OVER
         && !uiController.getPauseMenuController().getPauseMenu().isPaused()) {
       playerController.update();
+      pauseController.continueGame();
       uiController.update(bossControllers);
 
       for (BossController bc : bossControllers) {
@@ -404,6 +405,11 @@ public class GameplayController implements Screen {
       pauseController.pauseGame();
       uiController.update(bossControllers);
       gameState = GameState.OVER;
+    }
+
+    // Check if the game is paused, pause screen
+    if (uiController.getPauseMenuController().getPauseMenu().isPaused()) {
+      pauseController.pauseGame();
     }
 
     // Check if the player is alive and all bosses are dead, if so the player wins
@@ -473,10 +479,7 @@ public class GameplayController implements Screen {
       restart = false;
     }
 
-    // Load foreground (water gradient)
-
     // Draw reset and debug screen for wins and losses
-
     if (gameState == GameState.OVER || gameState == GameState.WIN) {
       if (inputController.didReset()) {
         setupGameplay();
