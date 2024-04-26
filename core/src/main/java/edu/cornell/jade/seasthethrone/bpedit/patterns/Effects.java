@@ -11,6 +11,8 @@ import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import com.badlogic.gdx.utils.*;
 import edu.cornell.jade.seasthethrone.model.Model;
 
+import java.util.Random;
+
 /** Creates an arc of bullets. */
 class Arc implements Effect {
   float offset;
@@ -129,6 +131,41 @@ class TargetsModel implements Effect {
     for (int i = 0; i < numBullets; i++) {
       BulletFamily orig = bullets.get(i);
       orig.rotate(theta - (dx < 0 ? -1 : 1) * orig.getDir(), 0, 0);
+    }
+  }
+}
+
+/**
+ * Causes all bullets randomly spray
+ */
+class RandomSpray implements Effect {
+
+  /**
+   * The random number generator
+   */
+  private final Random rand;
+
+  /**
+   * the full angle the spawner can spray in
+   */
+  private final float angleRange;
+
+  /**
+   * constructs a random spray
+   *
+   * @param angleRange the full angle the spawner can spray in (radians)
+   */
+  public RandomSpray(float angleRange) {
+    this.angleRange = angleRange;
+    this.rand = new Random();
+  }
+
+  @Override
+  public void apply(Array<BulletFamily> bullets, Pool<BulletFamily> familyPool, Pool<BulletModel> basePool) {
+    int numBullets = bullets.size;
+    for (int i = 0; i < numBullets; i++) {
+      BulletFamily orig = bullets.get(i);
+      orig.rotate(rand.nextFloat(-angleRange/2, angleRange/2), 0, 0);
     }
   }
 }
