@@ -33,7 +33,7 @@ abstract class JellyBossController implements BossController {
    * -----------------------------------
    */
   /** The distance the player must be from the boss before it begins attacking. */
-  private static float AGRO_DISTANCE = 35f;
+  private static float AGRO_DISTANCE = 20f;
 
   /** The minimum distance the boss must move during a movement cycle. */
   private static float MIN_MOVE_DIST = 8f;

@@ -1,0 +1,17 @@
+{
+  "textures": {
+    "loading:background": "loading/background.png",
+    "title:background": "title/background.png",
+    "title:logo": "title/logo.png"
+  },
+  "fonts": {
+    "loading:alagard": {
+      "file": "Alagard.ttf",
+      "size": 100
+    },
+    "title:alagard": {
+      "file": "Alagard.ttf",
+      "size": 100
+    }
+  }
+}

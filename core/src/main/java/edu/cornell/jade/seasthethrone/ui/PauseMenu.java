@@ -130,16 +130,7 @@ public class PauseMenu implements Renderable {
             selection = selection.cycleUp();
     }
 
-    /** Runs when a menu item is clicked */
-    public void clicked() {
-        //TODO: create actions
-        switch (selection) {
-            case RESUME -> paused = false;
-            case RESTART -> System.out.println("Restart Level");
-            case HELP -> System.out.println("Help");
-            case QUIT -> System.exit(0);
-        }
-    }
+    public MenuSelection getSelection() {return this.selection;}
 
     /** Ensures the menu stays the same size and remains in the center
      * of the screen when the window is resized. */

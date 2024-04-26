@@ -4542,6 +4542,40 @@
                  "width":40,
                  "x":739,
                  "y":734
+                }, 
+                {
+                 "height":40,
+                 "id":243,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"checkpointID",
+                         "type":"int",
+                         "value":1
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":40,
+                 "x":1672.25,
+                 "y":354.583333333333
+                }, 
+                {
+                 "height":40,
+                 "id":244,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"checkpointID",
+                         "type":"int",
+                         "value":0
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":40,
+                 "x":2755,
+                 "y":187.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -5205,7 +5239,7 @@
                  "width":20,
                  "x":1742.70242348681,
                  "y":451.457836136327
-                }, 
+                },
                 {
                  "gid":40,
                  "height":20,
@@ -5221,9 +5255,9 @@
                  "type":"",
                  "visible":true,
                  "width":20,
-                 "x":2260.74775361656,
-                 "y":236.833886965682
-                }, 
+                 "x":2269.98370867274,
+                 "y":226.942501197892
+                },
                 {
                  "gid":40,
                  "height":20,

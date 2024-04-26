@@ -585,6 +585,10 @@ public class PlayerModel extends ComplexModel implements Renderable {
     return getBodyModel().getHealth();
   }
 
+  public void setHealth(int hp) {
+    getBodyModel().setHealth(hp);
+  }
+
   /** Sets the player to dashing */
   public void startDashing() {
     isDashing = true;

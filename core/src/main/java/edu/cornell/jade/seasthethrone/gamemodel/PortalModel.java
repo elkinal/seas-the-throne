@@ -84,7 +84,7 @@ public class PortalModel extends BoxModel implements Renderable {
   @Override
   public void draw(RenderingEngine renderer) {
     if (activated) {
-      renderer.draw(texture, getX(), getY());
+      renderer.draw(texture, getX(), getY()+getHeight()/3f);
     }
   }
 
