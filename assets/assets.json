@@ -109,6 +109,20 @@
       "down": {
         "file": "bosses/jelly/down.png"
       }
+    },
+    "clam": {
+      "idle": {
+        "file": "bosses/clam/idle.png"
+      },
+      "shoot": {
+        "file": "bosses/clam/shoot.png"
+      },
+      "hurt": {
+        "file": "bosses/clam/hurt.png"
+      },
+      "death": {
+        "file": "bosses/clam/death.png"
+      }
     }
   },
   "soundfx": {

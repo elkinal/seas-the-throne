@@ -257,13 +257,15 @@ public class GameplayController implements Screen {
       //
       // clams are similar, but they have a number suffixed determining their angle
       // this number is in degrees
-      String assetName =
-          name.contains("jelly")
-              ? "jelly"
-              : name.contains("clam") || name.contains("shark") ? "jelly" : name;
-
-      // We will use jelly assets right now while clam assets don't exist
-      int health = name.contains("jelly") ? 50 : name.contains("clam") ? 10 : 200;
+      String[] splitName = name.replaceAll("[^a-zA-Z_]", "").split("_");
+      // Assuming that names are going to be of the format "_..._(boss)"
+      String assetName = splitName[splitName.length-1];
+      if (assetName.equals("shark")) assetName = "jelly";
+      int health = name.contains("jelly")
+        ? 50 
+        : name.contains("clam")
+          ? 10
+          : 200;
       var bossBuilder =
           BossModel.Builder.newInstance()
               .setType(name)
