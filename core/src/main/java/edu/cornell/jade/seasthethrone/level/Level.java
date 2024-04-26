@@ -34,12 +34,11 @@ public class Level {
 
   private BackgroundImage background;
 
+  private BackgroundImage gradient;
+
   private final Array<Tile> tiles = new Array<>();
 
-  /**
-   * The array of tileSets, each tileSet being a nested list of textures
-   * representing tiles
-   */
+  /** The array of tileSets, each tileSet being a nested list of textures representing tiles */
   private final Array<TextureRegion[][]> tileSets = new Array<>();
 
   /** The tile IDs of the first tile in each tileSet */
@@ -71,7 +70,9 @@ public class Level {
     this.viewport = new ExtendViewport(DEFAULT_WIDTH, DEFAULT_HEIGHT);
     tempPos = new Vector2();
     this.name = parseName(fileName);
-    if (BuildConfig.DEBUG) {System.out.println("Loading level:"+this.name);}
+    if (BuildConfig.DEBUG) {
+      System.out.println("Loading level:" + this.name);
+    }
 
     // Load JSON to map
     HashMap<String, Object> levelMap = JsonHandler.jsonToMap(fileName);
@@ -81,7 +82,8 @@ public class Level {
     TILED_WORLD_WIDTH = JsonHandler.getInt(levelMap, "width");
 
     // Create tileSets
-    Array<HashMap<String, Object>> tileSetsList = (Array<HashMap<String, Object>>) levelMap.get("tilesets");
+    Array<HashMap<String, Object>> tileSetsList =
+        (Array<HashMap<String, Object>>) levelMap.get("tilesets");
     for (HashMap<String, Object> tileSet : tileSetsList) {
       // For each tileSet
       Texture thisTexture = new Texture("levels/" + (String) tileSet.get("image"));
@@ -109,9 +111,7 @@ public class Level {
    * Returns the layer with the given name
    *
    * @param layerName the name of the layer to return
-   *
    * @return the layer with the given name
-   *
    * @throws Error if the provided name doesn't match any layer in the level
    */
   private HashMap<String, Object> getLayer(String layerName) {
@@ -121,11 +121,15 @@ public class Level {
       }
     }
     return new HashMap<>();
-//    throw new Error("No layer with name " + layerName);
+    //    throw new Error("No layer with name " + layerName);
   }
 
   public BackgroundImage getBackground() {
     return background;
+  }
+
+  public BackgroundImage getGradient() {
+    return gradient;
   }
 
   public Vector2 getPlayerLoc() {
@@ -156,9 +160,13 @@ public class Level {
     return portals;
   }
 
-  public Array<LevelObject> getGates() { return gates; }
+  public Array<LevelObject> getGates() {
+    return gates;
+  }
 
-  public Array<LevelObject> getCheckpoints() { return checkpoints; }
+  public Array<LevelObject> getCheckpoints() {
+    return checkpoints;
+  }
 
   private void parseBackgroundLayer(HashMap<String, Object> bgLayer) {
     int width;
@@ -169,8 +177,9 @@ public class Level {
     }
 
     int height = JsonHandler.getIntProperty(bgLayer, "height");
-    TextureRegion texture = new TextureRegion(new Texture("levels/" + JsonHandler.getString(bgLayer, "image")));
-
+    TextureRegion texture =
+        new TextureRegion(new Texture("levels/" + JsonHandler.getString(bgLayer, "image")));
+    TextureRegion gTexture = new TextureRegion(new Texture("watergradient.png"));
     float x, y;
     if ((String) bgLayer.get("offsetx") == null) {
       x = width / 2f;
@@ -181,7 +190,12 @@ public class Level {
     }
 
     Vector2 pos = tiledToWorldCoords(new Vector2(x, y));
-    background = new BackgroundImage(pos, (int) (width * WORLD_SCALE), (int) (height * WORLD_SCALE), texture);
+    background =
+        new BackgroundImage(
+            pos, (int) (width * WORLD_SCALE), (int) (height * WORLD_SCALE), texture, 100);
+    gradient =
+        new BackgroundImage(
+            pos, (int) (width * WORLD_SCALE), (int) (height * WORLD_SCALE), gTexture, 50);
   }
 
   /**
@@ -194,7 +208,8 @@ public class Level {
       return;
     }
 
-    HashMap<String, Object> playerWrapper = ((Array<HashMap<String, Object>>) playerLayer.get("objects")).get(0);
+    HashMap<String, Object> playerWrapper =
+        ((Array<HashMap<String, Object>>) playerLayer.get("objects")).get(0);
 
     float x = JsonHandler.getFloat(playerWrapper, "x");
     float y = JsonHandler.getFloat(playerWrapper, "y");
@@ -244,7 +259,8 @@ public class Level {
       return;
     }
 
-    Array<HashMap<String, Object>> bossWrapperList = (Array<HashMap<String, Object>>) bossLayer.get("objects");
+    Array<HashMap<String, Object>> bossWrapperList =
+        (Array<HashMap<String, Object>>) bossLayer.get("objects");
 
     for (HashMap<String, Object> bossWrapper : bossWrapperList) {
       float x = JsonHandler.getFloat(bossWrapper, "x");
@@ -281,9 +297,10 @@ public class Level {
 
     for (int i = 0; i < wallWrapperList.size; i++) {
       HashMap<String, Object> thisWallWrapper = wallWrapperList.get(i);
-      Vector2 tiledCoords = new Vector2(
-          JsonHandler.getFloat(thisWallWrapper, "x"),
-          JsonHandler.getFloat(thisWallWrapper, "y"));
+      Vector2 tiledCoords =
+          new Vector2(
+              JsonHandler.getFloat(thisWallWrapper, "x"),
+              JsonHandler.getFloat(thisWallWrapper, "y"));
 
       Vector2 worldCoords = tiledToWorldCoords(tiledCoords);
       LevelObject thisWall = new LevelObject(worldCoords.x, worldCoords.y);
@@ -311,7 +328,8 @@ public class Level {
       return;
     }
 
-    Array<HashMap<String, Object>> obsWrapperList = (Array<HashMap<String, Object>>) obstacleLayer.get("objects");
+    Array<HashMap<String, Object>> obsWrapperList =
+        (Array<HashMap<String, Object>>) obstacleLayer.get("objects");
 
     for (HashMap<String, Object> obsWrapper : obsWrapperList) {
       float x = Float.parseFloat((String) obsWrapper.get("x"));
@@ -330,7 +348,8 @@ public class Level {
 
       // get frames in animation if animated
       try {
-        obs.framesInAnimation = JsonHandler.getIntProperty(obsWrapper, "framesInAnimation");;
+        obs.framesInAnimation = JsonHandler.getIntProperty(obsWrapper, "framesInAnimation");
+        ;
       } catch (Error e) {
         obs.framesInAnimation = 1;
       }
@@ -342,16 +361,14 @@ public class Level {
     }
   }
 
-  /**
-   * Extracts gates objects from JSON gates layer
-   * */
+  /** Extracts gates objects from JSON gates layer */
   private void parseGatesLayer(HashMap<String, Object> gatesLayer) {
     if (gatesLayer.isEmpty()) {
       return;
     }
-    Array<HashMap<String, Object>> gateWrapperList = (Array<HashMap<String, Object>>) gatesLayer.get("objects");
+    Array<HashMap<String, Object>> gateWrapperList =
+        (Array<HashMap<String, Object>>) gatesLayer.get("objects");
 
-    
     // This is a map from IDs to a map of walls and sensors
     HashMap<Integer, HashMap<String, Array<LevelObject>>> gateGroups = new HashMap<>();
     Array<Integer> ids = new Array<>();
@@ -364,13 +381,12 @@ public class Level {
       float width = JsonHandler.getFloat(gateWrapper, "width");
       float height = JsonHandler.getFloat(gateWrapper, "height");
       tempPos.set(
-              JsonHandler.getFloat(gateWrapper, "x") + width/2f,
-              JsonHandler.getFloat(gateWrapper, "y") + height/2f);
+          JsonHandler.getFloat(gateWrapper, "x") + width / 2f,
+          JsonHandler.getFloat(gateWrapper, "y") + height / 2f);
       tempPos = tiledToWorldCoords(tempPos);
 
-      LevelObject thisObject = new LevelObject(
-              tempPos.x, tempPos.y, WORLD_SCALE*width, WORLD_SCALE*height
-      );
+      LevelObject thisObject =
+          new LevelObject(tempPos.x, tempPos.y, WORLD_SCALE * width, WORLD_SCALE * height);
 
       // If this is the first object of a gateGroup, add it to the map
       if (!gateGroups.containsKey(id)) {
@@ -397,9 +413,7 @@ public class Level {
 
       this.gates.add(gateObject);
     }
-
   }
-
 
   /**
    * Extracts portal objects from JSON portals layer
@@ -411,14 +425,15 @@ public class Level {
       return;
     }
 
-    Array<HashMap<String, Object>> portWrapperList = (Array<HashMap<String, Object>>) portalLayer.get("objects");
+    Array<HashMap<String, Object>> portWrapperList =
+        (Array<HashMap<String, Object>>) portalLayer.get("objects");
 
     for (HashMap<String, Object> portWrapper : portWrapperList) {
       float x = Float.parseFloat((String) portWrapper.get("x"));
       float y = Float.parseFloat((String) portWrapper.get("y"));
       float width = Float.parseFloat((String) portWrapper.get("width"));
       float height = Float.parseFloat((String) portWrapper.get("height"));
-      Vector2 pos = tiledToWorldCoords(new Vector2(x + width / 2f, y + height/2f));
+      Vector2 pos = tiledToWorldCoords(new Vector2(x + width / 2f, y + height / 2f));
       Vector2 dims = (new Vector2(width * WORLD_SCALE, height * WORLD_SCALE));
 
       LevelObject portal;
@@ -435,7 +450,8 @@ public class Level {
       } catch (Error e) {
         portal.checkpointID = -1;
       }
-      Vector2 playerLoc = new Vector2(
+      Vector2 playerLoc =
+          new Vector2(
               JsonHandler.getFloatProperty(portWrapper, "playerX"),
               JsonHandler.getFloatProperty(portWrapper, "playerY"));
       portal.playerLoc = playerLoc;
@@ -448,7 +464,8 @@ public class Level {
       return;
     }
 
-    Array<HashMap<String, Object>> cpWrapperList = (Array<HashMap<String, Object>>) checkpointLayer.get("objects");
+    Array<HashMap<String, Object>> cpWrapperList =
+        (Array<HashMap<String, Object>>) checkpointLayer.get("objects");
 
     for (HashMap<String, Object> cpWrapper : cpWrapperList) {
       float x = Float.parseFloat((String) cpWrapper.get("x"));
@@ -472,10 +489,9 @@ public class Level {
   /**
    * Converts Tiled coordinates to physics world coordinates based on WORLD_SCALE.
    *
-   * Aligns the center of the Tiled world with the origin in the physics world
+   * <p>Aligns the center of the Tiled world with the origin in the physics world
    *
    * @param tiledCoords vector position in Tiled coordinates
-   *
    * @return the vector position in physics world coordinates
    */
   public Vector2 tiledToWorldCoords(Vector2 tiledCoords) {
@@ -486,9 +502,8 @@ public class Level {
   }
 
   /**
-   * Takes an index from a tile in the JSON 'data' array and converts it into a
-   * TextureRegion
-   * of the corresponding tile in the tile set.
+   * Takes an index from a tile in the JSON 'data' array and converts it into a TextureRegion of the
+   * corresponding tile in the tile set.
    *
    * @param index the index from the array
    * @return
@@ -515,12 +530,10 @@ public class Level {
   }
 
   /**
-   * Finds the position of a tile in the world from its index in the tile layer
-   * array.
+   * Finds the position of a tile in the world from its index in the tile layer array.
    *
-   * NOTE: This index is NOT the same as the index of the tile in the TileSet, it
-   * is
-   * the index in the array of tile cells in the world.
+   * <p>NOTE: This index is NOT the same as the index of the tile in the TileSet, it is the index in
+   * the array of tile cells in the world.
    */
   public Vector2 tiledCoordsFromIndex(int index) {
     int x = TILE_SIZE * (index % TILED_WORLD_WIDTH) + TILE_SIZE / 2;
@@ -532,8 +545,8 @@ public class Level {
   /**
    * Returns the name of the JSON used to load this level.
    *
-   * "levels/name.json" -> "name"
-   * */
+   * <p>"levels/name.json" -> "name"
+   */
   private String parseName(String fileName) {
     int start = fileName.indexOf("/") + 1;
     int end = fileName.indexOf(".");

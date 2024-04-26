@@ -116,7 +116,10 @@ public class CrabBossController implements BossController {
     return true;
   }
 
-  /** Loads in the boss's previous state */
+  /**
+   * Loads in the boss's previous state TODO: ERROR WITH THIS (BOSS SAVES HP ACROSS ALL RUNS OF
+   * GAME, EVEN RERUNNING THE CODE)
+   */
   public void transferState(int storedHp) {
     this.boss.setHealth(storedHp);
   }

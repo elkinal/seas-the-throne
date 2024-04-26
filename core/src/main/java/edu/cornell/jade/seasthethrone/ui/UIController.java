@@ -105,7 +105,6 @@ public class UIController {
 
     // update boss hp
     uiModel.update(boss);
-    System.out.println("boss HP updated");
   }
 
   /** Runs when the viewport is resized */

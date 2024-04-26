@@ -73,7 +73,6 @@ public class UIModel implements Renderable {
     } else {
       isBoss = true;
       this.boss.changeHP(boss.getHealth());
-      System.out.println("hp changed" + boss.getHealth());
     }
   }
 
