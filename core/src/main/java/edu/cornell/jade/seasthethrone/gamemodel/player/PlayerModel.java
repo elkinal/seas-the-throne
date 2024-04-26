@@ -160,9 +160,6 @@ public class PlayerModel extends ComplexModel implements Renderable {
   /** The number of frames a dash lasts */
   private int dashLength;
 
-  /** The angle direction of this dash in radians */
-  private Vector2 dashDirection;
-
   /** Whether the player is shooting */
   private boolean isShooting;
 
@@ -631,16 +628,6 @@ public class PlayerModel extends ComplexModel implements Renderable {
     dashFrameCounter = 1;
     animationFrame = 0;
     getSpearModel().setSpear(false);
-  }
-
-  /** Returns dash direction */
-  public Vector2 getDashDirection() {
-    return dashDirection;
-  }
-
-  /** Sets dash direction */
-  public void setDashDirection(Vector2 dir) {
-    dashDirection = dir;
   }
 
   /** Returns if the player is currently shooting */

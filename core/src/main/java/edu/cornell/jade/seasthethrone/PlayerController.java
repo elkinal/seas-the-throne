@@ -57,11 +57,10 @@ public class PlayerController implements Controllable {
   int dashToggleCounter;
 
   /**
-   * The vector direction of the player for dashing NOTE: this vector will always
-   * be normalized, and
-   * nonzero
+   * The vector direction of the player indicator NOTE: this vector will always
+   * be normalized, and nonzero
    */
-  Vector2 dashDirection;
+  Vector2 indicatorDirection;
 
   /** The vector direction the player is moving */
   Vector2 moveDirection;
@@ -71,7 +70,7 @@ public class PlayerController implements Controllable {
     this.physicsEngine = physicsEngine;
     this.player = player;
     // start dash indicator down
-    dashDirection = new Vector2(0, -1);
+    indicatorDirection = new Vector2(0, -1);
     moveDirection = new Vector2();
     this.isAimToDashMode = true;
     this.dashToggleCounter = 0;
@@ -146,7 +145,7 @@ public class PlayerController implements Controllable {
     } else if (player.isDashing()) {
       moveSpeed *= 4;
       if (isAimToDashMode) {
-        moveDirection.set(moveSpeed * dashDirection.x, moveSpeed * dashDirection.y);
+        moveDirection.set(moveSpeed * indicatorDirection.x, moveSpeed * indicatorDirection.y);
       } else {
         // If not moving in a direction, just dash in currently facing direction
         if (xNorm == 0 && yNorm == 0) {
@@ -182,29 +181,21 @@ public class PlayerController implements Controllable {
     }
   }
 
-  /** Shoot a single bullet */
-  public void shoot() {
-    Vector2 playerPos = player.getPosition();
-    // TODO: stop hardcoding the offset
-    Vector2 startPos = playerPos.add(dashDirection.x * 1.5f, dashDirection.y * 1.5f);
-    physicsEngine.spawnBullet(startPos, dashDirection, 30, true);
-
-    player.decrementFishCount();
-  }
-
   /** Begin dashing */
   public void beginDashing() {
     player.startDashing();
-    player.setDashDirection(dashDirection);
   }
 
   /** Begin shooting */
   public void beginShooting() {
     player.startShooting();
-  }
 
-  /** Set the player to spearing or shooting, depending on which is applicable. */
-  public void spearOrShoot() {
+    Vector2 playerPos = player.getPosition();
+    // TODO: stop hardcoding the offset
+    Vector2 startPos = playerPos.add(indicatorDirection.x * 1.5f, indicatorDirection.y * 1.5f);
+    physicsEngine.spawnBullet(startPos, indicatorDirection, 30, true);
+
+    player.decrementFishCount();
   }
 
   /**
@@ -225,7 +216,7 @@ public class PlayerController implements Controllable {
     Vector2 diff = mousePos.sub(player.getPosition());
 
     if (diff.len2() > NO_DASH_ERROR) {
-      dashDirection.set(diff.nor());
+      indicatorDirection.set(diff.nor());
     }
   }
 
@@ -264,20 +255,18 @@ public class PlayerController implements Controllable {
 
   public void update() {
     if (dashingPressed && player.canDash()) {
-      // TODO: what happens if you get hit while dashing? (during iframes)
       beginDashing();
     } else if (shootingPressed && player.canShoot()) {
       beginShooting();
-      shoot();
     }
 
     setVelPercentages(hoff, voff);
     player.setDirection(moveDirection);
     orientPlayer();
 
-    player.updateDashIndicator(dashDirection);
+    player.updateDashIndicator(indicatorDirection);
     if (isAimToDashMode) {
-      player.updateSpear(dashDirection);
+      player.updateSpear(indicatorDirection);
     } else {
       player.updateSpear(moveDirection.nor());
     }
