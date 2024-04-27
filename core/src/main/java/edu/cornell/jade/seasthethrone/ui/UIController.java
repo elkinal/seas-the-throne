@@ -35,6 +35,10 @@ public class UIController {
   /** The rendering engine used to draw the UI elements */
   RenderingEngine render;
 
+  /** The current dialogue box to display */
+  DialogueBoxController dialogueBoxController;
+  DialogueBox dialogueBox;
+
   /** Internal UI canvas to handle rendering */
   private GameCanvas canvas;
 
@@ -47,10 +51,15 @@ public class UIController {
    * @param view the UI viewport
    */
   public UIController(
-      PlayerController player, PauseMenuController pauseMenuController, RenderingEngine render, GameCanvas canvas, ScreenViewport view) {
+      PlayerController player, PauseMenuController pauseMenuController, DialogueBoxController dialogueBoxController, RenderingEngine render, GameCanvas canvas, ScreenViewport view) {
     this.player = player;
+
     this.pauseMenuController = pauseMenuController;
     this.pauseMenu = pauseMenuController.getPauseMenu();
+
+    this.dialogueBoxController = dialogueBoxController;
+    this.dialogueBox = dialogueBoxController.getDialogueBox();
+
     this.render = render;
     viewport = view;
     boss = null;
@@ -81,6 +90,12 @@ public class UIController {
     boss = null;
   }
 
+  /** Sets the text of the dialogue box */
+  public void setDialogueBoxText(String text) {
+    dialogueBox.setText(text);
+    dialogueBox.setDisplay(true);
+  }
+
   /** Returns the pauseMenuController */
   public PauseMenuController getPauseMenuController() {
     return pauseMenuController;
@@ -92,6 +107,7 @@ public class UIController {
     canvas.getUiBatch().setProjectionMatrix(viewport.getCamera().combined);
     uiModel.draw(render);
     pauseMenu.draw(render);
+    dialogueBox.draw(render);
     canvas.endUI();
   }
 
@@ -105,6 +121,7 @@ public class UIController {
   /** Runs when the viewport is resized */
   public void resize(int width, int height) {
     pauseMenu.resize(width, height);
+    dialogueBox.resize(width, height);
   }
 
   /** Clears all the UI elements */

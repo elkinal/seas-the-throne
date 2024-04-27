@@ -1036,15 +1036,20 @@ public class GameCanvas {
    * @param font The font to use
    * @param x The x-coordinate of the center of the text
    * @param y The y-coordinate of the center of the text
+   * @param centered Draws text from center if true, from left if false
    */
-  public void drawTextUI(String text, BitmapFont font, float x, float y) {
+  public void drawTextUI(String text, BitmapFont font, float x, float y, boolean centered) {
     if (active != DrawPass.STANDARD) {
       Gdx.app.error(
               "GameCanvas", "Cannot draw without active begin()", new IllegalStateException());
       return;
     }
     GlyphLayout layout = new GlyphLayout(font, text);
-    font.draw(uiBatch, layout, x-layout.width/2, y-layout.height/2);
+    if (centered) {
+      font.draw(uiBatch, layout, x-layout.width/2, y-layout.height/2);
+    } else {
+      font.draw(uiBatch, layout, x, y);
+    }
   }
 
   /**

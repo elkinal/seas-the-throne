@@ -97,6 +97,7 @@ ui/darkammo_3_5.png
 ui/darkammo_4_5.png
 ui/darkammo_5_5.png
 ui/darkscreen.png
+ui/dialoguebox.png
 ui/health_hori_0.png
 ui/health_hori_1.png
 ui/health_hori_2.png

@@ -176,13 +176,13 @@ public class PauseMenu implements Renderable {
             float textY = getTextY();
 
             float shadowY = textSpacingY * (1.5f - selection.optionValue);
-            renderer.getGameCanvas().drawTextUI(selection.optionName, menuShadowFont, textX-2, textY+2 + shadowY);
+            renderer.getGameCanvas().drawTextUI(selection.optionName, menuShadowFont, textX-2, textY+2 + shadowY, true);
 
             // Drawing the default menu options
-            renderer.getGameCanvas().drawTextUI("Resume", menuFont, textX, textY + textSpacingY * 1.5f);
-            renderer.getGameCanvas().drawTextUI("Restart", menuFont, textX, textY + textSpacingY / 2);
-            renderer.getGameCanvas().drawTextUI("Help", menuFont, textX, textY - textSpacingY / 2);
-            renderer.getGameCanvas().drawTextUI("Quit", menuFont, textX, textY - textSpacingY * 1.5f);
+            renderer.getGameCanvas().drawTextUI("Resume", menuFont, textX, textY + textSpacingY * 1.5f, true);
+            renderer.getGameCanvas().drawTextUI("Restart", menuFont, textX, textY + textSpacingY / 2, true);
+            renderer.getGameCanvas().drawTextUI("Help", menuFont, textX, textY - textSpacingY / 2, true);
+            renderer.getGameCanvas().drawTextUI("Quit", menuFont, textX, textY - textSpacingY * 1.5f, true);
 
         }
     }
