@@ -22,9 +22,7 @@ import java.util.Optional;
 
 public class PlayerController implements Controllable {
 
-  /**
-   * Error value for how close the mouse is to the player for dash to not count
-   */
+  /** Error value for how close the mouse is to the player for indicator to not update. */
   private static final float NO_DASH_ERROR = 0.4f;
 
   /** The maximum distance an enemy can be from the player for aim assist to lock on. */

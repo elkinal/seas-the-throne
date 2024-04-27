@@ -60,7 +60,6 @@ public class BulletModel extends SimpleModel implements Renderable {
     shape.setRadius(builder.radius);
     knockbackForce = 40f;
     setBodyType(BodyDef.BodyType.DynamicBody);
-    setName("bullet");
     fishTexture = builder.FISH_TEXTURE;
     filmStrip = new FilmStrip(fishTexture, 1, 1);
   }
@@ -93,7 +92,6 @@ public class BulletModel extends SimpleModel implements Renderable {
     res.shape = new CircleShape();
     res.shape.setRadius(builder.radius);
     res.setBodyType(BodyDef.BodyType.DynamicBody);
-    res.setName("bullet");
     res.filmStrip = new FilmStrip(builder.FISH_TEXTURE, 1, 1);
     return res;
   }
