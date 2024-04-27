@@ -5,6 +5,8 @@ import edu.cornell.jade.seasthethrone.ai.BossController;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 
+import java.util.ArrayList;
+
 /**
  * This is a model class that combines all UI objects into one, and contains all of them in one
  * place so they are able to be updated all at once by UIController.
@@ -19,6 +21,9 @@ public class UIModel implements Renderable {
 
   /** The HP bar of the current boss */
   private BossHealthBar boss;
+
+  /** The HP bars of enemies */
+  private ArrayList<EnemyHealthBar> enemies;
 
   /** Whether the player is fighting a boss (need to render HP bar) */
   private boolean isBoss;
@@ -37,6 +42,7 @@ public class UIModel implements Renderable {
     boss = new BossHealthBar();
     gradient = new Gradient();
     health = new HealthBar();
+    enemies = new ArrayList<>();
     isBoss = false;
   }
 
@@ -47,6 +53,14 @@ public class UIModel implements Renderable {
    */
   public AmmoBar getAmmoBar() {
     return ammo;
+  }
+  /**
+   * Returns the Enemies
+   *
+   * @return the enemies
+   */
+  public ArrayList<EnemyHealthBar> getEnemies() {
+    return enemies;
   }
 
   /**
@@ -81,9 +95,21 @@ public class UIModel implements Renderable {
     if (boss == null) {
       isBoss = false;
     } else {
-      isBoss = true;
-      this.boss.changeHP(boss.getHealth());
+      if (boss.isBoss()) {
+        isBoss = true;
+        this.boss.changeHP(boss.getHealth());
+      }
+      else{
+        EnemyHealthBar newEnemy = new EnemyHealthBar();
+        newEnemy.changeHP(boss.getHealth(), boss.getBoss().getFullHealth());
+        newEnemy.changeEnemyPosition(boss.getBoss().getPosition());
+        this.enemies.add(newEnemy);
+      }
     }
+  }
+  /** Clear enemy cache */
+  public void clearEnemies (){
+    enemies.clear();
   }
 
   /**
