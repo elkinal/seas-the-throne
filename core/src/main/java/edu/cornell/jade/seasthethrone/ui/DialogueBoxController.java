@@ -31,8 +31,7 @@ public class DialogueBoxController implements Controllable {
     /** Hides the dialogue box */
     @Override
     public void pressInteract() {
-        //TODO: possible early hide
-        dialogueBox.setDisplay(false);
+        dialogueBox.setText("");
     }
 
     @Override

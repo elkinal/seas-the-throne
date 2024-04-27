@@ -93,7 +93,6 @@ public class UIController {
   /** Sets the text of the dialogue box */
   public void setDialogueBoxText(String text) {
     dialogueBox.setText(text);
-    dialogueBox.setDisplay(true);
   }
 
   /** Returns the pauseMenuController */

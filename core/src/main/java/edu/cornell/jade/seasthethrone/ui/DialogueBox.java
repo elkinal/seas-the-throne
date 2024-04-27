@@ -64,16 +64,6 @@ public class DialogueBox implements Renderable {
         height = 300;
     }
 
-    /** Returns true if the menu is paused */
-    public boolean isDisplay() {
-        return display;
-    }
-
-    /** Displays the menu when the game is paused */
-    public void setDisplay(boolean display) {
-        this.display = display;
-    }
-
     /** Ensures the dialogue box stays the same size and remains in the center
      * of the screen when the window is resized. */
     public void resize(int screenWidth, int screenHeight) {
@@ -97,9 +87,11 @@ public class DialogueBox implements Renderable {
         return y + height/2 + 30;
     }
 
-    /** Sets the text of the dialogue box */
+    /** Sets the text of the dialogue box
+     * Hides dialogue box if the text is empty */
     public void setText(String text) {
         this.text = text;
+        this.display = !text.equals("");
     }
 
     @Override
