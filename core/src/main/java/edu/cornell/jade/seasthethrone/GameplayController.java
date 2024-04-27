@@ -30,7 +30,6 @@ import edu.cornell.jade.seasthethrone.ui.UIController;
 import edu.cornell.jade.seasthethrone.util.ScreenListener;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 
-import java.io.FileNotFoundException;
 import java.util.Comparator;
 
 /**
@@ -63,6 +62,7 @@ public class GameplayController implements Screen {
   /** Sub-controller for handling updating physics engine based on input */
   PlayerController playerController;
 
+  /** The array of all bosses in a level */
   Array<BossController> bossControllers;
 
   /** Sub-controller for handling pausing the game */
@@ -243,7 +243,7 @@ public class GameplayController implements Screen {
       LevelObject bossContainer = level.getBosses().get(i);
       String name = bossContainer.bossName;
 
-      // FIXME: this literly only works because we are dumb it's stupid hack but 
+      // FIXME: this literly only works because we are dumb it's stupid hack but
       // whatever, should work, no less cursed than what we already have actually
       // despise what I'm about to write, no one do this
       //
@@ -251,7 +251,8 @@ public class GameplayController implements Screen {
       // a more systematic solution would require more overhall to this structure
       // which I would do if this were not a project with a due date in 2 weeks
 
-      // jellys are identified by containing the string jelly. They have ad-hoc names determining patterns.
+      // jellys are identified by containing the string jelly. They have ad-hoc names determining
+      // patterns.
       // See the buildController method for the case statement defining the behavior.
       //
       // clams are similar, but they have a number suffixed determining their angle
@@ -277,7 +278,7 @@ public class GameplayController implements Screen {
               .setFalloverAnimation(new Texture("bosses/" + assetName + "/fallover.png"))
               .setShootAnimation(new Texture("bosses/" + assetName + "/shoot.png"))
               .setGetHitAnimation(new Texture("bosses/" + assetName + "/hurt.png"))
-              .setDeathAnimation(new Texture("bosses/" + assetName+ "/death.png"))
+              .setDeathAnimation(new Texture("bosses/" + assetName + "/death.png"))
               .setAttackAnimation(new Texture("bosses/" + assetName + "/attack.png"))
               .setFrameDelay(12)
               .setRoomId(bossContainer.roomId);
@@ -341,8 +342,7 @@ public class GameplayController implements Screen {
     // Load Save State
     stateController.loadState("saves/save1.json");
 
-    if (BuildConfig.DEBUG) 
-      System.out.println("post setup ammo: " + playerController.getAmmo());
+    if (BuildConfig.DEBUG) System.out.println("post setup ammo: " + playerController.getAmmo());
 
     // Load UI
     PauseMenu pauseMenu = new PauseMenu(viewport);
@@ -350,13 +350,13 @@ public class GameplayController implements Screen {
     pauseMenuController.setGameplayController(this);
     inputController.add(pauseMenuController);
 
-    uiController = new UIController(
+    uiController =
+        new UIController(
             playerController,
             pauseMenuController,
             renderEngine,
             renderEngine.getGameCanvas(),
             uiViewport);
-
     if (BuildConfig.DEBUG) {
       System.out.println("num objects: " + physicsEngine.getObjects().size());
     }
@@ -369,8 +369,8 @@ public class GameplayController implements Screen {
   }
 
   public void draw(float delta) {
-      renderEngine.drawRenderables();
-      uiController.drawUI();
+    renderEngine.drawRenderables();
+    uiController.drawUI();
   }
 
   public void update(float delta) {
@@ -379,11 +379,12 @@ public class GameplayController implements Screen {
     inputController.update();
     portalController.update(stateController);
 
-
     // Update entity controllers and camera if the game is not over
-    if (gameState != GameState.OVER && !uiController.getPauseMenuController().getPauseMenu().isPaused()) {
+    if (gameState != GameState.OVER
+        && !uiController.getPauseMenuController().getPauseMenu().isPaused()) {
       playerController.update();
-      uiController.update();
+      pauseController.continueGame();
+      uiController.update(bossControllers);
 
       for (BossController bc : bossControllers) {
         if (!bc.isDead()) {
@@ -402,8 +403,13 @@ public class GameplayController implements Screen {
     // Check if the player is dead, end the game
     if (playerController.isDead()) {
       pauseController.pauseGame();
-      uiController.update();
+      uiController.update(bossControllers);
       gameState = GameState.OVER;
+    }
+
+    // Check if the game is paused, pause screen
+    if (uiController.getPauseMenuController().getPauseMenu().isPaused()) {
+      pauseController.pauseGame();
     }
 
     // Check if the player is alive and all bosses are dead, if so the player wins
@@ -460,7 +466,7 @@ public class GameplayController implements Screen {
       renderEngine.addRenderable((Renderable) r);
     }
 
-    // Draw the rendereables
+    // Draw the renderables
     draw(delta);
     if (BuildConfig.DEBUG) {
       debugRenderer.render(
@@ -474,7 +480,6 @@ public class GameplayController implements Screen {
     }
 
     // Draw reset and debug screen for wins and losses
-
     if (gameState == GameState.OVER || gameState == GameState.WIN) {
       if (inputController.didReset()) {
         setupGameplay();
@@ -526,14 +531,12 @@ public class GameplayController implements Screen {
   /**
    * Gather the assets for this controller.
    *
-   * This method extracts the asset variables from the given asset directory. It
-   * should only be called after the asset directory is completed.
+   * <p>This method extracts the asset variables from the given asset directory. It should only be
+   * called after the asset directory is completed.
    *
-   * @param directory	Reference to global asset manager.
+   * @param directory Reference to global asset manager.
    */
-  public void gatherAssets(AssetDirectory directory) {
-
-  }
+  public void gatherAssets(AssetDirectory directory) {}
 
   public void resize(int width, int height) {
     viewport.update(width, height);

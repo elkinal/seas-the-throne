@@ -1,3 +1,10 @@
+ui/boss_hp_empty.png
+ui/boss_hp_full.png
+ui/health_hori_0.png
+ui/health_hori_1.png
+ui/health_hori_2.png
+ui/health_hori_3.png
+ui/health_hori_4.png
 ui/pausescreen.png
 ui/darkscreen.png
 ui/health_v3_5.png
@@ -107,6 +114,7 @@ player/player_run_right.png
 player/player_shoot_down.png
 player/player_dash_ne.png
 player/player_shoot_right.png
+watergradient.png
 player/player_dash_nw.png
 player/player_dash_right.png
 player/player_dash_left.png
