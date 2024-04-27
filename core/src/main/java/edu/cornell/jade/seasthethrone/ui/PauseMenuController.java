@@ -40,10 +40,17 @@ public class PauseMenuController implements Controllable {
     public void pressInteract() {
             //TODO: create actions
             switch (pauseMenu.getSelection()) {
-                case RESUME -> pauseMenu.setPaused(false);
-                case RESTART -> gameplayController.setRestart(true);
-                case HELP -> UIController.dialogueBox.setTexts("Line1\nLine2\nLine3", "Line4\nLine5\nLine6", "Line7\nLine8\nLine9");
-                case QUIT -> System.exit(0);
+                case RESUME:
+                    pauseMenu.setPaused(false);
+                    break;
+                case RESTART:
+                    gameplayController.setRestart(true);
+                    break;
+                case HELP:
+                    pauseMenu.getDialogueBox().show();
+                    break;
+                case QUIT:
+                    System.exit(0);
             }
     }
 

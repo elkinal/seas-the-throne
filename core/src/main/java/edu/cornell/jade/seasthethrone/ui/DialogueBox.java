@@ -98,12 +98,15 @@ public class DialogueBox implements Renderable {
      * Hides dialogue box if the text is empty */
     public void setTexts(String ... texts) {
         this.texts = new ArrayList<>(Arrays.asList(texts));
-        this.display = true; //TODO: is this useful?
+    }
+
+    /** Shows the dialogue box */
+    public void show() {
+        this.display = true;
     }
 
     /** Hides the dialogue box */
     public void hide() {
-        this.texts = new ArrayList<>(List.of("hidden text"));
         this.display = false;
     }
 

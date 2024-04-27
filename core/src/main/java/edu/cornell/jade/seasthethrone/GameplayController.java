@@ -349,21 +349,18 @@ public class GameplayController implements Screen {
     pauseMenuController.setGameplayController(this);
     inputController.add(pauseMenuController);
 
-    // Load dialogue box
-    DialogueBox dialogueBox = new DialogueBox(viewport);
-    DialogueBoxController dialogueBoxController = new DialogueBoxController(dialogueBox);
-    dialogueBoxController.setGameplayController(this);
-    inputController.add(dialogueBoxController);
+    // Load the Pause Menu's dialogue box
+    DialogueBoxController pauseMenuDialogueBoxController = pauseMenu.getDialogueBoxController();
+    pauseMenuDialogueBoxController.setGameplayController(this);
+    inputController.add(pauseMenuDialogueBoxController);
 
+    // Load the UI Controller
     uiController = new UIController(
             playerController,
             pauseMenuController,
-            dialogueBoxController,
             renderEngine,
             renderEngine.getGameCanvas(),
             uiViewport);
-
-//    uiController.setDialogueBoxText("Line1\nLine2\nLine3", "Line4\nLine5\nLine6", "Line7\nLine8\nLine9");
 
     if (BuildConfig.DEBUG) {
       System.out.println("num objects: " + physicsEngine.getObjects().size());
