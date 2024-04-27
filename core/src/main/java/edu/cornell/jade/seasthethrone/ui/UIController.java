@@ -36,8 +36,8 @@ public class UIController {
   RenderingEngine render;
 
   /** The current dialogue box to display */
-  DialogueBoxController dialogueBoxController;
-  DialogueBox dialogueBox;
+  private static DialogueBoxController dialogueBoxController;
+  public static DialogueBox dialogueBox;
 
   /** Internal UI canvas to handle rendering */
   private GameCanvas canvas;

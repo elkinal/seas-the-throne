@@ -111,8 +111,9 @@ public class DialogueBox implements Renderable {
             renderer.getGameCanvas().drawTextUI(text, menuFont, getTextX(), getTextY() + textSpacingY * 1.5f, false);
 
             // Drawing hide message
-            renderer.getGameCanvas().drawTextUI("Press [E] to hide", menuShadowFont, width-7, getTextY() + textSpacingY * 1.5f - 2, false);
-            renderer.getGameCanvas().drawTextUI("Press [E] to hide", menuFont, width-5, getTextY() + textSpacingY * 1.5f, false);
+            float xTextOffset = 120;
+            renderer.getGameCanvas().drawTextUI("Press [primary1] to hide", menuShadowFont, width-xTextOffset+2, getTextY() + textSpacingY * 1.5f - 2, false);
+            renderer.getGameCanvas().drawTextUI("Press [primary1] to hide", menuFont, width-xTextOffset, getTextY() + textSpacingY * 1.5f, false);
         }
     }
 

@@ -30,13 +30,14 @@ public class DialogueBoxController implements Controllable {
 
     /** Hides the dialogue box */
     @Override
-    public void pressInteract() {
+    public void pressPrimary() {
         dialogueBox.setText("");
     }
 
     @Override
-    public void pressPause() {}
-
+    public void pressPause() {
+        dialogueBox.setText("");
+    }
 
     @Override
     public void moveVertical(float movement) {}

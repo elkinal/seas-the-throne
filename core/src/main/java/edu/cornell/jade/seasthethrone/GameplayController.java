@@ -363,7 +363,7 @@ public class GameplayController implements Screen {
             renderEngine.getGameCanvas(),
             uiViewport);
 
-    uiController.setDialogueBoxText("Line1\nLine2\nLine3");
+//    uiController.setDialogueBoxText("Line1\nLine2\nLine3");
 
     if (BuildConfig.DEBUG) {
       System.out.println("num objects: " + physicsEngine.getObjects().size());

@@ -33,6 +33,7 @@ public class PauseMenu implements Renderable {
     private BitmapFont menuFont, menuShadowFont;
     private float textSpacingY;
     private final float fontSize = 3.0f;
+    private String dialogueText = "Help Menu";
 
 
     public enum MenuSelection {
@@ -113,8 +114,9 @@ public class PauseMenu implements Renderable {
     /** Displays the menu when the game is paused */
     public void setPaused(boolean paused) {
         this.paused = paused;
-        if (!paused)
+        if (!paused) {
             selection = MenuSelection.RESUME;
+        }
     }
 
     /** Switches to a lower menu item */
@@ -185,6 +187,11 @@ public class PauseMenu implements Renderable {
             renderer.getGameCanvas().drawTextUI("Quit", menuFont, textX, textY - textSpacingY * 1.5f, true);
 
         }
+    }
+
+    /** Sets the text that appears when this object's dialogue is activated */
+    public void setDialogueText(String text) {
+        this.dialogueText = text;
     }
 
     @Override
