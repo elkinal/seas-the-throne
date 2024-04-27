@@ -7,6 +7,7 @@ import edu.cornell.jade.seasthethrone.input.Controllable;
 public class DialogueBoxController implements Controllable {
 
     private DialogueBox dialogueBox;
+    private boolean toggle;
 
     private GameplayController gameplayController;
 
@@ -31,16 +32,31 @@ public class DialogueBoxController implements Controllable {
     /** Hides the dialogue box */
     @Override
     public void pressPrimary() {
-        dialogueBox.setText("");
+        dialogueBox.hide();
     }
 
     @Override
     public void pressPause() {
-        dialogueBox.setText("");
+        dialogueBox.hide();
     }
 
+
+    /** Selects between dialogue box pages */
     @Override
-    public void moveVertical(float movement) {}
+    public void moveHorizontal(float movement) {
+        if (movement > 0 && !toggle) {
+            dialogueBox.cycleLeft();
+            toggle = true;
+        }
+        if (movement < 0 && !toggle){
+            dialogueBox.cycleRight();
+            toggle = true;
+        }
+        if (movement == 0) {
+            toggle = false;
+        }
+    }
+
 
     @Override
     public Vector2 getLocation() {

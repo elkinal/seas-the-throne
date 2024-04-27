@@ -2,7 +2,6 @@ package edu.cornell.jade.seasthethrone.ui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -11,6 +10,10 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class DialogueBox implements Renderable {
     private boolean display;
@@ -28,7 +31,9 @@ public class DialogueBox implements Renderable {
     private BitmapFont menuFont, menuShadowFont;
     private float textSpacingY;
     private final float fontSize = 2.0f;
-    private String text = "default text \nline 2\nline3";
+    private ArrayList<String> texts;
+    private int currentText;
+//    private String text = "default text \nline 2\nline3";
 
 
     /** Constructor for the Pause Menu */
@@ -52,6 +57,8 @@ public class DialogueBox implements Renderable {
         menuShadowFont.setUseIntegerPositions(false);
         menuShadowFont.getData().setScale(fontSize);
         menuShadowFont.setColor(Color.WHITE);
+
+        texts = new ArrayList<>();
 
         generator.dispose();
 
@@ -89,9 +96,29 @@ public class DialogueBox implements Renderable {
 
     /** Sets the text of the dialogue box
      * Hides dialogue box if the text is empty */
-    public void setText(String text) {
-        this.text = text;
-        this.display = !text.equals("");
+    public void setTexts(String ... texts) {
+        this.texts = new ArrayList<>(Arrays.asList(texts));
+        this.display = true; //TODO: is this useful?
+    }
+
+    /** Hides the dialogue box */
+    public void hide() {
+        this.texts = new ArrayList<>(List.of("hidden text"));
+        this.display = false;
+    }
+
+    /** Switches to the next text page */
+    public void cycleLeft() {
+        if (currentText < texts.size()-1) {
+            currentText++;
+        }
+    }
+
+    /** Switches to the previous text page */
+    public void cycleRight() {
+        if (currentText > 0) {
+            currentText--;
+        }
     }
 
     @Override
@@ -108,12 +135,19 @@ public class DialogueBox implements Renderable {
     private void drawText(RenderingEngine renderer) {
         if (display) {
             // Drawing the main text
-            renderer.getGameCanvas().drawTextUI(text, menuFont, getTextX(), getTextY() + textSpacingY * 1.5f, false);
+            renderer.getGameCanvas().drawTextUI(texts.get(currentText), menuFont, getTextX(), getTextY() + textSpacingY * 1.5f, false);
 
-            // Drawing hide message
+            // Drawing info messages
             float xTextOffset = 120;
             renderer.getGameCanvas().drawTextUI("Press [primary1] to hide", menuShadowFont, width-xTextOffset+2, getTextY() + textSpacingY * 1.5f - 2, false);
             renderer.getGameCanvas().drawTextUI("Press [primary1] to hide", menuFont, width-xTextOffset, getTextY() + textSpacingY * 1.5f, false);
+            renderer.getGameCanvas().drawTextUI(
+                    "Page " + (currentText+1) + "/" + (texts.size()),
+                    menuFont,
+                    x + width/2, 
+                    110,
+                    true
+            );
         }
     }
 

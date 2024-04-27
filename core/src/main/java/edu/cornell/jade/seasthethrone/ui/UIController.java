@@ -1,12 +1,9 @@
 package edu.cornell.jade.seasthethrone.ui;
 
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import edu.cornell.jade.seasthethrone.PlayerController;
 import edu.cornell.jade.seasthethrone.ai.BossController;
 import edu.cornell.jade.seasthethrone.render.GameCanvas;
-import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 
 /**
@@ -91,8 +88,8 @@ public class UIController {
   }
 
   /** Sets the text of the dialogue box */
-  public void setDialogueBoxText(String text) {
-    dialogueBox.setText(text);
+  public void setDialogueBoxText(String ... texts) {
+    dialogueBox.setTexts(texts);
   }
 
   /** Returns the pauseMenuController */

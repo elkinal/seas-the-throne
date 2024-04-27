@@ -42,7 +42,7 @@ public class PauseMenuController implements Controllable {
             switch (pauseMenu.getSelection()) {
                 case RESUME -> pauseMenu.setPaused(false);
                 case RESTART -> gameplayController.setRestart(true);
-                case HELP -> UIController.dialogueBox.setText("hello");
+                case HELP -> UIController.dialogueBox.setTexts("hello");
                 case QUIT -> System.exit(0);
             }
     }
