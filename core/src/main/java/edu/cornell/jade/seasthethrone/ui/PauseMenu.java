@@ -203,7 +203,7 @@ public class PauseMenu implements Renderable {
     }
 
     /** Sets the text that appears when this object's dialogue is activated */
-    public void setDialogueText(String ... texts) {
+    public void setDialogueTexts(String ... texts) {
         dialogueBox.setTexts(texts);
     }
 

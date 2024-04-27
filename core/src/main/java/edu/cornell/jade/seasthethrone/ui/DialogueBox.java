@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class DialogueBox implements Renderable {
+public class DialogueBox implements Renderable, Dialogueable {
     private boolean display;
 
     // Location and scaling
@@ -94,22 +94,6 @@ public class DialogueBox implements Renderable {
         return y + height/2 + 30;
     }
 
-    /** Sets the text of the dialogue box
-     * Hides dialogue box if the text is empty */
-    public void setTexts(String ... texts) {
-        this.texts = new ArrayList<>(Arrays.asList(texts));
-    }
-
-    /** Shows the dialogue box */
-    public void show() {
-        this.display = true;
-    }
-
-    /** Hides the dialogue box */
-    public void hide() {
-        this.display = false;
-    }
-
     /** Switches to the next text page */
     public void cycleLeft() {
         if (currentText < texts.size()-1) {
@@ -122,6 +106,22 @@ public class DialogueBox implements Renderable {
         if (currentText > 0) {
             currentText--;
         }
+    }
+
+    // Dialogue box methods
+    @Override
+    public void show() {
+        this.display = true;
+    }
+
+    @Override
+    public void hide() {
+        this.display = false;
+    }
+
+    @Override
+    public void setTexts(String ... texts) {
+        this.texts = new ArrayList<>(Arrays.asList(texts));
     }
 
     @Override
