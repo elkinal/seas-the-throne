@@ -287,7 +287,7 @@ public class PlayerModel extends ComplexModel implements Renderable {
 
   public boolean isHit(){
     int curHealth = getHealth();
-    if (curHealth == prevHealth){
+    if (curHealth >= prevHealth){
       if(hitCount > 0)
         return true;
       else
