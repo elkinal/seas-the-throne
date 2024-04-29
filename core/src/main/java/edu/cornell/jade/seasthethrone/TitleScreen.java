@@ -15,6 +15,7 @@ import edu.cornell.jade.seasthethrone.render.GameCanvas;
 import edu.cornell.jade.seasthethrone.ui.PauseMenu;
 import edu.cornell.jade.seasthethrone.util.ScreenListener;
 
+import javax.swing.*;
 import javax.swing.text.View;
 
 public class TitleScreen implements Screen, Controllable {
@@ -30,6 +31,8 @@ public class TitleScreen implements Screen, Controllable {
 
   /** Background texture for start-up */
   private Texture background;
+
+  private Viewport viewport;
 
   /** Logo texture */
   private Texture logo;
@@ -59,16 +62,17 @@ public class TitleScreen implements Screen, Controllable {
     }
 
     public TitleSelection cycleUp() {
-      return values()[(optionValue > 0 ? optionValue - 1 : optionValue)];
+      return values()[(optionValue > 0 ? optionValue - 1 : TitleSelection.values().length-1)];
     }
 
     public TitleSelection cycleDown() {
-      return values()[(optionValue < 3 ? optionValue + 1 : optionValue)];
+      return values()[(optionValue < 2 ? optionValue + 1 : 0)];
     }
   }
 
-  public TitleScreen(String file, GameCanvas canvas) {
+  public TitleScreen(String file, GameCanvas canvas, Viewport viewport) {
     this.canvas = canvas;
+    this.viewport = viewport;
 
     internal = new AssetDirectory("loading.json");
     internal.loadAssets();
@@ -94,19 +98,22 @@ public class TitleScreen implements Screen, Controllable {
   }
 
   public void update() {
-    canvas.resize();
+    viewport.update(canvas.getWidth(), canvas.getHeight());
+    viewport.apply();
+  }
+
+  public void resize() {
+
   }
 
   /** Switches to a lower menu item */
   public void cycleDown() {
-    if (selection.optionValue < MENU_SIZE - 1) {
       selection = selection.cycleDown();
-    }
   }
 
   /** Switches to a higher menu item */
   public void cycleUp() {
-    if (selection.optionValue > 0) selection = selection.cycleUp();
+    selection = selection.cycleUp();
   }
 
   public void draw() {
