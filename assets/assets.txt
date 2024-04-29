@@ -89,6 +89,8 @@ saves/save1.json
 title/background.png
 title/logo.png
 title/play_button.png
+ui/boss_healthbar_bottom.png
+ui/boss_healthbar_top.png
 ui/darkammo_1_5.png
 ui/darkammo_2_5.png
 ui/darkammo_3_5.png
