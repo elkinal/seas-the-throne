@@ -18,12 +18,12 @@ public class BackgroundImage implements Renderable {
 
   private Array<HashMap<String, Object>> properties;
 
-  public BackgroundImage(Vector2 pos, int width, int height, TextureRegion texture) {
-
+  public BackgroundImage(Vector2 pos, int width, int height, TextureRegion texture, float op) {
     position = pos;
     this.texture = texture;
     this.height = height;
     this.width = width;
+    opacity = op;
   }
 
   @Override
@@ -60,7 +60,7 @@ public class BackgroundImage implements Renderable {
     return texture;
   }
 
-  public float getOpactiy() {
+  public float getOpacity() {
     return opacity;
   }
 

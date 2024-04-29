@@ -584,6 +584,15 @@ public class Spawner {
   }
 
   /**
+   * Rotates the spawner, so it will be set in given direction
+   *
+   * @param theta new facing angle in radians
+   */
+  public void setAngle(float theta) {
+    rotation = theta;
+  }
+
+  /**
    * Returns if the there is possibly another bullet which can be created
    *
    * @return if another bullet could possibly be created
