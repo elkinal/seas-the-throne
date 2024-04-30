@@ -1,17 +1,16 @@
 {
 "storedLevels": {
 	"shallow_map": {
-		"bossHps": [ 200, 50, 45, 50, 10, 10, 0, 0, 10, 10, 10, 200, 10, 5 ]
+		"bossHps": [ 200, 50, 50, 50, 10, 10, 10, 10, 10, 10, 10, 200, 10, 10 ]
 	},
 	"hub_world": {
 		"bossHps": []
 	}
 },
-"playerAmmo": 1,
-"playerHealth": 3,
+"playerHealth": 5,
 "checkpoint": 2,
 "respawnLoc": {
-	"x": 242.88008,
-	"y": 235.83505
+	"x": 240,
+	"y": 235.83507
 }
 }

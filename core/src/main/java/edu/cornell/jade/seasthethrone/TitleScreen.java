@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import edu.cornell.jade.seasthethrone.assets.AssetDirectory;
 import edu.cornell.jade.seasthethrone.input.Controllable;
@@ -32,7 +34,7 @@ public class TitleScreen implements Screen, Controllable {
   /** Background texture for start-up */
   private Texture background;
 
-  private Viewport viewport;
+  private ScreenViewport viewport;
 
   /** Logo texture */
   private Texture logo;
@@ -42,11 +44,7 @@ public class TitleScreen implements Screen, Controllable {
   /** Font for display text */
   private BitmapFont textFont;
 
-  private float textSpacingY;
-
   private boolean toggle;
-
-  private static final int MENU_SIZE = 3;
 
   public enum TitleSelection {
     PLAY(0, "Play"),
@@ -62,7 +60,7 @@ public class TitleScreen implements Screen, Controllable {
     }
 
     public TitleSelection cycleUp() {
-      return values()[(optionValue > 0 ? optionValue - 1 : TitleSelection.values().length-1)];
+      return values()[(optionValue > 0 ? optionValue - 1 : TitleSelection.values().length - 1)];
     }
 
     public TitleSelection cycleDown() {
@@ -70,11 +68,11 @@ public class TitleScreen implements Screen, Controllable {
     }
   }
 
-  public TitleScreen(String file, GameCanvas canvas, Viewport viewport) {
+  public TitleScreen(String file, GameCanvas canvas, ScreenViewport viewport) {
     this.canvas = canvas;
     this.viewport = viewport;
 
-    internal = new AssetDirectory("loading.json");
+    internal = new AssetDirectory(file);
     internal.loadAssets();
     internal.finishLoading();
 
@@ -83,8 +81,6 @@ public class TitleScreen implements Screen, Controllable {
     textFont = internal.getEntry("loading:alagard", BitmapFont.class);
 
     // Calculating spacings between menu options
-    GlyphLayout layout = new GlyphLayout(textFont, "Sample");
-    textSpacingY = layout.height + 25;
     canvas.resize();
   }
 
@@ -98,17 +94,16 @@ public class TitleScreen implements Screen, Controllable {
   }
 
   public void update() {
+    canvas.resize();
     viewport.update(canvas.getWidth(), canvas.getHeight());
     viewport.apply();
   }
 
-  public void resize() {
-
-  }
+  public void resize() {}
 
   /** Switches to a lower menu item */
   public void cycleDown() {
-      selection = selection.cycleDown();
+    selection = selection.cycleDown();
   }
 
   /** Switches to a higher menu item */
@@ -119,33 +114,34 @@ public class TitleScreen implements Screen, Controllable {
   public void draw() {
     canvas.clear(Color.BLACK);
     canvas.begin();
-    //    canvas.getSpriteBatch().setProjectionMatrix(canvas.getCamera().combined);
-    float ratio = (float) logo.getHeight()/logo.getWidth();
-    float width = canvas.getWidth() / 2f;
-    float height = ratio*width;
-    canvas.draw(
-        logo,
-        Color.WHITE,
-        (canvas.getWidth() - width) / 2f,
-        canvas.getHeight() - 1.1f*height,
-        width,
-        height);
-    drawMenu();
-    canvas.end();
-  }
+    canvas.getSpriteBatch().setProjectionMatrix(viewport.getCamera().combined);
 
-  private void drawMenu() {
-    float y_offset = -250f;
+    // draw the background
+//    canvas.draw(background, Color.WHITE, 0, 0, background.getWidth(), background.getHeight());
+
+    // draw the logo
+    float scale = Math.min(2/3f, (float)canvas.getWidth()/logo.getWidth());
+    float width = logo.getWidth() * scale;
+
+    canvas.draw(logo, Color.WHITE, -width/2f , 0, width, scale*logo.getHeight());
+
+
+    // draw the menu
+    float y_offset = -200f;
+    float x_offset = -20f;
     for (TitleSelection s : TitleSelection.values()) {
-      canvas.drawTextCentered(s.optionName, textFont, y_offset, Color.WHITE);
-
       if (selection == s) {
-        canvas.drawTextCentered(s.optionName, textFont, y_offset + 6, Color.GOLDENROD);
+        canvas.drawText(s.optionName, textFont, x_offset, y_offset, Color.GOLDENROD);
+        canvas.drawText(s.optionName, textFont, x_offset+3,  y_offset + 6, Color.WHITE);
+      } else {
+        canvas.drawText(s.optionName, textFont, x_offset, y_offset, Color.WHITE);
       }
 
       y_offset -= 150f;
     }
+    canvas.end();
   }
+
 
   public void render(float delta) {
     update();
