@@ -4524,7 +4524,7 @@
         {
          "draworder":"topdown",
          "id":14,
-         "name":"checkpoints",
+         "name":"interactables",
          "objects":[
                 {
                  "height":40,
@@ -4535,6 +4535,11 @@
                          "name":"checkpointID",
                          "type":"int",
                          "value":2
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"checkpoint"
                         }],
                  "rotation":0,
                  "type":"",
@@ -4552,6 +4557,11 @@
                          "name":"checkpointID",
                          "type":"int",
                          "value":1
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"checkpoint"
                         }],
                  "rotation":0,
                  "type":"",
@@ -4569,6 +4579,11 @@
                          "name":"checkpointID",
                          "type":"int",
                          "value":0
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"checkpoint"
                         }],
                  "rotation":0,
                  "type":"",
@@ -4576,6 +4591,23 @@
                  "width":40,
                  "x":2755,
                  "y":187.5
+                }, 
+                {
+                 "height":40,
+                 "id":253,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"healthpack"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":40,
+                 "x":2620,
+                 "y":280
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -5604,7 +5636,7 @@
          "y":0
         }],
  "nextlayerid":15,
- "nextobjectid":253,
+ "nextobjectid":254,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

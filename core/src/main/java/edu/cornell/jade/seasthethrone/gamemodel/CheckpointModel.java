@@ -31,4 +31,10 @@ public class CheckpointModel extends BoxModel implements Interactable {
   public void setActivated(boolean a) {
     activated = a;
   }
+
+  public void interact() {}
+
+  public boolean isInteracted() {
+    return false;
+  }
 }

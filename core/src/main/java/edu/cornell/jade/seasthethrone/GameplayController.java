@@ -16,6 +16,7 @@ import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.ObstacleModel;
 import edu.cornell.jade.seasthethrone.gamemodel.gate.GateModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
+import edu.cornell.jade.seasthethrone.gamemodel.HealthpackModel;
 import edu.cornell.jade.seasthethrone.input.InputController;
 import edu.cornell.jade.seasthethrone.bpedit.AttackPattern;
 import edu.cornell.jade.seasthethrone.level.*;
@@ -31,6 +32,7 @@ import edu.cornell.jade.seasthethrone.util.ScreenListener;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 
 import java.util.Comparator;
+import java.util.HashMap;
 
 /**
  * The primary controller class for the game.
@@ -70,6 +72,9 @@ public class GameplayController implements Screen {
 
   /** Sub-controller for portals */
   PortalController portalController;
+
+  /** Sub-controller for interactables */
+  InteractableController interactController;
 
   /** Sub-controller for collecting input */
   UIController uiController;
@@ -154,6 +159,7 @@ public class GameplayController implements Screen {
     this.bossControllers = new Array<>();
     this.inputController = new InputController(viewport);
     this.portalController = new PortalController();
+    this.interactController = new InteractableController();
     this.renderEngine = new RenderingEngine(worldWidth, worldHeight, viewport, worldScale);
 
     setupGameplay();
@@ -168,6 +174,7 @@ public class GameplayController implements Screen {
     gameState = GameState.PLAY;
 
     World world = new World(new Vector2(0, 0), false);
+    HashMap<String, Array<LevelObject>> layers = level.getLayers();
 
     // Load background
     renderEngine.addRenderable(level.getBackground());
@@ -238,9 +245,9 @@ public class GameplayController implements Screen {
 
     // Load bosses
     bossControllers.clear();
-    for (int i = 0; i < level.getBosses().size; i++) {
+    for (int i = 0; i < layers.get("bosses").size; i++) {
       // TODO: set everything below here based on bossName, load from assets.json
-      LevelObject bossContainer = level.getBosses().get(i);
+      LevelObject bossContainer = layers.get("bosses").get(i);
       String name = bossContainer.bossName;
 
       // FIXME: this literly only works because we are dumb it's stupid hack but
@@ -290,14 +297,14 @@ public class GameplayController implements Screen {
     }
 
     // Load walls
-    for (LevelObject wall : level.getWalls()) {
+    for (LevelObject wall : layers.get("walls")) {
       PolygonModel model = new PolygonModel(wall.toList(), wall.x, wall.y);
       model.setBodyType(BodyDef.BodyType.StaticBody);
       physicsEngine.addObject(model);
     }
 
     // Load Obstacles
-    for (LevelObject obs : level.getObstacles()) {
+    for (LevelObject obs : layers.get("obstacles")) {
       ObstacleModel model = new ObstacleModel(obs, worldScale);
       model.setBodyType(BodyDef.BodyType.StaticBody);
       renderEngine.addRenderable(model);
@@ -305,7 +312,7 @@ public class GameplayController implements Screen {
     }
 
     // Load portals
-    for (LevelObject portal : level.getPortals()) {
+    for (LevelObject portal : layers.get("portals")) {
       PortalModel model = new PortalModel(portal);
       renderEngine.addRenderable(model);
       physicsEngine.addObject(model);
@@ -313,7 +320,7 @@ public class GameplayController implements Screen {
     }
 
     // Load gates
-    for (LevelObject gate : level.getGates()) {
+    for (LevelObject gate : layers.get("gates")) {
       int roomId = gate.roomId;
       GateModel model = new GateModel(gate, level.WORLD_SCALE);
       for (BossController bc : bossControllers) {
@@ -326,10 +333,18 @@ public class GameplayController implements Screen {
     }
 
     // Load checkpoints
-    for (LevelObject check : level.getCheckpoints()) {
+    for (LevelObject check : layers.get("checkpoints")) {
       CheckpointModel model = new CheckpointModel(check, worldScale);
       model.setSensor(true);
       physicsEngine.addObject(model);
+      interactController.add(model);
+    }
+
+    // Load healthpacks
+    for (LevelObject hpack : layers.get("healthpacks")) {
+      HealthpackModel model = new HealthpackModel(hpack);
+      physicsEngine.addObject(model);
+      interactController.add(model);
     }
 
     // Initlize controllers
