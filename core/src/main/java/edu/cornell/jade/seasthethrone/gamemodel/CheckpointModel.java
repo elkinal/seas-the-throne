@@ -21,6 +21,7 @@ public class CheckpointModel extends BoxModel implements Interactable, Renderabl
 
   private final float WORLD_SCALE;
 
+  /** Range within which the player can interact with this checkpoint */
   private final float INTERACT_RANGE = 3f;
 
   public CheckpointModel(LevelObject obs, float scale) {
@@ -41,6 +42,7 @@ public class CheckpointModel extends BoxModel implements Interactable, Renderabl
 
   public void interact() {}
 
+  /** Checks if the player is close enough to interact with this checkpoint */
   @Override
   public boolean playerInRange(Vector2 playerPos) {
     return Math.abs(Vector2.dst(getX(), getY(), playerPos.x, playerPos.y)) < INTERACT_RANGE;

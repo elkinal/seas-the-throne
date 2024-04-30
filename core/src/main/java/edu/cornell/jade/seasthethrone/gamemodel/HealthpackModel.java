@@ -13,6 +13,7 @@ public class HealthpackModel extends BoxModel implements Interactable, Renderabl
 
   private TextureRegion texture;
 
+  /** Range within which the player can interact with this healthpack */
   private final float INTERACT_RANGE = 3f;
 
   public HealthpackModel(LevelObject obs) {
@@ -22,6 +23,7 @@ public class HealthpackModel extends BoxModel implements Interactable, Renderabl
     setBodyType(BodyDef.BodyType.StaticBody);
   }
 
+  /** Checks if the player is close enough to interact with this healthpack */
   public boolean playerInRange(Vector2 playerPos) {
     return Math.abs(Vector2.dst(getX(), getY(), playerPos.x, playerPos.y)) < INTERACT_RANGE;
   }

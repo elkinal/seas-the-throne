@@ -8,15 +8,20 @@ import edu.cornell.jade.seasthethrone.gamemodel.Interactable;
 import edu.cornell.jade.seasthethrone.input.Controllable;
 
 public class InteractableController implements Controllable {
+
+  /** Array of interactables managed by this controller */
   private Array<Interactable> interactables;
 
+  /** If the interact button has been pressed */
   private boolean interactPressed;
 
   /** Checkpoint ID of the last interacted checkpoint */
   private int checkpointID;
 
+  /** Flag for gameplayController indicating that a checkpoint has just been set */
   private boolean checkpointActivated;
 
+  /** PlayerController updated by certain interactables (health packs) */
   private PlayerController player;
 
   public InteractableController() {
@@ -34,6 +39,7 @@ public class InteractableController implements Controllable {
     this.interactables.add(interactable);
   }
 
+  /** Checks if interact was pressed this frame. If so, interacts with all interactables in range */
   public void update() {
     this.checkpointActivated = false;
 
@@ -82,6 +88,13 @@ public class InteractableController implements Controllable {
   public void pressInteract() {
     interactPressed = true;
   }
+
+
+  /*
+  * ===============================
+  * Unused stub methods
+  * ===============================
+  * */
 
   @Override
   public void moveHorizontal(float movement) {
