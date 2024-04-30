@@ -45,6 +45,7 @@ levels/horizontal_gate.png
 levels/hub_world.json
 levels/kelpdark_filmstrip2.png
 levels/kelplight_filmstrip2.png
+levels/mossytablet.png
 levels/pinkdemonstatue.png
 levels/portal.png
 levels/shallowbiomemap2.png

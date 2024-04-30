@@ -2,7 +2,7 @@ package edu.cornell.jade.seasthethrone.gamemodel;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import edu.cornell.jade.seasthethrone.InteractableController;
+import com.badlogic.gdx.math.Vector2;
 import edu.cornell.jade.seasthethrone.level.LevelObject;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.render.Renderable;
@@ -12,21 +12,16 @@ public class HealthpackModel extends BoxModel implements Interactable, Renderabl
 
   private TextureRegion texture;
 
+  private final float INTERACT_RANGE = 1f;
+
   public HealthpackModel(LevelObject obs) {
     super(obs.x, obs.y, obs.width, obs.height);
 
     this.texture = new TextureRegion(new Texture("levels/healthpack.png"));
-
   }
 
-  @Override
-  public void interact() {
-
-  }
-
-  @Override
-  public boolean isInteracted() {
-    return false;
+  public boolean playerInRange(Vector2 playerPos) {
+    return Vector2.dst(getX(), getY(), playerPos.x, playerPos.y) < INTERACT_RANGE;
   }
 
   @Override

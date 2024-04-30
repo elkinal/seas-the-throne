@@ -160,6 +160,7 @@ public class GameplayController implements Screen {
     this.inputController = new InputController(viewport);
     this.portalController = new PortalController();
     this.interactController = new InteractableController();
+    inputController.add(interactController);
     this.renderEngine = new RenderingEngine(worldWidth, worldHeight, viewport, worldScale);
 
     setupGameplay();
@@ -337,6 +338,7 @@ public class GameplayController implements Screen {
       CheckpointModel model = new CheckpointModel(check, worldScale);
       model.setSensor(true);
       physicsEngine.addObject(model);
+      renderEngine.addRenderable(model);
       interactController.add(model);
     }
 
@@ -351,6 +353,7 @@ public class GameplayController implements Screen {
     // Initlize controllers
     playerController = new PlayerController(physicsEngine, player);
     inputController.add(playerController);
+    interactController.setPlayerController(playerController);
 
     // Initialize pause controller
     pauseController = new PauseController(renderEngine, physicsEngine, playerController);
@@ -399,6 +402,7 @@ public class GameplayController implements Screen {
     if (gameState != GameState.OVER
         && !uiController.getPauseMenuController().getPauseMenu().isPaused()) {
       playerController.update();
+      interactController.update();
       pauseController.continueGame();
       uiController.update(bossControllers);
 
@@ -441,7 +445,7 @@ public class GameplayController implements Screen {
       if (BuildConfig.DEBUG) {
         System.out.println("hasCheckpoint " + physicsEngine.getCheckpointID());
       }
-      playerController.setHealth(5);
+//      playerController.setHealth(5);
       stateController.updateState(level.name, playerController, bossControllers);
       stateController.setCheckpoint(physicsEngine.checkpointID);
     }
