@@ -344,6 +344,7 @@ public class GameplayController implements Screen {
     for (LevelObject hpack : layers.get("healthpacks")) {
       HealthpackModel model = new HealthpackModel(hpack);
       physicsEngine.addObject(model);
+      renderEngine.addRenderable(model);
       interactController.add(model);
     }
 
