@@ -21,7 +21,7 @@ public class CheckpointModel extends BoxModel implements Interactable, Renderabl
 
   private final float WORLD_SCALE;
 
-  private final float INTERACT_RANGE = 1f;
+  private final float INTERACT_RANGE = 3f;
 
   public CheckpointModel(LevelObject obs, float scale) {
     super(obs.x, obs.y, obs.width, obs.height);
@@ -43,7 +43,7 @@ public class CheckpointModel extends BoxModel implements Interactable, Renderabl
 
   @Override
   public boolean playerInRange(Vector2 playerPos) {
-    return Vector2.dst(getX(), getY(), playerPos.x, playerPos.y) < INTERACT_RANGE;
+    return Math.abs(Vector2.dst(getX(), getY(), playerPos.x, playerPos.y)) < INTERACT_RANGE;
   }
 
   @Override

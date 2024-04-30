@@ -13,7 +13,7 @@ public class HealthpackModel extends BoxModel implements Interactable, Renderabl
 
   private TextureRegion texture;
 
-  private final float INTERACT_RANGE = 1f;
+  private final float INTERACT_RANGE = 3f;
 
   public HealthpackModel(LevelObject obs) {
     super(obs.x, obs.y, obs.width, obs.height);
@@ -23,7 +23,7 @@ public class HealthpackModel extends BoxModel implements Interactable, Renderabl
   }
 
   public boolean playerInRange(Vector2 playerPos) {
-    return Vector2.dst(getX(), getY(), playerPos.x, playerPos.y) < INTERACT_RANGE;
+    return Math.abs(Vector2.dst(getX(), getY(), playerPos.x, playerPos.y)) < INTERACT_RANGE;
   }
 
   @Override

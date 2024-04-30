@@ -34,21 +34,19 @@ public class InteractableController implements Controllable {
 
     for (Interactable interactable : interactables) {
       if (interactable instanceof HealthpackModel) {
-        if (BuildConfig.DEBUG) {
-          System.out.println("Health restored!");
+        if (interactable.playerInRange(player.getShadowLocation())) {
+          if (BuildConfig.DEBUG) System.out.println("Health restored!");
+          player.setHealth(5);
         }
-        player.setHealth(5);
-
       } else if (interactable instanceof CheckpointModel) {
-        if (BuildConfig.DEBUG) {
-          System.out.println("Checkpoint activated");
+        if (interactable.playerInRange(player.getShadowLocation())) {
+          if (BuildConfig.DEBUG) System.out.println("Checkpoint activated");
+          ((CheckpointModel) interactable).setActivated(true);
         }
-        ((CheckpointModel) interactable).setActivated(true);
       }
     }
     interactPressed = false;
   }
-
 
   @Override
   public void pressInteract() {
