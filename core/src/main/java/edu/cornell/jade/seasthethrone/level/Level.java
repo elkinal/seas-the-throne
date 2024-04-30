@@ -460,8 +460,6 @@ public class Level {
         default:
           break;
       }
-
-
     }
   }
 

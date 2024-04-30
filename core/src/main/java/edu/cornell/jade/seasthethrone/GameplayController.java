@@ -231,7 +231,7 @@ public class GameplayController implements Screen {
             .setFramesInAnimationDeath(16)
             .setFrameDelay(3)
             .setDashLength(20)
-            .setMoveSpeed(8f)
+            .setMoveSpeed(12f)
             .setCooldownLimit(10)
             .setShootCooldownLimit(20)
             .build();
