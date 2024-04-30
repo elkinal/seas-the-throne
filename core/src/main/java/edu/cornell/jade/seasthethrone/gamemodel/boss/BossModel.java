@@ -37,9 +37,11 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   protected int animationFrame;
 
   protected float scale;
+
   /** Flag for executing the boss */
   private boolean isExecute;
-  /** Flag for the boss attack*/
+
+  /** Flag for the boss attack */
   private int attackCount;
 
   /** Array indicating polygon hitbox */
@@ -59,8 +61,10 @@ public abstract class BossModel extends EnemyModel implements Renderable {
 
   /** Death animation countdown */
   private int deathCount;
+
   /** Execute animation countdown */
   private int executeCount;
+
   /** Whether the boss should continue being animated. */
   private boolean shouldUpdate;
 
@@ -121,29 +125,34 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     renderer.draw(filmStrip, pos.x, pos.y, 0.16f);
   }
 
-  private boolean isHit(){
-    if (hitCount > 0){
+  /**
+   * Returns whether the boss is finished playing its death animation.
+   *
+   * @return 0 if the death animation is done playing.
+   */
+  public int getDeathCount() {
+    return deathCount;
+  }
+
+  private boolean isHit() {
+    if (hitCount > 0) {
       return true;
-    }
-    else{
+    } else {
       return false;
     }
   }
+
   @Override
   public void progressFrame() {
     int frame = getFrameNumber();
     if (isDead()) {
-      if (isExecute)
-        filmStrip = deathAnimation;
-      else
-        filmStrip = falloverAnimation;
-    } else if (isHit()){
+      if (isExecute) filmStrip = deathAnimation;
+      else filmStrip = falloverAnimation;
+    } else if (isHit()) {
       filmStrip = getHitAnimation;
     } else {
-      if (isAttack())
-        filmStrip = attackAnimation;
-      else
-        filmStrip = shootAnimation;
+      if (isAttack()) filmStrip = attackAnimation;
+      else filmStrip = shootAnimation;
     }
     filmStrip.setFrame(frame);
 
@@ -155,7 +164,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
         setFrameNumber(getFrameNumber());
         deathCount -= 1;
       }
-    } else if (isHit()){
+    } else if (isHit()) {
       if (frameCounter % frameDelay == 0 && getFrameNumber() < getFramesInAnimation() - 1) {
         setFrameNumber(getFrameNumber() + 1);
         hitCount -= 1;
@@ -163,13 +172,13 @@ public abstract class BossModel extends EnemyModel implements Renderable {
         setFrameNumber(getFrameNumber());
         hitCount -= 1;
       }
-      if (hitCount == 0){
+      if (hitCount == 0) {
         setFrameNumber(0);
       }
     } else {
       if (frameCounter % frameDelay == 0) {
         setFrameNumber((getFrameNumber() + 1) % getFramesInAnimation());
-        if (isAttack()){
+        if (isAttack()) {
           attackCount -= 1;
         }
       }
@@ -208,21 +217,26 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   public boolean isDead() {
     return health <= 0;
   }
-  public boolean isAttack() {return attackCount > 0; }
+
+  public boolean isAttack() {
+    return attackCount > 0;
+  }
 
   /** Get remaining health points of the boss */
   public int getHealth() {
     return health;
   }
 
-  public void setHealth(int health) {this.health = health;}
+  public void setHealth(int health) {
+    this.health = health;
+  }
 
   /** Returns the room this boss is in */
-  public int getRoomId() { return roomId; }
-  /**
-   * Reduce boss HP by a specified amount
-   * If the boss dies, play the fallover animation
-   */
+  public int getRoomId() {
+    return roomId;
+  }
+
+  /** Reduce boss HP by a specified amount If the boss dies, play the fallover animation */
   public void decrementHealth(int damage) {
     hitCount = frameDelay * getHitAnimation.getSize();
     setFrameNumber(0);
@@ -270,20 +284,15 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     }
   }
 
-  /**
-   * Lets the player execute the boss
-   */
-
-  public void executeBoss(){
+  /** Lets the player execute the boss */
+  public void executeBoss() {
     setFrameNumber(0);
     executeCount = frameDelay * deathAnimation.getSize();
     isExecute = true;
   }
 
-  /**
-   * Lets the boss attack
-   */
-  public void bossAttack(){
+  /** Lets the boss attack */
+  public void bossAttack() {
     if (attackCount == 0) {
       setFrameNumber(0);
       attackCount = frameDelay * attackAnimation.getSize();
@@ -386,19 +395,21 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     public Builder setFalloverAnimation(Texture texture) {
       int width = texture.getWidth();
       falloverAnimation = new FilmStrip(texture, 1, width / frameSize);
-      if (type.equals("crab")){
+      if (type.equals("crab")) {
         falloverAnimation = new FilmStrip(texture, 1, 16);
       }
       ;
       return this;
     }
-    public Builder setDeathAnimation(Texture texture){
+
+    public Builder setDeathAnimation(Texture texture) {
       int width = texture.getWidth();
       deathAnimation = new FilmStrip(texture, 1, width / frameSize);
       ;
       return this;
     }
-    public Builder setAttackAnimation(Texture texture){
+
+    public Builder setAttackAnimation(Texture texture) {
       int width = texture.getWidth();
       attackAnimation = new FilmStrip(texture, 1, width / frameSize);
       ;
@@ -424,7 +435,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
       if (type.equals("crab")) {
         frameSize = 110;
       } else if (type.contains("clam")) {
-        frameSize = 45;
+        frameSize = 60;
       } else {
         frameSize = 45;
       }
@@ -435,27 +446,36 @@ public abstract class BossModel extends EnemyModel implements Renderable {
       if (type.equals("crab")) {
         return new CrabBossModel(this);
       } else if (type.contains("clam")) {
-        return new JellyBossModel(this);
+        return new ClamModel(this);
       } else {
         return new JellyBossModel(this);
       }
     }
-    public BossController buildController(BossModel model, PlayerModel player, BulletModel.Builder bulletBuilder, 
+
+    public BossController buildController(
+        BossModel model,
+        PlayerModel player,
+        BulletModel.Builder bulletBuilder,
         PhysicsEngine physicsEngine) {
       if (type.equals("crab")) {
         return new CrabBossController((CrabBossModel) model, player, bulletBuilder, physicsEngine);
       } else if (type.equals("shark")) {
         return new SharkBossController(model, player, bulletBuilder, physicsEngine);
       } else if (type.equals("aimed_jelly")) {
-        return new AimedSingleBulletJellyBossController((JellyBossModel) model, player, bulletBuilder, physicsEngine);
+        return new AimedSingleBulletJellyBossController(
+            (JellyBossModel) model, player, bulletBuilder, physicsEngine);
       } else if (type.equals("arc_jelly")) {
-        return new AimedArcJellyBossController((JellyBossModel) model, player, bulletBuilder, physicsEngine);
+        return new AimedArcJellyBossController(
+            (JellyBossModel) model, player, bulletBuilder, physicsEngine);
       } else if (type.contains("fixed_clam")) {
         // invarient, this is a float and won't fail
         float angle = MathUtils.degRad * Float.parseFloat(type.replaceAll("[^\\d.]", ""));
         return new FixedStreamClamController(angle, model, player, bulletBuilder, physicsEngine);
       } else if (type.equals("oscillating_ring_clam")) {
         return new OscillatingRingClamController(model, player, bulletBuilder, physicsEngine);
+      } else if (type.contains("random_stream_clam")) {
+        float angle = MathUtils.degRad * Float.parseFloat(type.replaceAll("[^\\d.]", ""));
+        return new RandomStreamClamController(angle, model, player, bulletBuilder, physicsEngine);
       }
       throw new RuntimeException("boss type not supported");
     }

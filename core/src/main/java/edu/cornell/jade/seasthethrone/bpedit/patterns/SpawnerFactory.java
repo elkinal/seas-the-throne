@@ -170,4 +170,23 @@ public final class SpawnerFactory {
     out.addFamily(f);
     return out;
   }
+
+  /**
+   * Constructs a randomly spraying bullet stream of bullet aimed in a certain
+   * direction
+   *
+   * @param angleRange    the full angle the spawner can spray in (radians)
+   * @param delay         delay inbetween firing
+   * @param builder       a builder to create bullet models
+   * @param physicsEngine {@link PhysicsEngine} to add bullets to
+   */
+  public static Spawner constructRepeatingRandomStream(float angleRange, int delay, BulletModel.Builder builder,
+                                                           PhysicsEngine physicsEngine) {
+    Spawner out = new Spawner(builder, physicsEngine);
+    BulletFamily f = new BulletFamily(0f, 0f, 14f, 0f, 0.5f, 0);
+    f.addEffect(new Periodic(delay));
+    f.addEffect(new RandomSpray(angleRange));
+    out.addFamily(f);
+    return out;
+  }
 }

@@ -106,6 +106,9 @@ public class RenderingEngine {
     canvas.begin();
     canvas.getSpriteBatch().setProjectionMatrix(getViewport().getCamera().combined);
     for (Renderable r : renderables) {
+      if (r instanceof BackgroundImage) {
+        BackgroundImage b = (BackgroundImage) r;
+      }
       r.draw(this);
     }
     canvas.end();

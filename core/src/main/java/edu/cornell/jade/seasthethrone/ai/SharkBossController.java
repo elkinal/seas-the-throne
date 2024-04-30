@@ -88,10 +88,10 @@ public class SharkBossController implements BossController {
    * @param physicsEngine physics engine to add bullet attack to
    */
   public SharkBossController(
-          BossModel boss,
-          PlayerModel player,
-          BulletModel.Builder builder,
-          PhysicsEngine physicsEngine) {
+      BossModel boss,
+      PlayerModel player,
+      BulletModel.Builder builder,
+      PhysicsEngine physicsEngine) {
     this.boss = boss;
     this.player = player;
     this.state = State.IDLE;
@@ -110,14 +110,14 @@ public class SharkBossController implements BossController {
     return boss.getHealth();
   }
 
-  /**
-   * Returns if the crab this model controls is dead.
-   *
-   * @return if the crab this controller controls is dead
-   */
   @Override
   public boolean isDead() {
     return boss.isDead();
+  }
+
+  @Override
+  public boolean isBoss() {
+    return true;
   }
 
   /** Loads in the boss's previous state */
@@ -158,7 +158,7 @@ public class SharkBossController implements BossController {
   private void nextState() {
     if (boss.isDead()) {
       state = State.DEAD;
-    } else if (boss.reachedHealthThreshold()){
+    } else if (boss.reachedHealthThreshold()) {
       state = State.CHASE_PLAYER;
       goalPos.set(player.getX(), player.getY());
       boss.setLinearVelocity(boss.getPosition().sub(goalPos).nor().scl(-15));
@@ -208,7 +208,8 @@ public class SharkBossController implements BossController {
       case CHASE_PLAYER:
         if (goalPosReached()) {
           state = State.RESET;
-          goalPos.set(bounds.getX()+bounds.getWidth()/2, bounds.getY()+bounds.getHeight()/2);
+          goalPos.set(
+              bounds.getX() + bounds.getWidth() / 2, bounds.getY() + bounds.getHeight() / 2);
           boss.setLinearVelocity(boss.getPosition().sub(goalPos).nor().scl(-5));
         }
         break;
@@ -253,19 +254,19 @@ public class SharkBossController implements BossController {
   }
 
   /** If the goal pos was reached */
-  private boolean goalPosReached(){
+  private boolean goalPosReached() {
     return boss.getPosition().sub(goalPos).dot(boss.getLinearVelocity()) > 0;
   }
 
   /** Helper function to generate new goal position & set boss velocity. * */
   private void findNewGoalPos() {
     goalPos.set(
-            rand.nextFloat(bounds.getX(), bounds.getX() + bounds.getWidth()),
-            rand.nextFloat(bounds.getY(), bounds.getY() + bounds.getHeight()));
+        rand.nextFloat(bounds.getX(), bounds.getX() + bounds.getWidth()),
+        rand.nextFloat(bounds.getY(), bounds.getY() + bounds.getHeight()));
     while (boss.getPosition().dst(goalPos) < MIN_MOVE_DIST) {
       goalPos.set(
-              rand.nextFloat(bounds.getX(), bounds.getX() + bounds.getWidth()),
-              rand.nextFloat(bounds.getY(), bounds.getY() + bounds.getHeight()));
+          rand.nextFloat(bounds.getX(), bounds.getX() + bounds.getWidth()),
+          rand.nextFloat(bounds.getY(), bounds.getY() + bounds.getHeight()));
     }
     boss.setLinearVelocity(boss.getPosition().sub(goalPos).nor().scl(-6));
   }
