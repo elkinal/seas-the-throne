@@ -48,7 +48,8 @@ public class CheckpointModel extends BoxModel implements Interactable, Renderabl
 
   @Override
   public void draw(RenderingEngine renderer) {
-    renderer.draw(texture, getX(), getY());
+    float y_offset = WORLD_SCALE*texture.getRegionHeight()/2f - getHeight()/2f;
+    renderer.draw(texture, getX(), getY() + y_offset);
   }
 
   @Override
