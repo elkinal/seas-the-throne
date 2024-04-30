@@ -15,6 +15,7 @@ import edu.cornell.jade.seasthethrone.gamemodel.PortalModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.ObstacleModel;
 import edu.cornell.jade.seasthethrone.gamemodel.gate.GateModel;
+import edu.cornell.jade.seasthethrone.gamemodel.gate.GateWallModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.gamemodel.HealthpackModel;
 import edu.cornell.jade.seasthethrone.input.InputController;
@@ -329,14 +330,18 @@ public class GameplayController implements Screen {
           model.addBoss(bc.getBoss());
         }
       }
-      renderEngine.addRenderable(model);
+
+      for (GateWallModel wall : model.getWalls()) {
+        renderEngine.addRenderable(wall);
+      }
+
       physicsEngine.addObject(model);
     }
 
     // Load checkpoints
     for (LevelObject check : layers.get("checkpoints")) {
       CheckpointModel model = new CheckpointModel(check, worldScale);
-      model.setSensor(true);
+      model.setBodyType(BodyDef.BodyType.StaticBody);
       physicsEngine.addObject(model);
       renderEngine.addRenderable(model);
       interactController.add(model);
@@ -478,8 +483,18 @@ public class GameplayController implements Screen {
     for (Model obj : physicsEngine.getObjects()) {
       if (BuildConfig.DEBUG) assert obj.isActive();
 
-      if (obj instanceof Renderable r) objectCache.add((Model) r);
+      if (obj instanceof Renderable r) {
+        if (obj instanceof GateModel) {
+          for (GateWallModel wall : ((GateModel) obj).getWalls()) {
+            objectCache.add(wall);
+          }
+        } else {
+          objectCache.add((Model) r);
+        }
+      }
     }
+
+
     objectCache.sort(comp);
 
     for (Model r : objectCache) {
@@ -625,6 +640,12 @@ public class GameplayController implements Screen {
   class HeightComparator implements Comparator<Model> {
     @Override
     public int compare(Model o1, Model o2) {
+      if (o1 instanceof PlayerModel) {
+        o1 = ((PlayerModel) o1).getShadowModel();
+      } else if (o2 instanceof PlayerModel) {
+        o2 = ((PlayerModel) o2).getShadowModel();
+      }
+
       float diff = o2.getBody().getPosition().y - o1.getBody().getPosition().y;
       if (diff > 0) {
         return 1;

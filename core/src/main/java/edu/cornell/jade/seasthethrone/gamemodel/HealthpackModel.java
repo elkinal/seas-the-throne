@@ -3,6 +3,7 @@ package edu.cornell.jade.seasthethrone.gamemodel;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import edu.cornell.jade.seasthethrone.level.LevelObject;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.render.Renderable;
@@ -18,6 +19,7 @@ public class HealthpackModel extends BoxModel implements Interactable, Renderabl
     super(obs.x, obs.y, obs.width, obs.height);
 
     this.texture = new TextureRegion(new Texture("levels/healthpack.png"));
+    setBodyType(BodyDef.BodyType.StaticBody);
   }
 
   public boolean playerInRange(Vector2 playerPos) {
