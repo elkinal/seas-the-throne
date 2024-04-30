@@ -12,6 +12,7 @@ public class InteractableController implements Controllable {
 
   private boolean interactPressed;
 
+  /** Checkpoint ID of the last interacted checkpoint */
   private int checkpointID;
 
   private boolean checkpointActivated;

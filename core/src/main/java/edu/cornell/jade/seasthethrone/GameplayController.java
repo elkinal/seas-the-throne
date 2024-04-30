@@ -463,7 +463,6 @@ public class GameplayController implements Screen {
     // Reset target so player doesn't teleport again on next frame
     physicsEngine.setTarget(null);
     physicsEngine.setSpawnPoint(null);
-    physicsEngine.setCheckpointID(null);
 
     // Render frame
     renderEngine.clear();
