@@ -445,14 +445,10 @@ public class GameplayController implements Screen {
       }
     }
 
-    // Check which checkpoints are active
-    if (physicsEngine.hasCheckpoint()) {
-      if (BuildConfig.DEBUG) {
-        System.out.println("hasCheckpoint " + physicsEngine.getCheckpointID());
-      }
-//      playerController.setHealth(5);
+    // Check if a checkpoint was interacted with, updates save state
+    if (interactController.isCheckpointActivated()) {
       stateController.updateState(level.name, playerController, bossControllers);
-      stateController.setCheckpoint(physicsEngine.checkpointID);
+      stateController.setCheckpoint(interactController.getCheckpointID());
     }
 
     // Load new level if the player has touched a portal, thus setting a target

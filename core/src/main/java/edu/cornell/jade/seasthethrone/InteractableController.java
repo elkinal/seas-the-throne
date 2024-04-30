@@ -12,11 +12,17 @@ public class InteractableController implements Controllable {
 
   private boolean interactPressed;
 
+  private int checkpointID;
+
+  private boolean checkpointActivated;
+
   private PlayerController player;
 
   public InteractableController() {
     this.interactables = new Array<>();
     this.interactPressed = false;
+    checkpointActivated = false;
+    checkpointID = -1;
   }
 
   public void setPlayerController(PlayerController player) {
@@ -28,24 +34,47 @@ public class InteractableController implements Controllable {
   }
 
   public void update() {
+    this.checkpointActivated = false;
+
     if (!interactPressed) {
       return;
     }
 
     for (Interactable interactable : interactables) {
+      // interact with healthpacks
       if (interactable instanceof HealthpackModel) {
         if (interactable.playerInRange(player.getShadowLocation())) {
           if (BuildConfig.DEBUG) System.out.println("Health restored!");
           player.setHealth(5);
+
+          // Trying to remove healthpack after use is super buggy
+//          ((HealthpackModel) interactable).markRemoved(true);
         }
+
+        // interact with checkpoints
       } else if (interactable instanceof CheckpointModel) {
         if (interactable.playerInRange(player.getShadowLocation())) {
-          if (BuildConfig.DEBUG) System.out.println("Checkpoint activated");
+          if (BuildConfig.DEBUG) {
+            System.out.println("Checkpoint "+((CheckpointModel) interactable).getCheckpointID()+" activated");
+          }
+
+          // player.setHealth(5);
           ((CheckpointModel) interactable).setActivated(true);
+          this.checkpointID = ((CheckpointModel) interactable).getCheckpointID();
+          this.checkpointActivated = true;
+
         }
       }
     }
     interactPressed = false;
+  }
+
+  public boolean isCheckpointActivated() {
+    return checkpointActivated;
+  }
+
+  public int getCheckpointID() {
+    return checkpointID;
   }
 
   @Override
