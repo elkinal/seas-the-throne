@@ -62,6 +62,7 @@ levels/test1.tiled-project
 levels/vertical_gate.png
 libgdx.png
 loading/background.png
+loading/player_run_right.png
 loading.json
 player/dash_indicator.png
 player/player_dash_down.png
