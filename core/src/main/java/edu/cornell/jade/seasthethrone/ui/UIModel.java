@@ -1,11 +1,11 @@
 package edu.cornell.jade.seasthethrone.ui;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import edu.cornell.jade.seasthethrone.ai.BossController;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 
-import java.util.ArrayList;
 
 /**
  * This is a model class that combines all UI objects into one, and contains all of them in one
@@ -23,7 +23,7 @@ public class UIModel implements Renderable {
   private BossHealthBar boss;
 
   /** The HP bars of enemies */
-  private ArrayList<EnemyHealthBar> enemies;
+  private Array<EnemyHealthBar> enemies;
 
   /** Whether the player is fighting a boss (need to render HP bar) */
   private boolean isBoss;
@@ -42,7 +42,7 @@ public class UIModel implements Renderable {
     boss = new BossHealthBar();
     gradient = new Gradient();
     health = new HealthBar();
-    enemies = new ArrayList<>();
+    enemies = new Array<>();
     isBoss = false;
   }
 
@@ -59,7 +59,7 @@ public class UIModel implements Renderable {
    *
    * @return the enemies
    */
-  public ArrayList<EnemyHealthBar> getEnemies() {
+  public Array<EnemyHealthBar> getEnemies() {
     return enemies;
   }
 

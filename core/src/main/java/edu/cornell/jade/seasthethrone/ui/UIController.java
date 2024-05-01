@@ -76,7 +76,7 @@ public class UIController {
   /**
    * Returns the enemies health bars ui element.
    */
-  public ArrayList<EnemyHealthBar> getEnemies() {
+  public Array<EnemyHealthBar> getEnemies() {
     return uiModel.getEnemies();
   }
 
