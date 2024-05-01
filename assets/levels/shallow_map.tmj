@@ -4524,44 +4524,10 @@
         {
          "draworder":"topdown",
          "id":14,
-         "name":"checkpoints",
+         "name":"interactables",
          "objects":[
                 {
-                 "height":40,
-                 "id":178,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"checkpointID",
-                         "type":"int",
-                         "value":2
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":739,
-                 "y":734
-                }, 
-                {
-                 "height":40,
-                 "id":243,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"checkpointID",
-                         "type":"int",
-                         "value":1
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":40,
-                 "x":1672.25,
-                 "y":354.583333333333
-                }, 
-                {
-                 "height":40,
+                 "height":10,
                  "id":244,
                  "name":"",
                  "properties":[
@@ -4569,13 +4535,79 @@
                          "name":"checkpointID",
                          "type":"int",
                          "value":0
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"checkpoint"
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":40,
-                 "x":2755,
-                 "y":187.5
+                 "width":18.5,
+                 "x":2758,
+                 "y":217.5
+                }, 
+                {
+                 "height":7.5,
+                 "id":253,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"healthpack"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":10,
+                 "x":2635,
+                 "y":296.25
+                }, 
+                {
+                 "height":10,
+                 "id":255,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"checkpointID",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"checkpoint"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":18.5,
+                 "x":1640,
+                 "y":420
+                }, 
+                {
+                 "height":10,
+                 "id":256,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"checkpointID",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"checkpoint"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":18.5,
+                 "x":750.25,
+                 "y":758
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -5126,10 +5158,54 @@
                  "width":2.21836,
                  "x":2617.22260896323,
                  "y":1400.38712897862
+                }, 
+                {
+                 "height":138.066982746785,
+                 "id":251,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":7
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":18.6345,
+                 "x":2059.02165681072,
+                 "y":1340.59944578678
+                }, 
+                {
+                 "height":52.378231620346,
+                 "id":252,
+                 "name":"levels\/gate.png",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":7
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":false
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":2.21836,
+                 "x":2036.77688070159,
+                 "y":1617.55368842981
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -5219,8 +5295,8 @@
                  "type":"",
                  "visible":true,
                  "width":20,
-                 "x":1756.21382162943,
-                 "y":274.150005453091
+                 "x":1747.7868553373,
+                 "y":248.869106576687
                 }, 
                 {
                  "gid":40,
@@ -5237,8 +5313,8 @@
                  "type":"",
                  "visible":true,
                  "width":20,
-                 "x":1753.93837854299,
-                 "y":444.903529020222
+                 "x":1742.70242348681,
+                 "y":451.457836136327
                 }, 
                 {
                  "gid":40,
@@ -5274,7 +5350,7 @@
                  "visible":true,
                  "width":20,
                  "x":2262.40057498802,
-                 "y":434.417824628654
+                 "y":431.608835864609
                 }, 
                 {
                  "gid":40,
@@ -5347,6 +5423,42 @@
                  "width":20,
                  "x":2718,
                  "y":1200
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":249,
+                 "name":"random_stream_clam35",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":7
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":1810.90985475933,
+                 "y":1565.00939399215
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":250,
+                 "name":"random_stream_clam90",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":7
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":1942.23381806492,
+                 "y":1712.48229504261
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -5524,7 +5636,7 @@
          "y":0
         }],
  "nextlayerid":15,
- "nextobjectid":249,
+ "nextobjectid":257,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

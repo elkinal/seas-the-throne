@@ -64,22 +64,6 @@ public class BackgroundImage implements Renderable {
     return opacity;
   }
 
-  /**
-   * Returns the layer with the given name
-   *
-   * @param propName the name of the layer to return
-   * @return the layer with the given name
-   * @throws Error if the provided name doesn't match any layer in the level
-   */
-  private HashMap<String, Object> getProperty(String propName) {
-    for (HashMap<String, Object> prop : properties) {
-      if (((String) prop.get("name")).equals(propName)) {
-        return prop;
-      }
-    }
-    throw new Error("No layer with name " + propName);
-  }
-
   public int getFrameNumber() {
     return 0;
   }

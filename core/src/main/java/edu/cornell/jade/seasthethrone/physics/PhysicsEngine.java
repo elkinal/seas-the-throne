@@ -40,9 +40,6 @@ public class PhysicsEngine implements ContactListener {
   /** To keep track of the continuous player-boss collision */
   private Optional<Contact> playerBossCollision;
 
-  /** Checkpoint ID triggered, should be null unless the player is on a checkpoint */
-  public Integer checkpointID;
-
   public PhysicsEngine(Rectangle bounds, World world) {
     this.world = world;
     this.bounds = new Rectangle(bounds);
@@ -209,18 +206,6 @@ public class PhysicsEngine implements ContactListener {
       } else if (bd2 instanceof PlayerBulletModel && bd1 instanceof BossModel) {
         handleCollision((PlayerBulletModel) bd2, (BossModel) bd1);
       }
-      // Handle checkpoint sensors
-      else if (bd1 instanceof PlayerShadowModel && bd2 instanceof CheckpointModel) {
-        if (BuildConfig.DEBUG) System.out.println("checkpoint detected");
-
-        ((CheckpointModel) bd2).setActivated(true);
-        setCheckpointID(((CheckpointModel) bd2).getCheckpointID());
-      } else if (bd2 instanceof PlayerShadowModel && bd1 instanceof CheckpointModel) {
-        if (BuildConfig.DEBUG) System.out.println("checkpoint detected");
-
-        ((CheckpointModel) bd1).setActivated(true);
-        setCheckpointID(((CheckpointModel) bd1).getCheckpointID());
-      }
       // Handle obstacles
       else if (bd1 instanceof BulletModel && bd2 instanceof ObstacleModel) {
         bd1.markRemoved(true);
@@ -275,12 +260,6 @@ public class PhysicsEngine implements ContactListener {
   public boolean hasTarget() {
     return this.target != null;
   }
-
-  public void setCheckpointID(Integer id) { this.checkpointID = id; }
-
-  public boolean hasCheckpoint() { return this.checkpointID != null; }
-
-  public int getCheckpointID() { return this.checkpointID; }
 
   /** Helper function to apply a knockback on the player body. */
   public void applyKnockback(PlayerBodyModel pb, Vector2 bd2Pos, float knockbackForce) {

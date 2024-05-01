@@ -83,7 +83,6 @@ public class CrabBossController implements BossController {
     this.player = player;
     this.state = State.IDLE;
 
-    System.out.println(boss.getX() + " " + boss.getY());
     this.attack1 =
         new ArcsAcrossTheTopAttack(
             boss.getX() + X_OFFSET,

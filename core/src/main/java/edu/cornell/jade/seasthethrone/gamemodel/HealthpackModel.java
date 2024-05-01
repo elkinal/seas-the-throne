@@ -3,55 +3,34 @@ package edu.cornell.jade.seasthethrone.gamemodel;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import edu.cornell.jade.seasthethrone.level.LevelObject;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
-import edu.cornell.jade.seasthethrone.physics.CollisionMask;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 
-public class CheckpointModel extends BoxModel implements Interactable, Renderable {
-
-  /** The ID for this checkpoint */
-  private int checkpointID;
-
-  /** If this checkpoint has been activated */
-  private boolean activated;
+public class HealthpackModel extends BoxModel implements Interactable, Renderable {
 
   private TextureRegion texture;
 
-  private final float WORLD_SCALE;
-
-  /** Range within which the player can interact with this checkpoint */
+  /** Range within which the player can interact with this healthpack */
   private final float INTERACT_RANGE = 3f;
 
-  public CheckpointModel(LevelObject obs, float scale) {
+  public HealthpackModel(LevelObject obs) {
     super(obs.x, obs.y, obs.width, obs.height);
-    this.checkpointID = obs.checkpointID;
-    this.WORLD_SCALE = scale;
-    this.texture = new TextureRegion(new Texture("levels/mossytablet.png"));
-    CollisionMask.setCategoryMaskBits(this);
+
+    this.texture = new TextureRegion(new Texture("levels/healthpack.png"));
+    setBodyType(BodyDef.BodyType.StaticBody);
   }
 
-  public int getCheckpointID() {
-    return checkpointID;
-  }
-
-  public void setActivated(boolean a) {
-    activated = a;
-  }
-
-  public void interact() {}
-
-  /** Checks if the player is close enough to interact with this checkpoint */
-  @Override
+  /** Checks if the player is close enough to interact with this healthpack */
   public boolean playerInRange(Vector2 playerPos) {
     return Math.abs(Vector2.dst(getX(), getY(), playerPos.x, playerPos.y)) < INTERACT_RANGE;
   }
 
   @Override
   public void draw(RenderingEngine renderer) {
-    float y_offset = WORLD_SCALE*texture.getRegionHeight()/2f - getHeight()/2f;
-    renderer.draw(texture, getX(), getY() + y_offset);
+    renderer.draw(texture, getX(), getY());
   }
 
   @Override

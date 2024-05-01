@@ -16,21 +16,9 @@ public class Level {
   /** Name of this level */
   public String name;
 
-  private final Array<HashMap<String, Object>> layers;
-
   private Vector2 playerLoc;
 
-  private final Array<LevelObject> bosses = new Array<>();
-
-  private final Array<LevelObject> walls = new Array<>();
-
-  private final Array<LevelObject> obstacles = new Array<>();
-
-  private final Array<LevelObject> portals = new Array<>();
-
-  private final Array<LevelObject> gates = new Array<>();
-
-  private final Array<LevelObject> checkpoints = new Array<>();
+  private final HashMap<String, Array<LevelObject>> layers;
 
   private BackgroundImage background;
 
@@ -92,17 +80,19 @@ public class Level {
     }
 
     // Load in layers
-    layers = (Array<HashMap<String, Object>>) levelMap.get("layers");
+    Array<HashMap<String, Object>> layerArray = (Array<HashMap<String, Object>>) levelMap.get("layers");
 
-    parseBackgroundLayer(getLayer("background"));
-    parsePlayerLayer(getLayer("player"));
-    parseGatesLayer(getLayer("gates"));
-    parseTileLayer(getLayer("tiles"));
-    parseBossLayer(getLayer("bosses"));
-    parseWallLayer(getLayer("walls"));
-    parseObstacleLayer(getLayer("obstacles"));
-    parsePortalLayer(getLayer("portals"));
-    parseCheckpointLayer(getLayer("checkpoints"));
+    layers = new HashMap<>();
+
+    parseBackgroundLayer(getLayer(layerArray, "background"));
+    parsePlayerLayer(getLayer(layerArray,"player"));
+    parseGatesLayer(getLayer(layerArray,"gates"));
+    parseTileLayer(getLayer(layerArray,"tiles"));
+    parseBossLayer(getLayer(layerArray,"bosses"));
+    parseWallLayer(getLayer(layerArray,"walls"));
+    parseObstacleLayer(getLayer(layerArray,"obstacles"));
+    parsePortalLayer(getLayer(layerArray,"portals"));
+    parseInteractableLayer(getLayer(layerArray, "interactables"));
   }
 
   /**
@@ -112,14 +102,18 @@ public class Level {
    * @return the layer with the given name
    * @throws Error if the provided name doesn't match any layer in the level
    */
-  private HashMap<String, Object> getLayer(String layerName) {
-    for (HashMap<String, Object> layer : layers) {
+  private HashMap<String, Object> getLayer(Array<HashMap<String, Object>> layerArray, String layerName) {
+    for (HashMap<String, Object> layer : layerArray) {
       if (((String) layer.get("name")).equals(layerName)) {
         return layer;
       }
     }
     return new HashMap<>();
     //    throw new Error("No layer with name " + layerName);
+  }
+
+  public HashMap<String, Array<LevelObject>> getLayers() {
+    return layers;
   }
 
   public BackgroundImage getBackground() {
@@ -136,30 +130,6 @@ public class Level {
 
   public Array<Tile> getTiles() {
     return tiles;
-  }
-
-  public Array<LevelObject> getBosses() {
-    return bosses;
-  }
-
-  public Array<LevelObject> getWalls() {
-    return walls;
-  }
-
-  public Array<LevelObject> getObstacles() {
-    return obstacles;
-  }
-
-  public Array<LevelObject> getPortals() {
-    return portals;
-  }
-
-  public Array<LevelObject> getGates() {
-    return gates;
-  }
-
-  public Array<LevelObject> getCheckpoints() {
-    return checkpoints;
   }
 
   private void parseBackgroundLayer(HashMap<String, Object> bgLayer) {
@@ -237,16 +207,14 @@ public class Level {
     }
   }
 
-  private Array<EnemyModel> parseEnemyLayer(HashMap<String, Object> enemyLayer) {
-    throw new UnsupportedOperationException("parseEnemyLayer not implemented");
-  }
-
   /**
    * Extracts boss locations from a JSON boss layer
    *
    * @param bossLayer JSON object layer containing bosses
    */
   private void parseBossLayer(HashMap<String, Object> bossLayer) {
+    layers.put("bosses", new Array<>());
+
     if (bossLayer.isEmpty()) {
       return;
     }
@@ -271,7 +239,7 @@ public class Level {
       boss.setBossName(name);
       boss.roomId = id;
 
-      bosses.add(boss);
+      layers.get("bosses").add(boss);
     }
   }
 
@@ -281,6 +249,8 @@ public class Level {
    * @param wallLayer JSON object layer containing walls
    */
   private void parseWallLayer(HashMap<String, Object> wallLayer) {
+    layers.put("walls", new Array<>());
+
     if (wallLayer.isEmpty()) {
       return;
     }
@@ -306,7 +276,7 @@ public class Level {
         thisWall.addVertex(x);
         thisWall.addVertex(y);
       }
-      walls.add(thisWall);
+      layers.get("walls").add(thisWall);
     }
   }
 
@@ -316,6 +286,7 @@ public class Level {
    * @param obstacleLayer JSON object layer containing obstacles
    */
   private void parseObstacleLayer(HashMap<String, Object> obstacleLayer) {
+    layers.put("obstacles", new Array<>());
     if (obstacleLayer.isEmpty()) {
       return;
     }
@@ -349,15 +320,17 @@ public class Level {
       if (((String) obsWrapper.get("name")).length() > 0) {
         obs.texture = new TextureRegion(new Texture((String) obsWrapper.get("name")));
       }
-      obstacles.add(obs);
+      layers.get("obstacles").add(obs);
     }
   }
 
   /** Extracts gates objects from JSON gates layer */
   private void parseGatesLayer(HashMap<String, Object> gatesLayer) {
+    layers.put("gates", new Array<>());
     if (gatesLayer.isEmpty()) {
       return;
     }
+
     Array<HashMap<String, Object>> gateWrapperList =
         (Array<HashMap<String, Object>>) gatesLayer.get("objects");
 
@@ -403,7 +376,7 @@ public class Level {
       gateObject.sensors = thisGateGroup.get("sensors");
       gateObject.roomId = id;
 
-      this.gates.add(gateObject);
+      layers.get("gates").add(gateObject);
     }
   }
 
@@ -413,6 +386,7 @@ public class Level {
    * @param portalLayer JSON object layer containing portals
    */
   private void parsePortalLayer(HashMap<String, Object> portalLayer) {
+    layers.put("portals", new Array<>());
     if (portalLayer.isEmpty()) {
       return;
     }
@@ -447,34 +421,45 @@ public class Level {
               JsonHandler.getFloatProperty(portWrapper, "playerX"),
               JsonHandler.getFloatProperty(portWrapper, "playerY"));
       portal.playerLoc = playerLoc;
-      portals.add(portal);
+      layers.get("portals").add(portal);
     }
   }
 
-  private void parseCheckpointLayer(HashMap<String, Object> checkpointLayer) {
-    if (checkpointLayer.isEmpty()) {
+  private void parseInteractableLayer(HashMap<String, Object> interactLayer) {
+    layers.put("checkpoints", new Array<>());
+    layers.put("healthpacks", new Array<>());
+    if (interactLayer.isEmpty()) {
       return;
     }
 
-    Array<HashMap<String, Object>> cpWrapperList =
-        (Array<HashMap<String, Object>>) checkpointLayer.get("objects");
+    Array<HashMap<String, Object>> interactWrapperList =
+        (Array<HashMap<String, Object>>) interactLayer.get("objects");
 
-    for (HashMap<String, Object> cpWrapper : cpWrapperList) {
-      float x = Float.parseFloat((String) cpWrapper.get("x"));
-      float y = Float.parseFloat((String) cpWrapper.get("y"));
-      float width = Float.parseFloat((String) cpWrapper.get("width"));
-      float height = Float.parseFloat((String) cpWrapper.get("height"));
+    for (HashMap<String, Object> interactWrapper : interactWrapperList) {
+      float x = Float.parseFloat((String) interactWrapper.get("x"));
+      float y = Float.parseFloat((String) interactWrapper.get("y"));
+      float width = Float.parseFloat((String) interactWrapper.get("width"));
+      float height = Float.parseFloat((String) interactWrapper.get("height"));
       Vector2 pos = tiledToWorldCoords(new Vector2(x + width / 2f, y + height / 2f));
       Vector2 dims = (new Vector2(width * WORLD_SCALE, height * WORLD_SCALE));
+      String type = JsonHandler.getStringProperty(interactWrapper, "type");
 
-      int cpID = JsonHandler.getIntProperty(cpWrapper, "checkpointID");
       LevelObject obj = new LevelObject(pos.x, pos.y, dims.x, dims.y);
-      obj.checkpointID = cpID;
-
-      if (((String) cpWrapper.get("name")).length() > 0) {
-        obj.texture = new TextureRegion(new Texture((String) cpWrapper.get("name")));
+      if (!((String) interactWrapper.get("name")).isEmpty()) {
+        obj.texture = new TextureRegion(new Texture((String) interactWrapper.get("name")));
       }
-      checkpoints.add(obj);
+
+      switch (type) {
+        case "checkpoint":
+          obj.checkpointID = JsonHandler.getIntProperty(interactWrapper, "checkpointID");
+          layers.get("checkpoints").add(obj);
+          break;
+        case "healthpack":
+          layers.get("healthpacks").add(obj);
+          break;
+        default:
+          break;
+      }
     }
   }
 

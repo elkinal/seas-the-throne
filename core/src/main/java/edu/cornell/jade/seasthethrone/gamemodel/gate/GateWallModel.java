@@ -27,10 +27,12 @@ public class GateWallModel extends BoxModel implements Renderable {
   }
 
   public void draw(RenderingEngine renderer) {
-    if (getWidth() > getHeight()) {
-      drawHorizontal(renderer);
-    } else {
-      drawVertical(renderer);
+    if (isActive()){
+      if (getWidth() > getHeight()) {
+        drawHorizontal(renderer);
+      } else {
+        drawVertical(renderer);
+      }
     }
   }
 

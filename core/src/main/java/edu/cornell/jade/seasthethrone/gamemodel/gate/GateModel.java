@@ -52,6 +52,7 @@ public class GateModel extends ComplexModel implements Renderable {
         }
     }
 
+    public Array<GateWallModel> getWalls() { return this.walls; }
 
     @Override
     protected boolean createJoints(World world) {
