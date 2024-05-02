@@ -50,9 +50,10 @@ public class InteractableController implements Controllable {
     for (Interactable interactable : interactables) {
       // interact with healthpacks
       if (interactable instanceof HealthpackModel) {
-        if (interactable.playerInRange(player.getShadowLocation())) {
+        if (interactable.playerInRange(player.getShadowLocation()) && !((HealthpackModel) interactable).isUsed()) {
           if (BuildConfig.DEBUG) System.out.println("Health restored!");
           player.setHealth(5);
+          ((HealthpackModel) interactable).setUsed(true);
 
           // Trying to remove healthpack after use is super buggy
 //          ((HealthpackModel) interactable).markRemoved(true);

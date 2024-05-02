@@ -41,6 +41,7 @@ legacy/test1.json
 levels/boss-room-tileset.png
 levels/boss-room-tileset.tsx
 levels/healthpack.png
+levels/healthpack_empty.png
 levels/horizontal_gate.png
 levels/hub_world.json
 levels/kelpdark_filmstrip2.png
@@ -90,6 +91,7 @@ player/player_shoot_down.png
 player/player_shoot_left.png
 player/player_shoot_right.png
 player/player_shoot_up.png
+saves/save1.json
 title/background.png
 title/logo.png
 title/play_button.png
