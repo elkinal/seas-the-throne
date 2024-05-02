@@ -42,6 +42,10 @@ public class InteractableController implements Controllable {
   /** Checks if interact was pressed this frame. If so, interacts with all interactables in range */
   public void update() {
     this.checkpointActivated = false;
+    for (Interactable interactable : interactables) {
+      // Check if player is in range
+      interactable.setPlayerInRange(interactable.isPlayerInRange(player.getShadowLocation()));
+    }
 
     if (!interactPressed) {
       return;
@@ -50,7 +54,7 @@ public class InteractableController implements Controllable {
     for (Interactable interactable : interactables) {
       // interact with healthpacks
       if (interactable instanceof HealthpackModel) {
-        if (interactable.playerInRange(player.getShadowLocation()) && !((HealthpackModel) interactable).isUsed()) {
+        if (interactable.getPlayerInRange() && !((HealthpackModel) interactable).isUsed()) {
           if (BuildConfig.DEBUG) System.out.println("Health restored!");
           player.setHealth(5);
           ((HealthpackModel) interactable).setUsed(true);
@@ -61,7 +65,7 @@ public class InteractableController implements Controllable {
 
         // interact with checkpoints
       } else if (interactable instanceof CheckpointModel) {
-        if (interactable.playerInRange(player.getShadowLocation())) {
+        if (interactable.getPlayerInRange()) {
           if (BuildConfig.DEBUG) {
             System.out.println("Checkpoint "+((CheckpointModel) interactable).getCheckpointID()+" activated");
           }

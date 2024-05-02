@@ -44,6 +44,7 @@ levels/healthpack.png
 levels/healthpack_empty.png
 levels/horizontal_gate.png
 levels/hub_world.json
+levels/interactable_arrow.png
 levels/kelpdark_filmstrip2.png
 levels/kelplight_filmstrip2.png
 levels/mossytablet.png
