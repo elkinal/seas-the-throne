@@ -185,7 +185,6 @@ public class GameplayController implements Screen {
     for (Tile tile : level.getTiles()) {
       renderEngine.addRenderable(tile);
     }
-
     // Load player
     // TODO: make this come from the information JSON
     Vector2 playerLoc;
@@ -236,15 +235,13 @@ public class GameplayController implements Screen {
             .setShootCooldownLimit(20)
             .build();
     renderEngine.addRenderable(player);
-
     // Initialize physics engine
     physicsEngine = new PhysicsEngine(bounds, world);
     physicsEngine.addObject(player);
-
     // Load fish bullets builder
     fishBulletBuilder =
         BulletModel.Builder.newInstance().setFishTexture(new Texture("bullet/yellowfish_east.png"));
-
+    System.out.println("flag post bullets");
     // Load bosses
     bossControllers.clear();
     for (int i = 0; i < layers.get("bosses").size; i++) {
@@ -297,14 +294,14 @@ public class GameplayController implements Screen {
       physicsEngine.addObject(boss);
       bossControllers.add(bossController);
     }
-
+    System.out.println("flag post boss");
     // Load walls
     for (LevelObject wall : layers.get("walls")) {
       PolygonModel model = new PolygonModel(wall.toList(), wall.x, wall.y);
       model.setBodyType(BodyDef.BodyType.StaticBody);
       physicsEngine.addObject(model);
     }
-
+    System.out.println("flag post wall");
     // Load Obstacles
     for (LevelObject obs : layers.get("obstacles")) {
       ObstacleModel model = new ObstacleModel(obs, worldScale);
@@ -312,7 +309,7 @@ public class GameplayController implements Screen {
       renderEngine.addRenderable(model);
       physicsEngine.addObject(model);
     }
-
+    System.out.println("flag post obs");
     // Load portals
     for (LevelObject portal : layers.get("portals")) {
       PortalModel model = new PortalModel(portal);
@@ -320,7 +317,7 @@ public class GameplayController implements Screen {
       physicsEngine.addObject(model);
       portalController.addPortal(model);
     }
-
+    System.out.println("flag post portal");
     // Load gates
     for (LevelObject gate : layers.get("gates")) {
       int roomId = gate.roomId;
@@ -337,7 +334,7 @@ public class GameplayController implements Screen {
 
       physicsEngine.addObject(model);
     }
-
+    System.out.println("flag post gate");
     // Load checkpoints
     for (LevelObject check : layers.get("checkpoints")) {
       CheckpointModel model = new CheckpointModel(check, worldScale);
@@ -346,7 +343,7 @@ public class GameplayController implements Screen {
       renderEngine.addRenderable(model);
       interactController.add(model);
     }
-
+    System.out.println("flag post checkp");
     // Load healthpacks
     for (LevelObject hpack : layers.get("healthpacks")) {
       HealthpackModel model = new HealthpackModel(hpack);
@@ -531,9 +528,11 @@ public class GameplayController implements Screen {
 
     listener.exitScreen(this, GDXRoot.EXIT_SWAP);
     level = new Level(physicsEngine.getTarget());
+    System.out.println("flag level object created");
     this.renderEngine.clear();
     bossControllers.clear();
     setupGameplay();
+    System.out.println("flag setup gameplay finished");
     transferState(stateController.getLevel(level.name));
   }
 

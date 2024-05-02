@@ -52,7 +52,7 @@ public class LoadScreen implements Screen {
   private int framesInAnimation;
 
   /** Default budget for asset loader (do nothing but load 60 fps) */
-  private static int DEFAULT_BUDGET = 100;
+  private static int DEFAULT_BUDGET = 50;
 
   private int exitCode;
 
