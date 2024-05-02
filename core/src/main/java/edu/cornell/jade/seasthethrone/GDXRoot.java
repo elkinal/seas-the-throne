@@ -8,7 +8,7 @@ import edu.cornell.jade.seasthethrone.util.ScreenListener;
 import edu.cornell.jade.seasthethrone.assets.AssetDirectory;
 
 public class GDXRoot extends Game implements ScreenListener {
-  private static final int MIN_LOAD_TIME = 50;
+  private static final int MIN_LOAD_TIME = 100;
   public static final int EXIT_SWAP = 1;
   public static final int EXIT_TO_GAME = 2;
 

@@ -1,11 +1,9 @@
 package edu.cornell.jade.seasthethrone.ui;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
-import edu.cornell.jade.seasthethrone.render.GameCanvas;
+import edu.cornell.jade.seasthethrone.ai.BossController;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
-import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
 /**
  * This is a model class that combines all UI objects into one, and contains all of them in one
@@ -19,13 +17,34 @@ public class UIModel implements Renderable {
   /** The ammo bar of the player */
   private AmmoBar ammo;
 
-  /** Constructs a new UIModel. All UI elements are initially empty. */
-  public UIModel() {
-    health = new HealthBar();
+  /** The HP bar of the current boss */
+  private BossHealthBar boss;
+
+  /** Whether the player is fighting a boss (need to render HP bar) */
+  private boolean isBoss;
+
+  /** The gradient for water */
+  private Gradient gradient;
+
+  /**
+   * Constructs a new UIModel. All UI elements are initially empty.
+   *
+   * @param x the x coordinate of the middle of the screen
+   * @param y the y coordinate of the middle of the screen
+   */
+  public UIModel(int x, int y) {
     ammo = new AmmoBar();
+    boss = new BossHealthBar();
+    gradient = new Gradient();
+    health = new HealthBar();
+    isBoss = false;
   }
 
-  /** Returns the AmmoBar */
+  /**
+   * Returns the AmmoBar
+   *
+   * @return the ammo bar for the player
+   */
   public AmmoBar getAmmoBar() {
     return ammo;
   }
@@ -53,14 +72,49 @@ public class UIModel implements Renderable {
     ammo.changePlayerPos(pos);
   }
 
+  /**
+   * Updates the texture of the boss HP bar to match boss health
+   *
+   * @param boss the boss that the player is fighting; null if none
+   */
+  public void update(BossController boss) {
+    if (boss == null) {
+      isBoss = false;
+    } else {
+      isBoss = true;
+      this.boss.changeHP(boss.getHealth());
+    }
+  }
+
+  /**
+   * Draws UI with the Boss HP bar
+   *
+   * @param renderer the rendering engine
+   */
+  public void draw(RenderingEngine renderer, int finishAnimate) {
+    gradient.draw(renderer);
+    health.draw(renderer);
+    if (isBoss && finishAnimate > 0) {
+      boss.draw(renderer);
+    }
+  }
+
+  /**
+   * Draws UI without Boss HP bar
+   *
+   * @param renderer the rendering engine
+   */
   @Override
   public void draw(RenderingEngine renderer) {
+    gradient.draw(renderer);
     health.draw(renderer);
+    if (isBoss) {
+      boss.draw(renderer);
+    }
   }
 
   @Override
-  public void progressFrame() {
-  }
+  public void progressFrame() {}
 
   @Override
   public void alwaysUpdate() {}

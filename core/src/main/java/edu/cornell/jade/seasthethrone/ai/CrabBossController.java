@@ -83,7 +83,6 @@ public class CrabBossController implements BossController {
     this.player = player;
     this.state = State.IDLE;
 
-    System.out.println(boss.getX() + " " + boss.getY());
     this.attack1 =
         new ArcsAcrossTheTopAttack(
             boss.getX() + X_OFFSET,
@@ -111,7 +110,15 @@ public class CrabBossController implements BossController {
     return boss.isDead();
   }
 
-  /** Loads in the boss's previous state */
+  @Override
+  public boolean isBoss() {
+    return true;
+  }
+
+  /**
+   * Loads in the boss's previous state TODO: ERROR WITH THIS (BOSS SAVES HP ACROSS ALL RUNS OF
+   * GAME, EVEN RERUNNING THE CODE)
+   */
   public void transferState(int storedHp) {
     this.boss.setHealth(storedHp);
   }

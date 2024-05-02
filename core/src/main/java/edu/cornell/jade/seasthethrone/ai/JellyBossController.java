@@ -107,13 +107,14 @@ abstract class JellyBossController implements BossController {
     return boss.getHealth();
   }
 
-  /**
-   * Returns if the jelly this model controls is dead.
-   *
-   * @return if the jelly this controller controls is dead
-   */
+  @Override
   public boolean isDead() {
     return boss.isDead();
+  }
+
+  @Override
+  public boolean isBoss() {
+    return false;
   }
 
   @Override
@@ -204,12 +205,12 @@ abstract class JellyBossController implements BossController {
   /** Helper function to generate new goal position & set boss velocity. * */
   private void findNewGoalPos() {
     goalPos.set(
-            rand.nextFloat(bounds.getX(), bounds.getX() + bounds.getWidth()),
-            rand.nextFloat(bounds.getY(), bounds.getY() + bounds.getHeight()));
+        rand.nextFloat(bounds.getX(), bounds.getX() + bounds.getWidth()),
+        rand.nextFloat(bounds.getY(), bounds.getY() + bounds.getHeight()));
     while (boss.getPosition().dst(goalPos) < MIN_MOVE_DIST) {
       goalPos.set(
-              rand.nextFloat(bounds.getX(), bounds.getX() + bounds.getWidth()),
-              rand.nextFloat(bounds.getY(), bounds.getY() + bounds.getHeight()));
+          rand.nextFloat(bounds.getX(), bounds.getX() + bounds.getWidth()),
+          rand.nextFloat(bounds.getY(), bounds.getY() + bounds.getHeight()));
     }
     boss.setLinearVelocity(boss.getPosition().sub(goalPos).nor().scl(-5));
   }
