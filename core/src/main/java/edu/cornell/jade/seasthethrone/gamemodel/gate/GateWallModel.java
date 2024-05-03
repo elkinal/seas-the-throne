@@ -29,7 +29,7 @@ public class GateWallModel extends BoxModel implements Renderable {
       this.texture_up = new TextureRegion(new Texture("levels/gate_vertical_up.png"));
       texture_up.setRegion(0, 0, (int) texture_up.getRegionWidth(), (int) (obs.height / WORLD_SCALE));
 
-      this.texture_down = new TextureRegion(new Texture("levels/gate_vertical_up.png"));
+      this.texture_down = new TextureRegion(new Texture("levels/gate_vertical_down.png"));
       texture_down.setRegion(0, 0, (int) texture_down.getRegionWidth(), (int) (obs.height / WORLD_SCALE));
     }
   }
