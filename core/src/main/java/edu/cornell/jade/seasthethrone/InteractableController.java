@@ -68,7 +68,7 @@ public class InteractableController implements Controllable {
 
         // interact with checkpoints
       } else if (interactable instanceof CheckpointModel) {
-        if (interactable.getPlayerInRange()) {
+        if (interactable.getPlayerInRange() && !checkpointActivated) {
           if (BuildConfig.DEBUG) {
             System.out.println("Checkpoint "+((CheckpointModel) interactable).getCheckpointID()+" activated");
           }

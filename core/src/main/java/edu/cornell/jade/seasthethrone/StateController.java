@@ -61,7 +61,7 @@ public class StateController {
     json.setOutputType(JsonWriter.OutputType.json);
     String out = json.prettyPrint(json.toJson(this));
     if (BuildConfig.DEBUG) {
-      System.out.println("save " + out);
+//      System.out.println("save " + out);
     }
     try {
       File myObj = new File("saves/save" + saveIndex + ".json");

@@ -495,6 +495,7 @@ public class GameplayController implements Screen {
     }
 
     if (restart) {
+      System.out.println("flag1");
       respawn();
       restart = false;
     }
@@ -502,6 +503,7 @@ public class GameplayController implements Screen {
     // Draw reset and debug screen for wins and losses
     if (gameState == GameState.OVER || gameState == GameState.WIN) {
       if (inputController.didReset()) {
+        System.out.println("flag2");
         respawn();
         pauseController.continueGame();
       } else {
@@ -552,9 +554,14 @@ public class GameplayController implements Screen {
     if (BuildConfig.DEBUG) {
       System.out.println("Respawning");
     }
+
+    Vector2 respawnLoc = (stateController.getRespawnLoc() == null) ? null : stateController.getRespawnLoc().cpy();
+
     setupGameplay();
     stateController.loadState("saves/save1.json");
     transferState(stateController.getLevel(level.name));
+
+    if (respawnLoc != null) stateController.setRespawnLoc(respawnLoc);
 
     try {
       System.out.println("respawn loc " + stateController.getRespawnLoc());
