@@ -109,7 +109,7 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
   }
 
   /**
-   * Update the dash indicator vector
+   * Update the dash indicator vector (purely for rendering)
    *
    * @param dashDirection Vector representing the direction of the dash
    */
