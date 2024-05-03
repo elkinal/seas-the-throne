@@ -12,17 +12,25 @@ import edu.cornell.jade.seasthethrone.util.FilmStrip;
 public class GateWallModel extends BoxModel implements Renderable {
   private final float WORLD_SCALE;
 
-  private TextureRegion texture;
+  private TextureRegion texture_up;
+
+  private TextureRegion texture_down;
 
   public GateWallModel(LevelObject obs, float worldScale) {
     super(obs.x, obs.y, obs.width, obs.height);
     this.WORLD_SCALE = worldScale;
     if (getWidth() > getHeight()) {
-      this.texture = new TextureRegion(new Texture("levels/horizontal_gate.png"));
-      texture.setRegion(0, 0, (int) (obs.width / WORLD_SCALE), (int) texture.getRegionHeight());
+      this.texture_up = new TextureRegion(new Texture("levels/gate_horizontal_up.png"));
+      texture_up.setRegion(0, 0, (int) (obs.width / WORLD_SCALE), (int) texture_up.getRegionHeight());
+
+      this.texture_down = new TextureRegion(new Texture("levels/gate_horizontal_down.png"));
+      texture_down.setRegion(0, 0, (int) (obs.width / WORLD_SCALE), (int) texture_down.getRegionHeight());
     } else {
-      this.texture = new TextureRegion(new Texture("levels/vertical_gate.png"));
-      texture.setRegion(0, 0, (int) texture.getRegionWidth(), (int) (obs.height / WORLD_SCALE));
+      this.texture_up = new TextureRegion(new Texture("levels/gate_vertical_up.png"));
+      texture_up.setRegion(0, 0, (int) texture_up.getRegionWidth(), (int) (obs.height / WORLD_SCALE));
+
+      this.texture_down = new TextureRegion(new Texture("levels/gate_vertical_down.png"));
+      texture_down.setRegion(0, 0, (int) texture_down.getRegionWidth(), (int) (obs.height / WORLD_SCALE));
     }
   }
 
@@ -55,13 +63,13 @@ public class GateWallModel extends BoxModel implements Renderable {
 
   private void drawHorizontal(RenderingEngine renderer) {
     Vector2 pos = getPosition();
-    float y_offset = WORLD_SCALE * texture.getRegionHeight() / 2f;
-    renderer.draw(texture, pos.x, pos.y + y_offset);
+    float y_offset = WORLD_SCALE * texture_up.getRegionHeight() / 2f;
+    renderer.draw(texture_up, pos.x, pos.y + y_offset);
   }
 
   private void drawVertical(RenderingEngine renderer) {
     Vector2 pos = getPosition();
-    float y_offset = WORLD_SCALE * texture.getRegionHeight() / 2f;
-    renderer.draw(texture, pos.x, pos.y);
+    float y_offset = WORLD_SCALE * texture_up.getRegionHeight() / 2f;
+    renderer.draw(texture_up, pos.x, pos.y);
   }
 }

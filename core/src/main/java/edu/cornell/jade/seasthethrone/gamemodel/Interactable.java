@@ -4,6 +4,10 @@ import com.badlogic.gdx.math.Vector2;
 
 public interface Interactable {
 
-  public boolean playerInRange(Vector2 playerPos);
+  boolean isPlayerInRange(Vector2 playerPos);
+
+  void setPlayerInRange(boolean inRange);
+
+  boolean getPlayerInRange();
 
 }
