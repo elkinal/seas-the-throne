@@ -160,9 +160,6 @@ public class PlayerModel extends ComplexModel implements Renderable {
   /** The number of frames a dash lasts */
   private int dashLength;
 
-  /** The angle direction of this dash in radians */
-  private Vector2 dashDirection;
-
   /** Whether the player is shooting */
   private boolean isShooting;
 
@@ -183,8 +180,6 @@ public class PlayerModel extends ComplexModel implements Renderable {
 
   /** Death animation countdown */
   private int deathCount;
-  /** Get hit animation countdown */
-  private int hitCount;
 
   /** Whether the player should continue being animated. */
   private boolean shouldUpdate;
@@ -246,7 +241,6 @@ public class PlayerModel extends ComplexModel implements Renderable {
 
     shootCooldownLimit = builder.shootCooldownLimit;
     shootCounter = 0;
-    hitCount = 0;
     isShooting = false;
     shootTime = 0;
     deathCount = framesInAnimationDeath * initFrameDelay;
@@ -277,27 +271,11 @@ public class PlayerModel extends ComplexModel implements Renderable {
       progressFrame();
     }
     Vector2 pos = getPosition();
-    if (isHit() && !isDead()) {
+    if (getBodyModel().isHit() && !isDead()) {
       renderer.draw(currentStrip, pos.x, pos.y, 0.12f, Color.RED);
-      hitCount -=1;
     }
     else renderer.draw(currentStrip, pos.x, pos.y, 0.12f);
     getSpearModel().draw(renderer);
-  }
-
-  public boolean isHit(){
-    int curHealth = getHealth();
-    if (curHealth == prevHealth){
-      if(hitCount > 0)
-        return true;
-      else
-        return false;
-    }
-    else{
-      prevHealth = curHealth;
-      hitCount = dashLength;
-      return true;
-    }
   }
 
   @Override
@@ -630,17 +608,9 @@ public class PlayerModel extends ComplexModel implements Renderable {
     frameDelay = initFrameDelay;
     dashFrameCounter = 1;
     animationFrame = 0;
+    cooldownCounter = cooldownLimit;
+    dashCounter = 0;
     getSpearModel().setSpear(false);
-  }
-
-  /** Returns dash direction */
-  public Vector2 getDashDirection() {
-    return dashDirection;
-  }
-
-  /** Sets dash direction */
-  public void setDashDirection(Vector2 dir) {
-    dashDirection = dir;
   }
 
   /** Returns if the player is currently shooting */
@@ -707,7 +677,7 @@ public class PlayerModel extends ComplexModel implements Renderable {
     getSpearModel().updateSpear(dashDirection);
   }
 
-  /** Update the player's dash indicator */
+  /** Update the player's dash indicator (this is purely for rendering) */
   public void updateDashIndicator(Vector2 dashDirection) {
     getSpearModel().updateDashIndicator(dashDirection);
   }
@@ -733,6 +703,11 @@ public class PlayerModel extends ComplexModel implements Renderable {
    */
   @Override
   public void update(float delta) {
+    if (getBodyModel().shouldStopDashing()){
+      if (isDashing()) stopDashing();
+      getBodyModel().setStopDashing(false);
+    }
+
     if (isDead()) {
       if (deathCount == framesInAnimationDeath * initFrameDelay) startDying();
       deathCount = Math.max(0, deathCount - 1);
@@ -741,7 +716,6 @@ public class PlayerModel extends ComplexModel implements Renderable {
       if (dashCounter <= 0) {
         // exit dash
         stopDashing();
-        cooldownCounter = cooldownLimit;
       }
     } else if (isShooting()) {
       shootCounter -= 1;

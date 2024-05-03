@@ -37,7 +37,9 @@ public class InputController {
   /** Whether the reset button was pressed. */
   protected boolean resetPressed;
 
-  /** Cache vector to return containing the dash coordinates of the previous read */
+  /**
+   * Cache vector to return containing the dash coordinates of the previous read
+   */
   Vector2 dashCoordCache;
 
   /**
@@ -61,7 +63,8 @@ public class InputController {
   }
 
   /**
-   * Removes c from 'controllables.' Removing an object which was never added does nothing.
+   * Removes c from 'controllables.' Removing an object which was never added does
+   * nothing.
    *
    * @param c the Controllable to be removed
    */
@@ -72,10 +75,12 @@ public class InputController {
   }
 
   /**
-   * Constructor for InputController with a parameter to convert between screens and the world.
+   * Constructor for InputController with a parameter to convert between screens
+   * and the world.
    *
-   * @param screenToWorld viewport to support an unproject operation to convert screen coord to
-   *     mouse coord.
+   * @param screenToWorld viewport to support an unproject operation to convert
+   *                      screen coord to
+   *                      mouse coord.
    */
   public InputController(Viewport screenToWorld) {
     this.controllables = new ArrayList<>();
@@ -89,7 +94,9 @@ public class InputController {
     }
   }
 
-  /** Updates the state of this object (position) both vertically and horizontally. */
+  /**
+   * Updates the state of this object (position) both vertically and horizontally.
+   */
   public void update() {
     for (Controllable p : controllables) {
       readInput(p);
@@ -109,10 +116,13 @@ public class InputController {
   }
 
   /**
-   * Reads input from an XBox controller connected to this computer to determine the actions of the
-   * player. Then calls the corresponding methods in the controller to process the actions.
+   * Reads input from an XBox controller connected to this computer to determine
+   * the actions of the
+   * player. Then calls the corresponding methods in the controller to process the
+   * actions.
    *
-   * <p>Change the controller keys mapped to primary and secondary actions here.
+   * <p>
+   * Change the controller keys mapped to primary and secondary actions here.
    *
    * @param obj Controller for the player
    */
@@ -127,13 +137,15 @@ public class InputController {
 
     // dashing
     if (xbox.getRightTrigger() > 0.6f) {
-      //      obj.pressSecondary();
       obj.pressPrimary();
     }
     // shooting
     if (xbox.getLeftTrigger() > 0.6f) {
-      //      obj.pressPrimary();
       obj.pressSecondary();
+    }
+    // assisted shooting
+    if (xbox.getLBumper()) {
+      obj.pressTertiary();
     }
     // interact
     if (xbox.getB()) {
@@ -154,11 +166,14 @@ public class InputController {
   }
 
   /**
-   * Reads input from the keyboard to determine the actions of the player. Then calls the
-   * corresponding methods in the controller to process the actions. Reads from the keyboard
+   * Reads input from the keyboard to determine the actions of the player. Then
+   * calls the
+   * corresponding methods in the controller to process the actions. Reads from
+   * the keyboard
    * regardless of whether an X-Box controller is connected.
    *
-   * <p>Change the keyboard keys mapped to primary and secondary actions here.
+   * <p>
+   * Change the keyboard keys mapped to primary and secondary actions here.
    *
    * @param obj Controller for the player
    */
@@ -185,7 +200,7 @@ public class InputController {
     if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
       obj.pressSecondary();
     }
-    if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
+    if (Gdx.input.isKeyPressed(Input.Keys.ENTER) || Gdx.input.isKeyPressed(Input.Keys.E)) {
       obj.pressInteract();
     }
     //    if (Gdx.input.isKeyPressed(Input.Keys.T)) {
@@ -202,11 +217,14 @@ public class InputController {
   }
 
   /**
-   * Reads input from the mouse to determine the actions of the player. Then calls the corresponding
-   * methods in the controller to process the actions. Reads from the mouse regardless of whether an
+   * Reads input from the mouse to determine the actions of the player. Then calls
+   * the corresponding
+   * methods in the controller to process the actions. Reads from the mouse
+   * regardless of whether an
    * X-Box controller is connected.
    *
-   * <p>Updates position in world coordinates.
+   * <p>
+   * Updates position in world coordinates.
    *
    * @param obj Controller for the player
    */
@@ -217,6 +235,9 @@ public class InputController {
 
     if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
       obj.pressSecondary();
+    }
+    if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
+      obj.pressTertiary();
     }
   }
 }
