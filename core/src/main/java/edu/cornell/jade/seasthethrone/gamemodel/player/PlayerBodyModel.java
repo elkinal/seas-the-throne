@@ -13,7 +13,7 @@ public class PlayerBodyModel extends CircleModel {
   private static float PLAYER_RADIUS = 0.65f;
 
   /** Number of iFrames of the player on hit */
-  private static int HIT_IFRAMES = 70;
+  private static int HIT_IFRAMES = 60;
 
   /** Number of health points the player has */
   private int health;
@@ -33,6 +33,9 @@ public class PlayerBodyModel extends CircleModel {
   /** If the player is flagged for knockback application */
   private boolean justKnocked;
 
+  /** If the player was hit */
+  private boolean isHit;
+
   /** Create new player body at position (x,y) */
   public PlayerBodyModel(float x, float y) {
     super(x, y, PLAYER_RADIUS);
@@ -40,6 +43,7 @@ public class PlayerBodyModel extends CircleModel {
     iframeCounter = 0;
     knockbackTime = 0;
     justKnocked = false;
+    isHit = false;
   }
 
 
@@ -62,13 +66,16 @@ public class PlayerBodyModel extends CircleModel {
     return iframeCounter > 0;
   }
 
+  /** Returns if the player is in iFrames & was hit */
+  public boolean isHit() { return isHit; }
+
   /** Returns if the player is stunned (during iframes) */
   public boolean isKnockedBack() {
     return knockbackTime > 0;
   }
 
   /** Returns if the player is flagged for knockback application */
-  public boolean isJustKnoocked() {
+  public boolean isJustKnocked() {
     return justKnocked;
   }
 
@@ -95,6 +102,7 @@ public class PlayerBodyModel extends CircleModel {
     this.knockingBodyPos = b2pos;
     this.knockbackForce = force;
     this.knockbackTime = time;
+    this.isHit = true;
   }
 
   /** Sets the player invincible for the set period of time */
@@ -106,6 +114,8 @@ public class PlayerBodyModel extends CircleModel {
   public void update(float delta) {
     if (isInvincible()) {
       iframeCounter -= 1;
+    } else {
+      isHit = false;
     }
     knockbackTime = Math.max(0, knockbackTime - 1);
   }

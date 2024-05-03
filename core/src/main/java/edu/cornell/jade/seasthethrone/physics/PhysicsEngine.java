@@ -74,14 +74,14 @@ public class PhysicsEngine implements ContactListener {
    * @param vel velocity of bullet
    * @param speed speed of bullet
    */
-  public void spawnBullet(Vector2 pos, Vector2 vel, float speed, boolean shotByPlayer) {
+  public void spawnBullet(Vector2 pos, Vector2 vel, float speed, BulletModel.Builder.Type type) {
     BulletModel bullet =
         BulletModel.Builder.newInstance()
             .setX(pos.x)
             .setY(pos.y)
             .setFishTexture(new Texture("bullet/yellowfish_east.png"))
             .setRadius(0.5f)
-            .setShotByPlayer(shotByPlayer)
+            .setType(type)
             .build();
     bullet.setVX(speed * vel.x);
     bullet.setVY(speed * vel.y);
@@ -116,7 +116,7 @@ public class PhysicsEngine implements ContactListener {
         if (obj instanceof PlayerModel) {
           // Resolve knockback flag
           PlayerBodyModel body = ((PlayerModel) obj).getBodyModel();
-          if (body.isJustKnoocked()) {
+          if (body.isJustKnocked()) {
             applyKnockback(body, body.getKnockingBodyPos(), body.getKnockbackForce());
             body.setJustKnocked(false);
           }
@@ -278,11 +278,13 @@ public class PhysicsEngine implements ContactListener {
   /** Handle collision between player body and bullet */
   public void handleCollision(PlayerBodyModel pb, BulletModel b) {
     b.markRemoved(true);
-    if (!pb.isInvincible()) {
-      pb.decrementHealth();
-      pb.setInvincible(pb.getHitIFrames());
-      pb.setKnockedBack(b.getPosition(), b.getKnockbackForce(), 7);
-    }
+    System.out.println("hit1");
+    if (pb.isInvincible() && pb.isHit() && b instanceof UnbreakableBulletModel) return;
+    if (!(b instanceof UnbreakableBulletModel) && pb.isInvincible()) return;
+    System.out.println("hit2");
+    pb.decrementHealth();
+    pb.setInvincible(pb.getHitIFrames());
+    pb.setKnockedBack(b.getPosition(), b.getKnockbackForce(), 7);
   }
 
   /** Handle collision between player spear and bullet */

@@ -693,9 +693,11 @@ public class Spawner {
         .setY(f.by + y)
         .setVX(f.bvx)
         .setVY(f.bvy)
-        .setShotByPlayer(false)
+        .setType(BulletModel.Builder.Type.UNBREAKABLE)
         .setRadius(f.radius);
-    BulletModel m = BulletModel.construct(bulletBuilder, bulletBasePool);
+    BulletModel m = bulletBuilder.build();
+    //Disabled pooling for now
+    //BulletModel m = BulletModel.construct(bulletBuilder, bulletBasePool);
 
     for (DelayedAction a : f.delayedActions) {
       a.setModel(m);

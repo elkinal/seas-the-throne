@@ -274,27 +274,12 @@ public class PlayerModel extends ComplexModel implements Renderable {
       progressFrame();
     }
     Vector2 pos = getPosition();
-    if (isHit() && !isDead()) {
+    if (isInvincible() && !isDead() &&!isDashing) {
       renderer.draw(currentStrip, pos.x, pos.y, 0.12f, Color.RED);
       hitCount -=1;
     }
     else renderer.draw(currentStrip, pos.x, pos.y, 0.12f);
     getSpearModel().draw(renderer);
-  }
-
-  public boolean isHit(){
-    int curHealth = getHealth();
-    if (curHealth == prevHealth){
-      if(hitCount > 0)
-        return true;
-      else
-        return false;
-    }
-    else{
-      prevHealth = curHealth;
-      hitCount = dashLength;
-      return true;
-    }
   }
 
   @Override

@@ -11,6 +11,7 @@
 package edu.cornell.jade.seasthethrone;
 
 import com.badlogic.gdx.math.Vector2;
+import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import edu.cornell.jade.seasthethrone.gamemodel.EnemyModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
@@ -145,7 +146,7 @@ public class PlayerController implements Controllable {
     if (player.isKnockedBack()) {
       return;
     } else if (player.isDashing()) {
-      moveSpeed *= 4;
+      moveSpeed *= 3;
       if (isAimToDashMode) {
         moveDirection.set(moveSpeed * indicatorDirection.x, moveSpeed * indicatorDirection.y);
       } else {
@@ -195,7 +196,7 @@ public class PlayerController implements Controllable {
     Vector2 playerPos = player.getPosition();
     // TODO: stop hardcoding the offset
     Vector2 startPos = playerPos.add(indicatorDirection.x * 1.5f, indicatorDirection.y * 1.5f);
-    physicsEngine.spawnBullet(startPos, indicatorDirection, 30, true);
+    physicsEngine.spawnBullet(startPos, indicatorDirection, 30, BulletModel.Builder.Type.PLAYER);
 
     player.decrementFishCount();
   }
