@@ -4,7 +4,7 @@
  "layers":[
         {
          "id":9,
-         "image":"levels/tablet_room.png",
+         "image":"tablet_room.png",
          "name":"background",
          "opacity":1,
          "properties":[
@@ -267,7 +267,7 @@
         {
          "columns":18,
          "firstgid":1,
-         "image":"levels/boss-room-tileset.png",
+         "image":"boss-room-tileset.png",
          "imageheight":360,
          "imagewidth":360,
          "margin":0,

@@ -234,6 +234,8 @@ public class PlayerController implements Controllable {
     return player.getPosition();
   }
 
+  public Vector2 getShadowLocation() { return player.getShadowModel().getPosition(); }
+
   /**
    * Set the player to always animate.
    *
