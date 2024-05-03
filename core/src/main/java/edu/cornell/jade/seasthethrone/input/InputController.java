@@ -116,7 +116,6 @@ public class InputController {
    * @param obj Controller for the player
    */
   private void readController(Controllable obj) {
-
     // dash/shoot indicator
     float hind = xbox.getRightX();
     float vind = -xbox.getRightY();
@@ -188,9 +187,9 @@ public class InputController {
     if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
       obj.pressInteract();
     }
-    if (Gdx.input.isKeyPressed(Input.Keys.T)) {
-      obj.toggleDashMode();
-    }
+    //    if (Gdx.input.isKeyPressed(Input.Keys.T)) {
+    //      obj.toggleDashMode();
+    //    }
 
     // UI controls
     if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
