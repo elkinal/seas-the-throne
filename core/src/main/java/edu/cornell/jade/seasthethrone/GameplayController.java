@@ -134,6 +134,12 @@ public class GameplayController implements Screen {
   /** Distance at which point the camera will snap to the player */
   private final float CAMERA_SNAP_DISTANCE = 0.1f;
 
+  /** Timer to prevent saving multiple frames in a row */
+  private int saveTimer;
+
+  /** Minimum number of frames between saves */
+  private final int SAVE_DELAY = 10;
+
   /** fish bullet builder */
   BulletModel.Builder fishBulletBuilder;
 
@@ -155,6 +161,7 @@ public class GameplayController implements Screen {
 
     active = false;
     restart = false;
+    saveTimer = 0;
 
     this.stateController = new StateController();
     this.bossControllers = new Array<>();
@@ -353,11 +360,6 @@ public class GameplayController implements Screen {
     // Initialize pause controller
     pauseController = new PauseController(renderEngine, physicsEngine, playerController);
 
-    // Load Save State
-    stateController.loadState("saves/save1.json");
-
-    if (BuildConfig.DEBUG) System.out.println("post setup ammo: " + playerController.getAmmo());
-
     // Load UI
     PauseMenu pauseMenu = new PauseMenu(viewport);
     PauseMenuController pauseMenuController = new PauseMenuController(pauseMenu);
@@ -371,9 +373,6 @@ public class GameplayController implements Screen {
             renderEngine,
             renderEngine.getGameCanvas(),
             uiViewport);
-    if (BuildConfig.DEBUG) {
-      System.out.println("num objects: " + physicsEngine.getObjects().size());
-    }
   }
 
   public void render(float delta) {
@@ -400,6 +399,16 @@ public class GameplayController implements Screen {
       interactController.update();
       pauseController.continueGame();
       uiController.update(bossControllers);
+
+      // Update saving
+      if (saveTimer > 0) saveTimer += 1;
+      if (saveTimer > SAVE_DELAY) saveTimer = 0;
+
+      if (interactController.isCheckpointActivated() && saveTimer == 0) {
+        stateController.setRespawnLoc(playerController.getLocation().cpy());
+        stateController.saveGame();
+        saveTimer++;
+      }
 
       for (BossController bc : bossControllers) {
         if (!bc.isDead()) {
@@ -435,17 +444,9 @@ public class GameplayController implements Screen {
       }
     }
 
-    // Check if a checkpoint was interacted with, updates save state
-    if (interactController.isCheckpointActivated()) {
-      stateController.updateState(level.name, playerController, bossControllers);
-      stateController.setCheckpoint(interactController.getCheckpointID());
-    }
 
     // Load new level if the player has touched a portal, thus setting a target
     if (physicsEngine.hasTarget()) {
-      if (BuildConfig.DEBUG) {
-        System.out.println("hasTarget " + physicsEngine.getTarget());
-      }
       changeLevel();
       stateController.setRespawnLoc(null);
     }
@@ -494,7 +495,6 @@ public class GameplayController implements Screen {
     }
 
     if (restart) {
-      setupGameplay();
       respawn();
       restart = false;
     }
@@ -502,7 +502,6 @@ public class GameplayController implements Screen {
     // Draw reset and debug screen for wins and losses
     if (gameState == GameState.OVER || gameState == GameState.WIN) {
       if (inputController.didReset()) {
-        setupGameplay();
         respawn();
         pauseController.continueGame();
       } else {
@@ -513,25 +512,34 @@ public class GameplayController implements Screen {
 
   /** Changes the current level to the one specified by the physics engine target. */
   private void changeLevel() {
+    if (BuildConfig.DEBUG) {
+      System.out.println("Changing level to: " + physicsEngine.getTarget());
+    }
+
     // Save the current level state
     stateController.updateState(level.name, playerController, bossControllers);
-
-    if (BuildConfig.DEBUG)
-      System.out.println("player ammo pre portal: " + playerController.getAmmo());
+    stateController.saveGame();
 
     listener.exitScreen(this, GDXRoot.EXIT_SWAP);
     level = new Level(physicsEngine.getTarget());
     this.renderEngine.clear();
     bossControllers.clear();
     setupGameplay();
+
+    stateController.loadState("saves/save1.json");
     transferState(stateController.getLevel(level.name));
   }
 
   /** Loads the stored state of the target level, if it exists */
   private void transferState(LevelState newState) {
+    if (BuildConfig.DEBUG) {
+      System.out.println("Transferring state");
+    }
+
+    // Transfer player state
     playerController.transferState(stateController);
 
-    // Load level state if this is not the first time entering level
+    // Transfer level state if this is not the first time entering level
     if (newState != null && newState.getBossHps().size > 0) {
       for (int i = 0; i < bossControllers.size; i++) {
         int storedHp = newState.getBossHps().get(i);
@@ -541,11 +549,21 @@ public class GameplayController implements Screen {
   }
 
   private void respawn() {
+    if (BuildConfig.DEBUG) {
+      System.out.println("Respawning");
+    }
+    setupGameplay();
+    stateController.loadState("saves/save1.json");
+    transferState(stateController.getLevel(level.name));
+
     try {
+      System.out.println("respawn loc " + stateController.getRespawnLoc());
       playerController.setPlayerLocation(stateController.getRespawnLoc());
     } catch (NullPointerException e) {
+      System.out.println("respawn to default loc");
       playerController.setPlayerLocation(level.getPlayerLoc());
     }
+
   }
 
   /**

@@ -2,8 +2,6 @@ package edu.cornell.jade.seasthethrone;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.*;
-import edu.cornell.jade.seasthethrone.BuildConfig;
-import edu.cornell.jade.seasthethrone.PlayerController;
 import edu.cornell.jade.seasthethrone.ai.BossController;
 import edu.cornell.jade.seasthethrone.level.LevelState;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
@@ -17,9 +15,6 @@ public class StateController {
 
   /** All levels/rooms the player has been in */
   private HashMap<String, LevelState> storedLevels;
-
-  /** Reference to physics engine */
-  PhysicsEngine physicsEngine;
 
   /** The level/room the player is currently in */
   private LevelState currentLevel;
@@ -50,7 +45,7 @@ public class StateController {
     // Update player state
     this.playerAmmo = player.getAmmo();
     this.playerHealth = player.getHealth();
-    this.respawnLoc = player.getLocation();
+    System.out.println("setting respawn loc: "+player.getLocation());
 
     // Update level state in stored levels
     if (storedLevels.containsKey(levelName)) {
@@ -153,7 +148,6 @@ public class StateController {
 
   public void setCheckpoint(int checkpoint) {
     this.checkpoint = Math.max(checkpoint, this.checkpoint);
-    saveGame();
   }
 
   public int getPlayerAmmo() {

@@ -45,12 +45,15 @@ public class InteractableController implements Controllable {
     for (Interactable interactable : interactables) {
       // Check if player is in range
       interactable.setPlayerInRange(interactable.isPlayerInRange(player.getShadowLocation()));
+
+      if (interactable instanceof CheckpointModel) ((CheckpointModel) interactable).setActivated(false);
     }
 
     if (!interactPressed) {
       return;
     }
 
+    // If interact pressed
     for (Interactable interactable : interactables) {
       // interact with healthpacks
       if (interactable instanceof HealthpackModel) {
