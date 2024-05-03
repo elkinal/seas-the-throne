@@ -22,6 +22,7 @@ import edu.cornell.jade.seasthethrone.util.Controllers;
 import edu.cornell.jade.seasthethrone.util.XBoxController;
 import java.util.*;
 
+// TODO: make the inputcontroller take input from the json instead of through fixed state
 /** Processes movements for player and AI */
 public class InputController {
   /** Viewport to unproject screen coordinates */

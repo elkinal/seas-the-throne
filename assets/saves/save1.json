@@ -1,16 +1,37 @@
 {
-"storedLevels": {
-	"shallow_map": {
-		"bossHps": [ 200, 50, 50, 50, 10, 10, 10, 10, 10, 10, 10, 200, 10, 10 ]
-	},
-	"hub_world": {
-		"bossHps": []
-	}
-},
-"playerHealth": 5,
-"checkpoint": 2,
-"respawnLoc": {
-	"x": 239.63443,
-	"y": 235.46762
-}
+  "storedLevels": {
+    "shallow_map": {
+      "bossHps": [
+        200,
+        50,
+        50,
+        50,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        10,
+        200,
+        10,
+        10
+      ]
+    },
+    "hub_world": {
+      "bossHps": []
+    }
+  },
+  "playerHealth": 5,
+  "checkpoint": 2,
+  "respawnLoc": {
+    "x": 239.63443,
+    "y": 235.46762
+  },
+  "keybindings": {
+    "easy mode": "false",
+    "dash indicator": "false",
+    "attack": "LT",
+    "dash": "RT"
+  }
 }

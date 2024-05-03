@@ -15,11 +15,18 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import edu.cornell.jade.seasthethrone.assets.AssetDirectory;
 import edu.cornell.jade.seasthethrone.render.GameCanvas;
+import edu.cornell.jade.seasthethrone.util.Controllers;
 import edu.cornell.jade.seasthethrone.util.ScreenListener;
 import edu.cornell.jade.seasthethrone.util.XBoxController;
+import org.w3c.dom.Text;
 
 import java.util.HashMap;
 
+/**
+ * Keybindings: Keybindings are saved into a hashmap with key = action, value = keybind. This
+ * hashmap will be saved in the save file (has default values which are there from beginning) and
+ * will be loaded by InputController to get keybindings.
+ */
 public class OptionScreen implements Screen {
   /** Internal assets for this title screen */
   private AssetDirectory internal;
@@ -68,24 +75,24 @@ public class OptionScreen implements Screen {
   /** Button for resetting settings to default */
   private TextButton resetButton;
 
-  /** Dictionary that maps buttons to indices in an array */
-  private HashMap<TextButton, Integer> buttonMap = new HashMap<>();
+  /** Hashmap containing default values for keybindings/preferences */
+  private HashMap<TextButton, String> defaultSettings;
+
+  // todo: xbox controller support-- cycle through hashmap when going up/down
+  // todo: for keymapping, press a on xbox to select the keybinding, then click button to change
+  // todo: for preference (true/false), press a on xbox to change to the other preference
+
+  /** Hashmap containing player's CURRENT keybindings/preferences TODO: Use? */
+  private HashMap<String, String> currentControls;
+
+  /** Dictionary that maps buttons to text (to change button appearance when changing settings) */
+  private HashMap<TextButton, String> buttonNames;
 
   /** The screen listener to know when to exit screen */
   private ScreenListener listener;
 
+  /** The table that contains and orients all the buttons and labels */
   private Table controlsTable;
-
-  /**
-   * indices:
-   *
-   * <p>0 = easy mode toggle 1 = movement indication 2 = controller keymap for attack 3 = controller
-   * keymap for dash
-   */
-  private final String[] defaultSettings = {"Off", "Movement", "LT", "RT"};
-
-  /** The current controls set by the player */
-  private String[] currentControls;
 
   /** Indicates screen should close (exit options page) */
   private boolean exit;
@@ -96,7 +103,15 @@ public class OptionScreen implements Screen {
     internal.finishLoading();
 
     this.canvas = canvas;
-    //    controlsButtons = new HashMap<>();
+    defaultSettings = new HashMap<>();
+    currentControls = new HashMap<>();
+    buttonNames = new HashMap<>();
+
+    // initialize controller
+    if (Controllers.get().getControllers().size > 0) {
+      xbox = Controllers.get().getXBoxControllers().get(0);
+    }
+
     background = internal.getEntry("title:background", Texture.class);
     textFont = internal.getEntry("loading:alagard", BitmapFont.class);
     headingStyle = new Label.LabelStyle(textFont, Color.CYAN);
@@ -111,9 +126,8 @@ public class OptionScreen implements Screen {
     controlsTable.setDebug(true);
     //    controlsTable.align(Align.topLeft);
     stage.addActor(controlsTable);
-    currentControls = defaultSettings;
-    setDefault();
 
+    setDefault();
     makeControls();
   }
 
@@ -157,12 +171,23 @@ public class OptionScreen implements Screen {
     dashButton.getLabel().setFontScale(.5f);
     stage.addActor(dashButton);
 
+    // add all defaults to the map, and also do this with buttonNames
+    defaultSettings.put(easyModeButton, "Off");
+    defaultSettings.put(dashControlButton, "Movement");
+    defaultSettings.put(attackButton, "LT");
+    defaultSettings.put(dashButton, "RT");
+
+    buttonNames.put(easyModeButton, "Off");
+    buttonNames.put(dashControlButton, "Movement");
+    buttonNames.put(attackButton, "LT");
+    buttonNames.put(dashButton, "RT");
+
     // make buttons have text
     TextButton buttons[] =
         new TextButton[] {easyModeButton, dashControlButton, attackButton, dashButton};
 
-    for (int i = 0; i < buttons.length; i++) {
-      buttons[i].setText(defaultSettings[i]);
+    for (TextButton t : buttons) {
+      t.setText(defaultSettings.get(t));
     }
 
     // back and reset buttons
@@ -196,12 +221,6 @@ public class OptionScreen implements Screen {
     controlsTable.add(resetButton).padTop(40).bottom();
 
     addListeners();
-
-    // add buttons to map to make them remappable
-    //    controlsButtons.put(easyModeButton, "Off");
-    //    controlsButtons.put(dashControlButton, "Movement");
-    //    controlsButtons.put(attackButton, "LT");
-    //    controlsButtons.put(dashButton, "RT");
   }
 
   /** Add listeners to buttons */
@@ -225,11 +244,11 @@ public class OptionScreen implements Screen {
     easyModeButton.addListener(
         new ClickListener() {
           public void clicked(InputEvent event, float x, float y) {
-            if (currentControls[0].equals("Off")) {
-              currentControls[0] = "On";
+            if (buttonNames.get(easyModeButton).equals("Off")) {
+              buttonNames.put(easyModeButton, "On");
               easyModeButton.setText("On");
             } else {
-              currentControls[0] = "Off";
+              buttonNames.put(easyModeButton, "Off");
               easyModeButton.setText("Off");
             }
           }
@@ -238,11 +257,11 @@ public class OptionScreen implements Screen {
     dashControlButton.addListener(
         new ClickListener() {
           public void clicked(InputEvent event, float x, float y) {
-            if (currentControls[1].equals("Movement")) {
-              currentControls[1] = "Indicator";
+            if (buttonNames.get(dashControlButton).equals("Movement")) {
+              buttonNames.put(dashControlButton, "Indicator");
               dashControlButton.setText("Indicator");
             } else {
-              currentControls[1] = "Movement";
+              buttonNames.put(dashControlButton, "Movement");
               dashControlButton.setText("Movement");
             }
           }
@@ -273,9 +292,10 @@ public class OptionScreen implements Screen {
     this.listener = listener;
   }
 
+  // TODO: set controls back to normal but need to update the buttons
   private void setDefault() {
-    for (int i = 0; i < currentControls.length; i++) {
-      currentControls[i] = defaultSettings[i];
+    for (TextButton k : buttonNames.keySet()) {
+      k.setText(defaultSettings.get(k));
     }
   }
 
