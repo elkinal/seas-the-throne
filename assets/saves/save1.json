@@ -5,9 +5,5 @@
 		"respawnLoc": null
 	}
 },
-"playerHealth": 5,
-"respawnLoc": {
-	"x": 184.7524,
-	"y": 179.24028
-}
+"playerHealth": 5
 }

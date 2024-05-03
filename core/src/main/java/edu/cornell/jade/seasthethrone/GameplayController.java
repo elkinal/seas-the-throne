@@ -241,6 +241,18 @@ public class GameplayController implements Screen {
             .setCooldownLimit(10)
             .setShootCooldownLimit(20)
             .build();
+
+    if (restart) {
+      try {
+        System.out.println("respawn loc " + stateController.getRespawnLoc());
+        player.setPosition(stateController.getRespawnLoc());
+      } catch (NullPointerException e) {
+        System.out.println("respawn to default loc");
+        player.setPosition(level.getPlayerLoc());
+      }
+      restart = false;
+    }
+
     renderEngine.addRenderable(player);
     // Initialize physics engine
     physicsEngine = new PhysicsEngine(bounds, world);
@@ -496,14 +508,14 @@ public class GameplayController implements Screen {
 
     if (restart) {
       System.out.println("flag1");
+      System.out.println("pre respawn rl "+stateController.getRespawnLoc());
       respawn();
-      restart = false;
+      System.out.println("post respawn pl "+playerController.getLocation());
     }
 
     // Draw reset and debug screen for wins and losses
     if (gameState == GameState.OVER || gameState == GameState.WIN) {
       if (inputController.didReset()) {
-        System.out.println("flag2");
         respawn();
         pauseController.continueGame();
       } else {
@@ -562,15 +574,6 @@ public class GameplayController implements Screen {
     transferState(stateController.getLevel(level.name));
 
     if (respawnLoc != null) stateController.setRespawnLoc(respawnLoc);
-
-    try {
-      System.out.println("respawn loc " + stateController.getRespawnLoc());
-      playerController.setPlayerLocation(stateController.getRespawnLoc());
-    } catch (NullPointerException e) {
-      System.out.println("respawn to default loc");
-      playerController.setPlayerLocation(level.getPlayerLoc());
-    }
-
   }
 
   /**
