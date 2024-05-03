@@ -1,7 +1,6 @@
 package edu.cornell.jade.seasthethrone.ai;
 
 import com.badlogic.gdx.math.MathUtils;
-import edu.cornell.jade.seasthethrone.bpedit.patterns.FixedAngleStreamAttack;
 import edu.cornell.jade.seasthethrone.bpedit.patterns.RandomStreamAttack;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;

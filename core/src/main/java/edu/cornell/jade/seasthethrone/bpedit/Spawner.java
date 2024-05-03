@@ -47,8 +47,12 @@ public class Spawner {
   /**
    * Represents a change to a bullet at a given timestamp.
    */
-  public static sealed abstract class DelayedAction
-      extends BinaryHeap.Node permits DelayedVelocityRotate, DelayedTarget, DelayedSpeedChange {
+  public static abstract class DelayedAction extends BinaryHeap.Node {
+    /**
+     * Set a delay to say the action will never stop being applied.
+     */
+    public static int NEVER_REMOVE = Integer.MIN_VALUE;
+
     /**
      * The timestamp at which the action should be applied, relative to the bullet
      * families timestamp.
@@ -235,6 +239,8 @@ public class Spawner {
     protected float bvy;
     /** The radius of the constructed bullet */
     protected float radius;
+    /** If the base bullet model is unbreakable */
+    protected boolean isUnbreakable;
 
     /** An ordered list of effects to be applied to the base bullet. */
     protected Queue<Effect> effect;
@@ -337,6 +343,13 @@ public class Spawner {
     public void setPosition(float x, float y) {
       this.bx = x;
       this.by = y;
+    }
+
+    /**
+     * Sets the base bullet to be unbreakable
+     */
+    public void setUnbreakable() {
+      this.isUnbreakable = true;
     }
 
     /**
@@ -480,6 +493,8 @@ public class Spawner {
    */
   private float rotation;
 
+  private final Array<DelayedAction> delayedActionCache;
+
   /**
    * Constructs a <code>Spawner<code>.
    *
@@ -499,6 +514,7 @@ public class Spawner {
     this.delayedActions = new BinaryHeap<>();
     this.delayedActionsList = new ObjectSet<>();
     this.bulletBuilder = bulletBuilder;
+    this.delayedActionCache = new Array<>();
   }
 
   /**
@@ -544,9 +560,15 @@ public class Spawner {
    * @param py player y position
    */
   private void applyDelayedActions(float px, float py) {
+
     while (!delayedActions.isEmpty() && delayedActions.peek().getValue() < timer) {
-      delayedActions.pop().apply(px, py);
+      var act = delayedActions.pop();
+      act.apply(px, py);
+      if (act.delay == DelayedAction.NEVER_REMOVE)
+        delayedActionCache.add(act);
     }
+    for (var act : delayedActionCache)
+      delayedActions.add(act);
   }
 
   /**
@@ -693,9 +715,12 @@ public class Spawner {
         .setY(f.by + y)
         .setVX(f.bvx)
         .setVY(f.bvy)
-        .setShotByPlayer(false)
         .setRadius(f.radius);
-    BulletModel m = BulletModel.construct(bulletBuilder, bulletBasePool);
+    if (f.isUnbreakable) bulletBuilder.setType(BulletModel.Builder.Type.UNBREAKABLE);
+    BulletModel m = bulletBuilder.build();
+    bulletBuilder.setType(BulletModel.Builder.Type.DEFAULT);
+    //Disabled pooling for now
+    //BulletModel m = BulletModel.construct(bulletBuilder, bulletBasePool);
 
     for (DelayedAction a : f.delayedActions) {
       a.setModel(m);
