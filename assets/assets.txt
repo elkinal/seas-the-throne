@@ -45,7 +45,9 @@ levels/gate_horizontal_up.png
 levels/gate_vertical_down.png
 levels/gate_vertical_up.png
 levels/healthpack.png
+levels/healthpack_empty.png
 levels/hub_world.json
+levels/interactable_arrow.png
 levels/kelpdark_filmstrip2.png
 levels/kelplight_filmstrip2.png
 levels/mossytablet.png
@@ -56,6 +58,7 @@ levels/shallowbiomemap3.png
 levels/shallowmap1.png
 levels/shallow_map.json
 levels/shallow_map.tmj
+levels/shallow_map_backup.json
 levels/shallow_map_full.tmx
 levels/tablet_room.json
 levels/tablet_room.png
@@ -91,7 +94,6 @@ player/player_shoot_down.png
 player/player_shoot_left.png
 player/player_shoot_right.png
 player/player_shoot_up.png
-player/playe_idle_left.png
 saves/save1.json
 title/background.png
 title/logo.png

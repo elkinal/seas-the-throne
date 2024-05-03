@@ -28,8 +28,6 @@ public class UIController {
   /** A reference to the pause menu */
   PauseMenuController pauseMenuController;
 
-  PauseMenu pauseMenu;
-
   /** A reference to the current boss that the player is facing */
   BossController boss;
 
@@ -57,7 +55,6 @@ public class UIController {
       ScreenViewport view) {
     this.player = player;
     this.pauseMenuController = pauseMenuController;
-    this.pauseMenu = pauseMenuController.getPauseMenu();
     this.render = render;
     viewport = view;
     boss = null;
@@ -94,7 +91,7 @@ public class UIController {
     } else {
       uiModel.draw(render, 0);
     }
-    pauseMenu.draw(render);
+    pauseMenuController.getPauseMenu().draw(render);
     canvas.endUI();
   }
 
@@ -121,7 +118,7 @@ public class UIController {
 
   /** Runs when the viewport is resized */
   public void resize(int width, int height) {
-    pauseMenu.resize(width, height);
+    pauseMenuController.getPauseMenu().resize(width, height);
   }
 
   /** Clears all the UI elements */
