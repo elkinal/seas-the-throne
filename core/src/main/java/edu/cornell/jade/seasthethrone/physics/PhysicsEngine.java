@@ -278,10 +278,8 @@ public class PhysicsEngine implements ContactListener {
   /** Handle collision between player body and bullet */
   public void handleCollision(PlayerBodyModel pb, BulletModel b) {
     b.markRemoved(true);
-    System.out.println("hit1");
     if (pb.isInvincible() && pb.isHit() && b instanceof UnbreakableBulletModel) return;
     if (!(b instanceof UnbreakableBulletModel) && pb.isInvincible()) return;
-    System.out.println("hit2");
     pb.decrementHealth();
     pb.setInvincible(pb.getHitIFrames());
     pb.setKnockedBack(b.getPosition(), b.getKnockbackForce(), 7);

@@ -710,10 +710,11 @@ public class PlayerModel extends ComplexModel implements Renderable {
       deathCount = Math.max(0, deathCount - 1);
     } else if (isDashing()) {
       dashCounter -= 1;
-      if (dashCounter <= 0) {
+      if (dashCounter <= 0 || getBodyModel().isHit()) {
         // exit dash
         stopDashing();
         cooldownCounter = cooldownLimit;
+        dashCounter = 0;
       }
     } else if (isShooting()) {
       shootCounter -= 1;
