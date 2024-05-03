@@ -1,5 +1,6 @@
 package edu.cornell.jade.seasthethrone;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
@@ -10,6 +11,7 @@ import com.badlogic.gdx.utils.viewport.*;
 
 import edu.cornell.jade.seasthethrone.ai.BossController;
 import edu.cornell.jade.seasthethrone.assets.AssetDirectory;
+import edu.cornell.jade.seasthethrone.audio.*;
 import edu.cornell.jade.seasthethrone.gamemodel.CheckpointModel;
 import edu.cornell.jade.seasthethrone.gamemodel.PortalModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
@@ -139,6 +141,22 @@ public class GameplayController implements Screen {
 
   /** Listener that will update the player mode when we are done */
   private ScreenListener listener;
+  /** List of sounds to play */
+  SoundEffect sounds[];
+  /** The sounds instances ids */
+  long soundIds[];
+  /** The current sound effect play */
+  int currentSound = 0;
+  /** List of music to play */
+  AudioSource samples[];
+  /** The current music sample to play */
+  int currentSample = 0;
+
+  /** A queue to play music */
+  MusicQueue music;
+
+  /** An effect filter to apply */
+  EffectFilter filter;
 
   protected GameplayController() {
     gameState = GameState.PLAY;
@@ -291,6 +309,7 @@ public class GameplayController implements Screen {
               .setAttackAnimation(new Texture("bosses/" + assetName + "/attack.png"))
               .setFrameDelay(12)
               .setRoomId(bossContainer.roomId);
+
       BossModel boss = bossBuilder.build();
       BossController bossController = bossBuilder.buildController(boss, player, fishBulletBuilder, physicsEngine);
       renderEngine.addRenderable(boss);
@@ -384,6 +403,30 @@ public class GameplayController implements Screen {
     if (BuildConfig.DEBUG) {
       System.out.println("num objects: " + physicsEngine.getObjects().size());
     }
+    AssetDirectory directory = new AssetDirectory("sounds.json");
+
+    sounds = new SoundEffect[2];
+//    sounds[0] = directory.getEntry( "pew", SoundEffect.class );
+//    sounds[1] = directory.getEntry( "pop", SoundEffect.class );
+    soundIds = new long[2];
+    soundIds[0] = -1;
+    soundIds[1] = -1;
+    currentSound = 1;
+
+    samples = new AudioSource[2];
+//    samples[0] = directory.getEntry( "dodge", AudioSource.class );
+//    samples[1] = directory.getEntry( "win", AudioSource.class );
+    currentSample = 0;
+
+//    AudioEngine engine = (AudioEngine)Gdx.audio;
+//    music = engine.newMusicBuffer( false, 44100 );
+//    music.addSource( samples[0] );
+//    music.addSource( samples[1] );
+//
+//    EffectFactory factory = engine.getEffectFactory();
+//    EffectFactory.ReverbDef def = new EffectFactory.ReverbDef();
+//    def.REVERB_REFLECTIONS_DELAY = 0.2f;
+//    filter = factory.createReverb(def);
   }
 
   public void render(float delta) {
