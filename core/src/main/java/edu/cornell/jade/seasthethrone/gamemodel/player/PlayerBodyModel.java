@@ -33,8 +33,11 @@ public class PlayerBodyModel extends CircleModel {
   /** If the player is flagged for knockback application */
   private boolean justKnocked;
 
-  /** If the player was hit */
-  private boolean isHit;
+  /** The counter for the time the player is hit */
+  private float hitCounter;
+
+  /** Flag to be passed to the main model to stop dashing */
+  private boolean stopDashing;
 
   /** Create new player body at position (x,y) */
   public PlayerBodyModel(float x, float y) {
@@ -43,7 +46,7 @@ public class PlayerBodyModel extends CircleModel {
     iframeCounter = 0;
     knockbackTime = 0;
     justKnocked = false;
-    isHit = false;
+    hitCounter = 0;
   }
 
 
@@ -67,7 +70,7 @@ public class PlayerBodyModel extends CircleModel {
   }
 
   /** Returns if the player is in iFrames & was hit */
-  public boolean isHit() { return isHit; }
+  public boolean isHit() { return hitCounter > 0; }
 
   /** Returns if the player is stunned (during iframes) */
   public boolean isKnockedBack() {
@@ -102,20 +105,29 @@ public class PlayerBodyModel extends CircleModel {
     this.knockingBodyPos = b2pos;
     this.knockbackForce = force;
     this.knockbackTime = time;
-    this.isHit = true;
   }
 
   /** Sets the player invincible for the set period of time */
   public void setInvincible(int time) {
-    iframeCounter = time;
+    iframeCounter = Math.max(iframeCounter, time);
   }
+
+  /** Sets the player in hit status for the set period of time */
+  public void setHit(int time) {
+    hitCounter = time;
+  }
+
+  public boolean shouldStopDashing() { return stopDashing; }
+  public void setStopDashing(boolean value) { stopDashing = value; }
+
 
   @Override
   public void update(float delta) {
     if (isInvincible()) {
       iframeCounter -= 1;
-    } else {
-      isHit = false;
+    }
+    if (isHit()) {
+      hitCounter -= 1;
     }
     knockbackTime = Math.max(0, knockbackTime - 1);
   }

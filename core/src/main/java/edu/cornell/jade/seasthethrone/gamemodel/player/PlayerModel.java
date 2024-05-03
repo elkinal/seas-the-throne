@@ -180,8 +180,6 @@ public class PlayerModel extends ComplexModel implements Renderable {
 
   /** Death animation countdown */
   private int deathCount;
-  /** Get hit animation countdown */
-  private int hitCount;
 
   /** Whether the player should continue being animated. */
   private boolean shouldUpdate;
@@ -243,7 +241,6 @@ public class PlayerModel extends ComplexModel implements Renderable {
 
     shootCooldownLimit = builder.shootCooldownLimit;
     shootCounter = 0;
-    hitCount = 0;
     isShooting = false;
     shootTime = 0;
     deathCount = framesInAnimationDeath * initFrameDelay;
@@ -274,9 +271,8 @@ public class PlayerModel extends ComplexModel implements Renderable {
       progressFrame();
     }
     Vector2 pos = getPosition();
-    if (isInvincible() && !isDead() &&!isDashing) {
+    if (getBodyModel().isHit() && !isDead()) {
       renderer.draw(currentStrip, pos.x, pos.y, 0.12f, Color.RED);
-      hitCount -=1;
     }
     else renderer.draw(currentStrip, pos.x, pos.y, 0.12f);
     getSpearModel().draw(renderer);
@@ -612,6 +608,8 @@ public class PlayerModel extends ComplexModel implements Renderable {
     frameDelay = initFrameDelay;
     dashFrameCounter = 1;
     animationFrame = 0;
+    cooldownCounter = cooldownLimit;
+    dashCounter = 0;
     getSpearModel().setSpear(false);
   }
 
@@ -705,16 +703,19 @@ public class PlayerModel extends ComplexModel implements Renderable {
    */
   @Override
   public void update(float delta) {
+    if (getBodyModel().shouldStopDashing()){
+      if (isDashing()) stopDashing();
+      getBodyModel().setStopDashing(false);
+    }
+
     if (isDead()) {
       if (deathCount == framesInAnimationDeath * initFrameDelay) startDying();
       deathCount = Math.max(0, deathCount - 1);
     } else if (isDashing()) {
       dashCounter -= 1;
-      if (dashCounter <= 0 || getBodyModel().isHit()) {
+      if (dashCounter <= 0) {
         // exit dash
         stopDashing();
-        cooldownCounter = cooldownLimit;
-        dashCounter = 0;
       }
     } else if (isShooting()) {
       shootCounter -= 1;

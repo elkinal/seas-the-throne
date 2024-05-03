@@ -19,8 +19,6 @@ import edu.cornell.jade.seasthethrone.util.Direction;
 import edu.cornell.jade.seasthethrone.input.Controllable;
 import com.badlogic.gdx.math.MathUtils;
 
-import java.util.Optional;
-
 public class PlayerController implements Controllable {
 
   /** Error value for how close the mouse is to the player for indicator to not update. */

@@ -282,6 +282,8 @@ public class PhysicsEngine implements ContactListener {
     if (!(b instanceof UnbreakableBulletModel) && pb.isInvincible()) return;
     pb.decrementHealth();
     pb.setInvincible(pb.getHitIFrames());
+    pb.setHit(pb.getHitIFrames());
+    pb.setStopDashing(true);
     pb.setKnockedBack(b.getPosition(), b.getKnockbackForce(), 7);
   }
 
@@ -298,7 +300,9 @@ public class PhysicsEngine implements ContactListener {
     if (!pb.isInvincible() && !b.isDead()) {
       pb.decrementHealth();
       pb.setInvincible(pb.getHitIFrames());
+      pb.setHit(pb.getHitIFrames());
       pb.setKnockedBack(b.getPosition(), b.getBodyKnockbackForce(), 7);
+      pb.setStopDashing(true);
       playerBossCollision = Optional.empty();
     } else {
       if (playerBossCollision.isEmpty() && pb.getHealth() > 0) {
