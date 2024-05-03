@@ -10,6 +10,8 @@ public class UnbreakableBulletModel extends BulletModel{
     super(builder);
     fishTexture = new Texture("bullet/urchinbullet.png");
     filmStrip = new FilmStrip(fishTexture, 1, 1);
+    setMass(1000000f);
+    setDensity(100000f);
   }
 
 
