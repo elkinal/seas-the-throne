@@ -188,11 +188,11 @@ public class PhysicsEngine implements ContactListener {
       if (bd1 instanceof PlayerBodyModel && bd2 instanceof BulletModel) {
         if (BuildConfig.DEBUG) System.out.println("player hit");
 
-        handleCollision((PlayerBodyModel) bd1, (BulletModel) bd2);
+        handleCollision((PlayerBodyModel) bd1, (BulletModel) bd2, contact);
       } else if (bd2 instanceof PlayerBodyModel && bd1 instanceof BulletModel) {
         if (BuildConfig.DEBUG) System.out.println("player hit");
 
-        handleCollision((PlayerBodyModel) bd2, (BulletModel) bd1);
+        handleCollision((PlayerBodyModel) bd2, (BulletModel) bd1, contact);
       } else if (bd1 instanceof PlayerSpearModel && bd2 instanceof BulletModel) {
         handleCollision((PlayerSpearModel) bd1, (BulletModel) bd2);
       } else if (bd2 instanceof PlayerSpearModel && bd1 instanceof BulletModel) {
@@ -276,12 +276,15 @@ public class PhysicsEngine implements ContactListener {
   }
 
   /** Handle collision between player body and bullet */
-  public void handleCollision(PlayerBodyModel pb, BulletModel b) {
-    pb.setKnockedBack(b.getPosition(), b.getKnockbackForce(), 7);
+  public void handleCollision(PlayerBodyModel pb, BulletModel b, Contact c) {
     if (!(b instanceof  UnbreakableBulletModel)) {
       b.markRemoved(true);
-      if (pb.isInvincible()) return;
+      if (pb.isInvincible()) {
+        c.setEnabled(false);
+        return;
+      }
     }
+    pb.setKnockedBack(b.getPosition(), b.getKnockbackForce(), 7);
     if (pb.isInvincible() && pb.isHit() && b instanceof UnbreakableBulletModel) return;
     pb.decrementHealth();
     pb.setInvincible(pb.getHitIFrames());
