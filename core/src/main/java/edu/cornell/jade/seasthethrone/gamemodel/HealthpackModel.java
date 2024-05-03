@@ -80,7 +80,7 @@ public class HealthpackModel extends BoxModel implements Interactable, Renderabl
         progressFrame();
       }
 
-      renderer.draw(arrow, getX(), getY() + y_offset + WOLRD_SCALE*0.8f*used_texture.getRegionHeight());
+      renderer.draw(arrow, getX(), getY() + y_offset + WOLRD_SCALE*used_texture.getRegionHeight());
     }
 
   }
