@@ -197,6 +197,12 @@ public class RenderingEngine {
 
     canvas.draw(filmStrip, color, oy, ox, x, y, 0, scale, scale);
   }
+  public void draw(TextureRegion texture, float x, float y, float scalex, float scaley) {
+    float ox = texture.getRegionWidth() / 2f;
+    float oy = texture.getRegionHeight() / 2f;
+
+    canvas.draw(texture, Color.WHITE, ox, oy, x, y, 0, scalex*worldScale, scaley*worldScale);
+  }
 
   public void clear() {
     renderables.clear();
