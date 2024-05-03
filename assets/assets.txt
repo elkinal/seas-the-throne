@@ -40,9 +40,12 @@ legacy/spritebox_up.png
 legacy/test1.json
 levels/boss-room-tileset.png
 levels/boss-room-tileset.tsx
+levels/gate_horizontal_down.png
+levels/gate_horizontal_up.png
+levels/gate_vertical_down.png
+levels/gate_vertical_up.png
 levels/healthpack.png
 levels/healthpack_empty.png
-levels/horizontal_gate.png
 levels/hub_world.json
 levels/interactable_arrow.png
 levels/kelpdark_filmstrip2.png
@@ -62,7 +65,6 @@ levels/tablet_room.png
 levels/tablet_room_1.json
 levels/tablet_room_2.json
 levels/test1.tiled-project
-levels/vertical_gate.png
 libgdx.png
 loading/background.png
 loading/player_run_right.png
@@ -106,6 +108,8 @@ ui/darkammo_3_5.png
 ui/darkammo_4_5.png
 ui/darkammo_5_5.png
 ui/darkscreen.png
+ui/enemy_hp_empty.png
+ui/enemy_hp_full.png
 ui/health_hori_0.png
 ui/health_hori_1.png
 ui/health_hori_2.png

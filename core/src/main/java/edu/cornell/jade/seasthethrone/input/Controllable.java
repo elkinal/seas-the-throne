@@ -28,6 +28,10 @@ public interface Controllable {
   default public void pressSecondary() {
   }
 
+  /** Updates the tertiary attack state of the character. */
+  default public void pressTertiary() {
+  }
+
   /** Updates the interact state of the character. */
   default public void pressInteract() {
   }

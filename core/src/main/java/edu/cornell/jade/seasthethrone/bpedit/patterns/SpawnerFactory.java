@@ -189,4 +189,22 @@ public final class SpawnerFactory {
     out.addFamily(f);
     return out;
   }
+
+  /**
+   * Constructs a ring of unbreakable bullets that slowly spin around a moving origin
+   *
+   * @param dups          number of bullets in the ring
+   * @param delay         the time it takes to make a full rotation
+   * @param builder       a builder to create bullet models
+   * @param physicsEngine {@link PhysicsEngine} to add bullets to
+   */
+  public static Spawner constructUnbreakableSpinningRing(int dups, int delay, BulletModel.Builder builder,
+                                               PhysicsEngine physicsEngine) {
+    Spawner out = new Spawner(builder, physicsEngine);
+    BulletFamily f = new BulletFamily(3.5f, 0f, 0f, 0f, 0.5f, 0);
+    f.addEffect(new Arc(0f, MathUtils.PI * 2, dups));
+    f.addEffect(new Unbreakable());
+    out.addFamily(f);
+    return out;
+  }
 }

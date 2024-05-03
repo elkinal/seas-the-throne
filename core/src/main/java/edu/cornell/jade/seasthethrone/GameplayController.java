@@ -26,6 +26,7 @@ import edu.cornell.jade.seasthethrone.model.PolygonModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
+import edu.cornell.jade.seasthethrone.ui.EnemyHealthBar;
 import edu.cornell.jade.seasthethrone.ui.PauseMenu;
 import edu.cornell.jade.seasthethrone.ui.PauseMenuController;
 import edu.cornell.jade.seasthethrone.ui.UIController;
@@ -297,6 +298,7 @@ public class GameplayController implements Screen {
               .setX(bossContainer.x)
               .setY(bossContainer.y)
               .setHealth(health)
+
               //              .setHitbox(new float[]{-3, -3, -3, 3, 3, 3, 3, -3})
               .setHealthThresholds(new int[] {150, 100, 50})
               .setFalloverAnimation(new Texture("bosses/" + assetName + "/fallover.png"))
@@ -471,6 +473,9 @@ public class GameplayController implements Screen {
     renderEngine.clear();
     renderEngine.addRenderable(level.getBackground());
     renderEngine.addRenderable(uiController.getAmmoBar());
+    for (EnemyHealthBar e : uiController.getEnemies()){
+      renderEngine.addRenderable(e);
+    }
 
     for (Tile tile : level.getTiles()) {
       renderEngine.addRenderable(tile);

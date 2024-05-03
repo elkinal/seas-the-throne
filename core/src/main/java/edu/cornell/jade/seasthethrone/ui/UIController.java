@@ -7,6 +7,8 @@ import edu.cornell.jade.seasthethrone.ai.BossController;
 import edu.cornell.jade.seasthethrone.render.GameCanvas;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 
+import java.util.ArrayList;
+
 /**
  * This is a controller to manage the UI interface for the game. This controller updates all UI, but
  * only draws UI items that are static on the screen. It does not, for example, draw the AmmoBar.
@@ -28,6 +30,7 @@ public class UIController {
 
   /** A reference to the current boss that the player is facing */
   BossController boss;
+
 
   /** The rendering engine used to draw the UI elements */
   RenderingEngine render;
@@ -67,6 +70,12 @@ public class UIController {
   public AmmoBar getAmmoBar() {
     return uiModel.getAmmoBar();
   }
+  /**
+   * Returns the enemies health bars ui element.
+   */
+  public Array<EnemyHealthBar> getEnemies() {
+    return uiModel.getEnemies();
+  }
 
   /** Returns the pauseMenuController */
   public PauseMenuController getPauseMenuController() {
@@ -80,7 +89,7 @@ public class UIController {
     if (boss != null) {
       uiModel.draw(render, boss.getBoss().getDeathCount());
     } else {
-      uiModel.draw(render);
+      uiModel.draw(render, 0);
     }
     pauseMenuController.getPauseMenu().draw(render);
     canvas.endUI();
@@ -88,6 +97,7 @@ public class UIController {
 
   /** Updates states of all UI */
   public void update(Array<BossController> bosses) {
+    uiModel.clearEnemies();
     // update health bar
     uiModel.update(player.getHealth());
     // update ammo
@@ -97,8 +107,11 @@ public class UIController {
       if (b.isBoss() && b.getBoss().isAttack()) {
         boss = b;
       }
+      else{
+        if(b.getHealth()>0)
+          uiModel.update(b);
+      }
     }
-
     // update boss hp
     uiModel.update(boss);
   }

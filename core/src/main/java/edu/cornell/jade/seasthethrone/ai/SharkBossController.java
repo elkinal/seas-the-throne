@@ -6,6 +6,7 @@ import edu.cornell.jade.seasthethrone.bpedit.AttackPattern;
 import edu.cornell.jade.seasthethrone.bpedit.patterns.AimedArcAttack;
 import edu.cornell.jade.seasthethrone.bpedit.patterns.OscillatingRingAttack;
 import edu.cornell.jade.seasthethrone.bpedit.patterns.RingAttack;
+import edu.cornell.jade.seasthethrone.bpedit.patterns.UnbreakableSpinningRing;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
@@ -79,6 +80,9 @@ public class SharkBossController implements BossController {
   /** The aimed arc attack */
   private final AttackPattern aimedArcAttack;
 
+  /** The unbreakable ring around the boss */
+  private final AttackPattern unbreakableRing;
+
   /**
    * Constructs a shark boss controller
    *
@@ -103,6 +107,7 @@ public class SharkBossController implements BossController {
     this.oscRingAttack = new OscillatingRingAttack(boss, player, builder, physicsEngine);
     this.ringAttack = new RingAttack(boss, 20, 5, builder, physicsEngine);
     this.aimedArcAttack = new AimedArcAttack(60, boss, player, builder, physicsEngine);
+    this.unbreakableRing = new UnbreakableSpinningRing(9, 60, boss, builder, physicsEngine);
   }
 
   @Override
@@ -228,6 +233,7 @@ public class SharkBossController implements BossController {
 
   /** Performs actions based on the controller state */
   private void act() {
+    unbreakableRing.update(player.getX(), player.getY());
     switch (state) {
       case IDLE:
         break;

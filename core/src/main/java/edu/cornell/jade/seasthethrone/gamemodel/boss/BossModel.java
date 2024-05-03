@@ -79,6 +79,8 @@ public abstract class BossModel extends EnemyModel implements Renderable {
 
   /** The ID number of the room this boss is associated with */
   private int roomId;
+  /** Full amount of health */
+  private int fullHealth;
 
   /**
    * {@link BossModel} constructor using an x and y coordinate.
@@ -102,6 +104,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     frameCounter = 1;
     frameDelay = builder.frameDelay;
     health = builder.health;
+    fullHealth = builder.health;
     deathCount = frameDelay * 16;
     attackCount = 0;
     hitCount = 0;
@@ -186,6 +189,10 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     frameCounter += 1;
   }
 
+  /** Returns full health */
+  public int getFullHealth(){
+    return fullHealth;
+  }
   @Override
   public void alwaysUpdate() {
     shouldUpdate = true;
