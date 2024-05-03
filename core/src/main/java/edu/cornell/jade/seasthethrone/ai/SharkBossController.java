@@ -233,7 +233,6 @@ public class SharkBossController implements BossController {
 
   /** Performs actions based on the controller state */
   private void act() {
-    unbreakableRing.update(player.getX(), player.getY());
     switch (state) {
       case IDLE:
         break;
@@ -257,6 +256,7 @@ public class SharkBossController implements BossController {
       case DEAD:
         break;
     }
+    if (state != State.IDLE && state != State.DEAD) unbreakableRing.update(player.getX(), player.getY());
   }
 
   /** If the goal pos was reached */
