@@ -1,11 +1,14 @@
 package edu.cornell.jade.seasthethrone.level;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import edu.cornell.jade.seasthethrone.ai.BossController;
 
 public class LevelState {
 
   private Array<Integer> bossHps = new Array<>();
+
+  private Vector2 respawnLoc;
 
   public LevelState(Array<BossController> bossControllers) {
     for (BossController bc : bossControllers) {

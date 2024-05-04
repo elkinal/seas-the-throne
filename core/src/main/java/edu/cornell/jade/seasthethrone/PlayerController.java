@@ -11,23 +11,21 @@
 package edu.cornell.jade.seasthethrone;
 
 import com.badlogic.gdx.math.Vector2;
+import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
+import edu.cornell.jade.seasthethrone.gamemodel.EnemyModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
-import edu.cornell.jade.seasthethrone.ui.AmmoBar;
-import edu.cornell.jade.seasthethrone.ui.HealthBar;
-import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.util.Direction;
 import edu.cornell.jade.seasthethrone.input.Controllable;
 import com.badlogic.gdx.math.MathUtils;
 
-import java.util.jar.JarInputStream;
-
 public class PlayerController implements Controllable {
 
-  /**
-   * Error value for how close the mouse is to the player for dash to not count
-   */
+  /** Error value for how close the mouse is to the player for indicator to not update. */
   private static final float NO_DASH_ERROR = 0.4f;
+
+  /** The maximum distance an enemy can be from the player for aim assist to lock on. */
+  private static final float AIM_ASSIST_RANGE = 40f;
 
   /** The player */
   private PlayerModel player;
@@ -47,6 +45,9 @@ public class PlayerController implements Controllable {
   /** If shooting pressed in since last update */
   boolean shootingPressed;
 
+  /** If assisted shooting pressed in since last update */
+  boolean assistedShootingPressed;
+
   /** If interact pressed in since last update */
   boolean interactPressed;
 
@@ -57,11 +58,10 @@ public class PlayerController implements Controllable {
   int dashToggleCounter;
 
   /**
-   * The vector direction of the player for dashing NOTE: this vector will always
-   * be normalized, and
-   * nonzero
+   * The vector direction of the player indicator NOTE: this vector will always
+   * be normalized, and nonzero
    */
-  Vector2 dashDirection;
+  Vector2 indicatorDirection;
 
   /** The vector direction the player is moving */
   Vector2 moveDirection;
@@ -71,7 +71,7 @@ public class PlayerController implements Controllable {
     this.physicsEngine = physicsEngine;
     this.player = player;
     // start dash indicator down
-    dashDirection = new Vector2(0, -1);
+    indicatorDirection = new Vector2(0, -1);
     moveDirection = new Vector2();
     this.isAimToDashMode = true;
     this.dashToggleCounter = 0;
@@ -98,9 +98,9 @@ public class PlayerController implements Controllable {
     dashingPressed = true;
   }
 
-  public void pressSecondary() {
-    shootingPressed = true;
-  }
+  public void pressSecondary() { shootingPressed = true; }
+
+  public void pressTertiary() { assistedShootingPressed = true; }
 
   public void pressInteract() {
     interactPressed = true;
@@ -144,9 +144,9 @@ public class PlayerController implements Controllable {
     if (player.isKnockedBack()) {
       return;
     } else if (player.isDashing()) {
-      moveSpeed *= 4;
+      moveSpeed *= 3;
       if (isAimToDashMode) {
-        moveDirection.set(moveSpeed * dashDirection.x, moveSpeed * dashDirection.y);
+        moveDirection.set(moveSpeed * indicatorDirection.x, moveSpeed * indicatorDirection.y);
       } else {
         // If not moving in a direction, just dash in currently facing direction
         if (xNorm == 0 && yNorm == 0) {
@@ -182,29 +182,21 @@ public class PlayerController implements Controllable {
     }
   }
 
-  /** Shoot a single bullet */
-  public void shoot() {
-    Vector2 playerPos = player.getPosition();
-    // TODO: stop hardcoding the offset
-    Vector2 startPos = playerPos.add(dashDirection.x * 1.5f, dashDirection.y * 1.5f);
-    physicsEngine.spawnBullet(startPos, dashDirection, 30, true);
-
-    player.decrementFishCount();
-  }
-
   /** Begin dashing */
   public void beginDashing() {
     player.startDashing();
-    player.setDashDirection(dashDirection);
   }
 
   /** Begin shooting */
   public void beginShooting() {
     player.startShooting();
-  }
 
-  /** Set the player to spearing or shooting, depending on which is applicable. */
-  public void spearOrShoot() {
+    Vector2 playerPos = player.getPosition();
+    // TODO: stop hardcoding the offset
+    Vector2 startPos = playerPos.add(indicatorDirection.x * 1.5f, indicatorDirection.y * 1.5f);
+    physicsEngine.spawnBullet(startPos, indicatorDirection, 30, BulletModel.Builder.Type.PLAYER);
+
+    player.decrementFishCount();
   }
 
   /**
@@ -225,7 +217,28 @@ public class PlayerController implements Controllable {
     Vector2 diff = mousePos.sub(player.getPosition());
 
     if (diff.len2() > NO_DASH_ERROR) {
-      dashDirection.set(diff.nor());
+      indicatorDirection.set(diff.nor());
+    }
+  }
+
+  /**
+   * Sets the {@link #indicatorDirection} field to point in the direction
+   * of the nearest enemy. If no enemies are close enough, this method will
+   * not do anything.
+   */
+  public void pointToClosestEnemy() {
+    EnemyModel closestEnemy = null;
+    float closestDist = Float.MAX_VALUE;
+    for (EnemyModel b : physicsEngine.getEnemies()) {
+      if (!b.isActive()) continue;
+      float dist = player.getPosition().dst(b.getPosition());
+      if (dist < closestDist) {
+        closestEnemy = b;
+        closestDist = dist;
+      }
+    }
+    if (closestDist < AIM_ASSIST_RANGE) {
+      indicatorDirection.set(closestEnemy.getPosition().sub(player.getPosition())).nor();
     }
   }
 
@@ -265,27 +278,28 @@ public class PlayerController implements Controllable {
   }
 
   public void update() {
+    if (isAimToDashMode) {
+      player.updateSpear(indicatorDirection);
+    } else {
+      player.updateSpear(moveDirection.nor());
+    }
+
+    if (assistedShootingPressed) { pointToClosestEnemy(); }
+    player.updateDashIndicator(indicatorDirection);
+
     if (dashingPressed && player.canDash()) {
-      // TODO: what happens if you get hit while dashing? (during iframes)
       beginDashing();
-    } else if (shootingPressed && player.canShoot()) {
+    } else if ((shootingPressed || assistedShootingPressed) && player.canShoot()) {
       beginShooting();
-      shoot();
     }
 
     setVelPercentages(hoff, voff);
     player.setDirection(moveDirection);
     orientPlayer();
 
-    player.updateDashIndicator(dashDirection);
-    if (isAimToDashMode) {
-      player.updateSpear(dashDirection);
-    } else {
-      player.updateSpear(moveDirection.nor());
-    }
-
     dashToggleCounter = Math.max(dashToggleCounter - 1, 0);
     dashingPressed = false;
     shootingPressed = false;
+    assistedShootingPressed = false;
   }
 }

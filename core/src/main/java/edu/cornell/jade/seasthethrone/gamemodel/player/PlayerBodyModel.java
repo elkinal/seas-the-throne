@@ -13,7 +13,7 @@ public class PlayerBodyModel extends CircleModel {
   private static float PLAYER_RADIUS = 0.65f;
 
   /** Number of iFrames of the player on hit */
-  private static int HIT_IFRAMES = 70;
+  private static int HIT_IFRAMES = 60;
 
   /** Number of health points the player has */
   private int health;
@@ -33,6 +33,12 @@ public class PlayerBodyModel extends CircleModel {
   /** If the player is flagged for knockback application */
   private boolean justKnocked;
 
+  /** The counter for the time the player is hit */
+  private float hitCounter;
+
+  /** Flag to be passed to the main model to stop dashing */
+  private boolean stopDashing;
+
   /** Create new player body at position (x,y) */
   public PlayerBodyModel(float x, float y) {
     super(x, y, PLAYER_RADIUS);
@@ -40,6 +46,7 @@ public class PlayerBodyModel extends CircleModel {
     iframeCounter = 0;
     knockbackTime = 0;
     justKnocked = false;
+    hitCounter = 0;
   }
 
 
@@ -62,13 +69,16 @@ public class PlayerBodyModel extends CircleModel {
     return iframeCounter > 0;
   }
 
+  /** Returns if the player is in iFrames & was hit */
+  public boolean isHit() { return hitCounter > 0; }
+
   /** Returns if the player is stunned (during iframes) */
   public boolean isKnockedBack() {
     return knockbackTime > 0;
   }
 
   /** Returns if the player is flagged for knockback application */
-  public boolean isJustKnoocked() {
+  public boolean isJustKnocked() {
     return justKnocked;
   }
 
@@ -99,13 +109,25 @@ public class PlayerBodyModel extends CircleModel {
 
   /** Sets the player invincible for the set period of time */
   public void setInvincible(int time) {
-    iframeCounter = time;
+    iframeCounter = Math.max(iframeCounter, time);
   }
+
+  /** Sets the player in hit status for the set period of time */
+  public void setHit(int time) {
+    hitCounter = time;
+  }
+
+  public boolean shouldStopDashing() { return stopDashing; }
+  public void setStopDashing(boolean value) { stopDashing = value; }
+
 
   @Override
   public void update(float delta) {
     if (isInvincible()) {
       iframeCounter -= 1;
+    }
+    if (isHit()) {
+      hitCounter -= 1;
     }
     knockbackTime = Math.max(0, knockbackTime - 1);
   }

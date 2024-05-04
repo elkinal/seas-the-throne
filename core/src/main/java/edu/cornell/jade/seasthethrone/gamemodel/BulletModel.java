@@ -44,23 +44,13 @@ public class BulletModel extends SimpleModel implements Renderable {
    * @param builder The builder for BulletModel
    */
   public BulletModel(Builder builder) {
-    // super(x, y);
-    // shape = new CircleShape();
-    // shape.setRadius(radius);
-    // knockbackForce = 30f;
-    // setName("bullet");
-    // faceDirection = Direction.DOWN;
-    // filmStrip = new FilmStrip(FISH_TEXTURE, 1, 1);
-    //
-    // setBodyType(BodyDef.BodyType.KinematicBody);
     super(builder.x, builder.y);
     setVX(builder.vx);
     setVY(builder.vy);
     shape = new CircleShape();
     shape.setRadius(builder.radius);
-    knockbackForce = 40f;
+    knockbackForce = 20f;
     setBodyType(BodyDef.BodyType.DynamicBody);
-    setName("bullet");
     fishTexture = builder.FISH_TEXTURE;
     filmStrip = new FilmStrip(fishTexture, 1, 1);
   }
@@ -93,7 +83,6 @@ public class BulletModel extends SimpleModel implements Renderable {
     res.shape = new CircleShape();
     res.shape.setRadius(builder.radius);
     res.setBodyType(BodyDef.BodyType.DynamicBody);
-    res.setName("bullet");
     res.filmStrip = new FilmStrip(builder.FISH_TEXTURE, 1, 1);
     return res;
   }
@@ -184,6 +173,16 @@ public class BulletModel extends SimpleModel implements Renderable {
   }
 
   public static class Builder {
+    /** the type of bullet */
+    public static enum Type{
+      /** A normal, breakable enemy bullet */
+      DEFAULT,
+      /** A bullet shot by the player */
+      PLAYER,
+      /** An unbreakable enemy bullet */
+      UNBREAKABLE
+    }
+
     /** bullet x position */
     private float x;
 
@@ -205,11 +204,14 @@ public class BulletModel extends SimpleModel implements Renderable {
     /** Whether the bullet has been shot by player */
     private boolean shotByPlayer;
 
+    /** The type of the bullet */
+    private Type type;
+
     public static Builder newInstance() {
       return new Builder();
     }
 
-    private Builder() {}
+    private Builder() { this.type = Type.DEFAULT; }
 
     public Builder setFishTexture(Texture texture) {
       FISH_TEXTURE = texture;
@@ -241,13 +243,20 @@ public class BulletModel extends SimpleModel implements Renderable {
       return this;
     }
 
-    public Builder setShotByPlayer(boolean shotByPlayer) {
-      this.shotByPlayer = shotByPlayer;
+    public Builder setType(Type type) {
+      this.type = type;
       return this;
     }
 
     public BulletModel build() {
-      return this.shotByPlayer ? new PlayerBulletModel(this) : new BulletModel(this);
+      switch (type) {
+        case PLAYER:
+          return new PlayerBulletModel(this);
+        case UNBREAKABLE:
+          return new UnbreakableBulletModel(this);
+        default:
+          return new BulletModel(this);
+      }
     }
   }
 }
