@@ -19,10 +19,25 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   /** Boss-unique move animation TODO: make left right up down filmstrips */
   private FilmStrip moveAnimation;
 
-  private FilmStrip falloverAnimation;
-  private FilmStrip getHitAnimation;
-  private FilmStrip deathAnimation;
-  private FilmStrip attackAnimation;
+  protected FilmStrip falloverAnimation;
+  protected FilmStrip getHitAnimation;
+  protected FilmStrip deathAnimation;
+  protected FilmStrip attackAnimation;
+  protected FilmStrip hitDownAnimation;
+  protected FilmStrip hitLeftAnimation;
+  protected FilmStrip hitRightAnimation;
+  protected FilmStrip hitUpAnimation;
+  protected FilmStrip moveLeftAnimation;
+  protected FilmStrip moveRightAnimation;
+  protected FilmStrip moveUpAnimation;
+  protected FilmStrip moveDownAnimation;
+
+  protected FilmStrip downIdleAnimation;
+  protected FilmStrip leftIdleAnimation;
+  protected FilmStrip upIdleAnimation;
+  protected FilmStrip rightIdleAnimation;
+
+
 
   /** The current filmstrip being used */
   public FilmStrip filmStrip;
@@ -39,10 +54,10 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   protected float scale;
 
   /** Flag for executing the boss */
-  private boolean isExecute;
+  protected boolean isExecute;
 
   /** Flag for the boss attack */
-  private int attackCount;
+  protected int attackCount;
 
   /** Array indicating polygon hitbox */
   protected float[] hitbox;
@@ -57,10 +72,10 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   protected int health;
 
   /** Hit animation countdown */
-  private int hitCount;
+  protected int hitCount;
 
   /** Death animation countdown */
-  private int deathCount;
+  protected int deathCount;
 
   /** Execute animation countdown */
   private int executeCount;
@@ -100,6 +115,18 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     falloverAnimation = builder.falloverAnimation;
     deathAnimation = builder.deathAnimation;
     attackAnimation = builder.attackAnimation;
+    hitDownAnimation = builder.hitDownAnimation;
+    hitLeftAnimation = builder.hitLeftAnimation;
+    hitUpAnimation = builder.hitUpAnimation;
+    hitRightAnimation = builder.hitRightAnimation;
+    moveLeftAnimation = builder.moveLeftAnimation;
+    moveRightAnimation = builder.moveRightAnimation;
+    moveUpAnimation = builder.moveUpAnimation;
+    moveDownAnimation = builder.moveDownAnimation;
+    downIdleAnimation = builder.downIdleAnimation;
+    leftIdleAnimation = builder.leftIdleAnimation;
+    rightIdleAnimation = builder.rightIdleAnimation;
+    upIdleAnimation = builder.upIdleAnimation;
     this.filmStrip = shootAnimation;
     frameCounter = 1;
     frameDelay = builder.frameDelay;
@@ -137,7 +164,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     return deathCount;
   }
 
-  private boolean isHit() {
+  protected boolean isHit() {
     if (hitCount > 0) {
       return true;
     } else {
@@ -333,6 +360,18 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     private FilmStrip shootAnimation;
     private FilmStrip idleAnimation;
     private FilmStrip attackAnimation;
+    protected FilmStrip hitDownAnimation;
+    protected FilmStrip hitLeftAnimation;
+    protected FilmStrip hitRightAnimation;
+    protected FilmStrip hitUpAnimation;
+    protected FilmStrip moveLeftAnimation;
+    protected FilmStrip moveRightAnimation;
+    protected FilmStrip moveUpAnimation;
+    protected FilmStrip moveDownAnimation;
+    protected FilmStrip downIdleAnimation;
+    protected FilmStrip leftIdleAnimation;
+    protected FilmStrip upIdleAnimation;
+    protected FilmStrip rightIdleAnimation;
 
     /** The number of frames between animation updates */
     private int frameDelay;
@@ -422,6 +461,55 @@ public abstract class BossModel extends EnemyModel implements Renderable {
       ;
       return this;
     }
+    public Builder setHitFrontAnimation(Texture texture) {
+      int width = texture.getWidth();
+      hitDownAnimation = new FilmStrip(texture, 1, width / frameSize);
+      hitUpAnimation = new FilmStrip(texture, 1, width / frameSize);
+      hitUpAnimation.flip(false, true);
+      return this;
+    }
+    public Builder setHitSideAnimation(Texture texture) {
+      int width = texture.getWidth();
+      hitLeftAnimation = new FilmStrip(texture, 1, width / frameSize);
+      hitRightAnimation = new FilmStrip(texture, 1, width / frameSize);
+      hitRightAnimation.flip(true, false);
+      return this;
+    }
+    public Builder setFrontIdleAnimation(Texture texture) {
+      int width = texture.getWidth();
+      downIdleAnimation = new FilmStrip(texture, 1, width / frameSize);
+      upIdleAnimation = new FilmStrip(texture, 1, width / frameSize);
+      upIdleAnimation.flip(false, true);
+      return this;
+    }
+    public Builder setMoveLeftAnimation(Texture texture) {
+      int width = texture.getWidth();
+      moveLeftAnimation = new FilmStrip(texture, 1, width / frameSize);
+      return this;
+    }
+    public Builder setMoveRightAnimation(Texture texture) {
+      int width = texture.getWidth();
+      moveRightAnimation = new FilmStrip(texture, 1, width / frameSize);
+      return this;
+    }
+    public Builder setMoveUpAnimation(Texture texture) {
+      int width = texture.getWidth();
+      moveUpAnimation = new FilmStrip(texture, 1, width / frameSize);
+      return this;
+    }
+    public Builder setMoveDownAnimation(Texture texture) {
+      int width = texture.getWidth();
+      moveDownAnimation = new FilmStrip(texture, 1, width / frameSize);
+      return this;
+    }
+    public Builder setSideIdleAnimation(Texture texture) {
+      int width = texture.getWidth();
+      leftIdleAnimation = new FilmStrip(texture, 1, width / frameSize);
+      rightIdleAnimation = new FilmStrip(texture, 1, width / frameSize);
+      rightIdleAnimation.flip(true, false);
+      return this;
+    }
+
 
     public Builder setFrameDelay(int frameDelay) {
       this.frameDelay = frameDelay;

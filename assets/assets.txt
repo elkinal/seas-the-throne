@@ -19,6 +19,15 @@ bosses/jelly/fallover.png
 bosses/jelly/hurt.png
 bosses/jelly/idle.png
 bosses/jelly/shoot.png
+bosses/swordfish/death.png
+bosses/swordfish/move_side.png
+bosses/swordfish/move_side_right.png
+bosses/swordfish/move_vertical.png
+bosses/swordfish/move_vertical_up.png
+bosses/swordfish/swordfishfront_hit.png
+bosses/swordfish/swordfishfront_idle.png
+bosses/swordfish/swordfishside_hit.png
+bosses/swordfish/swordfishside_idle.png
 bullet/urchinbullet.png
 bullet/yellowfish_east.png
 bullet/yellowfish_NE.png

@@ -7,6 +7,7 @@ public class JellyBossModel extends BossModel{
     super(builder);
 }
 
+
   @Override
   void setHitbox() {
     hitbox = new float[]{

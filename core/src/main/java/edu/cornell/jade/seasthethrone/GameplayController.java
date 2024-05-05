@@ -1,6 +1,5 @@
 package edu.cornell.jade.seasthethrone;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
@@ -308,7 +307,9 @@ public class GameplayController implements Screen {
         ? 50 
         : name.contains("clam")
           ? 10
-          : 200;
+          : name.contains("swordfish")
+            ? 40
+            :200;
       var bossBuilder =
           BossModel.Builder.newInstance()
               .setType(name)
@@ -326,7 +327,16 @@ public class GameplayController implements Screen {
               .setAttackAnimation(new Texture("bosses/" + assetName + "/attack.png"))
               .setFrameDelay(12)
               .setRoomId(bossContainer.roomId);
-
+      if (name.contains("swordfish")){
+          bossBuilder.setFrontIdleAnimation(new Texture("bosses/" + assetName + "/front_idle.png"))
+              .setSideIdleAnimation(new Texture("bosses/" + assetName + "/side_idle.png"))
+              .setHitFrontAnimation(new Texture("bosses/" + assetName + "/front_hit.png"))
+              .setHitSideAnimation(new Texture("bosses/" + assetName + "/side_hit.png"))
+              .setMoveDownAnimation(new Texture("bosses/" + assetName + "/move_down.png"))
+              .setMoveUpAnimation(new Texture("bosses/" + assetName + "/move_up.png"))
+              .setMoveLeftAnimation(new Texture("bosses/" + assetName + "/move_left.png"))
+              .setMoveRightAnimation(new Texture("bosses/" + assetName + "/move_right.png"));
+      }
       BossModel boss = bossBuilder.build();
       BossController bossController = bossBuilder.buildController(boss, player, fishBulletBuilder, physicsEngine);
       renderEngine.addRenderable(boss);
