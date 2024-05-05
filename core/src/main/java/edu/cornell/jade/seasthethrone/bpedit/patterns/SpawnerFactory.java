@@ -202,7 +202,7 @@ public final class SpawnerFactory {
   public static Spawner constructUnbreakableSpinningRing(int dups, int delay, BossModel model,
                                                BulletModel.Builder builder, PhysicsEngine physicsEngine) {
     Spawner out = new Spawner(builder, physicsEngine);
-    BulletFamily f = new BulletFamily(3.5f, 0f, 0f, 0f, 0.5f, 0);
+    BulletFamily f = new BulletFamily(4.5f, 0f, 0f, 0f, 0.5f, 0);
     f.addEffect(new Arc(0f, MathUtils.PI * 2, dups));
     f.addEffect(new Unbreakable());
     f.addDelayedAction(new Spawner.DelayedIndefiniteRotate(delay, model));
