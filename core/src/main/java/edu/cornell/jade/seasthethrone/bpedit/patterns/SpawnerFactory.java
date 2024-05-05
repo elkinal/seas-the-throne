@@ -166,7 +166,7 @@ public final class SpawnerFactory {
     f.addEffect(new Periodic(delay));
     f.addEffect(new TargetsModel(out, player));
     f.addEffect(new PlaysAttackAnimation(model));
-    f.addEffect(new Arc(-MathUtils.PI / 6f, MathUtils.PI / 3f, 5));
+    f.addEffect(new Arc(-MathUtils.PI / 6f, centralAngle, dups));
     out.addFamily(f);
     return out;
   }
@@ -195,15 +195,17 @@ public final class SpawnerFactory {
    *
    * @param dups          number of bullets in the ring
    * @param delay         the time it takes to make a full rotation
+   * @param model         model to track
    * @param builder       a builder to create bullet models
    * @param physicsEngine {@link PhysicsEngine} to add bullets to
    */
-  public static Spawner constructUnbreakableSpinningRing(int dups, int delay, BulletModel.Builder builder,
-                                               PhysicsEngine physicsEngine) {
+  public static Spawner constructUnbreakableSpinningRing(int dups, int delay, BossModel model,
+                                               BulletModel.Builder builder, PhysicsEngine physicsEngine) {
     Spawner out = new Spawner(builder, physicsEngine);
-    BulletFamily f = new BulletFamily(3.5f, 0f, 0f, 0f, 0.5f, 0);
+    BulletFamily f = new BulletFamily(4.5f, 0f, 0f, 0f, 0.5f, 0);
     f.addEffect(new Arc(0f, MathUtils.PI * 2, dups));
     f.addEffect(new Unbreakable());
+    f.addDelayedAction(new Spawner.DelayedIndefiniteRotate(delay, model));
     out.addFamily(f);
     return out;
   }

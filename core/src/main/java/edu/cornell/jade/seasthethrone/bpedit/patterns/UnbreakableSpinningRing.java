@@ -35,15 +35,14 @@ public final class UnbreakableSpinningRing extends AttackPattern {
    */
   public UnbreakableSpinningRing(int dups, int period, BossModel model, BulletModel.Builder builder,
                         PhysicsEngine physicsEngine) {
-    this.spawner = SpawnerFactory.constructUnbreakableSpinningRing(dups, period, builder, physicsEngine);
+    this.spawner = SpawnerFactory.constructUnbreakableSpinningRing(dups, period, model, builder, physicsEngine);
     this.model = model;
 
+    this.spawner.translate(model.getX(), model.getY());
     this.addSpawner(spawner);
   }
 
   @Override
-  protected void animateStep() {
-    this.spawner.moveSpawner(model.getX(), model.getY());
-  }
+  protected void animateStep() {}
 }
 

@@ -1,6 +1,8 @@
 package edu.cornell.jade.seasthethrone.bpedit;
 
 import java.util.Iterator;
+
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.BinaryHeap;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Queue;
@@ -8,6 +10,7 @@ import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.ReflectionPool;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import com.badlogic.gdx.math.MathUtils;
+import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import com.badlogic.gdx.utils.ObjectSet;
 
@@ -216,6 +219,64 @@ public class Spawner {
       dy *= mag;
       model.setVX(dx);
       model.setVY(dy);
+    }
+  }
+
+  /** Rotates a bullet around a model's origin indefinitely. */
+  public static final class DelayedIndefiniteRotate extends DelayedAction {
+
+    /** Angle to rotate by each tick, in radians */
+    final float dtheta;
+
+    /** Time to make one full rotation */
+    float period;
+
+    /** The angle of the bullet w.r.t the origin */
+    float angle;
+
+    /** The distance from the origin */
+    float radius;
+
+    /** The model to rotate around */
+    Model origin;
+
+    /**
+     * Constructs a DelayedIndefiniteRotate
+     *
+     * @param period  the time it takes to make one full rotation in frame ticks
+     * @param origin  the model to rotate around
+     *
+     */
+    public DelayedIndefiniteRotate(float period, Model origin) {
+      super(NEVER_REMOVE);
+      this.period = period;
+      this.origin = origin;
+      this.dtheta = MathUtils.PI*2/period;
+    }
+
+    @Override
+    public void setModel(BulletModel model) {
+      super.setModel(model);
+      this.radius = model.getPosition().dst(origin.getPosition());
+      this.angle = MathUtils.atan2(model.getY()-origin.getY(), model.getX()-origin.getX());
+    }
+
+    @Override
+    public DelayedIndefiniteRotate clone() {
+      return new DelayedIndefiniteRotate(period, origin);
+    }
+
+    @Override
+    public void apply(float px, float py) {
+      if (model == null)
+        return;
+      System.out.println(model + " " + model.getPosition().dst(origin.getPosition()) + " " + radius);
+
+      angle = (angle + dtheta) % (MathUtils.PI*2);
+      float cos = MathUtils.cos(angle);
+      float sin = MathUtils.sin(angle);
+      model.setX(radius * cos + origin.getX());
+      model.setY(radius * sin + origin.getY());
     }
   }
 
@@ -560,7 +621,6 @@ public class Spawner {
    * @param py player y position
    */
   private void applyDelayedActions(float px, float py) {
-
     while (!delayedActions.isEmpty() && delayedActions.peek().getValue() < timer) {
       var act = delayedActions.pop();
       act.apply(px, py);
@@ -569,6 +629,7 @@ public class Spawner {
     }
     for (var act : delayedActionCache)
       delayedActions.add(act);
+    delayedActionCache.clear();
   }
 
   /**
