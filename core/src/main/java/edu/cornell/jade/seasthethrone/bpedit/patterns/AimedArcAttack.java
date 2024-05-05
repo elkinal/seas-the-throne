@@ -21,7 +21,7 @@ public final class AimedArcAttack extends AttackPattern {
   public static float CENTRAL_ANGLE = MathUtils.PI / 3;
 
   /** The number of bullets fired at once */
-  public static int BULLETS = 6;
+  public static int BULLETS = 5;
 
   /** the spawner actually creating the arc */
   private final Spawner spawner;

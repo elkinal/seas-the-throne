@@ -41,7 +41,7 @@ class Arc implements Effect {
       BulletFamily orig = bullets.get(i);
       for (int j = 0; j < dups; j++) {
         BulletFamily b = orig.clone(familyPool);
-        float theta = j * centralAngle / (dups - 1) + offset;
+        float theta = j * centralAngle / (dups-1) + offset;
         b.rotate(theta, 0, 0);
         bullets.add(b);
       }
