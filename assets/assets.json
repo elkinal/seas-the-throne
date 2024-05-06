@@ -125,9 +125,12 @@
       }
     }
   },
+  "jsons"  : {
+    "clam": "bosses/clam/clam.json",
+    "jelly": "bosses/jelly/jelly.json",
+    "shark": "bosses/shark/shark.json",
+    "crab": "bosses/crab/crab.json"
+  },
   "soundfx": {
-    "fusion": "sounds/fusion.mp3",
-    "laser": "sounds/laser.mp3",
-    "torpedo": "sounds/torpedo.mp3"
   }
 }

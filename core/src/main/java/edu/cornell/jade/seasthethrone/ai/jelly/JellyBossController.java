@@ -140,7 +140,6 @@ abstract class JellyBossController implements BossController {
 
   /** Progresses to the next state of the controller. */
   protected void nextState() {
-    System.out.println(state);
     switch (state) {
       case IDLE:
         if (boss.getPosition().dst(player.getPosition()) < AGRO_DISTANCE) {

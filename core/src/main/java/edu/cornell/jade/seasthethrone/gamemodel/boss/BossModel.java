@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 
+import com.badlogic.gdx.utils.Array;
 import edu.cornell.jade.seasthethrone.ai.*;
 import edu.cornell.jade.seasthethrone.ai.clam.FixedStreamClamController;
 import edu.cornell.jade.seasthethrone.ai.clam.OscillatingRingClamController;
@@ -99,12 +100,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
    * @param builder builder for BossModel
    */
   public BossModel(Builder builder) {
-    super(builder.x, builder.y, builder.type, builder.frameSize);
-
-    // Doing this for now so hitboxes can be defined in subclasses
-    setHitbox();
-    initShapes(this.hitbox);
-    initBounds();
+    super(builder.hitbox, builder.x, builder.y, builder.type, builder.frameSize);
 
     moveAnimation = builder.moveAnimation;
     getHitAnimation = builder.getHitAnimation;
@@ -290,9 +286,6 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     return filmStrip.getSize();
   }
 
-  /** Sets the hitbox of the boss */
-  abstract void setHitbox();
-
   /**
    * Returns if the boss's health reached under a certain health threshold.
    *
@@ -359,6 +352,9 @@ public abstract class BossModel extends EnemyModel implements Renderable {
 
     /** Health threshold numbers */
     private int[] healthThresholds;
+
+    /** Boss hitbox */
+    private float[] hitbox;
 
     /** ID for the room this boss is in */
     private int roomId;
@@ -455,14 +451,13 @@ public abstract class BossModel extends EnemyModel implements Renderable {
       return this;
     }
 
-    public Builder setFrameSize() {
-      if (type.equals("crab")) {
-        frameSize = 110;
-      } else if (type.contains("clam")) {
-        frameSize = 60;
-      } else {
-        frameSize = 45;
-      }
+    public Builder setHitbox(float[] hitbox) {
+      this.hitbox = hitbox;
+      return this;
+    }
+
+    public Builder setFrameSize(int frameSize) {
+      this.frameSize = frameSize;
       return this;
     }
 
@@ -471,6 +466,8 @@ public abstract class BossModel extends EnemyModel implements Renderable {
         return new CrabBossModel(this);
       } else if (type.contains("clam")) {
         return new ClamModel(this);
+      } else if (type.contains("shark")) {
+        return new SharkBossModel(this);
       } else {
         return new JellyBossModel(this);
       }

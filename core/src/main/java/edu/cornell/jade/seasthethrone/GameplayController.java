@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.viewport.*;
 
 import edu.cornell.jade.seasthethrone.ai.BossController;
@@ -30,9 +31,11 @@ import edu.cornell.jade.seasthethrone.ui.EnemyHealthBar;
 import edu.cornell.jade.seasthethrone.ui.PauseMenu;
 import edu.cornell.jade.seasthethrone.ui.PauseMenuController;
 import edu.cornell.jade.seasthethrone.ui.UIController;
+import edu.cornell.jade.seasthethrone.util.JsonHandler;
 import edu.cornell.jade.seasthethrone.util.ScreenListener;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 
@@ -285,20 +288,21 @@ public class GameplayController implements Screen {
       String[] splitName = name.replaceAll("[^a-zA-Z_]", "").split("_");
       // Assuming that names are going to be of the format "_..._(boss)"
       String assetName = splitName[splitName.length-1];
-      if (assetName.equals("shark")) assetName = "jelly";
-      int health = name.contains("jelly")
-        ? 50 
-        : name.contains("clam")
-          ? 10
-          : 200;
+
+      AssetDirectory assetDirectory = new AssetDirectory("assets.json");
+      assetDirectory.loadAssets();
+      assetDirectory.finishLoading();
+
+      JsonValue bossInfo = assetDirectory.getEntry(assetName, JsonValue.class);
       var bossBuilder =
           BossModel.Builder.newInstance()
               .setType(name)
-              .setFrameSize()
+              .setFrameSize(bossInfo.getInt("frame_size", 0))
               .setX(bossContainer.x)
               .setY(bossContainer.y)
-              .setHealth(health)
-              .setHealthThresholds(new int[] {150, 100, 50})
+              .setHealth(bossInfo.getInt("health", 0))
+              .setHealthThresholds(bossInfo.get("thresholds").asIntArray())
+              .setHitbox(bossInfo.get("hitbox").asFloatArray())
               .setFalloverAnimation(new Texture("bosses/" + assetName + "/fallover.png"))
               .setShootAnimation(new Texture("bosses/" + assetName + "/shoot.png"))
               .setGetHitAnimation(new Texture("bosses/" + assetName + "/hurt.png"))
