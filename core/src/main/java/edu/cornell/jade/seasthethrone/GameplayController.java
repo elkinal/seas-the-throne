@@ -123,6 +123,9 @@ public class GameplayController implements Screen {
   /** If the game has been flagged to restart at last checkpoint */
   private boolean restart;
 
+  /** If the game has been set to quit */
+  private boolean quit;
+
   /** Temporary cache to sort physics renderables */
   private final Array<Model> objectCache = new Array<>();
 
@@ -168,6 +171,7 @@ public class GameplayController implements Screen {
 
     active = false;
     restart = false;
+    quit = false;
     saveTimer = 0;
 
     this.stateController = new StateController();
@@ -526,6 +530,13 @@ public class GameplayController implements Screen {
       respawn();
     }
 
+    if (quit) {
+      dispose();
+      assets.unloadAssets();
+      assets.dispose();
+      System.exit(0);
+    }
+
     // Draw reset and debug screen for wins and losses
     if (gameState == GameState.OVER || gameState == GameState.WIN) {
       if (inputController.didReset()) {
@@ -632,6 +643,10 @@ public class GameplayController implements Screen {
 
   public void setRestart(boolean restart) {
     this.restart = restart;
+  }
+
+  public void setQuit(boolean quit) {
+    this.quit = quit;
   }
 
   public void pause() {

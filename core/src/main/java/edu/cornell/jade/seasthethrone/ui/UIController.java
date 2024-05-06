@@ -107,7 +107,7 @@ public class UIController {
 
     if (drawSave) {
       String message = "Game Saved!";
-      canvas.drawTextUI(message, messageFont, canvas.getWidth() - 400, 100);
+      canvas.drawTextUI(message, messageFont, canvas.getWidth() - 300, 100);
     }
 
     pauseMenuController.getPauseMenu().draw(render);
