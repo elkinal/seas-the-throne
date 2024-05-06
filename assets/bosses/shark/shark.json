@@ -1,5 +1,5 @@
 {
-  "frame_size": 60,
+  "frame_size": 100,
   "health": 200,
   "hitbox": [
     -2,    1.2,
