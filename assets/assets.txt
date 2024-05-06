@@ -65,6 +65,8 @@ levels/tablet_room.png
 levels/tablet_room_1.json
 levels/tablet_room_2.json
 levels/test1.tiled-project
+levels/tutorial_background.png
+levels/tutorial_map.json
 libgdx.png
 loading/background.png
 loading/player_run_right.png

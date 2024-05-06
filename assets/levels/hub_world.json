@@ -349,17 +349,17 @@
                         {
                          "name":"playerX",
                          "type":"float",
-                         "value":880
+                         "value":2070
                         }, 
                         {
                          "name":"playerY",
                          "type":"float",
-                         "value":1220
+                         "value":225
                         }, 
                         {
                          "name":"target",
                          "type":"string",
-                         "value":"levels\/shallow_map.json"
+                         "value":"levels\/tutorial_map.json"
                         }],
                  "rotation":0,
                  "type":"",
