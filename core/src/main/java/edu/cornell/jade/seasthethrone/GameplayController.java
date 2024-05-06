@@ -28,7 +28,6 @@ import edu.cornell.jade.seasthethrone.ui.*;
 import edu.cornell.jade.seasthethrone.util.ScreenListener;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 
-import java.io.FileNotFoundException;
 import java.util.Comparator;
 
 /**
