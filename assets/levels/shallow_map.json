@@ -5829,11 +5829,77 @@
                  "visible":true,
                  "width":2.21836,
                  "x":2036.77688070159,
-                 "y":1617.55368842981
+                 "y":1614.86044846213
+                }, 
+                {
+                 "height":52.3782,
+                 "id":263,
+                 "name":"levels\/gate.png",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":8
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":false
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":2.21836,
+                 "x":2038.2719733052,
+                 "y":1622.07376022085
+                }, 
+                {
+                 "height":8.83167320866528,
+                 "id":264,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":8
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":104.914818459544,
+                 "x":2035.85010772882,
+                 "y":1678.04461804805
+                }, 
+                {
+                 "height":173.771660141056,
+                 "id":265,
+                 "name":"levels\/gate.png",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":8
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":false
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":2.21836,
+                 "x":1294.47167329418,
+                 "y":2345.88481960392
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -6020,7 +6086,7 @@
                  "gid":40,
                  "height":20,
                  "id":239,
-                 "name":"fixed_clam180",
+                 "name":"fixed_clam225",
                  "properties":[
                         {
                          "name":"id",
@@ -6031,8 +6097,8 @@
                  "type":"",
                  "visible":true,
                  "width":20,
-                 "x":2347.33265848412,
-                 "y":1057.94888017209
+                 "x":2148.42223152352,
+                 "y":845.102053870304
                 }, 
                 {
                  "gid":40,
@@ -6087,10 +6153,28 @@
                  "width":20,
                  "x":1942.23381806492,
                  "y":1712.48229504261
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":262,
+                 "name":"chasing_jelly",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":8
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":1740.52,
+                 "y":1830.58
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -6264,7 +6348,7 @@
          "y":0
         }],
  "nextlayerid":15,
- "nextobjectid":262,
+ "nextobjectid":266,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

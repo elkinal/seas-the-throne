@@ -14,7 +14,7 @@ import java.util.Random;
 /** A controller defining the behavior of a jelly boss. */
 abstract class JellyBossController implements BossController {
   /** Enumeration of AI states. */
-  private static enum State {
+  static enum State {
     /** The boss is stationary */
     IDLE,
     /** The boss is attacking */
@@ -33,7 +33,7 @@ abstract class JellyBossController implements BossController {
    * -----------------------------------
    */
   /** The distance the player must be from the boss before it begins attacking. */
-  private static float AGRO_DISTANCE = 20f;
+  protected static float AGRO_DISTANCE = 25f;
 
   /** The minimum distance the boss must move during a movement cycle. */
   private static float MIN_MOVE_DIST = 8f;
@@ -44,13 +44,13 @@ abstract class JellyBossController implements BossController {
    * -------------------------------
    */
   /** The model being controlled */
-  private JellyBossModel boss;
+  protected JellyBossModel boss;
 
   /** The player model being attacked */
-  private PlayerModel player;
+  protected PlayerModel player;
 
   /** The boss's current state */
-  private State state;
+  protected State state;
 
   /** The timer for state switching */
   private int timer;
@@ -138,7 +138,7 @@ abstract class JellyBossController implements BossController {
   }
 
   /** Progresses to the next state of the controller. */
-  private void nextState() {
+  protected void nextState() {
     switch (state) {
       case IDLE:
         if (boss.getPosition().dst(player.getPosition()) < AGRO_DISTANCE) {
@@ -184,7 +184,7 @@ abstract class JellyBossController implements BossController {
   }
 
   /** Performs actions based on the controller state */
-  private void act() {
+  protected void act() {
     switch (state) {
       case IDLE:
         break;
@@ -212,6 +212,5 @@ abstract class JellyBossController implements BossController {
           rand.nextFloat(bounds.getX(), bounds.getX() + bounds.getWidth()),
           rand.nextFloat(bounds.getY(), bounds.getY() + bounds.getHeight()));
     }
-    boss.setLinearVelocity(boss.getPosition().sub(goalPos).nor().scl(-5));
   }
 }

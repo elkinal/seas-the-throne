@@ -1,5 +1,6 @@
 package edu.cornell.jade.seasthethrone.gamemodel.boss;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -82,6 +83,9 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   /** Full amount of health */
   private int fullHealth;
 
+  /** Tint of the boss */
+  private Color color;
+
   /**
    * {@link BossModel} constructor using an x and y coordinate.
    *
@@ -116,6 +120,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     healthThresholds = builder.healthThresholds;
     thresholdPointer = 0;
     isExecute = false;
+    color = Color.WHITE;
     setBodyType(BodyDef.BodyType.KinematicBody);
   }
 
@@ -125,7 +130,12 @@ public abstract class BossModel extends EnemyModel implements Renderable {
       progressFrame();
     }
     Vector2 pos = getPosition();
-    renderer.draw(filmStrip, pos.x, pos.y, 0.16f);
+    renderer.draw(filmStrip, pos.x, pos.y, 0.16f, color);
+  }
+
+  /** Sets the color of this boss model */
+  public void setColor(Color color) {
+    this.color = color;
   }
 
   /**
@@ -474,6 +484,9 @@ public abstract class BossModel extends EnemyModel implements Renderable {
       } else if (type.equals("arc_jelly")) {
         return new AimedArcJellyBossController(
             (JellyBossModel) model, player, bulletBuilder, physicsEngine);
+      }  else if (type.equals("chasing_jelly")) {
+        return new ChasingJellyBossController(
+                (JellyBossModel) model, player, bulletBuilder, physicsEngine);
       } else if (type.contains("fixed_clam")) {
         // invarient, this is a float and won't fail
         float angle = MathUtils.degRad * Float.parseFloat(type.replaceAll("[^\\d.]", ""));
