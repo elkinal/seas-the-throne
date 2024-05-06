@@ -161,16 +161,6 @@ public class PolygonModel extends SimpleModel {
     initBounds();
   }
 
-  /**
-   * Creates a (not necessarily convex) polygon
-   *
-   * @param x Initial x position of the polygon center
-   * @param y Initial y position of the polygon center
-   */
-  public PolygonModel(float x, float y) {
-    super(x, y);
-  }
-
   /** Initializes the bounding box (and drawing scale) for this polygon */
   protected void initBounds() {
     float minx = vertices[0];

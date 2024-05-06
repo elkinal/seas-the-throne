@@ -191,7 +191,7 @@ public final class SpawnerFactory {
   }
 
   /**
-   * Constructs a ring of unbreakable bullets that slowly spin around a moving origin
+   * Constructs a ring of bullets that slowly spin around a moving origin
    *
    * @param dups          number of bullets in the ring
    * @param delay         the time it takes to make a full rotation
@@ -199,12 +199,11 @@ public final class SpawnerFactory {
    * @param builder       a builder to create bullet models
    * @param physicsEngine {@link PhysicsEngine} to add bullets to
    */
-  public static Spawner constructUnbreakableSpinningRing(int dups, int delay, BossModel model,
+  public static Spawner constructSpinningRing(int dups, int delay, BossModel model,
                                                BulletModel.Builder builder, PhysicsEngine physicsEngine) {
     Spawner out = new Spawner(builder, physicsEngine);
     BulletFamily f = new BulletFamily(4.5f, 0f, 0f, 0f, 0.5f, 0);
     f.addEffect(new Arc(0f, MathUtils.PI * 2, dups));
-    f.addEffect(new Unbreakable());
     f.addDelayedAction(new Spawner.DelayedIndefiniteRotate(delay, model));
     out.addFamily(f);
     return out;
