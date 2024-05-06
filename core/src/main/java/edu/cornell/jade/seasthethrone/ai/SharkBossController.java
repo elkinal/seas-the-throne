@@ -105,7 +105,7 @@ public class SharkBossController implements BossController {
     this.bounds = new Rectangle(boss.getX() - 15, boss.getY() - 15, 30, 30);
 
     this.oscRingAttack = new OscillatingRingAttack(boss, player, builder, physicsEngine);
-    this.ringAttack = new RingAttack(boss, 20, 5, builder, physicsEngine);
+    this.ringAttack = new RingAttack(boss, 20, 5, false, builder, physicsEngine);
     this.aimedArcAttack = new AimedArcAttack(60, boss, player, builder, physicsEngine);
     this.unbreakableRing = new UnbreakableSpinningRing(17, 240, boss, builder, physicsEngine);
   }

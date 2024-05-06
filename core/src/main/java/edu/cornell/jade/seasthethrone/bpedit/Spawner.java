@@ -300,8 +300,6 @@ public class Spawner {
     protected float bvy;
     /** The radius of the constructed bullet */
     protected float radius;
-    /** If the base bullet model is unbreakable */
-    protected boolean isUnbreakable;
 
     /** An ordered list of effects to be applied to the base bullet. */
     protected Queue<Effect> effect;
@@ -404,13 +402,6 @@ public class Spawner {
     public void setPosition(float x, float y) {
       this.bx = x;
       this.by = y;
-    }
-
-    /**
-     * Sets the base bullet to be unbreakable
-     */
-    public void setUnbreakable() {
-      this.isUnbreakable = true;
     }
 
     /**
@@ -554,6 +545,9 @@ public class Spawner {
    */
   private float rotation;
 
+  /** If bullets from this spawner should be unbreakable */
+  private boolean unbreakable;
+
   private final Array<DelayedAction> delayedActionCache;
 
   /**
@@ -676,6 +670,13 @@ public class Spawner {
   }
 
   /**
+   * Makes all bullets coming from the spawner unbreakable
+   */
+  public void setUnbreakable() {
+    unbreakable = true;
+  }
+
+  /**
    * Returns if the there is possibly another bullet which can be created
    *
    * @return if another bullet could possibly be created
@@ -777,7 +778,7 @@ public class Spawner {
         .setVX(f.bvx)
         .setVY(f.bvy)
         .setRadius(f.radius);
-    if (f.isUnbreakable) bulletBuilder.setType(BulletModel.Builder.Type.UNBREAKABLE);
+    if (unbreakable) bulletBuilder.setType(BulletModel.Builder.Type.UNBREAKABLE);
     BulletModel m = bulletBuilder.build();
     bulletBuilder.setType(BulletModel.Builder.Type.DEFAULT);
     //Disabled pooling for now

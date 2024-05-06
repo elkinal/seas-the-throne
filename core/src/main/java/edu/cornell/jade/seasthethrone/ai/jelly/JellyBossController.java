@@ -1,7 +1,8 @@
-package edu.cornell.jade.seasthethrone.ai;
+package edu.cornell.jade.seasthethrone.ai.jelly;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import edu.cornell.jade.seasthethrone.ai.BossController;
 import edu.cornell.jade.seasthethrone.bpedit.AttackPattern;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
@@ -139,6 +140,7 @@ abstract class JellyBossController implements BossController {
 
   /** Progresses to the next state of the controller. */
   protected void nextState() {
+    System.out.println(state);
     switch (state) {
       case IDLE:
         if (boss.getPosition().dst(player.getPosition()) < AGRO_DISTANCE) {
@@ -212,5 +214,6 @@ abstract class JellyBossController implements BossController {
           rand.nextFloat(bounds.getX(), bounds.getX() + bounds.getWidth()),
           rand.nextFloat(bounds.getY(), bounds.getY() + bounds.getHeight()));
     }
+    boss.setLinearVelocity(boss.getPosition().sub(goalPos).nor().scl(-5));
   }
 }

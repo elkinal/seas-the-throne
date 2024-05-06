@@ -7,6 +7,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 
 import edu.cornell.jade.seasthethrone.ai.*;
+import edu.cornell.jade.seasthethrone.ai.clam.FixedStreamClamController;
+import edu.cornell.jade.seasthethrone.ai.clam.OscillatingRingClamController;
+import edu.cornell.jade.seasthethrone.ai.clam.RandomStreamClamController;
+import edu.cornell.jade.seasthethrone.ai.clam.UnbreakableRingClamController;
+import edu.cornell.jade.seasthethrone.ai.jelly.AimedArcJellyBossController;
+import edu.cornell.jade.seasthethrone.ai.jelly.AimedSingleBulletJellyBossController;
+import edu.cornell.jade.seasthethrone.ai.jelly.ChasingJellyBossController;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import edu.cornell.jade.seasthethrone.gamemodel.EnemyModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
@@ -496,6 +503,8 @@ public abstract class BossModel extends EnemyModel implements Renderable {
       } else if (type.contains("random_stream_clam")) {
         float angle = MathUtils.degRad * Float.parseFloat(type.replaceAll("[^\\d.]", ""));
         return new RandomStreamClamController(angle, model, player, bulletBuilder, physicsEngine);
+      } else if (type.equals("unbreak_ring_clam")) {
+        return new UnbreakableRingClamController(model, player, bulletBuilder, physicsEngine);
       }
       throw new RuntimeException("boss type not supported");
     }

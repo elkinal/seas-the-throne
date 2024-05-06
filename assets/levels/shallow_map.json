@@ -5145,7 +5145,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -6169,8 +6169,98 @@
                  "type":"",
                  "visible":true,
                  "width":20,
-                 "x":1740.52,
-                 "y":1830.58
+                 "x":1494.81289403881,
+                 "y":2084.6634845735
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":267,
+                 "name":"random_stream_clam35",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":8
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":1256.90405349225,
+                 "y":2239.6074487517
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":268,
+                 "name":"random_stream_clam45",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":8
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":1747.96534376747,
+                 "y":2397.76970374511
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":269,
+                 "name":"chasing_jelly",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":8
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":1882.31410122891,
+                 "y":2261.40179129348
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":270,
+                 "name":"unbreak_ring_clam",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":-1
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":1840.47683003359,
+                 "y":1996.39392890568
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":271,
+                 "name":"arc_jelly",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":8
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":2004.48989795579,
+                 "y":1878.27120375516
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -6348,7 +6438,7 @@
          "y":0
         }],
  "nextlayerid":15,
- "nextobjectid":266,
+ "nextobjectid":272,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

@@ -298,8 +298,6 @@ public class GameplayController implements Screen {
               .setX(bossContainer.x)
               .setY(bossContainer.y)
               .setHealth(health)
-
-              //              .setHitbox(new float[]{-3, -3, -3, 3, 3, 3, 3, -3})
               .setHealthThresholds(new int[] {150, 100, 50})
               .setFalloverAnimation(new Texture("bosses/" + assetName + "/fallover.png"))
               .setShootAnimation(new Texture("bosses/" + assetName + "/shoot.png"))
