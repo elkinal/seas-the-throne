@@ -1,9 +1,17 @@
 {
 "storedLevels": {
+	"tutorial_map": {
+		"bossHps": [],
+		"respawnLoc": null
+	},
 	"hub_world": {
 		"bossHps": [],
 		"respawnLoc": null
 	}
 },
-"playerHealth": 5
+"playerHealth": 5,
+"respawnLoc": {
+	"x": 106.08546,
+	"y": 106.409546
+}
 }

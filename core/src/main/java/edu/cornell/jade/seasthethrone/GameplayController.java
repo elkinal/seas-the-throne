@@ -57,6 +57,9 @@ public class GameplayController implements Screen {
   /** State defining the current logic of the GameplayController. */
   private GameState gameState;
 
+  /** Assets to be loaded */
+  private AssetDirectory assets;
+
   /** Renderer for debug hitboxes. */
   Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
 
@@ -151,6 +154,9 @@ public class GameplayController implements Screen {
     gameState = GameState.PLAY;
 
     this.level = new Level("levels/hub_world.json");
+    this.assets = new AssetDirectory("assets.json");
+    assets.loadAssets();
+    assets.finishLoading();
 
     worldHeight = level.DEFAULT_HEIGHT;
     worldWidth = level.DEFAULT_WIDTH;
@@ -387,6 +393,7 @@ public class GameplayController implements Screen {
             renderEngine,
             renderEngine.getGameCanvas(),
             uiViewport);
+    uiController.gatherAssets(assets);
   }
 
   public void render(float delta) {
@@ -416,11 +423,15 @@ public class GameplayController implements Screen {
 
       // Update saving
       if (saveTimer > 0) saveTimer += 1;
-      if (saveTimer > SAVE_DELAY) saveTimer = 0;
+      if (saveTimer > SAVE_DELAY) {
+        saveTimer = 0;
+        uiController.setDrawSave(false);
+      }
 
       if (interactController.isCheckpointActivated() && saveTimer == 0) {
         stateController.setRespawnLoc(playerController.getLocation().cpy());
         stateController.saveGame();
+        uiController.setDrawSave(true);
         saveTimer++;
       }
 
@@ -512,10 +523,7 @@ public class GameplayController implements Screen {
     }
 
     if (restart) {
-      System.out.println("flag1");
-      System.out.println("pre respawn rl "+stateController.getRespawnLoc());
       respawn();
-      System.out.println("post respawn pl "+playerController.getLocation());
     }
 
     // Draw reset and debug screen for wins and losses
