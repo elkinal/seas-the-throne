@@ -1,4 +1,4 @@
-package edu.cornell.jade.seasthethrone.ai;
+package edu.cornell.jade.seasthethrone.ai.clam;
 
 import edu.cornell.jade.seasthethrone.bpedit.patterns.OscillatingRingAttack;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;

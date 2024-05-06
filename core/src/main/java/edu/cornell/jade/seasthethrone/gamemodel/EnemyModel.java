@@ -42,13 +42,14 @@ public class EnemyModel extends PolygonModel {
   /**
    * Constructor for EnemyModel. Assigns all textures.
    *
-   * @param enemyName Enemy name in the json file (eg. crab)
+   * @param points coordinates of the hitbox
    * @param x x coordinate of the enemy model
    * @param y y coordinate of the enemy model
+   * @param enemyName Enemy name in the json file (eg. crab)
    * @param frameSize number of frames in all animations 
    */
-  public EnemyModel(float x, float y, String enemyName, int frameSize) {
-    super(x, y);
+  public EnemyModel(float[] points, float x, float y, String enemyName, int frameSize) {
+    super(points, x, y);
     // FIXME: another stupid hack to make multiple named jellies work.
     // This code is terrible and I hate it with a burning passion
 

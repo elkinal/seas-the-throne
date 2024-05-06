@@ -27,13 +27,16 @@ public class RingAttack extends AttackPattern {
    *
    * @param delay         the length of time between successive bullets
    * @param shots         the number of bullets in one ring
+   * @param unbreakable   if the bullets are unbreakable
    * @param builder       a builder to create bullet models
    * @param physicsEngine {@link PhysicsEngine} to add bullets to
    */
-  public RingAttack(BossModel model, int delay, int shots,
+  public RingAttack(BossModel model, int delay, int shots, boolean unbreakable,
                     BulletModel.Builder builder, PhysicsEngine physicsEngine) {
 
     this.spawner = SpawnerFactory.constructRepeatingRing(shots, delay, builder, physicsEngine);
+    if (unbreakable) this.spawner.setUnbreakable();
+
     this.model = model;
 
     this.addSpawner(spawner);

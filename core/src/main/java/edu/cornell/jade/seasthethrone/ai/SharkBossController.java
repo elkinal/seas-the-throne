@@ -105,9 +105,9 @@ public class SharkBossController implements BossController {
     this.bounds = new Rectangle(boss.getX() - 15, boss.getY() - 15, 30, 30);
 
     this.oscRingAttack = new OscillatingRingAttack(boss, player, builder, physicsEngine);
-    this.ringAttack = new RingAttack(boss, 20, 5, builder, physicsEngine);
+    this.ringAttack = new RingAttack(boss, 20, 5, false, builder, physicsEngine);
     this.aimedArcAttack = new AimedArcAttack(60, boss, player, builder, physicsEngine);
-    this.unbreakableRing = new UnbreakableSpinningRing(9, 60, boss, builder, physicsEngine);
+    this.unbreakableRing = new UnbreakableSpinningRing(17, 240, boss, builder, physicsEngine);
   }
 
   @Override
@@ -233,7 +233,6 @@ public class SharkBossController implements BossController {
 
   /** Performs actions based on the controller state */
   private void act() {
-    unbreakableRing.update(player.getX(), player.getY());
     switch (state) {
       case IDLE:
         break;
@@ -257,6 +256,7 @@ public class SharkBossController implements BossController {
       case DEAD:
         break;
     }
+    if (state != State.IDLE && state != State.DEAD) unbreakableRing.update(player.getX(), player.getY());
   }
 
   /** If the goal pos was reached */
