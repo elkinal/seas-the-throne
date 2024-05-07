@@ -22,7 +22,6 @@ public class PauseMenu implements Renderable {
   private float screenWidth, screenHeight;
 
   // Textures
-  // TODO: stop hardcoding textures
   private final Texture scrollTexture = new Texture("ui/pausescreen.png");
   private final Texture backgroundTexture = new Texture("ui/darkscreen.png");
   private final TextureRegion scrollTextureRegion, backgroundTextureRegion;
@@ -42,8 +41,9 @@ public class PauseMenu implements Renderable {
   public enum MenuSelection {
     RESUME(0, "Resume"),
     RESTART(1, "Restart"),
-    HELP(2, "Help"),
-    QUIT(3, "Quit");
+    OPTIONS(2, "Options"),
+    LEVEL_SELECT(3, "Level Select"),
+    QUIT(4, "Quit");
 
     public final String optionName;
     public final int optionValue;
@@ -54,11 +54,11 @@ public class PauseMenu implements Renderable {
     }
 
     public MenuSelection cycleUp() {
-      return values()[(optionValue > 0 ? optionValue - 1 : optionValue)];
+      return values()[(optionValue > 0 ? optionValue - 1 : values().length - 1)];
     }
 
     public MenuSelection cycleDown() {
-      return values()[(optionValue < 3 ? optionValue + 1 : optionValue)];
+      return values()[(optionValue < values().length - 1 ? optionValue + 1 : 0)];
     }
   }
 
@@ -73,12 +73,10 @@ public class PauseMenu implements Renderable {
         viewport.getScreenHeight(),
         Pixmap.Format.RGBA8888);
 
+
     Color backgroundColor = new Color(0, 0, 0, 0.55f);
     pixmap.setColor(backgroundColor);
     pixmap.fill();
-    // TODO: fix opacity bug
-    // Texture backgroundTexture = new Texture(pixmap);
-    // backgroundTextureRegion = new TextureRegion(backgroundTexture);
     backgroundTextureRegion = new TextureRegion(backgroundTexture);
 
     // Setting up text
@@ -99,11 +97,11 @@ public class PauseMenu implements Renderable {
 
     // Calculating spacings between menu options
     GlyphLayout layout = new GlyphLayout(menuFont, "Sample");
-    textSpacingY = layout.height + 25;
+    textSpacingY = layout.height + 35;
 
     // Setting scaling
-    width = 500;
-    height = 520;
+    width = 750;
+    height = 780;
 
     // Creating the dialogue box
     dialogueBox = new DialogueBox(viewport);
@@ -119,22 +117,19 @@ public class PauseMenu implements Renderable {
   /** Displays the menu when the game is paused */
   public void setPaused(boolean paused) {
     this.paused = paused;
-    if (!paused) {
-      selection = MenuSelection.RESUME;
-    }
+    if (!paused) selection = MenuSelection.RESUME;
   }
 
   /** Switches to a lower menu item */
   public void cycleDown() {
-    if (paused && selection.optionValue < 3) {
+    if (paused) {
       selection = selection.cycleDown();
     }
   }
 
   /** Switches to a higher menu item */
   public void cycleUp() {
-    if (paused && selection.optionValue > 0)
-      selection = selection.cycleUp();
+    if (paused) selection = selection.cycleUp();
   }
 
   public MenuSelection getSelection() {
@@ -142,16 +137,14 @@ public class PauseMenu implements Renderable {
   }
 
   /**
-   * Ensures the menu stays the same size and remains in the center
-   * of the screen when the window is resized.
+   * Ensures the menu stays the same size and remains in the center of the screen when the window is
+   * resized.
    */
   public void resize(int screenWidth, int screenHeight) {
 
     // Initial scale
-    if (this.screenWidth == 0)
-      this.screenWidth = screenWidth;
-    if (this.screenHeight == 0)
-      this.screenHeight = screenHeight;
+    if (this.screenWidth == 0) this.screenWidth = screenWidth;
+    if (this.screenHeight == 0) this.screenHeight = screenHeight;
 
     // New position of menu after resizing
     x = ((float) screenWidth / 2) - width / 2;
@@ -173,10 +166,10 @@ public class PauseMenu implements Renderable {
   @Override
   public void draw(RenderingEngine renderer) {
     if (paused) {
-      renderer.getGameCanvas().drawUI(
-          backgroundTextureRegion, 0, 0, screenWidth * 4, screenHeight * 4);
-      renderer.getGameCanvas().drawUI(
-          scrollTextureRegion, x, y, width, height);
+      renderer
+          .getGameCanvas()
+          .drawUI(backgroundTextureRegion, 0, 0, screenWidth * 4, screenHeight * 4);
+      renderer.getGameCanvas().drawUI(scrollTextureRegion, x, y, width, height);
       dialogueBox.draw(renderer);
       drawText(renderer);
     }
@@ -187,19 +180,38 @@ public class PauseMenu implements Renderable {
     if (paused) {
       // Drawing the shadow for the selected option
       float textX = getTextX();
-      float textY = getTextY();
+      float textY = getTextY() + 40;
 
       float shadowY = textSpacingY * (1.5f - selection.optionValue);
-      renderer.getGameCanvas().drawTextUI(selection.optionName, menuShadowFont, textX - 2, textY + 2 + shadowY, true);
+      renderer
+          .getGameCanvas()
+          .drawTextUI(selection.optionName, menuShadowFont, textX - 2, textY - 2 + shadowY, true);
 
-      // Drawing the default menu options
-      renderer.getGameCanvas().drawTextUI("Resume", menuFont, textX, textY + textSpacingY * 1.5f, true);
-      renderer.getGameCanvas().drawTextUI("Restart", menuFont, textX, textY + textSpacingY / 2, true);
-      renderer.getGameCanvas().drawTextUI("Help", menuFont, textX, textY - textSpacingY / 2, true);
-      renderer.getGameCanvas().drawTextUI("Quit", menuFont, textX, textY - textSpacingY * 1.5f, true);
-
+      for (MenuSelection option : MenuSelection.values()) {
+        float option_offset = textSpacingY * (float) (1.5 - option.optionValue);
+        renderer
+            .getGameCanvas()
+            .drawTextUI(option.optionName, menuFont, textX, textY + option_offset, true);
+      }
     }
   }
+
+  @Override
+  public void alwaysUpdate() {}
+
+  @Override
+  public void neverUpdate() {}
+
+  @Override
+  public void setAlwaysAnimate(boolean animate) {}
+
+  @Override
+  public boolean alwaysAnimate() {
+    return false;
+  }
+
+  @Override
+  public void progressFrame() {}
 
   /** Sets the text that appears when this object's dialogue is activated */
   public void setDialogueTexts(String... texts) {
@@ -214,26 +226,6 @@ public class PauseMenu implements Renderable {
   /** Returns the pause menu's help dialogue box controller */
   public DialogueBoxController getDialogueBoxController() {
     return dialogueBoxController;
-  }
 
-  @Override
-  public void alwaysUpdate() {
-  }
-
-  @Override
-  public void neverUpdate() {
-  }
-
-  @Override
-  public void setAlwaysAnimate(boolean animate) {
-  }
-
-  @Override
-  public boolean alwaysAnimate() {
-    return false;
-  }
-
-  @Override
-  public void progressFrame() {
   }
 }
