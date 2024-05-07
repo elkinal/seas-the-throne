@@ -38,12 +38,13 @@ public class PauseMenuController implements Controllable {
   /** Clicks on a pause menu item */
   @Override
   public void pressInteract() {
-    if (!pauseMenu.isPaused()) return;
+    if (!pauseMenu.isPaused())
+      return;
     // TODO: create actions
     switch (pauseMenu.getSelection()) {
       case RESUME -> pauseMenu.setPaused(false);
       case RESTART -> restart();
-      case HELP -> System.out.println("Help");
+      case HELP -> pauseMenu.getDialogueBox().show();
       case QUIT -> gameplayController.setQuit(true);
     }
   }

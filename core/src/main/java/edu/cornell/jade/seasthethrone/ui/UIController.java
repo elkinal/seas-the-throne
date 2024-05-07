@@ -10,8 +10,6 @@ import edu.cornell.jade.seasthethrone.assets.AssetDirectory;
 import edu.cornell.jade.seasthethrone.render.GameCanvas;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 
-import java.util.ArrayList;
-
 /**
  * This is a controller to manage the UI interface for the game. This controller updates all UI, but
  * only draws UI items that are static on the screen. It does not, for example, draw the AmmoBar.
@@ -62,7 +60,9 @@ public class UIController {
       GameCanvas canvas,
       ScreenViewport view) {
     this.player = player;
+
     this.pauseMenuController = pauseMenuController;
+
     this.render = render;
     viewport = view;
     boss = null;
@@ -107,7 +107,7 @@ public class UIController {
 
     if (drawSave) {
       String message = "Game Saved!";
-      canvas.drawTextUI(message, messageFont, canvas.getWidth() - 300, 100);
+      canvas.drawTextUI(message, messageFont, canvas.getWidth() - 300, 100, true);
     }
 
     pauseMenuController.getPauseMenu().draw(render);
