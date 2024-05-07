@@ -1,5 +1,6 @@
-package edu.cornell.jade.seasthethrone.ai;
+package edu.cornell.jade.seasthethrone.ai.clam;
 
+import edu.cornell.jade.seasthethrone.ai.BossController;
 import edu.cornell.jade.seasthethrone.bpedit.AttackPattern;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
@@ -40,7 +41,7 @@ abstract class ClamController implements BossController {
   /**
    * Constructs a crab controller
    *
-   * @param boss   boss model shooting
+   * @param boss boss model shooting
    * @param attack attack pattern being shot
    * @param player player being shot at
    */
@@ -67,6 +68,11 @@ abstract class ClamController implements BossController {
   @Override
   public boolean isDead() {
     return boss.isDead();
+  }
+
+  @Override
+  public boolean isBoss() {
+    return false;
   }
 
   @Override

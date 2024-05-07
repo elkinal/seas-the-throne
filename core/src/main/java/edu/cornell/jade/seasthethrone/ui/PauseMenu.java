@@ -22,6 +22,7 @@ public class PauseMenu implements Renderable {
   private float screenWidth, screenHeight;
 
   // Textures
+  // TODO: stop hardcoding textures
   private final Texture scrollTexture = new Texture("ui/pausescreen.png");
   private final Texture backgroundTexture = new Texture("ui/darkscreen.png");
   private final TextureRegion scrollTextureRegion, backgroundTextureRegion;

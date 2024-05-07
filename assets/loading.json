@@ -1,13 +1,14 @@
 {
   "textures": {
     "loading:background": "loading/background.png",
+    "loading:player_run": "loading/player_run_right.png",
     "title:background": "title/background.png",
     "title:logo": "title/logo.png"
   },
   "fonts": {
     "loading:alagard": {
       "file": "Alagard.ttf",
-      "size": 100
+      "size": 120
     },
     "title:alagard": {
       "file": "Alagard.ttf",

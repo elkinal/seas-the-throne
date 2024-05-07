@@ -1,7 +1,8 @@
-package edu.cornell.jade.seasthethrone.ai;
+package edu.cornell.jade.seasthethrone.ai.jelly;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import edu.cornell.jade.seasthethrone.ai.BossController;
 import edu.cornell.jade.seasthethrone.bpedit.AttackPattern;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
@@ -14,7 +15,7 @@ import java.util.Random;
 /** A controller defining the behavior of a jelly boss. */
 abstract class JellyBossController implements BossController {
   /** Enumeration of AI states. */
-  private static enum State {
+  static enum State {
     /** The boss is stationary */
     IDLE,
     /** The boss is attacking */
@@ -33,7 +34,7 @@ abstract class JellyBossController implements BossController {
    * -----------------------------------
    */
   /** The distance the player must be from the boss before it begins attacking. */
-  private static float AGRO_DISTANCE = 20f;
+  protected static float AGRO_DISTANCE = 25f;
 
   /** The minimum distance the boss must move during a movement cycle. */
   private static float MIN_MOVE_DIST = 8f;
@@ -44,13 +45,13 @@ abstract class JellyBossController implements BossController {
    * -------------------------------
    */
   /** The model being controlled */
-  private JellyBossModel boss;
+  protected JellyBossModel boss;
 
   /** The player model being attacked */
-  private PlayerModel player;
+  protected PlayerModel player;
 
   /** The boss's current state */
-  private State state;
+  protected State state;
 
   /** The timer for state switching */
   private int timer;
@@ -107,13 +108,14 @@ abstract class JellyBossController implements BossController {
     return boss.getHealth();
   }
 
-  /**
-   * Returns if the jelly this model controls is dead.
-   *
-   * @return if the jelly this controller controls is dead
-   */
+  @Override
   public boolean isDead() {
     return boss.isDead();
+  }
+
+  @Override
+  public boolean isBoss() {
+    return false;
   }
 
   @Override
@@ -137,7 +139,7 @@ abstract class JellyBossController implements BossController {
   }
 
   /** Progresses to the next state of the controller. */
-  private void nextState() {
+  protected void nextState() {
     switch (state) {
       case IDLE:
         if (boss.getPosition().dst(player.getPosition()) < AGRO_DISTANCE) {
@@ -183,7 +185,7 @@ abstract class JellyBossController implements BossController {
   }
 
   /** Performs actions based on the controller state */
-  private void act() {
+  protected void act() {
     switch (state) {
       case IDLE:
         break;
@@ -204,12 +206,12 @@ abstract class JellyBossController implements BossController {
   /** Helper function to generate new goal position & set boss velocity. * */
   private void findNewGoalPos() {
     goalPos.set(
-            rand.nextFloat(bounds.getX(), bounds.getX() + bounds.getWidth()),
-            rand.nextFloat(bounds.getY(), bounds.getY() + bounds.getHeight()));
+        rand.nextFloat(bounds.getX(), bounds.getX() + bounds.getWidth()),
+        rand.nextFloat(bounds.getY(), bounds.getY() + bounds.getHeight()));
     while (boss.getPosition().dst(goalPos) < MIN_MOVE_DIST) {
       goalPos.set(
-              rand.nextFloat(bounds.getX(), bounds.getX() + bounds.getWidth()),
-              rand.nextFloat(bounds.getY(), bounds.getY() + bounds.getHeight()));
+          rand.nextFloat(bounds.getX(), bounds.getX() + bounds.getWidth()),
+          rand.nextFloat(bounds.getY(), bounds.getY() + bounds.getHeight()));
     }
     boss.setLinearVelocity(boss.getPosition().sub(goalPos).nor().scl(-5));
   }

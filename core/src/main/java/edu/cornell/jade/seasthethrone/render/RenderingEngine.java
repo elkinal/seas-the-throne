@@ -106,6 +106,9 @@ public class RenderingEngine {
     canvas.begin();
     canvas.getSpriteBatch().setProjectionMatrix(getViewport().getCamera().combined);
     for (Renderable r : renderables) {
+      if (r instanceof BackgroundImage) {
+        BackgroundImage b = (BackgroundImage) r;
+      }
       r.draw(this);
     }
     canvas.end();
@@ -193,6 +196,12 @@ public class RenderingEngine {
     float oy = filmStrip.getRegionHeight() / 2f;
 
     canvas.draw(filmStrip, color, oy, ox, x, y, 0, scale, scale);
+  }
+  public void draw(TextureRegion texture, float x, float y, float scalex, float scaley) {
+    float ox = texture.getRegionWidth() / 2f;
+    float oy = texture.getRegionHeight() / 2f;
+
+    canvas.draw(texture, Color.WHITE, ox, oy, x, y, 0, scalex*worldScale, scaley*worldScale);
   }
 
   public void clear() {

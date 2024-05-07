@@ -14,11 +14,19 @@ public interface BossController {
   public void remove();
 
   /**
-   * Returns if the boss this model controls is dead.
+   * Returns if the boss this model controller is dead.
    *
-   * @return if the boss this controller controls is dead
+   * @return if the boss controller is dead
    */
   public boolean isDead();
+
+  /**
+   * Returns if an enemy is a boss or a mob. Bosses are opponents which are combinations of all
+   * previous bullet patterns, such as the head or the crab.
+   *
+   * @return true if an enemy is a boss
+   */
+  public boolean isBoss();
 
   /** Cleans up this bosses attack patterns */
   public void dispose();

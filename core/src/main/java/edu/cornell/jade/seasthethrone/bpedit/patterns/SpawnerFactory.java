@@ -166,7 +166,45 @@ public final class SpawnerFactory {
     f.addEffect(new Periodic(delay));
     f.addEffect(new TargetsModel(out, player));
     f.addEffect(new PlaysAttackAnimation(model));
-    f.addEffect(new Arc(-MathUtils.PI / 6f, MathUtils.PI / 3f, 5));
+    f.addEffect(new Arc(-MathUtils.PI / 6f, centralAngle, dups));
+    out.addFamily(f);
+    return out;
+  }
+
+  /**
+   * Constructs a randomly spraying bullet stream of bullet aimed in a certain
+   * direction
+   *
+   * @param angleRange    the full angle the spawner can spray in (radians)
+   * @param delay         delay inbetween firing
+   * @param builder       a builder to create bullet models
+   * @param physicsEngine {@link PhysicsEngine} to add bullets to
+   */
+  public static Spawner constructRepeatingRandomStream(float angleRange, int delay, BulletModel.Builder builder,
+                                                           PhysicsEngine physicsEngine) {
+    Spawner out = new Spawner(builder, physicsEngine);
+    BulletFamily f = new BulletFamily(0f, 0f, 14f, 0f, 0.5f, 0);
+    f.addEffect(new Periodic(delay));
+    f.addEffect(new RandomSpray(angleRange));
+    out.addFamily(f);
+    return out;
+  }
+
+  /**
+   * Constructs a ring of bullets that slowly spin around a moving origin
+   *
+   * @param dups          number of bullets in the ring
+   * @param delay         the time it takes to make a full rotation
+   * @param model         model to track
+   * @param builder       a builder to create bullet models
+   * @param physicsEngine {@link PhysicsEngine} to add bullets to
+   */
+  public static Spawner constructSpinningRing(int dups, int delay, BossModel model,
+                                               BulletModel.Builder builder, PhysicsEngine physicsEngine) {
+    Spawner out = new Spawner(builder, physicsEngine);
+    BulletFamily f = new BulletFamily(4.5f, 0f, 0f, 0f, 0.5f, 0);
+    f.addEffect(new Arc(0f, MathUtils.PI * 2, dups));
+    f.addDelayedAction(new Spawner.DelayedIndefiniteRotate(delay, model));
     out.addFamily(f);
     return out;
   }

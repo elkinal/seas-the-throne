@@ -20,34 +20,39 @@ public class CollisionMask {
   private static final short CATEGORY_WALL = 0x0001;
 
   /**
-   * Category bitmask for player
+   * Category bitmask for player body
    */
   private static final short CATEGORY_PLAYER = 0x0002;
 
   /**
+   * Category bitmask for player spear
+   */
+  private static final short CATEGORY_PLAYER_SPEAR = 0x0004;
+
+  /**
    * Category bitmask for player shadow (should only touch walls)
    */
-  private static final short CATEGORY_PLAYER_SHADOW = 0x0004;
+  private static final short CATEGORY_PLAYER_SHADOW = 0x0008;
 
   /**
    * Category bitmask for enemy bullet
    */
-  private static final short CATEGORY_ENEMY_BULLET = 0x0008;
+  private static final short CATEGORY_ENEMY_BULLET = 0x0010;
 
   /**
    * Category bitmask for boss
    */
-  private static final short CATEGORY_BOSS = 0x0010;
+  private static final short CATEGORY_BOSS = 0x0020;
 
   /**
    * Category bitmask for checkpoint
    */
-  private static final short CATEGORY_CHECKPOINT = 0x0020;
+  private static final short CATEGORY_CHECKPOINT = 0x0040;
 
   /**
    * Category bitmask for obstacle
    */
-  private static final short CATEGORY_OBSTACLE = 0x0040;
+  private static final short CATEGORY_OBSTACLE = 0x0080;
 
 
   /**
@@ -55,8 +60,12 @@ public class CollisionMask {
    */
   public static void setCategoryMaskBits(Model model) {
     // If player
-    if (model instanceof PlayerBodyModel || model instanceof PlayerSpearModel) {
+    if (model instanceof PlayerBodyModel) {
       model.setCategoryBits(CATEGORY_PLAYER);
+      model.setMaskBits((short) (CATEGORY_ENEMY_BULLET | CATEGORY_BOSS));
+    }
+    if (model instanceof PlayerSpearModel) {
+      model.setCategoryBits(CATEGORY_PLAYER_SPEAR);
       model.setMaskBits((short) (CATEGORY_ENEMY_BULLET | CATEGORY_BOSS));
     }
     // If player shadow
@@ -69,15 +78,20 @@ public class CollisionMask {
       model.setCategoryBits(CATEGORY_PLAYER);
       model.setMaskBits((short) (CATEGORY_BOSS | CATEGORY_OBSTACLE));
     }
+    // If enemy unbreakable bullet
+    else if (model instanceof UnbreakableBulletModel) {
+      model.setCategoryBits(CATEGORY_ENEMY_BULLET);
+      model.setMaskBits((short) (CATEGORY_PLAYER | CATEGORY_OBSTACLE));
+    }
     // If enemy bullet
     else if (model instanceof BulletModel) {
       model.setCategoryBits(CATEGORY_ENEMY_BULLET);
-      model.setMaskBits((short) (CATEGORY_PLAYER | CATEGORY_OBSTACLE));
+      model.setMaskBits((short) (CATEGORY_PLAYER | CATEGORY_PLAYER_SPEAR | CATEGORY_OBSTACLE));
     }
     // If boss
     else if (model instanceof BossModel) {
       model.setCategoryBits(CATEGORY_BOSS);
-      model.setMaskBits(CATEGORY_PLAYER);
+      model.setMaskBits((short) (CATEGORY_PLAYER | CATEGORY_PLAYER_SPEAR));
     }
     // If portal
     else if (model instanceof PortalModel) {

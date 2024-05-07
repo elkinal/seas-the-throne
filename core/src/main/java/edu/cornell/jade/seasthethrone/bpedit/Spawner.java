@@ -1,6 +1,8 @@
 package edu.cornell.jade.seasthethrone.bpedit;
 
 import java.util.Iterator;
+
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.BinaryHeap;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Queue;
@@ -8,6 +10,7 @@ import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.ReflectionPool;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import com.badlogic.gdx.math.MathUtils;
+import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import com.badlogic.gdx.utils.ObjectSet;
 
@@ -47,8 +50,12 @@ public class Spawner {
   /**
    * Represents a change to a bullet at a given timestamp.
    */
-  public static sealed abstract class DelayedAction
-      extends BinaryHeap.Node permits DelayedVelocityRotate, DelayedTarget, DelayedSpeedChange {
+  public static abstract class DelayedAction extends BinaryHeap.Node {
+    /**
+     * Set a delay to say the action will never stop being applied.
+     */
+    public static int NEVER_REMOVE = Integer.MIN_VALUE;
+
     /**
      * The timestamp at which the action should be applied, relative to the bullet
      * families timestamp.
@@ -212,6 +219,64 @@ public class Spawner {
       dy *= mag;
       model.setVX(dx);
       model.setVY(dy);
+    }
+  }
+
+  /** Rotates a bullet around a model's origin indefinitely. */
+  public static final class DelayedIndefiniteRotate extends DelayedAction {
+
+    /** Angle to rotate by each tick, in radians */
+    final float dtheta;
+
+    /** Time to make one full rotation */
+    float period;
+
+    /** The angle of the bullet w.r.t the origin */
+    float angle;
+
+    /** The distance from the origin */
+    float radius;
+
+    /** The model to rotate around */
+    Model origin;
+
+    /**
+     * Constructs a DelayedIndefiniteRotate
+     *
+     * @param period  the time it takes to make one full rotation in frame ticks
+     * @param origin  the model to rotate around
+     *
+     */
+    public DelayedIndefiniteRotate(float period, Model origin) {
+      super(NEVER_REMOVE);
+      this.period = period;
+      this.origin = origin;
+      this.dtheta = MathUtils.PI*2/period;
+    }
+
+    @Override
+    public void setModel(BulletModel model) {
+      super.setModel(model);
+      this.radius = model.getPosition().dst(origin.getPosition());
+      this.angle = MathUtils.atan2(model.getY()-origin.getY(), model.getX()-origin.getX());
+    }
+
+    @Override
+    public DelayedIndefiniteRotate clone() {
+      return new DelayedIndefiniteRotate(period, origin);
+    }
+
+    @Override
+    public void apply(float px, float py) {
+      if (model == null)
+        return;
+      System.out.println(model + " " + model.getPosition().dst(origin.getPosition()) + " " + radius);
+
+      angle = (angle + dtheta) % (MathUtils.PI*2);
+      float cos = MathUtils.cos(angle);
+      float sin = MathUtils.sin(angle);
+      model.setX(radius * cos + origin.getX());
+      model.setY(radius * sin + origin.getY());
     }
   }
 
@@ -480,6 +545,11 @@ public class Spawner {
    */
   private float rotation;
 
+  /** If bullets from this spawner should be unbreakable */
+  private boolean unbreakable;
+
+  private final Array<DelayedAction> delayedActionCache;
+
   /**
    * Constructs a <code>Spawner<code>.
    *
@@ -499,6 +569,7 @@ public class Spawner {
     this.delayedActions = new BinaryHeap<>();
     this.delayedActionsList = new ObjectSet<>();
     this.bulletBuilder = bulletBuilder;
+    this.delayedActionCache = new Array<>();
   }
 
   /**
@@ -545,8 +616,14 @@ public class Spawner {
    */
   private void applyDelayedActions(float px, float py) {
     while (!delayedActions.isEmpty() && delayedActions.peek().getValue() < timer) {
-      delayedActions.pop().apply(px, py);
+      var act = delayedActions.pop();
+      act.apply(px, py);
+      if (act.delay == DelayedAction.NEVER_REMOVE)
+        delayedActionCache.add(act);
     }
+    for (var act : delayedActionCache)
+      delayedActions.add(act);
+    delayedActionCache.clear();
   }
 
   /**
@@ -581,6 +658,22 @@ public class Spawner {
    */
   public void rotates(float theta) {
     rotation += theta;
+  }
+
+  /**
+   * Rotates the spawner, so it will be set in given direction
+   *
+   * @param theta new facing angle in radians
+   */
+  public void setAngle(float theta) {
+    rotation = theta;
+  }
+
+  /**
+   * Makes all bullets coming from the spawner unbreakable
+   */
+  public void setUnbreakable() {
+    unbreakable = true;
   }
 
   /**
@@ -684,9 +777,12 @@ public class Spawner {
         .setY(f.by + y)
         .setVX(f.bvx)
         .setVY(f.bvy)
-        .setShotByPlayer(false)
         .setRadius(f.radius);
-    BulletModel m = BulletModel.construct(bulletBuilder, bulletBasePool);
+    if (unbreakable) bulletBuilder.setType(BulletModel.Builder.Type.UNBREAKABLE);
+    BulletModel m = bulletBuilder.build();
+    bulletBuilder.setType(BulletModel.Builder.Type.DEFAULT);
+    //Disabled pooling for now
+    //BulletModel m = BulletModel.construct(bulletBuilder, bulletBasePool);
 
     for (DelayedAction a : f.delayedActions) {
       a.setModel(m);

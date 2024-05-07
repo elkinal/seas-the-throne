@@ -1024,8 +1024,9 @@ public class GameCanvas {
               "GameCanvas", "Cannot draw without active begin()", new IllegalStateException());
       return;
     }
-    GlyphLayout layout = new GlyphLayout(font, text);
+
     font.setColor(tint);
+    GlyphLayout layout = new GlyphLayout(font, text);
     font.draw(spriteBatch, layout, x, y);
   }
 

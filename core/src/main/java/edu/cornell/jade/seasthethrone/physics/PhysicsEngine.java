@@ -27,7 +27,7 @@ public class PhysicsEngine implements ContactListener {
   /** The boundary of the world */
   private Rectangle bounds;
 
-  private Array<BossModel> bosses = new Array<>();
+  private Array<EnemyModel> enemies = new Array<>();
 
   /**
    * Filepath to the JSON of the level to switch to. Should be null unless the player is on a portal
@@ -40,9 +40,6 @@ public class PhysicsEngine implements ContactListener {
   /** To keep track of the continuous player-boss collision */
   private Optional<Contact> playerBossCollision;
 
-  /** Checkpoint ID triggered, should be null unless the player is on a checkpoint */
-  public Integer checkpointID;
-
   public PhysicsEngine(Rectangle bounds, World world) {
     this.world = world;
     this.bounds = new Rectangle(bounds);
@@ -52,6 +49,10 @@ public class PhysicsEngine implements ContactListener {
 
   public PooledList<Model> getObjects() {
     return objects;
+  }
+
+  public Array<EnemyModel> getEnemies() {
+    return enemies;
   }
 
   public void dispose() {
@@ -73,14 +74,14 @@ public class PhysicsEngine implements ContactListener {
    * @param vel velocity of bullet
    * @param speed speed of bullet
    */
-  public void spawnBullet(Vector2 pos, Vector2 vel, float speed, boolean shotByPlayer) {
+  public void spawnBullet(Vector2 pos, Vector2 vel, float speed, BulletModel.Builder.Type type) {
     BulletModel bullet =
         BulletModel.Builder.newInstance()
             .setX(pos.x)
             .setY(pos.y)
             .setFishTexture(new Texture("bullet/yellowfish_east.png"))
             .setRadius(0.5f)
-            .setShotByPlayer(shotByPlayer)
+            .setType(type)
             .build();
     bullet.setVX(speed * vel.x);
     bullet.setVY(speed * vel.y);
@@ -107,15 +108,15 @@ public class PhysicsEngine implements ContactListener {
       Model obj = entry.getValue();
       if (obj.isRemoved()) {
         obj.deactivatePhysics(world);
-        if (obj instanceof BossModel) {
-          bosses.removeValue((BossModel) obj, true);
+        if (obj instanceof EnemyModel) {
+          enemies.removeValue((EnemyModel) obj, true);
         }
         entry.remove();
       } else {
         if (obj instanceof PlayerModel) {
           // Resolve knockback flag
           PlayerBodyModel body = ((PlayerModel) obj).getBodyModel();
-          if (body.isJustKnoocked()) {
+          if (body.isJustKnocked()) {
             applyKnockback(body, body.getKnockingBodyPos(), body.getKnockbackForce());
             body.setJustKnocked(false);
           }
@@ -140,8 +141,8 @@ public class PhysicsEngine implements ContactListener {
     assert inBounds(obj) : "Object is not in bounds";
     objects.add(obj);
     obj.activatePhysics(world);
-    if (obj instanceof BossModel) {
-      bosses.add((BossModel) obj);
+    if (obj instanceof EnemyModel) {
+      enemies.add((EnemyModel) obj);
     }
   }
 
@@ -187,11 +188,11 @@ public class PhysicsEngine implements ContactListener {
       if (bd1 instanceof PlayerBodyModel && bd2 instanceof BulletModel) {
         if (BuildConfig.DEBUG) System.out.println("player hit");
 
-        handleCollision((PlayerBodyModel) bd1, (BulletModel) bd2);
+        handleCollision((PlayerBodyModel) bd1, (BulletModel) bd2, contact);
       } else if (bd2 instanceof PlayerBodyModel && bd1 instanceof BulletModel) {
         if (BuildConfig.DEBUG) System.out.println("player hit");
 
-        handleCollision((PlayerBodyModel) bd2, (BulletModel) bd1);
+        handleCollision((PlayerBodyModel) bd2, (BulletModel) bd1, contact);
       } else if (bd1 instanceof PlayerSpearModel && bd2 instanceof BulletModel) {
         handleCollision((PlayerSpearModel) bd1, (BulletModel) bd2);
       } else if (bd2 instanceof PlayerSpearModel && bd1 instanceof BulletModel) {
@@ -208,18 +209,6 @@ public class PhysicsEngine implements ContactListener {
         handleCollision((PlayerBulletModel) bd1, (BossModel) bd2);
       } else if (bd2 instanceof PlayerBulletModel && bd1 instanceof BossModel) {
         handleCollision((PlayerBulletModel) bd2, (BossModel) bd1);
-      }
-      // Handle checkpoint sensors
-      else if (bd1 instanceof PlayerShadowModel && bd2 instanceof CheckpointModel) {
-        if (BuildConfig.DEBUG) System.out.println("checkpoint detected");
-
-        ((CheckpointModel) bd2).setActivated(true);
-        setCheckpointID(((CheckpointModel) bd2).getCheckpointID());
-      } else if (bd2 instanceof PlayerShadowModel && bd1 instanceof CheckpointModel) {
-        if (BuildConfig.DEBUG) System.out.println("checkpoint detected");
-
-        ((CheckpointModel) bd1).setActivated(true);
-        setCheckpointID(((CheckpointModel) bd1).getCheckpointID());
       }
       // Handle obstacles
       else if (bd1 instanceof BulletModel && bd2 instanceof ObstacleModel) {
@@ -276,12 +265,6 @@ public class PhysicsEngine implements ContactListener {
     return this.target != null;
   }
 
-  public void setCheckpointID(Integer id) { this.checkpointID = id; }
-
-  public boolean hasCheckpoint() { return this.checkpointID != null; }
-
-  public int getCheckpointID() { return this.checkpointID; }
-
   /** Helper function to apply a knockback on the player body. */
   public void applyKnockback(PlayerBodyModel pb, Vector2 bd2Pos, float knockbackForce) {
 
@@ -293,13 +276,20 @@ public class PhysicsEngine implements ContactListener {
   }
 
   /** Handle collision between player body and bullet */
-  public void handleCollision(PlayerBodyModel pb, BulletModel b) {
-    b.markRemoved(true);
-    if (!pb.isInvincible()) {
-      pb.decrementHealth();
-      pb.setInvincible(pb.getHitIFrames());
-      pb.setKnockedBack(b.getPosition(), b.getKnockbackForce(), 7);
+  public void handleCollision(PlayerBodyModel pb, BulletModel b, Contact c) {
+    if (!(b instanceof  UnbreakableBulletModel)) {
+      b.markRemoved(true);
+      if (pb.isInvincible()) {
+        c.setEnabled(false);
+        return;
+      }
     }
+    pb.setKnockedBack(b.getPosition(), b.getKnockbackForce(), 7);
+    if (pb.isInvincible() && pb.isHit() && b instanceof UnbreakableBulletModel) return;
+    pb.decrementHealth();
+    pb.setInvincible(pb.getHitIFrames());
+    pb.setHit(pb.getHitIFrames());
+    pb.setStopDashing(true);
   }
 
   /** Handle collision between player spear and bullet */
@@ -315,7 +305,9 @@ public class PhysicsEngine implements ContactListener {
     if (!pb.isInvincible() && !b.isDead()) {
       pb.decrementHealth();
       pb.setInvincible(pb.getHitIFrames());
+      pb.setHit(pb.getHitIFrames());
       pb.setKnockedBack(b.getPosition(), b.getBodyKnockbackForce(), 7);
+      pb.setStopDashing(true);
       playerBossCollision = Optional.empty();
     } else {
       if (playerBossCollision.isEmpty() && pb.getHealth() > 0) {

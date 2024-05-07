@@ -18,7 +18,7 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
   private static float SPEAR_WIDTH = 1.5f;
 
   /** Length of spear */
-  private static float SPEAR_LENGTH = 1.2f;
+  private static float SPEAR_LENGTH = 1.5f;
 
   /** Offset length of the spear center from the body center (when extended) */
   private static float SPEAR_OFFSET = 2.0f;
@@ -109,7 +109,7 @@ public class PlayerSpearModel extends BoxModel implements Renderable {
   }
 
   /**
-   * Update the dash indicator vector
+   * Update the dash indicator vector (purely for rendering)
    *
    * @param dashDirection Vector representing the direction of the dash
    */

@@ -127,7 +127,7 @@ public class InputController {
    */
   private void readController(Controllable obj) {
 
-    //dash/shoot indicator
+    // dash/shoot indicator
     float hind = xbox.getRightX();
     float vind = -xbox.getRightY();
 
@@ -137,13 +137,15 @@ public class InputController {
 
     // dashing
     if (xbox.getRightTrigger() > 0.6f) {
-//      obj.pressSecondary();
       obj.pressPrimary();
     }
     // shooting
     if (xbox.getLeftTrigger() > 0.6f) {
-//      obj.pressPrimary();
       obj.pressSecondary();
+    }
+    // assisted shooting
+    if (xbox.getLBumper()) {
+      obj.pressTertiary();
     }
     // interact
     if (xbox.getB()) {
@@ -155,7 +157,7 @@ public class InputController {
 
     resetPressed = xbox.getY();
 
-    //movement
+    // movement
     float hoff = xbox.getLeftX();
     float voff = -xbox.getLeftY();
 
@@ -198,7 +200,7 @@ public class InputController {
     if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
       obj.pressSecondary();
     }
-    if (Gdx.input.isKeyPressed(Input.Keys.E)) {
+    if (Gdx.input.isKeyPressed(Input.Keys.ENTER) || Gdx.input.isKeyPressed(Input.Keys.E)) {
       obj.pressInteract();
     }
     if (Gdx.input.isKeyPressed(Input.Keys.T)) {
@@ -233,6 +235,9 @@ public class InputController {
 
     if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
       obj.pressSecondary();
+    }
+    if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
+      obj.pressTertiary();
     }
   }
 }

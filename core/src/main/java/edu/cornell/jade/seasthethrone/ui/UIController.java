@@ -1,5 +1,6 @@
 package edu.cornell.jade.seasthethrone.ui;
 
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import edu.cornell.jade.seasthethrone.PlayerController;
 import edu.cornell.jade.seasthethrone.ai.BossController;
@@ -24,10 +25,10 @@ public class UIController {
 
   /** A reference to the pause menu */
   PauseMenuController pauseMenuController;
-  PauseMenu pauseMenu;
 
   /** A reference to the current boss that the player is facing */
   BossController boss;
+
 
   /** The rendering engine used to draw the UI elements */
   RenderingEngine render;
@@ -36,26 +37,30 @@ public class UIController {
   private GameCanvas canvas;
 
   /**
-   * Constructs a UIController object. *
+   * Constructs a UIController object.
    *
    * @param player the player
    * @param render the render engine
    * @param canvas the canvas of the render engine
    * @param view the UI viewport
+   * @param
    */
   public UIController(
-      PlayerController player, PauseMenuController pauseMenuController, RenderingEngine render, GameCanvas canvas, ScreenViewport view) {
+      PlayerController player,
+      PauseMenuController pauseMenuController,
+      RenderingEngine render,
+      GameCanvas canvas,
+      ScreenViewport view) {
     this.player = player;
 
     this.pauseMenuController = pauseMenuController;
-    this.pauseMenu = pauseMenuController.getPauseMenu();
 
     this.render = render;
     viewport = view;
     boss = null;
 
     this.canvas = canvas;
-    uiModel = new UIModel();
+    uiModel = new UIModel(viewport.getScreenWidth(), viewport.getScreenHeight());
   }
 
   /**
@@ -65,19 +70,11 @@ public class UIController {
   public AmmoBar getAmmoBar() {
     return uiModel.getAmmoBar();
   }
-
   /**
-   * Adds boss once player encounters it
-   *
-   * @param b the BossController of the boss that the player is fighting
+   * Returns the enemies health bars ui element.
    */
-  public void addBoss(BossController b) {
-    boss = b;
-  }
-
-  /** Removes boss once player defeats it */
-  public void removeBoss() {
-    boss = null;
+  public Array<EnemyHealthBar> getEnemies() {
+    return uiModel.getEnemies();
   }
 
   /** Returns the pauseMenuController */
@@ -89,21 +86,39 @@ public class UIController {
   public void drawUI() {
     canvas.beginUI();
     canvas.getUiBatch().setProjectionMatrix(viewport.getCamera().combined);
-    uiModel.draw(render);
-    pauseMenu.draw(render);
+    if (boss != null) {
+      uiModel.draw(render, boss.getBoss().getDeathCount());
+    } else {
+      uiModel.draw(render, 0);
+    }
+    pauseMenuController.getPauseMenu().draw(render);
     canvas.endUI();
   }
 
   /** Updates states of all UI */
-  public void update() {
+  public void update(Array<BossController> bosses) {
+    uiModel.clearEnemies();
     // update health bar
     uiModel.update(player.getHealth());
+    // update ammo
     uiModel.update(player.getAmmo(), player.getLocation());
+
+    for (BossController b : bosses) {
+      if (b.isBoss() && b.getBoss().isAttack()) {
+        boss = b;
+      }
+      else{
+        if(b.getHealth()>0)
+          uiModel.update(b);
+      }
+    }
+    // update boss hp
+    uiModel.update(boss);
   }
 
   /** Runs when the viewport is resized */
   public void resize(int width, int height) {
-    pauseMenu.resize(width, height);
+    pauseMenuController.getPauseMenu().resize(width, height);
   }
 
   /** Clears all the UI elements */

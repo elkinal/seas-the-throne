@@ -6,6 +6,7 @@ import edu.cornell.jade.seasthethrone.bpedit.AttackPattern;
 import edu.cornell.jade.seasthethrone.bpedit.patterns.AimedArcAttack;
 import edu.cornell.jade.seasthethrone.bpedit.patterns.OscillatingRingAttack;
 import edu.cornell.jade.seasthethrone.bpedit.patterns.RingAttack;
+import edu.cornell.jade.seasthethrone.bpedit.patterns.UnbreakableSpinningRing;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
@@ -79,6 +80,9 @@ public class SharkBossController implements BossController {
   /** The aimed arc attack */
   private final AttackPattern aimedArcAttack;
 
+  /** The unbreakable ring around the boss */
+  private final AttackPattern unbreakableRing;
+
   /**
    * Constructs a shark boss controller
    *
@@ -88,10 +92,10 @@ public class SharkBossController implements BossController {
    * @param physicsEngine physics engine to add bullet attack to
    */
   public SharkBossController(
-          BossModel boss,
-          PlayerModel player,
-          BulletModel.Builder builder,
-          PhysicsEngine physicsEngine) {
+      BossModel boss,
+      PlayerModel player,
+      BulletModel.Builder builder,
+      PhysicsEngine physicsEngine) {
     this.boss = boss;
     this.player = player;
     this.state = State.IDLE;
@@ -101,8 +105,9 @@ public class SharkBossController implements BossController {
     this.bounds = new Rectangle(boss.getX() - 15, boss.getY() - 15, 30, 30);
 
     this.oscRingAttack = new OscillatingRingAttack(boss, player, builder, physicsEngine);
-    this.ringAttack = new RingAttack(boss, 20, 5, builder, physicsEngine);
+    this.ringAttack = new RingAttack(boss, 20, 5, false, builder, physicsEngine);
     this.aimedArcAttack = new AimedArcAttack(60, boss, player, builder, physicsEngine);
+    this.unbreakableRing = new UnbreakableSpinningRing(17, 240, boss, builder, physicsEngine);
   }
 
   @Override
@@ -110,14 +115,14 @@ public class SharkBossController implements BossController {
     return boss.getHealth();
   }
 
-  /**
-   * Returns if the crab this model controls is dead.
-   *
-   * @return if the crab this controller controls is dead
-   */
   @Override
   public boolean isDead() {
     return boss.isDead();
+  }
+
+  @Override
+  public boolean isBoss() {
+    return true;
   }
 
   /** Loads in the boss's previous state */
@@ -158,7 +163,7 @@ public class SharkBossController implements BossController {
   private void nextState() {
     if (boss.isDead()) {
       state = State.DEAD;
-    } else if (boss.reachedHealthThreshold()){
+    } else if (boss.reachedHealthThreshold()) {
       state = State.CHASE_PLAYER;
       goalPos.set(player.getX(), player.getY());
       boss.setLinearVelocity(boss.getPosition().sub(goalPos).nor().scl(-15));
@@ -208,7 +213,8 @@ public class SharkBossController implements BossController {
       case CHASE_PLAYER:
         if (goalPosReached()) {
           state = State.RESET;
-          goalPos.set(bounds.getX()+bounds.getWidth()/2, bounds.getY()+bounds.getHeight()/2);
+          goalPos.set(
+              bounds.getX() + bounds.getWidth() / 2, bounds.getY() + bounds.getHeight() / 2);
           boss.setLinearVelocity(boss.getPosition().sub(goalPos).nor().scl(-5));
         }
         break;
@@ -250,22 +256,23 @@ public class SharkBossController implements BossController {
       case DEAD:
         break;
     }
+    if (state != State.IDLE && state != State.DEAD) unbreakableRing.update(player.getX(), player.getY());
   }
 
   /** If the goal pos was reached */
-  private boolean goalPosReached(){
+  private boolean goalPosReached() {
     return boss.getPosition().sub(goalPos).dot(boss.getLinearVelocity()) > 0;
   }
 
   /** Helper function to generate new goal position & set boss velocity. * */
   private void findNewGoalPos() {
     goalPos.set(
-            rand.nextFloat(bounds.getX(), bounds.getX() + bounds.getWidth()),
-            rand.nextFloat(bounds.getY(), bounds.getY() + bounds.getHeight()));
+        rand.nextFloat(bounds.getX(), bounds.getX() + bounds.getWidth()),
+        rand.nextFloat(bounds.getY(), bounds.getY() + bounds.getHeight()));
     while (boss.getPosition().dst(goalPos) < MIN_MOVE_DIST) {
       goalPos.set(
-              rand.nextFloat(bounds.getX(), bounds.getX() + bounds.getWidth()),
-              rand.nextFloat(bounds.getY(), bounds.getY() + bounds.getHeight()));
+          rand.nextFloat(bounds.getX(), bounds.getX() + bounds.getWidth()),
+          rand.nextFloat(bounds.getY(), bounds.getY() + bounds.getHeight()));
     }
     boss.setLinearVelocity(boss.getPosition().sub(goalPos).nor().scl(-6));
   }
