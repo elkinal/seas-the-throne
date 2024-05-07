@@ -129,6 +129,9 @@ public class GameplayController implements Screen {
   /** If the game has been set to quit */
   private boolean quit;
 
+  /** If level select was clicked in the pause menu */
+  private boolean returnToHub;
+
   /** Temporary cache to sort physics renderables */
   private final Array<Model> objectCache = new Array<>();
 
@@ -175,6 +178,7 @@ public class GameplayController implements Screen {
     active = false;
     restart = false;
     quit = false;
+    returnToHub = false;
     saveTimer = 0;
 
     this.stateController = new StateController();
@@ -528,6 +532,11 @@ public class GameplayController implements Screen {
           physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
     }
 
+    if (returnToHub) {
+      physicsEngine.setTarget("levels/hub_world.json");
+      returnToHub = false;
+    }
+
     if (restart) {
       respawn();
     }
@@ -639,6 +648,10 @@ public class GameplayController implements Screen {
    */
   public void setScreenListener(ScreenListener listener) {
     this.listener = listener;
+  }
+
+  public void setReturnToHub(boolean returnToHub) {
+    this.returnToHub = returnToHub;
   }
 
   public void setRestart(boolean restart) {
