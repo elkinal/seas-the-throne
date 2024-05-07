@@ -133,6 +133,27 @@ public class PhysicsEngine implements ContactListener {
   }
 
   /**
+   * Removes any models currently marked for removal
+   */
+  public void removeMarked() {
+    // Garbage collect the deleted objects.
+    // Note how we use the linked list nodes to delete O(1) in place.
+    // This is O(n) without copying.
+    Iterator<PooledList<Model>.Entry> iterator = objects.entryIterator();
+    while (iterator.hasNext()) {
+      PooledList<Model>.Entry entry = iterator.next();
+      Model obj = entry.getValue();
+      if (obj.isRemoved()) {
+        obj.deactivatePhysics(world);
+        if (obj instanceof EnemyModel) {
+          enemies.removeValue((EnemyModel) obj, true);
+        }
+        entry.remove();
+      }
+    }
+  }
+
+  /**
    * Immediately adds the object to the physics world
    *
    * @param obj The object to add

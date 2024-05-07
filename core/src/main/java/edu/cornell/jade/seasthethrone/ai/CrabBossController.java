@@ -170,6 +170,8 @@ public class CrabBossController implements BossController {
       case MOVE:
         break;
       case DEAD:
+        attackPattern.cleanup();
+        attack1.cleanup();
         break;
     }
   }
