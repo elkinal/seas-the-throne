@@ -125,6 +125,7 @@ ui/darkammo_3_5.png
 ui/darkammo_4_5.png
 ui/darkammo_5_5.png
 ui/darkscreen.png
+ui/dialoguebox.png
 ui/enemy_hp_empty.png
 ui/enemy_hp_full.png
 ui/health_hori_0.png

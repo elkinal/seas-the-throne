@@ -27,13 +27,10 @@ import edu.cornell.jade.seasthethrone.model.PolygonModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
-import edu.cornell.jade.seasthethrone.ui.EnemyHealthBar;
-import edu.cornell.jade.seasthethrone.ui.PauseMenu;
-import edu.cornell.jade.seasthethrone.ui.PauseMenuController;
-import edu.cornell.jade.seasthethrone.ui.UIController;
-import edu.cornell.jade.seasthethrone.util.JsonHandler;
+import edu.cornell.jade.seasthethrone.ui.*;
 import edu.cornell.jade.seasthethrone.util.ScreenListener;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
+import edu.cornell.jade.seasthethrone.util.JsonHandler;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -396,6 +393,10 @@ public class GameplayController implements Screen {
     pauseMenuController.setGameplayController(this);
     inputController.add(pauseMenuController);
 
+    // Load the Pause Menu's dialogue box
+    DialogueBoxController pauseMenuDialogueBoxController = pauseMenu.getDialogueBoxController();
+    pauseMenuDialogueBoxController.setGameplayController(this);
+    inputController.add(pauseMenuDialogueBoxController);
     uiController =
         new UIController(
             playerController,

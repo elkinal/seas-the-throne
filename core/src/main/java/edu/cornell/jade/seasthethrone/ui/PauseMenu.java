@@ -34,6 +34,10 @@ public class PauseMenu implements Renderable {
   private float textSpacingY;
   private final float fontSize = 3.0f;
 
+  // Dialogue box for the help menu
+  private DialogueBoxController dialogueBoxController;
+  private DialogueBox dialogueBox;
+
   public enum MenuSelection {
     RESUME(0, "Resume"),
     RESTART(1, "Restart"),
@@ -65,21 +69,19 @@ public class PauseMenu implements Renderable {
     scrollTextureRegion = new TextureRegion(scrollTexture);
 
     // Creating dark background texture
-    Pixmap pixmap =
-        new Pixmap(viewport.getScreenWidth(), viewport.getScreenHeight(), Pixmap.Format.RGBA8888);
+    Pixmap pixmap = new Pixmap(viewport.getScreenWidth(),
+        viewport.getScreenHeight(),
+        Pixmap.Format.RGBA8888);
+
 
     Color backgroundColor = new Color(0, 0, 0, 0.55f);
     pixmap.setColor(backgroundColor);
     pixmap.fill();
-    // TODO: fix opacity bug
-    //        Texture backgroundTexture = new Texture(pixmap);
-    //        backgroundTextureRegion = new TextureRegion(backgroundTexture);
     backgroundTextureRegion = new TextureRegion(backgroundTexture);
 
     // Setting up text
     FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Alagard.ttf"));
-    FreeTypeFontGenerator.FreeTypeFontParameter parameter =
-        new FreeTypeFontGenerator.FreeTypeFontParameter();
+    FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 
     menuFont = generator.generateFont(parameter);
     menuFont.setUseIntegerPositions(false);
@@ -100,6 +102,11 @@ public class PauseMenu implements Renderable {
     // Setting scaling
     width = 750;
     height = 780;
+
+    // Creating the dialogue box
+    dialogueBox = new DialogueBox(viewport);
+    dialogueBox.setTexts("Line1\nLine2\nLine3", "Line4\nLine5\nLine6", "Line7\nLine8\nLine9");
+    dialogueBoxController = new DialogueBoxController(dialogueBox);
   }
 
   /** Returns true if the menu is paused */
@@ -142,6 +149,8 @@ public class PauseMenu implements Renderable {
     // New position of menu after resizing
     x = ((float) screenWidth / 2) - width / 2;
     y = ((float) screenHeight / 2) - height / 2;
+
+    dialogueBox.resize(screenWidth, screenHeight);
   }
 
   /** Returns the X position of the text */
@@ -161,6 +170,7 @@ public class PauseMenu implements Renderable {
           .getGameCanvas()
           .drawUI(backgroundTextureRegion, 0, 0, screenWidth * 4, screenHeight * 4);
       renderer.getGameCanvas().drawUI(scrollTextureRegion, x, y, width, height);
+      dialogueBox.draw(renderer);
       drawText(renderer);
     }
   }
@@ -175,13 +185,13 @@ public class PauseMenu implements Renderable {
       float shadowY = textSpacingY * (1.5f - selection.optionValue);
       renderer
           .getGameCanvas()
-          .drawTextUI(selection.optionName, menuShadowFont, textX - 2, textY - 2 + shadowY);
+          .drawTextUI(selection.optionName, menuShadowFont, textX - 2, textY - 2 + shadowY, true);
 
       for (MenuSelection option : MenuSelection.values()) {
         float option_offset = textSpacingY * (float) (1.5 - option.optionValue);
         renderer
             .getGameCanvas()
-            .drawTextUI(option.optionName, menuFont, textX, textY + option_offset);
+            .drawTextUI(option.optionName, menuFont, textX, textY + option_offset, true);
       }
     }
   }
@@ -202,4 +212,20 @@ public class PauseMenu implements Renderable {
 
   @Override
   public void progressFrame() {}
+
+  /** Sets the text that appears when this object's dialogue is activated */
+  public void setDialogueTexts(String... texts) {
+    dialogueBox.setTexts(texts);
+  }
+
+  /** Returns the pause menu's help dialogue box */
+  public DialogueBox getDialogueBox() {
+    return dialogueBox;
+  }
+
+  /** Returns the pause menu's help dialogue box controller */
+  public DialogueBoxController getDialogueBoxController() {
+    return dialogueBoxController;
+
+  }
 }
