@@ -22,6 +22,8 @@ public class Level {
 
   private BackgroundImage background;
 
+  private BackgroundImage foreground;
+
   private final Array<Tile> tiles = new Array<>();
 
   /** The array of tileSets, each tileSet being a nested list of textures representing tiles */
@@ -85,6 +87,7 @@ public class Level {
     layers = new HashMap<>();
 
     parseBackgroundLayer(getLayer(layerArray, "background"));
+    parseForegroundLayer(getLayer(layerArray, "foreground"));
     parsePlayerLayer(getLayer(layerArray,"player"));
     parseGatesLayer(getLayer(layerArray,"gates"));
     parseTileLayer(getLayer(layerArray,"tiles"));
@@ -119,6 +122,8 @@ public class Level {
   public BackgroundImage getBackground() {
     return background;
   }
+
+  public BackgroundImage getForeground() {return foreground;}
 
   public Vector2 getPlayerLoc() {
     return playerLoc;
@@ -159,6 +164,35 @@ public class Level {
         new BackgroundImage(
             pos, (int) (width * WORLD_SCALE), (int) (height * WORLD_SCALE), texture, 100);
   }
+
+  private void parseForegroundLayer(HashMap<String, Object> fgLayer) {
+    if (fgLayer.isEmpty()) {
+      return;
+    }
+    int width;
+    try {
+      width = JsonHandler.getIntProperty(fgLayer, "width");
+    } catch (Error e) {
+      return;
+    }
+
+    int height = JsonHandler.getIntProperty(fgLayer, "height");
+    TextureRegion texture =
+            new TextureRegion(new Texture("levels/" + JsonHandler.getString(fgLayer, "image")));
+    float x, y;
+    if ((String) fgLayer.get("offsetx") == null) {
+      x = width / 2f;
+      y = height / 2f;
+    } else {
+      x = JsonHandler.getFloat(fgLayer, "offsetx") + width / 2f;
+      y = JsonHandler.getFloat(fgLayer, "offsety") + height / 2f;
+    }
+
+    Vector2 pos = tiledToWorldCoords(new Vector2(x, y));
+    foreground = new BackgroundImage(
+            pos, (int) (width * WORLD_SCALE), (int) (height * WORLD_SCALE), texture, 100);
+  }
+
 
   /**
    * Extracts the position of the player from the player layer.
