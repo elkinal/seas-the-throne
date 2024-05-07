@@ -56,7 +56,7 @@ public class GDXRoot extends Game implements ScreenListener {
     options.setViewport(new FitViewport(canvas.getWidth(), canvas.getHeight()));
     options.setScreenListener(this);
 
-    setScreen(options);
+    setScreen(menus);
   }
 
   @Override
