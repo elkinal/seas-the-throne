@@ -6,79 +6,71 @@ import edu.cornell.jade.seasthethrone.input.Controllable;
 
 public class PauseMenuController implements Controllable {
 
-    private PauseMenu pauseMenu;
-    private boolean toggle;
+  private PauseMenu pauseMenu;
+  private boolean toggle;
 
-    private GameplayController gameplayController;
+  private GameplayController gameplayController;
 
-    public PauseMenuController(PauseMenu pauseMenu) {
-        this.pauseMenu = pauseMenu;
-    }
+  public PauseMenuController(PauseMenu pauseMenu) {
+    this.pauseMenu = pauseMenu;
+  }
 
-    /** Sets the pause menu */
-    public void setPauseMenu(PauseMenu pauseMenu) {
-        this.pauseMenu = pauseMenu;
-    }
+  /** Sets the pause menu */
+  public void setPauseMenu(PauseMenu pauseMenu) {
+    this.pauseMenu = pauseMenu;
+  }
 
-    /** Returns the pause menu*/
-    public PauseMenu getPauseMenu() {
-        return pauseMenu;
-    }
+  /** Returns the pause menu */
+  public PauseMenu getPauseMenu() {
+    return pauseMenu;
+  }
 
-    public void setGameplayController(GameplayController gameplayController) {
-        this.gameplayController = gameplayController;
-    }
+  public void setGameplayController(GameplayController gameplayController) {
+    this.gameplayController = gameplayController;
+  }
 
-    /** Shows / hides the pause menu */
-    @Override
-    public void pressPause() {
-        pauseMenu.setPaused(!pauseMenu.isPaused());
-    }
-
-    /** Clicks on a pause menu item*/
-    @Override
-    public void pressInteract() {
-        if (!pauseMenu.isPaused()) return;
-        System.out.println("In menu, interact pressed");
-            //TODO: create actions
-            switch (pauseMenu.getSelection()) {
-                case RESUME:
-                    pauseMenu.setPaused(false);
+  /** Shows / hides the pause menu */
+  @Override
+  public void pressPause() {
+    pauseMenu.setPaused(!pauseMenu.isPaused());
+  }
+  /** Clicks on a pause menu item */
+  @Override
+  public void pressInteract() {
+    if (!pauseMenu.isPaused()) return;
+    // TODO: create actions
+    switch (pauseMenu.getSelection()) {
+      case RESUME -> pauseMenu.setPaused(false); break;
+      case RESTART -> restart(); break;
+      case HELP ->                     pauseMenu.getDialogueBox().show();
                     break;
-                case RESTART:
-                    gameplayController.setRestart(true);
-                    break;
-                case HELP:
-                    pauseMenu.getDialogueBox().show();
-                    break;
-                case QUIT:
-                    System.exit(0);
-            }
+      case QUIT -> gameplayController.setQuit(true); break;
     }
+  }
 
-    private void restart() {
-        gameplayController.setRestart(true);
-        pauseMenu.setPaused(false);
-    }
+  private void restart() {
+    gameplayController.setRestart(true);
+    pauseMenu.setPaused(false);
+  }
 
-    /** Selects between menu options */
-    @Override
-    public void moveVertical(float movement) {
-        if (movement > 0 && !toggle) {
-            pauseMenu.cycleUp();
-            toggle = true;
-        }
-        if (movement < 0 && !toggle){
-            pauseMenu.cycleDown();
-            toggle = true;
-        }
-        if (movement == 0) {
-            toggle = false;
-        }
+  /** Selects between menu options */
+  @Override
+  public void moveVertical(float movement) {
+    if (movement > 0 && !toggle) {
+      pauseMenu.cycleUp();
+      toggle = true;
     }
+    if (movement < 0 && !toggle) {
+      pauseMenu.cycleDown();
+      toggle = true;
+    }
+    if (movement == 0) {
+      toggle = false;
+    }
+  }
 
-    @Override
-    public Vector2 getLocation() {
-        return null;
-    }
+  @Override
+  public Vector2 getLocation() {
+    return null;
+  }
 }
