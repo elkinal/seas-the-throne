@@ -106,6 +106,7 @@ public class LoadScreen implements Screen {
    */
   private void update(float delta) {
 //    canvas.resize();
+    assets.update(budget);
     viewport.update(canvas.getWidth(), canvas.getHeight());
     viewport.apply();
 
@@ -164,6 +165,7 @@ public class LoadScreen implements Screen {
       if (isReady() && listener != null) {
         listener.exitScreen(this, exitCode);
       }
+      System.out.println(getAssets().getProgress());
     }
   }
 
@@ -214,6 +216,5 @@ public class LoadScreen implements Screen {
 
   @Override
   public void dispose() {
-
   }
 }

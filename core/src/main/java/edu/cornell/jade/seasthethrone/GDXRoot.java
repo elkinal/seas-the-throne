@@ -68,8 +68,9 @@ public class GDXRoot extends Game implements ScreenListener {
     }
 
     if (screen == loading && exitCode == EXIT_SWAP) {
+      controller.changeDirectory(loading.getAssets());
+      controller.setupGameplay();
       setScreen(controller);
-
       loading.dispose();
       loading = null;
     }

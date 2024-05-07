@@ -177,14 +177,15 @@ public class GameplayController implements Screen {
 
   /** An effect filter to apply */
   EffectFilter filter;
+  AssetDirectory testDirectory;
 
   protected GameplayController() {
     gameState = GameState.PLAY;
 
     this.level = new Level("levels/hub_world.json");
-    this.assets = new AssetDirectory("assets.json");
-    assets.loadAssets();
-    assets.finishLoading();
+//    this.assets = new AssetDirectory("assets.json");
+//    assets.loadAssets();
+//    assets.finishLoading();
 
     worldHeight = level.DEFAULT_HEIGHT;
     worldWidth = level.DEFAULT_WIDTH;
@@ -207,7 +208,6 @@ public class GameplayController implements Screen {
     inputController.add(interactController);
     this.renderEngine = new RenderingEngine(worldWidth, worldHeight, viewport, worldScale);
 
-    setupGameplay();
   }
 
   public void show() {
@@ -325,7 +325,7 @@ public class GameplayController implements Screen {
 //      assetDirectory.loadAssets();
 //      assetDirectory.finishLoading();
 
-      JsonValue bossInfo = assets.getEntry(assetName, JsonValue.class);
+      JsonValue bossInfo = testDirectory.getEntry(assetName, JsonValue.class);
 //      sounds = new SoundEffect[2];
 //      sounds[0] = assetDirectory.getEntry( "pew", SoundEffect.class );
       var bossBuilder =
@@ -448,7 +448,7 @@ public class GameplayController implements Screen {
             renderEngine,
             renderEngine.getGameCanvas(),
             uiViewport);
-    uiController.gatherAssets(assets);
+    uiController.gatherAssets(testDirectory);
   }
 
   public void render(float delta) {
@@ -615,6 +615,9 @@ public class GameplayController implements Screen {
 
     stateController.loadState();
     transferState(stateController.getLevel(level.name));
+  }
+  public void changeDirectory(AssetDirectory directory){
+    testDirectory = directory;
   }
 
   /** Loads the stored state of the target level, if it exists */
