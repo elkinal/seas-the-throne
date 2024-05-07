@@ -503,6 +503,44 @@ public class XBoxController implements Controller, ControllerListener {
     return 0;
   }
 
+  /** Returns the button that is currently being pressed on the controller. */
+  public String getPressed() {
+    if (controller != null) {
+      if (getX()) {
+        return "X";
+      }
+      if (getY()) {
+        return "Y";
+      }
+      if (getA()) {
+        return "A";
+      }
+      if (getB()) {
+        return "B";
+      }
+      if (getLStick()) {
+        return "LS";
+      }
+      if (getRStick()) {
+        return "RS";
+      }
+      if (getLBumper()) {
+        return "LB";
+      }
+      if (getRBumper()) {
+        return "RB";
+      }
+      if (getLeftTrigger() != 0) {
+        return "LT";
+      }
+      if (getRightTrigger() != 0) {
+        return "RT";
+      }
+    }
+
+    return null;
+  }
+
   // PASS THROUGH METHODS FOR CONTROLLER
   /**
    * Returns whether the button is pressed.
