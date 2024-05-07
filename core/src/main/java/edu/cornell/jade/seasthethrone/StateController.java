@@ -1,10 +1,12 @@
 package edu.cornell.jade.seasthethrone;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.*;
 import edu.cornell.jade.seasthethrone.ai.BossController;
+import edu.cornell.jade.seasthethrone.level.LevelObject;
 import edu.cornell.jade.seasthethrone.level.LevelState;
-import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
+import com.badlogic.gdx.Preferences;
 
 import java.io.*;
 import java.lang.StringBuilder;
@@ -12,6 +14,8 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class StateController {
+
+  private Preferences prefs;
 
   /** All levels/rooms the player has been in */
   private HashMap<String, LevelState> storedLevels;
@@ -34,10 +38,16 @@ public class StateController {
   /** The index of the current save file */
   private int saveIndex;
 
+  /** Json initialization for (de)serializing level state */
+  private final Json json;
+
   public StateController() {
     this.storedLevels = new HashMap<>();
     this.checkpoint = -1;
     this.saveIndex = 1;
+    this.prefs = Gdx.app.getPreferences("save");
+    json = new Json();
+    json.setOutputType(JsonWriter.OutputType.json);
   }
 
   /** Copies the current in-game state into this controller */
@@ -45,7 +55,7 @@ public class StateController {
     // Update player state
     this.playerAmmo = player.getAmmo();
     this.playerHealth = player.getHealth();
-    System.out.println("setting respawn loc: "+player.getLocation());
+    System.out.println("setting respawn loc: " + player.getLocation());
 
     // Update level state in stored levels
     if (storedLevels.containsKey(levelName)) {
@@ -57,64 +67,54 @@ public class StateController {
 
   /** Serializes the state of this controller to a json */
   public void saveGame() {
-    Json json = new Json();
-    json.setOutputType(JsonWriter.OutputType.json);
-    String out = json.prettyPrint(json.toJson(this));
     if (BuildConfig.DEBUG) {
-//      System.out.println("save " + out);
+      System.out.println("saving game");
     }
+    prefs.putInteger("checkpoint", this.checkpoint);
+    prefs.putInteger("player health", this.playerHealth);
+    prefs.putInteger("player ammo", this.playerAmmo);
     try {
-      File myObj = new File("saves/save" + saveIndex + ".json");
-      if (myObj.createNewFile()) {
-        System.out.println("New save: " + "save" + saveIndex + ".json");
-      }
-    } catch (IOException e) {
-      System.out.println("An error occurred.");
-      e.printStackTrace();
+      prefs.putFloat("respawn x", this.respawnLoc.x);
+      prefs.putFloat("respawn y", this.respawnLoc.y);
+    } catch (NullPointerException e) {
     }
-    try {
-      FileWriter myWriter = new FileWriter("saves/save" + saveIndex + ".json");
-      myWriter.write(out);
-      myWriter.close();
-      System.out.println("Game saved!");
-    } catch (IOException e) {
-      System.out.println("An error occurred.");
-      e.printStackTrace();
-    }
+
+    String storedLevelsString = json.prettyPrint(json.toJson(storedLevels));
+    prefs.putString("stored levels", storedLevelsString);
+    prefs.flush();
   }
 
   /** Loads in state from a json */
-  public void loadState(String saveName) {
+  public void loadState() {
     try {
-      Scanner input = new Scanner(new File(saveName));
-      java.lang.StringBuilder loadString = new StringBuilder();
-      while (input.hasNext()) {
-        loadString.append(input.next());
-      }
-
-      String out = loadString.toString();
-      JsonValue loadState = new JsonReader().parse(out);
-
-      this.checkpoint = loadState.getInt("checkpoint");
-      //        this.currentLevel = loadState.currentLevel;
-      this.playerHealth = loadState.getInt("playerHealth");
+      this.checkpoint = prefs.getInteger("checkpoint", -1);
+      this.playerHealth = prefs.getInteger("playerHealth", 5);
       try {
-        this.playerAmmo = loadState.getInt("playerAmmo");
+        this.playerAmmo = prefs.getInteger("playerAmmo", 0);
         System.out.println("loaded ammo: " + this.playerAmmo);
       } catch (IllegalArgumentException e) {
         this.playerAmmo = 0;
       }
 
-      JsonValue levelsRoot = loadState.get("storedLevels");
+      String storedLevelsString = prefs.getString("stored levels", "");
+      System.out.println("sl string "+storedLevelsString);
+
       this.storedLevels.clear();
+
+     JsonValue levelsRoot = new JsonReader().parse(storedLevelsString);
       for (int i = 0; i < levelsRoot.size; i++) {
         LevelState thisLevel = new LevelState(levelsRoot.get(i).get("bossHps").asIntArray());
         storedLevels.put(levelsRoot.get(i).name, thisLevel);
       }
+      System.out.println("stored l "+storedLevels);
+
     } catch (Exception e) {
-        this.checkpoint = -1;
-        this.playerHealth = 5;
-        this.playerAmmo = 0;
+      if (BuildConfig.DEBUG) {
+        System.out.println("Loading defaults");
+      }
+      this.checkpoint = -1;
+      this.playerHealth = 5;
+      this.playerAmmo = 0;
     }
   }
 
@@ -123,9 +123,13 @@ public class StateController {
     return storedLevels.containsKey(name);
   }
 
-  public void setRespawnLoc(Vector2 respawnLoc) {this.respawnLoc = respawnLoc;}
+  public void setRespawnLoc(Vector2 respawnLoc) {
+    this.respawnLoc = respawnLoc;
+  }
 
-  public Vector2 getRespawnLoc() {return respawnLoc;}
+  public Vector2 getRespawnLoc() {
+    return respawnLoc;
+  }
 
   /** Returns the specified level */
   public LevelState getLevel(String name) {

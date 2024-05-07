@@ -70,6 +70,6 @@ public class GateWallModel extends BoxModel implements Renderable {
   private void drawVertical(RenderingEngine renderer) {
     Vector2 pos = getPosition();
     float y_offset = WORLD_SCALE * texture_up.getRegionHeight() / 2f;
-    renderer.draw(texture_up, pos.x, pos.y);
+    renderer.draw(texture_up, pos.x, pos.y+y_offset);
   }
 }

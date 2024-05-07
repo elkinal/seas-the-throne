@@ -41,7 +41,7 @@ class Arc implements Effect {
       BulletFamily orig = bullets.get(i);
       for (int j = 0; j < dups; j++) {
         BulletFamily b = orig.clone(familyPool);
-        float theta = j * centralAngle / (dups - 1) + offset;
+        float theta = j * centralAngle / (dups-1) + offset;
         b.rotate(theta, 0, 0);
         bullets.add(b);
       }
@@ -171,22 +171,3 @@ class RandomSpray implements Effect {
 }
 
 
-/**
- * Causes all bullets to be unbreakable
- */
-class Unbreakable implements Effect {
-
-  /**
-   * constructs an unbreakable effect
-   */
-  public Unbreakable() {}
-
-  @Override
-  public void apply(Array<BulletFamily> bullets, Pool<BulletFamily> familyPool, Pool<BulletModel> basePool) {
-    int numBullets = bullets.size;
-    for (int i = 0; i < numBullets; i++) {
-      BulletFamily orig = bullets.get(i);
-      orig.setUnbreakable();
-    }
-  }
-}

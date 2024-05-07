@@ -1,8 +1,10 @@
 package edu.cornell.jade.seasthethrone.gamemodel;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import edu.cornell.jade.seasthethrone.assets.AssetDirectory;
 import edu.cornell.jade.seasthethrone.level.LevelObject;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.physics.CollisionMask;
@@ -30,7 +32,6 @@ public class CheckpointModel extends BoxModel implements Interactable, Renderabl
 
   private int frameCounter;
 
-
   /** Range within which the player can interact with this checkpoint */
   private final float INTERACT_RANGE = 5f;
 
@@ -44,6 +45,7 @@ public class CheckpointModel extends BoxModel implements Interactable, Renderabl
 
     this.texture = new TextureRegion(new Texture("levels/mossytablet.png"));
     this.arrow = new FilmStrip(new Texture("levels/interactable_arrow.png"), 1, 20);
+
     CollisionMask.setCategoryMaskBits(this);
   }
 
@@ -54,8 +56,6 @@ public class CheckpointModel extends BoxModel implements Interactable, Renderabl
   public void setActivated(boolean a) {
     activated = a;
   }
-
-  public void interact() {}
 
   /** Checks if the player is close enough to interact with this checkpoint */
   @Override

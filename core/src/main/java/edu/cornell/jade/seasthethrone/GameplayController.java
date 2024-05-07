@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.viewport.*;
 
 import edu.cornell.jade.seasthethrone.ai.BossController;
@@ -30,9 +31,11 @@ import edu.cornell.jade.seasthethrone.ui.EnemyHealthBar;
 import edu.cornell.jade.seasthethrone.ui.PauseMenu;
 import edu.cornell.jade.seasthethrone.ui.PauseMenuController;
 import edu.cornell.jade.seasthethrone.ui.UIController;
+import edu.cornell.jade.seasthethrone.util.JsonHandler;
 import edu.cornell.jade.seasthethrone.util.ScreenListener;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 
@@ -56,6 +59,9 @@ public class GameplayController implements Screen {
 
   /** State defining the current logic of the GameplayController. */
   private GameState gameState;
+
+  /** Assets to be loaded */
+  private AssetDirectory assets;
 
   /** Renderer for debug hitboxes. */
   Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
@@ -120,6 +126,9 @@ public class GameplayController implements Screen {
   /** If the game has been flagged to restart at last checkpoint */
   private boolean restart;
 
+  /** If the game has been set to quit */
+  private boolean quit;
+
   /** Temporary cache to sort physics renderables */
   private final Array<Model> objectCache = new Array<>();
 
@@ -139,7 +148,7 @@ public class GameplayController implements Screen {
   private int saveTimer;
 
   /** Minimum number of frames between saves */
-  private final int SAVE_DELAY = 10;
+  private final int SAVE_DELAY = 30;
 
   /** fish bullet builder */
   BulletModel.Builder fishBulletBuilder;
@@ -151,6 +160,9 @@ public class GameplayController implements Screen {
     gameState = GameState.PLAY;
 
     this.level = new Level("levels/hub_world.json");
+    this.assets = new AssetDirectory("assets.json");
+    assets.loadAssets();
+    assets.finishLoading();
 
     worldHeight = level.DEFAULT_HEIGHT;
     worldWidth = level.DEFAULT_WIDTH;
@@ -162,6 +174,7 @@ public class GameplayController implements Screen {
 
     active = false;
     restart = false;
+    quit = false;
     saveTimer = 0;
 
     this.stateController = new StateController();
@@ -285,22 +298,21 @@ public class GameplayController implements Screen {
       String[] splitName = name.replaceAll("[^a-zA-Z_]", "").split("_");
       // Assuming that names are going to be of the format "_..._(boss)"
       String assetName = splitName[splitName.length-1];
-      if (assetName.equals("shark")) assetName = "jelly";
-      int health = name.contains("jelly")
-        ? 50 
-        : name.contains("clam")
-          ? 10
-          : 200;
+
+      AssetDirectory assetDirectory = new AssetDirectory("assets.json");
+      assetDirectory.loadAssets();
+      assetDirectory.finishLoading();
+
+      JsonValue bossInfo = assetDirectory.getEntry(assetName, JsonValue.class);
       var bossBuilder =
           BossModel.Builder.newInstance()
               .setType(name)
-              .setFrameSize()
+              .setFrameSize(bossInfo.getInt("frame_size", 0))
               .setX(bossContainer.x)
               .setY(bossContainer.y)
-              .setHealth(health)
-
-              //              .setHitbox(new float[]{-3, -3, -3, 3, 3, 3, 3, -3})
-              .setHealthThresholds(new int[] {150, 100, 50})
+              .setHealth(bossInfo.getInt("health", 0))
+              .setHealthThresholds(bossInfo.get("thresholds").asIntArray())
+              .setHitbox(bossInfo.get("hitbox").asFloatArray())
               .setFalloverAnimation(new Texture("bosses/" + assetName + "/fallover.png"))
               .setShootAnimation(new Texture("bosses/" + assetName + "/shoot.png"))
               .setGetHitAnimation(new Texture("bosses/" + assetName + "/hurt.png"))
@@ -387,6 +399,7 @@ public class GameplayController implements Screen {
             renderEngine,
             renderEngine.getGameCanvas(),
             uiViewport);
+    uiController.gatherAssets(assets);
   }
 
   public void render(float delta) {
@@ -416,11 +429,15 @@ public class GameplayController implements Screen {
 
       // Update saving
       if (saveTimer > 0) saveTimer += 1;
-      if (saveTimer > SAVE_DELAY) saveTimer = 0;
+      if (saveTimer > SAVE_DELAY) {
+        saveTimer = 0;
+        uiController.setDrawSave(false);
+      }
 
       if (interactController.isCheckpointActivated() && saveTimer == 0) {
         stateController.setRespawnLoc(playerController.getLocation().cpy());
         stateController.saveGame();
+        uiController.setDrawSave(true);
         saveTimer++;
       }
 
@@ -512,10 +529,12 @@ public class GameplayController implements Screen {
     }
 
     if (restart) {
-      System.out.println("flag1");
-      System.out.println("pre respawn rl "+stateController.getRespawnLoc());
       respawn();
-      System.out.println("post respawn pl "+playerController.getLocation());
+    }
+
+    if (quit) {
+      ((GDXRoot) listener).dispose();
+      System.exit(0);
     }
 
     // Draw reset and debug screen for wins and losses
@@ -545,7 +564,7 @@ public class GameplayController implements Screen {
     bossControllers.clear();
     setupGameplay();
 
-    stateController.loadState("saves/save1.json");
+    stateController.loadState();
     transferState(stateController.getLevel(level.name));
   }
 
@@ -575,7 +594,7 @@ public class GameplayController implements Screen {
     Vector2 respawnLoc = (stateController.getRespawnLoc() == null) ? null : stateController.getRespawnLoc().cpy();
 
     setupGameplay();
-    stateController.loadState("saves/save1.json");
+    stateController.loadState();
     transferState(stateController.getLevel(level.name));
 
     if (respawnLoc != null) stateController.setRespawnLoc(respawnLoc);
@@ -624,6 +643,10 @@ public class GameplayController implements Screen {
 
   public void setRestart(boolean restart) {
     this.restart = restart;
+  }
+
+  public void setQuit(boolean quit) {
+    this.quit = quit;
   }
 
   public void pause() {

@@ -1,5 +1,6 @@
-package edu.cornell.jade.seasthethrone.ai;
+package edu.cornell.jade.seasthethrone.ai.clam;
 
+import edu.cornell.jade.seasthethrone.ai.BossController;
 import edu.cornell.jade.seasthethrone.bpedit.AttackPattern;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;

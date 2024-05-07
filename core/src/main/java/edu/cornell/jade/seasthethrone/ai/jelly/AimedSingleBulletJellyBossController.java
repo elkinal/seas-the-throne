@@ -1,4 +1,4 @@
-package edu.cornell.jade.seasthethrone.ai;
+package edu.cornell.jade.seasthethrone.ai.jelly;
 
 import edu.cornell.jade.seasthethrone.bpedit.patterns.SingleBulletAttack;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
