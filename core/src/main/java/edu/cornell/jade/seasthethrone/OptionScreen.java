@@ -4,7 +4,6 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -18,12 +17,12 @@ import edu.cornell.jade.seasthethrone.render.GameCanvas;
 import edu.cornell.jade.seasthethrone.util.Controllers;
 import edu.cornell.jade.seasthethrone.util.ScreenListener;
 import edu.cornell.jade.seasthethrone.util.XBoxController;
-import org.w3c.dom.Text;
-
 import java.util.HashMap;
 
 /**
- * Keybindings: Keybindings are saved into a hashmap with key = action, value = keybind. This
+ * Options screen which contians settings for player preferences and keybindings.
+ *
+ * <p>Keybindings: Keybindings are saved into a hashmap with key = action, value = keybind. This
  * hashmap will be saved in the save file (has default values which are there from beginning) and
  * will be loaded by InputController to get keybindings.
  */
@@ -36,6 +35,12 @@ public class OptionScreen implements Screen {
 
   /** The game canvas */
   private GameCanvas canvas;
+
+  /** === Custom colors */
+  private Color blue = new Color(90 / 255f, 148 / 255f, 156 / 255f, 1);
+
+  private Color coral = new Color(185 / 255f, 75 / 255f, 78 / 255f, 1);
+  private Color sand = new Color(223 / 255f, 209 / 255f, 160 / 255f, 1);
 
   /** XBox Controller support */
   private XBoxController xbox;
@@ -78,7 +83,7 @@ public class OptionScreen implements Screen {
   /** Hashmap containing default values for keybindings/preferences */
   private HashMap<TextButton, String> defaultSettings;
 
-  // todo: xbox controller support-- cycle through hashmap when going up/down
+  // todo: xbox controller support-- cycle through buttons when going up/down
   // todo: for keymapping, press a on xbox to select the keybinding, then click button to change
   // todo: for preference (true/false), press a on xbox to change to the other preference
 
@@ -87,6 +92,15 @@ public class OptionScreen implements Screen {
 
   /** Dictionary that maps buttons to text (to change button appearance when changing settings) */
   private HashMap<TextButton, String> buttonNames;
+
+  /** Array of all buttons (for controller) */
+  private TextButton[] buttons;
+
+  /** The hover index of the controller */
+  private int hoverIndex;
+
+  private int cooldown = 10;
+  private int moveCount;
 
   /** The screen listener to know when to exit screen */
   private ScreenListener listener;
@@ -111,10 +125,12 @@ public class OptionScreen implements Screen {
     if (Controllers.get().getControllers().size > 0) {
       xbox = Controllers.get().getXBoxControllers().get(0);
     }
+    hoverIndex = 0;
+    moveCount = 0;
 
     background = internal.getEntry("title:background", Texture.class);
     textFont = internal.getEntry("loading:alagard", BitmapFont.class);
-    headingStyle = new Label.LabelStyle(textFont, Color.CYAN);
+    headingStyle = new Label.LabelStyle(textFont, blue);
     buttonStyle = new Label.LabelStyle(textFont, Color.WHITE);
     // make stage for options screen
     stage = new Stage();
@@ -123,7 +139,7 @@ public class OptionScreen implements Screen {
     // make table for all the controls options
     controlsTable = new Table();
     controlsTable.setFillParent(true);
-    controlsTable.setDebug(true);
+//    controlsTable.setDebug(true);
     //    controlsTable.align(Align.topLeft);
     stage.addActor(controlsTable);
 
@@ -154,7 +170,7 @@ public class OptionScreen implements Screen {
     TextButton.TextButtonStyle buttonStyle =
         new TextButton.TextButtonStyle(null, null, null, textFont);
     // color on hover (mouse)
-    buttonStyle.overFontColor = Color.CYAN;
+    buttonStyle.overFontColor = coral;
 
     easyModeButton = new TextButton("", buttonStyle);
     easyModeButton.getLabel().setFontScale(.5f);
@@ -171,7 +187,7 @@ public class OptionScreen implements Screen {
     dashButton.getLabel().setFontScale(.5f);
     stage.addActor(dashButton);
 
-    // add all defaults to the map, and also do this with buttonNames
+    // add all defaults to the maps and array
     defaultSettings.put(easyModeButton, "Off");
     defaultSettings.put(dashControlButton, "Movement");
     defaultSettings.put(attackButton, "LT");
@@ -182,11 +198,10 @@ public class OptionScreen implements Screen {
     buttonNames.put(attackButton, "LT");
     buttonNames.put(dashButton, "RT");
 
-    // make buttons have text
-    TextButton buttons[] =
+    TextButton[] button =
         new TextButton[] {easyModeButton, dashControlButton, attackButton, dashButton};
 
-    for (TextButton t : buttons) {
+    for (TextButton t : button) {
       t.setText(defaultSettings.get(t));
     }
 
@@ -220,12 +235,17 @@ public class OptionScreen implements Screen {
     controlsTable.add(backButton).padTop(40).bottom();
     controlsTable.add(resetButton).padTop(40).bottom();
 
+    buttons =
+        new TextButton[] {
+          easyModeButton, dashControlButton, attackButton, dashButton, backButton, resetButton
+        };
+
     addListeners();
   }
 
   /** Add listeners to buttons */
   private void addListeners() {
-    // button listener to listen for key remapping
+    // button listener to listen for first click
     InputListener buttonListener =
         new InputListener() {
           @Override
@@ -277,10 +297,85 @@ public class OptionScreen implements Screen {
     backButton.addListener(
         new ClickListener() {
           public void clicked(InputEvent event, float x, float y) {
-            System.out.println("clicked exit");
             exit = true;
           }
         });
+  }
+
+  private void xboxListener() {
+    /** --------- scrolling to the option */
+    // controller buttonstyles
+    TextButton.TextButtonStyle style = new TextButton.TextButtonStyle(null, null, null, textFont);
+    style.fontColor = Color.WHITE;
+    TextButton.TextButtonStyle hoverStyle =
+        new TextButton.TextButtonStyle(null, null, null, textFont);
+    hoverStyle.fontColor = coral;
+
+    // go down
+    if (moveCount == 0) {
+      if (xbox.getLeftY() == 1 || xbox.getRightY() == 1) {
+        if (hoverIndex >= buttons.length - 1) {
+          hoverIndex = 0;
+        } else {
+          hoverIndex++;
+        }
+      }
+
+      // go up
+      if (xbox.getLeftY() == -1 || xbox.getRightY() == -1) {
+        if (hoverIndex == 0) {
+          hoverIndex = buttons.length - 1;
+        } else {
+          hoverIndex--;
+        }
+      }
+
+      for (int i = 0; i < buttons.length; i++) {
+        buttons[i].setStyle(style);
+      }
+
+      buttons[hoverIndex].setStyle(hoverStyle);
+
+      /** --------- selecting the option */
+      if (xbox.getA()) {
+        // 2 options only
+        if (hoverIndex == 0) {
+          if (buttonNames.get(easyModeButton).equals("Off")) {
+            buttonNames.put(easyModeButton, "On");
+            easyModeButton.setText("On");
+          } else {
+            buttonNames.put(easyModeButton, "Off");
+            easyModeButton.setText("Off");
+          }
+        } else if (hoverIndex == 1) {
+          if (buttonNames.get(dashControlButton).equals("Movement")) {
+            buttonNames.put(dashControlButton, "Indicator");
+            dashControlButton.setText("Indicator");
+          } else {
+            buttonNames.put(dashControlButton, "Movement");
+            dashControlButton.setText("Movement");
+          }
+        } else if (hoverIndex == 4) {
+          exit = true;
+        } else if (hoverIndex == 5) {
+          setDefault();
+        }
+      }
+      // any key
+      if (hoverIndex == 2 && xbox.getPressed() != null) {
+        buttonNames.put(attackButton, xbox.getPressed());
+        attackButton.setText(xbox.getPressed());
+      } else if (hoverIndex == 3 && xbox.getPressed() != null) {
+        buttonNames.put(dashButton, xbox.getPressed());
+        dashButton.setText(xbox.getPressed());
+      }
+    }
+
+    if (moveCount == cooldown) {
+      moveCount = 0;
+    } else {
+      moveCount++;
+    }
   }
 
   /**
@@ -300,12 +395,15 @@ public class OptionScreen implements Screen {
   }
 
   public void draw() {
-    canvas.clear(Color.BLACK);
+    canvas.clear(sand);
     stage.getBatch().begin();
     stage.getBatch().setProjectionMatrix(stage.getCamera().combined);
     // draw background
     //      stage.getBatch().draw(background.getRegion(), 0, 0, stage.getViewport().getWorldWidth(),
     // stage.getViewport().getWorldHeight());
+    if (xbox != null) {
+      xboxListener();
+    }
     stage.getBatch().end();
     stage.draw();
   }
@@ -318,14 +416,11 @@ public class OptionScreen implements Screen {
   public void render(float delta) {
     update();
     draw();
-    //    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     stage.act(delta);
     if (exit) {
       listener.exitScreen(this, 4);
     }
   }
-
-  private void updateSettings() {}
 
   @Override
   public void show() {
