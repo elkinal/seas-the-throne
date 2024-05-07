@@ -43,11 +43,11 @@ public class GDXRoot extends Game implements ScreenListener {
   public void create() {
     canvas = new GameCanvas();
 
-    controller = new GameplayController();
-    controller.setScreenListener(this);
-
     loading = new LoadScreen("assets.json", canvas, MIN_LOAD_TIME, 1);
     loading.setScreenListener(this);
+
+    controller = new GameplayController();
+    controller.setScreenListener(this);
 
     menus = new MenuController(canvas);
     menus.setScreenListener(this);

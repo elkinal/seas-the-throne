@@ -119,3 +119,6 @@ Thumbs.db
 /ios/xcode/native/
 /ios/IOSLauncher.app
 /ios/IOSLauncher.app.dSYM
+
+## ASSETS.TXT IS THE BANE OF MY EXISTENCE
+/assets/assets.txt

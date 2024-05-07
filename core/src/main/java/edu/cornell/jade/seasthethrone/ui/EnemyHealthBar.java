@@ -83,7 +83,10 @@ public class EnemyHealthBar implements Renderable {
   public void draw(RenderingEngine renderer) {
     resize(renderer.getGameCanvas().getWidth(), renderer.getGameCanvas().getHeight());
     renderer.draw(background, enemyPosition.x, enemyPosition.y + HEALTH_OFFSET, 1.0f, 1.0f);
-    renderer.draw(foreground, enemyPosition.x, enemyPosition.y + HEALTH_OFFSET, hWidth, 1.0f);
+
+    // TODO: don't hardcode worldscale here
+    float x_offset = 0.135f*(background.getRegionWidth()/2f)*(hWidth-1);
+    renderer.draw(foreground, enemyPosition.x + x_offset,enemyPosition.y + HEALTH_OFFSET, hWidth, 1.0f);
   }
 
   /**

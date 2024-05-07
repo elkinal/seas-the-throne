@@ -72,7 +72,6 @@ public class InteractableController implements Controllable {
           if (BuildConfig.DEBUG) {
             System.out.println("Checkpoint "+((CheckpointModel) interactable).getCheckpointID()+" activated");
           }
-
           // player.setHealth(5);
           ((CheckpointModel) interactable).setActivated(true);
           this.checkpointID = ((CheckpointModel) interactable).getCheckpointID();
