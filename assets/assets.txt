@@ -109,6 +109,10 @@ player/player_shoot_left.png
 player/player_shoot_right.png
 player/player_shoot_up.png
 saves/save1.json
+sounds/Dodge.ogg
+sounds/Pew.wav
+sounds/Pop.wav
+sounds/Victory.ogg
 title/background.png
 title/logo.png
 title/play_button.png

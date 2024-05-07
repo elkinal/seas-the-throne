@@ -125,6 +125,14 @@
       }
     }
   },
+  "soundfx": {
+    "pop": "sounds/Pop.wav",
+    "pew": "sounds/Pew.wav"
+  },
+  "samples": {
+    "dodge": "sounds/Dodge.ogg",
+    "win": "sounds/Victory.ogg"
+  },
   "fonts": {
     "ui:alagard": {
       "file": "Alagard.ttf",
