@@ -11,7 +11,6 @@ import edu.cornell.jade.seasthethrone.input.Controllable;
 import edu.cornell.jade.seasthethrone.render.GameCanvas;
 import edu.cornell.jade.seasthethrone.util.ScreenListener;
 
-
 public class TitleScreen implements Screen, Controllable {
 
   /** Internal assets for this title screen */
@@ -109,14 +108,13 @@ public class TitleScreen implements Screen, Controllable {
     canvas.getSpriteBatch().setProjectionMatrix(viewport.getCamera().combined);
 
     // draw the background
-//    canvas.draw(background, Color.WHITE, 0, 0, background.getWidth(), background.getHeight());
+    //    canvas.draw(background, Color.WHITE, 0, 0, background.getWidth(), background.getHeight());
 
     // draw the logo
-    float scale = Math.min(2/3f, (float)canvas.getWidth()/logo.getWidth());
+    float scale = Math.min(2 / 3f, (float) canvas.getWidth() / logo.getWidth());
     float width = logo.getWidth() * scale;
 
-    canvas.draw(logo, Color.WHITE, -width/2f , 0, width, scale*logo.getHeight());
-
+    canvas.draw(logo, Color.WHITE, -width / 2f, 0, width, scale * logo.getHeight());
 
     // draw the menu
     float y_offset = -200f;
@@ -124,7 +122,7 @@ public class TitleScreen implements Screen, Controllable {
     for (TitleSelection s : TitleSelection.values()) {
       if (selection == s) {
         canvas.drawText(s.optionName, textFont, x_offset, y_offset, Color.GOLDENROD);
-        canvas.drawText(s.optionName, textFont, x_offset+3,  y_offset + 6, Color.WHITE);
+        canvas.drawText(s.optionName, textFont, x_offset + 3, y_offset + 6, Color.WHITE);
       } else {
         canvas.drawText(s.optionName, textFont, x_offset, y_offset, Color.WHITE);
       }
@@ -134,7 +132,6 @@ public class TitleScreen implements Screen, Controllable {
     canvas.end();
   }
 
-
   public void render(float delta) {
     update();
     draw();
@@ -143,8 +140,12 @@ public class TitleScreen implements Screen, Controllable {
   /** Selects the current menu option */
   public void pressInteract() {
     switch (selection) {
-      case PLAY -> listener.exitScreen(this, 1);
-      case OPTIONS -> System.out.println("Options");
+      case PLAY -> {
+        listener.exitScreen(this, 1);
+      }
+      case OPTIONS -> {
+        listener.exitScreen(this, 3);
+      }
       case QUIT -> System.exit(0);
     }
   }
