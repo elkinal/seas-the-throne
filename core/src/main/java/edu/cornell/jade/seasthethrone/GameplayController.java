@@ -148,7 +148,7 @@ public class GameplayController implements Screen {
   private int saveTimer;
 
   /** Minimum number of frames between saves */
-  private final int SAVE_DELAY = 10;
+  private final int SAVE_DELAY = 30;
 
   /** fish bullet builder */
   BulletModel.Builder fishBulletBuilder;
@@ -533,9 +533,7 @@ public class GameplayController implements Screen {
     }
 
     if (quit) {
-      dispose();
-      assets.unloadAssets();
-      assets.dispose();
+      ((GDXRoot) listener).dispose();
       System.exit(0);
     }
 
@@ -566,7 +564,7 @@ public class GameplayController implements Screen {
     bossControllers.clear();
     setupGameplay();
 
-    stateController.loadState("saves/save1.json");
+    stateController.loadState();
     transferState(stateController.getLevel(level.name));
   }
 
@@ -596,7 +594,7 @@ public class GameplayController implements Screen {
     Vector2 respawnLoc = (stateController.getRespawnLoc() == null) ? null : stateController.getRespawnLoc().cpy();
 
     setupGameplay();
-    stateController.loadState("saves/save1.json");
+    stateController.loadState();
     transferState(stateController.getLevel(level.name));
 
     if (respawnLoc != null) stateController.setRespawnLoc(respawnLoc);
