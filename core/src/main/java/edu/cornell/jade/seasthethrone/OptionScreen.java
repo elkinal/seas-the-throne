@@ -139,7 +139,7 @@ public class OptionScreen implements Screen {
     // make table for all the controls options
     controlsTable = new Table();
     controlsTable.setFillParent(true);
-//    controlsTable.setDebug(true);
+    //    controlsTable.setDebug(true);
     //    controlsTable.align(Align.topLeft);
     stage.addActor(controlsTable);
 
@@ -395,7 +395,7 @@ public class OptionScreen implements Screen {
   }
 
   public void draw() {
-    canvas.clear(sand);
+    canvas.clear(Color.DARK_GRAY);
     stage.getBatch().begin();
     stage.getBatch().setProjectionMatrix(stage.getCamera().combined);
     // draw background
