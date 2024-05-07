@@ -405,6 +405,9 @@ public class GameplayController implements Screen {
             renderEngine.getGameCanvas(),
             uiViewport);
     uiController.gatherAssets(assets);
+
+    // load foreground
+    renderEngine.addRenderable(level.getForeground());
   }
 
   public void render(float delta) {
@@ -526,12 +529,15 @@ public class GameplayController implements Screen {
       renderEngine.addRenderable((Renderable) r);
     }
 
+    renderEngine.addRenderable(level.getForeground());
+
     // Draw the renderables
     draw(delta);
     if (BuildConfig.DEBUG) {
       debugRenderer.render(
           physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
     }
+
 
     if (returnToHub) {
       physicsEngine.setTarget("levels/hub_world.json");

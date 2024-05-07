@@ -78,6 +78,7 @@ levels/tablet_room_1.json
 levels/tablet_room_2.json
 levels/test1.tiled-project
 levels/tutorial_background.png
+levels/tutorial_foreground.png
 levels/tutorial_map.json
 libgdx.png
 loading/background.png
