@@ -6,9 +6,8 @@
 	}
 },
 "playerHealth": 5,
-"checkpoint": 2,
 "respawnLoc": {
-	"x": 240,
-	"y": 235.9096
+	"x": 106.26966,
+	"y": 110.49476
 }
 }

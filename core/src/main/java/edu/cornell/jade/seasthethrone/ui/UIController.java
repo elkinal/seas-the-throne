@@ -1,9 +1,12 @@
 package edu.cornell.jade.seasthethrone.ui;
 
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import edu.cornell.jade.seasthethrone.GameplayController;
 import edu.cornell.jade.seasthethrone.PlayerController;
 import edu.cornell.jade.seasthethrone.ai.BossController;
+import edu.cornell.jade.seasthethrone.assets.AssetDirectory;
 import edu.cornell.jade.seasthethrone.render.GameCanvas;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 
@@ -31,9 +34,14 @@ public class UIController {
   /** A reference to the current boss that the player is facing */
   BossController boss;
 
+  /** If this controller should draw Game Saved text */
+  private boolean drawSave;
 
   /** The rendering engine used to draw the UI elements */
   RenderingEngine render;
+
+  /** Font for drawing on screen UI messages */
+  private BitmapFont messageFont;
 
   /** Internal UI canvas to handle rendering */
   private GameCanvas canvas;
@@ -58,9 +66,14 @@ public class UIController {
     this.render = render;
     viewport = view;
     boss = null;
+    drawSave = false;
 
     this.canvas = canvas;
     uiModel = new UIModel(viewport.getScreenWidth(), viewport.getScreenHeight());
+  }
+
+  public void gatherAssets(AssetDirectory assets) {
+    this.messageFont = assets.getEntry("ui:alagard", BitmapFont.class);
   }
 
   /**
@@ -91,6 +104,12 @@ public class UIController {
     } else {
       uiModel.draw(render, 0);
     }
+
+    if (drawSave) {
+      String message = "Game Saved!";
+      canvas.drawTextUI(message, messageFont, canvas.getWidth() - 300, 100);
+    }
+
     pauseMenuController.getPauseMenu().draw(render);
     canvas.endUI();
   }
@@ -114,6 +133,10 @@ public class UIController {
     }
     // update boss hp
     uiModel.update(boss);
+  }
+
+  public void setDrawSave(boolean draw) {
+    drawSave = draw;
   }
 
   /** Runs when the viewport is resized */

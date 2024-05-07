@@ -60,6 +60,9 @@ public class GameplayController implements Screen {
   /** State defining the current logic of the GameplayController. */
   private GameState gameState;
 
+  /** Assets to be loaded */
+  private AssetDirectory assets;
+
   /** Renderer for debug hitboxes. */
   Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
 
@@ -123,6 +126,9 @@ public class GameplayController implements Screen {
   /** If the game has been flagged to restart at last checkpoint */
   private boolean restart;
 
+  /** If the game has been set to quit */
+  private boolean quit;
+
   /** Temporary cache to sort physics renderables */
   private final Array<Model> objectCache = new Array<>();
 
@@ -142,7 +148,7 @@ public class GameplayController implements Screen {
   private int saveTimer;
 
   /** Minimum number of frames between saves */
-  private final int SAVE_DELAY = 10;
+  private final int SAVE_DELAY = 30;
 
   /** fish bullet builder */
   BulletModel.Builder fishBulletBuilder;
@@ -154,6 +160,9 @@ public class GameplayController implements Screen {
     gameState = GameState.PLAY;
 
     this.level = new Level("levels/hub_world.json");
+    this.assets = new AssetDirectory("assets.json");
+    assets.loadAssets();
+    assets.finishLoading();
 
     worldHeight = level.DEFAULT_HEIGHT;
     worldWidth = level.DEFAULT_WIDTH;
@@ -165,6 +174,7 @@ public class GameplayController implements Screen {
 
     active = false;
     restart = false;
+    quit = false;
     saveTimer = 0;
 
     this.stateController = new StateController();
@@ -389,6 +399,7 @@ public class GameplayController implements Screen {
             renderEngine,
             renderEngine.getGameCanvas(),
             uiViewport);
+    uiController.gatherAssets(assets);
   }
 
   public void render(float delta) {
@@ -418,11 +429,15 @@ public class GameplayController implements Screen {
 
       // Update saving
       if (saveTimer > 0) saveTimer += 1;
-      if (saveTimer > SAVE_DELAY) saveTimer = 0;
+      if (saveTimer > SAVE_DELAY) {
+        saveTimer = 0;
+        uiController.setDrawSave(false);
+      }
 
       if (interactController.isCheckpointActivated() && saveTimer == 0) {
         stateController.setRespawnLoc(playerController.getLocation().cpy());
         stateController.saveGame();
+        uiController.setDrawSave(true);
         saveTimer++;
       }
 
@@ -514,10 +529,12 @@ public class GameplayController implements Screen {
     }
 
     if (restart) {
-      System.out.println("flag1");
-      System.out.println("pre respawn rl "+stateController.getRespawnLoc());
       respawn();
-      System.out.println("post respawn pl "+playerController.getLocation());
+    }
+
+    if (quit) {
+      ((GDXRoot) listener).dispose();
+      System.exit(0);
     }
 
     // Draw reset and debug screen for wins and losses
@@ -547,7 +564,7 @@ public class GameplayController implements Screen {
     bossControllers.clear();
     setupGameplay();
 
-    stateController.loadState("saves/save1.json");
+    stateController.loadState();
     transferState(stateController.getLevel(level.name));
   }
 
@@ -577,7 +594,7 @@ public class GameplayController implements Screen {
     Vector2 respawnLoc = (stateController.getRespawnLoc() == null) ? null : stateController.getRespawnLoc().cpy();
 
     setupGameplay();
-    stateController.loadState("saves/save1.json");
+    stateController.loadState();
     transferState(stateController.getLevel(level.name));
 
     if (respawnLoc != null) stateController.setRespawnLoc(respawnLoc);
@@ -626,6 +643,10 @@ public class GameplayController implements Screen {
 
   public void setRestart(boolean restart) {
     this.restart = restart;
+  }
+
+  public void setQuit(boolean quit) {
+    this.quit = quit;
   }
 
   public void pause() {
