@@ -1474,8 +1474,8 @@
                  "type":"",
                  "visible":true,
                  "width":10,
-                 "x":1957.66666666667,
-                 "y":369.166666666667
+                 "x":2260,
+                 "y":360
                 }, 
                 {
                  "height":10,
@@ -1498,6 +1498,45 @@
                  "width":18.5,
                  "x":2094.66666666667,
                  "y":277.333333333333
+                }, 
+                {
+                 "height":7.5,
+                 "id":308,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"healthpack"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":10,
+                 "x":703,
+                 "y":1115.58333333333
+                }, 
+                {
+                 "height":10,
+                 "id":310,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"checkpointID",
+                         "type":"int",
+                         "value":0
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"checkpoint"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":18.5,
+                 "x":1152.75,
+                 "y":334
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1520,7 +1559,95 @@
          "draworder":"topdown",
          "id":13,
          "name":"gates",
-         "objects":[],
+         "objects":[
+                {
+                 "height":110.155318181818,
+                 "id":303,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":37.4242090909091,
+                 "x":874.309456363636,
+                 "y":562.833315151515
+                }, 
+                {
+                 "height":77.545490909091,
+                 "id":304,
+                 "name":"levels\/gate.png",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":false
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":2.2446750527568,
+                 "x":920.459026109985,
+                 "y":580.227254545455
+                }, 
+                {
+                 "height":16.905,
+                 "id":305,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":137.6742,
+                 "x":623.05266,
+                 "y":795.339166666667
+                }, 
+                {
+                 "height":4.21216666666663,
+                 "id":306,
+                 "name":"levels\/gate.png",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":false
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":39.24468,
+                 "x":660.119326666667,
+                 "y":817.649833333333
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -1531,7 +1658,151 @@
          "draworder":"topdown",
          "id":2,
          "name":"bosses",
-         "objects":[],
+         "objects":[
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":295,
+                 "name":"fixed_clam270",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":-1
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":1460,
+                 "y":120
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":296,
+                 "name":"fixed_clam270",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":-1
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":1560,
+                 "y":120
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":297,
+                 "name":"fixed_clam270",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":-1
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":1660,
+                 "y":120
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":298,
+                 "name":"fixed_clam270",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":-1
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":1360,
+                 "y":120
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":300,
+                 "name":"fixed_clam270",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":-1
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":1020,
+                 "y":500
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":301,
+                 "name":"fixed_clam90",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":-1
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":1040,
+                 "y":760
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":302,
+                 "name":"fixed_clam270",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":-1
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":1060,
+                 "y":500
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":309,
+                 "name":"oscillating_ring_clam",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":1
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":680,
+                 "y":680
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -1627,7 +1898,7 @@
          "y":0
         }],
  "nextlayerid":15,
- "nextobjectid":285,
+ "nextobjectid":311,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
