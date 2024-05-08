@@ -1,12 +1,10 @@
 package edu.cornell.jade.seasthethrone.ui;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
+
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
-import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
 public class EnemyHealthBar implements Renderable {
   /**
@@ -53,9 +51,9 @@ public class EnemyHealthBar implements Renderable {
   /**
    * Creates a new Health Bar
    */
-  public EnemyHealthBar() {
-    foreground = new TextureRegion(new Texture("ui/enemy_hp_full.png"));
-    background = new TextureRegion(new Texture("ui/enemy_hp_empty.png"));
+  public EnemyHealthBar(TextureRegion foreground, TextureRegion background) {
+    this.foreground = foreground;
+    this.background = background;
     // set width of full hp bar
     hWidth = width;
   }
