@@ -468,6 +468,8 @@ public abstract class BossModel extends EnemyModel implements Renderable {
         return new ClamModel(this);
       } else if (type.contains("shark")) {
         return new SharkBossModel(this);
+      } else if (type.contains("head")){
+        return new HeadBossModel(this);
       } else {
         return new JellyBossModel(this);
       }
@@ -502,6 +504,8 @@ public abstract class BossModel extends EnemyModel implements Renderable {
         return new RandomStreamClamController(angle, model, player, bulletBuilder, physicsEngine);
       } else if (type.equals("unbreak_ring_clam")) {
         return new UnbreakableRingClamController(model, player, bulletBuilder, physicsEngine);
+      } else if (type.equals("head")) {
+        return new HeadBossController (model, player, bulletBuilder, physicsEngine);
       }
       throw new RuntimeException("boss type not supported");
     }

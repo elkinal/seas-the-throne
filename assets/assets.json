@@ -123,6 +123,20 @@
       "death": {
         "file": "bosses/clam/death.png"
       }
+    },
+    "head": {
+      "idle": {
+        "file": "bosses/head/idle.png"
+      },
+      "shoot": {
+        "file": "bosses/head/shoot.png"
+      },
+      "hurt": {
+        "file": "bosses/head/hurt.png"
+      },
+      "death": {
+        "file": "bosses/head/death.png"
+      }
     }
   },
   "fonts": {
@@ -135,6 +149,7 @@
     "clam": "bosses/clam/clam.json",
     "jelly": "bosses/jelly/jelly.json",
     "shark": "bosses/shark/shark.json",
-    "crab": "bosses/crab/crab.json"
+    "crab": "bosses/crab/crab.json",
+    "head": "bosses/head/head.json"
   }
 }
