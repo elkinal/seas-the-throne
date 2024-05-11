@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import edu.cornell.jade.seasthethrone.gamemodel.EnemyModel;
+import edu.cornell.jade.seasthethrone.gamemodel.boss.SharkBossModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.util.Direction;
@@ -231,8 +232,8 @@ public class PlayerController implements Controllable {
 
   /**
    * Sets the {@link #indicatorDirection} field to point in the direction
-   * of the nearest enemy. If no enemies are close enough, this method will
-   * not do anything.
+   * of the nearest enemy, if the indicator is already close enough.
+   * If no enemies are near the player, this method will not do anything.
    */
   public void pointToClosestEnemy() {
     EnemyModel closestEnemy = null;
@@ -241,6 +242,10 @@ public class PlayerController implements Controllable {
       if (!b.isActive()) continue;
       float dist = player.getPosition().dst(b.getPosition());
       if (dist < closestDist) {
+        //Check if the angle is "close enough"
+        float angle = b.getPosition().sub(player.getPosition()).angleDeg(indicatorDirection);
+        if(b instanceof SharkBossModel) System.out.println(angle);
+        if (angle > 45 && angle < 315) continue;
         closestEnemy = b;
         closestDist = dist;
       }
