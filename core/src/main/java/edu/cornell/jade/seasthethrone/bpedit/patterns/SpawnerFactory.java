@@ -30,13 +30,14 @@ public final class SpawnerFactory {
    *
    * @param dups          number of bullets in the arc
    * @param delay         delay in between firings
+   * @param vel           velocity of the bullet
    * @param builder       a builder to create bullet models
    * @param physicsEngine {@link PhysicsEngine} to add bullets to
    */
-  public static Spawner constructRepeatingRing(int dups, int delay, BulletModel.Builder builder,
+  public static Spawner constructRepeatingRing(int dups, int delay, float vel,  BulletModel.Builder builder,
       PhysicsEngine physicsEngine) {
     Spawner out = new Spawner(builder, physicsEngine, bulletFamilyPool, bulletModelPool);
-    BulletFamily f = new BulletFamily(1f, 0f, 8f, 0f, 0.5f, 0);
+    BulletFamily f = new BulletFamily(1f, 0f, vel, 0f, 0.5f, 0);
     f.addEffect(new Arc(0, MathUtils.PI * 2, dups));
     f.addEffect(new Periodic(delay));
     out.addFamily(f);

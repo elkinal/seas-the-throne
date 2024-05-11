@@ -807,10 +807,8 @@ public class Spawner {
         .setRadius(f.radius);
     if (unbreakable)
       bulletBuilder.setType(BulletModel.Builder.Type.UNBREAKABLE);
-    bulletBuilder.setType(BulletModel.Builder.Type.DEFAULT);
-    // Disabled pooling for now
     BulletModel m = BulletModel.construct(bulletBuilder, bulletBasePool);
-
+    bulletBuilder.setType(BulletModel.Builder.Type.DEFAULT);
     for (DelayedAction a : f.delayedActions) {
       a.setModel(m);
       delayedActions.add(a, a.delay + f.timestamp);

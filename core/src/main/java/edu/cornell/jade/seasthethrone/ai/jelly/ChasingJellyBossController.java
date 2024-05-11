@@ -17,7 +17,7 @@ public class ChasingJellyBossController extends JellyBossController {
   public ChasingJellyBossController(JellyBossModel boss, PlayerModel player, BulletModel.Builder builder,
                                      PhysicsEngine physicsEngine) {
     super(boss, player, null, builder, physicsEngine);
-    boss.setColor(new Color(0.6f, 0f, 0.6f, 1));
+    boss.setColor(new Color(0.8f, 0f, 0f, 1));
     AGRO_DISTANCE = 35f;
   }
 

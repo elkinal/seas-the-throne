@@ -10,6 +10,7 @@
 
 package edu.cornell.jade.seasthethrone;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import edu.cornell.jade.seasthethrone.gamemodel.EnemyModel;
@@ -66,6 +67,9 @@ public class PlayerController implements Controllable {
   /** The vector direction the player is moving */
   Vector2 moveDirection;
 
+  /** Bullet model builder */
+  BulletModel.Builder bulletBuilder;
+
   /** Constructs PlayerController */
   public PlayerController(PhysicsEngine physicsEngine, PlayerModel player) {
     this.physicsEngine = physicsEngine;
@@ -75,6 +79,10 @@ public class PlayerController implements Controllable {
     moveDirection = new Vector2();
     this.isAimToDashMode = true;
     this.dashToggleCounter = 0;
+
+    bulletBuilder = BulletModel.Builder.newInstance()
+            .setBaseTexture(new Texture("bullet/yellowfish_east.png"))
+            .setType(BulletModel.Builder.Type.PLAYER);
   }
 
   /**
@@ -194,7 +202,7 @@ public class PlayerController implements Controllable {
     Vector2 playerPos = player.getPosition();
     // TODO: stop hardcoding the offset
     Vector2 startPos = playerPos.add(indicatorDirection.x * 1.5f, indicatorDirection.y * 1.5f);
-    physicsEngine.spawnBullet(startPos, indicatorDirection, 30, BulletModel.Builder.Type.PLAYER);
+    physicsEngine.spawnBullet(startPos, indicatorDirection, 30, bulletBuilder);
 
     player.decrementFishCount();
   }

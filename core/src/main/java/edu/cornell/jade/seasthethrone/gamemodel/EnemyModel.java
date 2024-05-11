@@ -56,7 +56,6 @@ public class EnemyModel extends PolygonModel {
     String[] splitName = enemyName.replaceAll("[^a-zA-Z_]", "").split("_");
     // Assuming that names are going to be of the format "_..._(boss)"
     enemyName = splitName[splitName.length-1];
-    if (enemyName.equals("shark")) enemyName = "jelly";
 
     HashMap<String, Object> bossTextures =
         (HashMap<String, Object>) JsonHandler.jsonToMap("assets.json").get("textures");

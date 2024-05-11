@@ -123,6 +123,20 @@
       "death": {
         "file": "bosses/clam/death.png"
       }
+    },
+    "shark": {
+      "idle": {
+        "file": "bosses/shark/idle.png"
+      },
+      "shoot": {
+        "file": "bosses/shark/shoot.png"
+      },
+      "hurt": {
+        "file": "bosses/shark/hurt.png"
+      },
+      "death": {
+        "file": "bosses/shark/death.png"
+      }
     }
   },
   "fonts": {

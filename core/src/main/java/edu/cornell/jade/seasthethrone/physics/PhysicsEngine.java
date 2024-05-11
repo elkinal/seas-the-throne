@@ -68,20 +68,18 @@ public class PhysicsEngine implements ContactListener {
   }
 
   /**
-   * Spawns a single bullet given a position and velocity
+   * Spawns a single bullet given a position and velocity (only used for the player right now)
    *
    * @param pos starting position of bullet
    * @param vel velocity of bullet
    * @param speed speed of bullet
+   * @param builder the bullet model builder
    */
-  public void spawnBullet(Vector2 pos, Vector2 vel, float speed, BulletModel.Builder.Type type) {
-    BulletModel bullet =
-        BulletModel.Builder.newInstance()
+  public void spawnBullet(Vector2 pos, Vector2 vel, float speed, BulletModel.Builder builder) {
+    BulletModel bullet = builder
             .setX(pos.x)
             .setY(pos.y)
-            .setFishTexture(new Texture("bullet/yellowfish_east.png"))
             .setRadius(0.5f)
-            .setType(type)
             .build();
     bullet.setVX(speed * vel.x);
     bullet.setVY(speed * vel.y);
@@ -214,9 +212,11 @@ public class PhysicsEngine implements ContactListener {
         if (BuildConfig.DEBUG) System.out.println("player hit");
 
         handleCollision((PlayerBodyModel) bd2, (BulletModel) bd1, contact);
-      } else if (bd1 instanceof PlayerSpearModel && bd2 instanceof BulletModel) {
+      } else if (bd1 instanceof PlayerSpearModel && bd2 instanceof BulletModel
+              && !((BulletModel) bd2).isUnbreakable()) {
         handleCollision((PlayerSpearModel) bd1, (BulletModel) bd2);
-      } else if (bd2 instanceof PlayerSpearModel && bd1 instanceof BulletModel) {
+      } else if (bd2 instanceof PlayerSpearModel && bd1 instanceof BulletModel
+              && !((BulletModel) bd1).isUnbreakable()) {
         handleCollision((PlayerSpearModel) bd2, (BulletModel) bd1);
       } else if (bd1 instanceof PlayerSpearModel && bd2 instanceof BossModel) {
         handleCollision((PlayerSpearModel) bd1, (BossModel) bd2);
@@ -298,7 +298,7 @@ public class PhysicsEngine implements ContactListener {
 
   /** Handle collision between player body and bullet */
   public void handleCollision(PlayerBodyModel pb, BulletModel b, Contact c) {
-    if (!(b instanceof  UnbreakableBulletModel)) {
+    if (!(b.isUnbreakable())) {
       b.markRemoved(true);
       if (pb.isInvincible()) {
         c.setEnabled(false);
@@ -306,7 +306,7 @@ public class PhysicsEngine implements ContactListener {
       }
     }
     pb.setKnockedBack(b.getPosition(), b.getKnockbackForce(), 7);
-    if (pb.isInvincible() && pb.isHit() && b instanceof UnbreakableBulletModel) return;
+    if (pb.isInvincible() && pb.isHit() && b.isUnbreakable()) return;
     pb.decrementHealth();
     pb.setInvincible(pb.getHitIFrames());
     pb.setHit(pb.getHitIFrames());

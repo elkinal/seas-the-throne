@@ -193,6 +193,11 @@ public class GameplayController implements Screen {
 
   public void setupGameplay() {
     dispose();
+
+    AssetDirectory assetDirectory = new AssetDirectory("assets.json");
+    assetDirectory.loadAssets();
+    assetDirectory.finishLoading();
+
     gameState = GameState.PLAY;
 
     World world = new World(new Vector2(0, 0), false);
@@ -272,9 +277,12 @@ public class GameplayController implements Screen {
     physicsEngine.addObject(player);
     // Load fish bullets builder
     fishBulletBuilder =
-        BulletModel.Builder.newInstance().setFishTexture(new Texture("bullet/yellowfish_east.png"));
+        BulletModel.Builder.newInstance()
+                .setBaseTexture(new Texture("bullet/yellowfish_east.png"))
+                .setUnbreakableTexture(new Texture("bullet/urchinbullet.png"));
     // Load bosses
     bossControllers.clear();
+
     for (int i = 0; i < layers.get("bosses").size; i++) {
       // TODO: set everything below here based on bossName, load from assets.json
       LevelObject bossContainer = layers.get("bosses").get(i);
@@ -297,10 +305,6 @@ public class GameplayController implements Screen {
       String[] splitName = name.replaceAll("[^a-zA-Z_]", "").split("_");
       // Assuming that names are going to be of the format "_..._(boss)"
       String assetName = splitName[splitName.length-1];
-
-      AssetDirectory assetDirectory = new AssetDirectory("assets.json");
-      assetDirectory.loadAssets();
-      assetDirectory.finishLoading();
 
       JsonValue bossInfo = assetDirectory.getEntry(assetName, JsonValue.class);
       var bossBuilder =

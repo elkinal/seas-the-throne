@@ -16,7 +16,7 @@ public class UnbreakableRingClamController extends ClamController{
 
   public UnbreakableRingClamController(BossModel boss, PlayerModel player, BulletModel.Builder builder,
                                     PhysicsEngine physicsEngine) {
-    super(boss, new RingAttack(boss, PERIOD, DUPS, true, builder, physicsEngine), player);
+    super(boss, new RingAttack(boss, PERIOD, DUPS, 6f, true, builder, physicsEngine), player);
   }
 }
 

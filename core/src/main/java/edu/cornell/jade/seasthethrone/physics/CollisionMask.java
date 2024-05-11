@@ -78,11 +78,6 @@ public class CollisionMask {
       model.setCategoryBits(CATEGORY_PLAYER);
       model.setMaskBits((short) (CATEGORY_BOSS | CATEGORY_OBSTACLE));
     }
-    // If enemy unbreakable bullet
-    else if (model instanceof UnbreakableBulletModel) {
-      model.setCategoryBits(CATEGORY_ENEMY_BULLET);
-      model.setMaskBits((short) (CATEGORY_PLAYER | CATEGORY_OBSTACLE));
-    }
     // If enemy bullet
     else if (model instanceof BulletModel) {
       model.setCategoryBits(CATEGORY_ENEMY_BULLET);
