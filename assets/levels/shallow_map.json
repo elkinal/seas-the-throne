@@ -4619,6 +4619,72 @@
                  "width":2.21836,
                  "x":1294.47167329418,
                  "y":2345.88481960392
+                }, 
+                {
+                 "height":66.6365127524086,
+                 "id":326,
+                 "name":"levels\/gate.png",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":9
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":false
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":2.21836,
+                 "x":1059.41949605754,
+                 "y":2420.54063699625
+                }, 
+                {
+                 "height":38.8770080775444,
+                 "id":327,
+                 "name":"levels\/gate.png",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":9
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":false
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":2.21836,
+                 "x":758.776340705566,
+                 "y":2180.24406983743
+                }, 
+                {
+                 "height":65.4847467597206,
+                 "id":330,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":7
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":13.8488569292122,
+                 "x":1042.2419165635,
+                 "y":2413.66415190584
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -4984,10 +5050,46 @@
                  "width":20,
                  "x":2004.48989795579,
                  "y":1878.27120375516
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":328,
+                 "name":"aimed_jelly",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":9
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":818.805438837837,
+                 "y":2284.13610721507
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":329,
+                 "name":"head",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":9
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":919.30912262724,
+                 "y":2320.34465194735
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -5161,7 +5263,7 @@
          "y":0
         }],
  "nextlayerid":15,
- "nextobjectid":323,
+ "nextobjectid":332,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

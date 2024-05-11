@@ -2,7 +2,7 @@ package edu.cornell.jade.seasthethrone.ai.jelly;
 
 import com.badlogic.gdx.graphics.Color;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
-import edu.cornell.jade.seasthethrone.gamemodel.boss.JellyBossModel;
+import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 
@@ -14,8 +14,8 @@ public class ChasingJellyBossController extends JellyBossController {
   /** The movement speed of the jelly */
   private static final float speed = 8f;
 
-  public ChasingJellyBossController(JellyBossModel boss, PlayerModel player, BulletModel.Builder builder,
-                                     PhysicsEngine physicsEngine) {
+  public ChasingJellyBossController(BossModel boss, PlayerModel player, BulletModel.Builder builder,
+                                    PhysicsEngine physicsEngine) {
     super(boss, player, null, builder, physicsEngine);
     boss.setColor(new Color(0.8f, 0f, 0f, 1));
     AGRO_DISTANCE = 35f;

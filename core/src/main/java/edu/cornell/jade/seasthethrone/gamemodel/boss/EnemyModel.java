@@ -1,4 +1,4 @@
-package edu.cornell.jade.seasthethrone.gamemodel;
+package edu.cornell.jade.seasthethrone.gamemodel.boss;
 
 import com.badlogic.gdx.graphics.Texture;
 import edu.cornell.jade.seasthethrone.model.PolygonModel;

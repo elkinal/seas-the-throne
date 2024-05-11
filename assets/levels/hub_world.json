@@ -431,6 +431,38 @@
                  "width":20,
                  "x":360,
                  "y":360
+                }, 
+                {
+                 "height":20,
+                 "id":21,
+                 "name":"levels\/portal.png",
+                 "properties":[
+                        {
+                         "name":"playerX",
+                         "type":"float",
+                         "value":1160
+                        }, 
+                        {
+                         "name":"playerY",
+                         "type":"float",
+                         "value":2500
+                        }, 
+                        {
+                         "name":"requiredCheckpoint",
+                         "type":"int",
+                         "value":-1
+                        }, 
+                        {
+                         "name":"target",
+                         "type":"string",
+                         "value":"levels\/shallow_map.json"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":289.963672219627,
+                 "y":342.379469614407
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -439,7 +471,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":21,
+ "nextobjectid":22,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

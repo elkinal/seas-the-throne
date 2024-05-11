@@ -13,8 +13,7 @@ package edu.cornell.jade.seasthethrone;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
-import edu.cornell.jade.seasthethrone.gamemodel.EnemyModel;
-import edu.cornell.jade.seasthethrone.gamemodel.boss.SharkBossModel;
+import edu.cornell.jade.seasthethrone.gamemodel.boss.EnemyModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.util.Direction;
@@ -244,7 +243,6 @@ public class PlayerController implements Controllable {
       if (dist < closestDist) {
         //Check if the angle is "close enough"
         float angle = b.getPosition().sub(player.getPosition()).angleDeg(indicatorDirection);
-        if(b instanceof SharkBossModel) System.out.println(angle);
         if (angle > 45 && angle < 315) continue;
         closestEnemy = b;
         closestDist = dist;
