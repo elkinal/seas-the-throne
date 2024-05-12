@@ -38,6 +38,8 @@ public class ObstacleModel extends BoxModel implements Renderable {
     this.frameDelay = 10;
 
     this.filmStrip = new FilmStrip(this.texture.getTexture(), 1, framesInAnimation);
+    setBodyType(BodyDef.BodyType.StaticBody);
+    if (animated) setSensor(true);
   }
 
   @Override
