@@ -429,6 +429,7 @@ public class OptionScreen implements Screen {
     }
   }
 
+  /** Saves the current options to a preference file */
   private void saveOptions() {
     prefs.putString("easyMode", buttonNames.get(easyModeButton));
     prefs.putString("dashControl", buttonNames.get(dashControlButton));
@@ -438,6 +439,7 @@ public class OptionScreen implements Screen {
     }
   }
 
+  /** Loads in option settings from the options preference file */
   private void loadPrefs() {
     String savedEasyMode = prefs.getString("easyMode");
     String savedDashControl = prefs.getString("dashControl");
