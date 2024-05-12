@@ -639,17 +639,17 @@
                         {
                          "name":"playerX",
                          "type":"float",
-                         "value":440
+                         "value":2070
                         }, 
                         {
                          "name":"playerY",
                          "type":"float",
-                         "value":400
+                         "value":225
                         }, 
                         {
                          "name":"target",
                          "type":"string",
-                         "value":"levels\/hub_world.json"
+                         "value":"levels\/tutorial_map.json"
                         }],
                  "rotation":0,
                  "type":"",
@@ -666,17 +666,17 @@
                         {
                          "name":"playerX",
                          "type":"float",
-                         "value":440
+                         "value":2780
                         }, 
                         {
                          "name":"playerY",
                          "type":"float",
-                         "value":400
+                         "value":200
                         }, 
                         {
                          "name":"target",
                          "type":"string",
-                         "value":"levels\/hub_world.json"
+                         "value":"levels\/shallow_map.json"
                         }],
                  "rotation":0,
                  "type":"",
@@ -693,17 +693,22 @@
                         {
                          "name":"playerX",
                          "type":"float",
-                         "value":440
+                         "value":2308
                         }, 
                         {
                          "name":"playerY",
                          "type":"float",
-                         "value":400
+                         "value":1388
+                        }, 
+                        {
+                         "name":"requiredCheckpoint",
+                         "type":"int",
+                         "value":-1
                         }, 
                         {
                          "name":"target",
                          "type":"string",
-                         "value":"levels\/hub_world.json"
+                         "value":"levels\/shallow_map.json"
                         }],
                  "rotation":0,
                  "type":"",
@@ -711,141 +716,6 @@
                  "width":18,
                  "x":492,
                  "y":320
-                }, 
-                {
-                 "height":18,
-                 "id":350,
-                 "name":"levels\/portal_lobby.png",
-                 "properties":[
-                        {
-                         "name":"playerX",
-                         "type":"float",
-                         "value":440
-                        }, 
-                        {
-                         "name":"playerY",
-                         "type":"float",
-                         "value":400
-                        }, 
-                        {
-                         "name":"target",
-                         "type":"string",
-                         "value":"levels\/hub_world.json"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":18,
-                 "x":491,
-                 "y":380.5
-                }, 
-                {
-                 "height":18,
-                 "id":351,
-                 "name":"levels\/portal_lobby.png",
-                 "properties":[
-                        {
-                         "name":"playerX",
-                         "type":"float",
-                         "value":440
-                        }, 
-                        {
-                         "name":"playerY",
-                         "type":"float",
-                         "value":400
-                        }, 
-                        {
-                         "name":"target",
-                         "type":"string",
-                         "value":"levels\/hub_world.json"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":18,
-                 "x":491,
-                 "y":440
-                }, 
-                {
-                 "height":18,
-                 "id":352,
-                 "name":"levels\/portal_lobby.png",
-                 "properties":[
-                        {
-                         "name":"playerX",
-                         "type":"float",
-                         "value":440
-                        }, 
-                        {
-                         "name":"playerY",
-                         "type":"float",
-                         "value":400
-                        }, 
-                        {
-                         "name":"target",
-                         "type":"string",
-                         "value":"levels\/hub_world.json"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":18,
-                 "x":430.5,
-                 "y":440.5
-                }, 
-                {
-                 "height":18,
-                 "id":353,
-                 "name":"levels\/portal_lobby.png",
-                 "properties":[
-                        {
-                         "name":"playerX",
-                         "type":"float",
-                         "value":440
-                        }, 
-                        {
-                         "name":"playerY",
-                         "type":"float",
-                         "value":400
-                        }, 
-                        {
-                         "name":"target",
-                         "type":"string",
-                         "value":"levels\/hub_world.json"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":18,
-                 "x":371,
-                 "y":439.5
-                }, 
-                {
-                 "height":18,
-                 "id":354,
-                 "name":"levels\/portal_lobby.png",
-                 "properties":[
-                        {
-                         "name":"playerX",
-                         "type":"float",
-                         "value":440
-                        }, 
-                        {
-                         "name":"playerY",
-                         "type":"float",
-                         "value":400
-                        }, 
-                        {
-                         "name":"target",
-                         "type":"string",
-                         "value":"levels\/hub_world.json"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":18,
-                 "x":371.5,
-                 "y":380
                 }],
          "opacity":1,
          "type":"objectgroup",
