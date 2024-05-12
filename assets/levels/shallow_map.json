@@ -18387,12 +18387,12 @@
                         {
                          "name":"playerX",
                          "type":"float",
-                         "value":300
+                         "value":400
                         }, 
                         {
                          "name":"playerY",
                          "type":"float",
-                         "value":300
+                         "value":440
                         }, 
                         {
                          "name":"target",
@@ -18441,12 +18441,12 @@
                         {
                          "name":"playerX",
                          "type":"float",
-                         "value":300
+                         "value":400
                         }, 
                         {
                          "name":"playerY",
                          "type":"float",
-                         "value":300
+                         "value":440
                         }, 
                         {
                          "name":"target",
@@ -18468,12 +18468,12 @@
                         {
                          "name":"playerX",
                          "type":"float",
-                         "value":300
+                         "value":400
                         }, 
                         {
                          "name":"playerY",
                          "type":"float",
-                         "value":300
+                         "value":440
                         }, 
                         {
                          "name":"target",
@@ -18516,7 +18516,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }],
