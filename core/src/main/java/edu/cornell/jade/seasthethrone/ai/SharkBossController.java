@@ -227,6 +227,10 @@ public class SharkBossController implements BossController {
         }
         break;
       case DEAD:
+        oscRingAttack.cleanup();
+        ringAttack.cleanup();
+        aimedArcAttack.cleanup();
+        unbreakableRing.cleanup();
         break;
     }
   }

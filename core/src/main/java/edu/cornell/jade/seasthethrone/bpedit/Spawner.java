@@ -2,17 +2,18 @@ package edu.cornell.jade.seasthethrone.bpedit;
 
 import java.util.Iterator;
 
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.BinaryHeap;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Queue;
-import com.badlogic.gdx.utils.Pool;
-import com.badlogic.gdx.utils.ReflectionPool;
-import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.BinaryHeap;
+import com.badlogic.gdx.utils.ObjectSet;
+import com.badlogic.gdx.utils.Pool;
+import com.badlogic.gdx.utils.Pool.Poolable;
+import com.badlogic.gdx.utils.Queue;
+
+import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
+import edu.cornell.jade.seasthethrone.gamemodel.BulletModelPool;
 import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
-import com.badlogic.gdx.utils.ObjectSet;
 
 /**
  * Stores a bullet pattern. This is sourse of bullets which, at a given an
@@ -243,22 +244,22 @@ public class Spawner {
     /**
      * Constructs a DelayedIndefiniteRotate
      *
-     * @param period  the time it takes to make one full rotation in frame ticks
-     * @param origin  the model to rotate around
+     * @param period the time it takes to make one full rotation in frame ticks
+     * @param origin the model to rotate around
      *
      */
     public DelayedIndefiniteRotate(float period, Model origin) {
       super(NEVER_REMOVE);
       this.period = period;
       this.origin = origin;
-      this.dtheta = MathUtils.PI*2/period;
+      this.dtheta = MathUtils.PI * 2 / period;
     }
 
     @Override
     public void setModel(BulletModel model) {
       super.setModel(model);
       this.radius = model.getPosition().dst(origin.getPosition());
-      this.angle = MathUtils.atan2(model.getY()-origin.getY(), model.getX()-origin.getX());
+      this.angle = MathUtils.atan2(model.getY() - origin.getY(), model.getX() - origin.getX());
     }
 
     @Override
@@ -270,9 +271,8 @@ public class Spawner {
     public void apply(float px, float py) {
       if (model == null)
         return;
-      System.out.println(model + " " + model.getPosition().dst(origin.getPosition()) + " " + radius);
 
-      angle = (angle + dtheta) % (MathUtils.PI*2);
+      angle = (angle + dtheta) % (MathUtils.PI * 2);
       float cos = MathUtils.cos(angle);
       float sin = MathUtils.sin(angle);
       model.setX(radius * cos + origin.getX());
@@ -283,7 +283,7 @@ public class Spawner {
   /**
    * A list of events and base bullet model pair.
    */
-  public static class BulletFamily extends BinaryHeap.Node {
+  public static class BulletFamily extends BinaryHeap.Node implements Poolable {
     /**
      * The <code>BulletFamily</code>'s timestamp. If the bullet pattern's timer is
      * after this timestamp, then this bullet should be spawned.
@@ -330,7 +330,7 @@ public class Spawner {
       this.delayedActions = new Array<>();
     }
 
-    /** A zero argument constructor for use with a reflection rool */
+    /** A zero argument constructor for use with a pool */
     public BulletFamily() {
       super(0);
     }
@@ -354,10 +354,6 @@ public class Spawner {
       res.bvx = bvx;
       res.bvy = bvy;
       res.radius = radius;
-
-      // TODO: remove this dynamic allocation in the render loop
-      res.effect = new Queue<Effect>();
-      res.delayedActions = new Array<>();
 
       return res;
     }
@@ -491,6 +487,12 @@ public class Spawner {
     }
 
     @Override
+    public void reset() {
+      effect.clear();
+      delayedActions.clear();
+    }
+
+    @Override
     public String toString() {
       return "BulletFamily [bvx=" + bvx + ", bvy=" + bvy + ", bx=" + bx + ", by=" + by + ", delayedActions="
           + delayedActions + ", effect=" + effect + ", radius=" + radius + ", timestamp=" + timestamp + "]";
@@ -539,6 +541,12 @@ public class Spawner {
   /** Builder for bullets */
   private BulletModel.Builder bulletBuilder;
 
+  /** cache array to store bullets to remove */
+  private Array<BulletModel> bulletRemoveCache;
+
+  /** cache array to store DelayedActions to remove */
+  private Array<DelayedAction> delayedActionRemoveCache;
+
   /**
    * The current rotation of the spawner. Rotations are relative to the spawner's
    * origin and measured in radians and applied before any translation.
@@ -553,15 +561,20 @@ public class Spawner {
   /**
    * Constructs a <code>Spawner<code>.
    *
-   * @param physicsEngine {@link PhysicsEngine} to add bullets to
-   * @param bulletBuilder a builder to create bullet models
+   * @param physicsEngine    {@link PhysicsEngine} to add bullets to
+   * @param bulletBuilder    a builder to create bullet models
+   * @param bulletFamilyPool pool for bullet families
+   * @param bulletModelPool  pool for bullet models
    */
-  public Spawner(BulletModel.Builder bulletBuilder, PhysicsEngine physicsEngine) {
+  public Spawner(BulletModel.Builder bulletBuilder, PhysicsEngine physicsEngine, BulletFamilyPool bulletFamilyPool,
+      BulletModelPool bulletModelPool) {
     timer = 0;
     curBullets = new BinaryHeap<>();
     bulletFamilyCache = new Array<>();
-    bulletFamilyPool = new ReflectionPool<>(BulletFamily.class);
-    bulletBasePool = new ReflectionPool<>(BulletModel.class);
+    bulletRemoveCache = new Array<>();
+    delayedActionRemoveCache = new Array<>();
+    this.bulletFamilyPool = bulletFamilyPool;
+    this.bulletBasePool = bulletModelPool;
     x = 0;
     y = 0;
     this.physicsEngine = physicsEngine;
@@ -575,13 +588,16 @@ public class Spawner {
   /**
    * Constructs a <code>Spawner<code> at a given position.
    *
-   * @param x             x coordinate of spawner
-   * @param y             y coordinate of spawner
-   * @param bulletBuilder a builder to create bullet models
-   * @param physicsEngine {@link PhysicsEngine} to add bullets to
+   * @param x                x coordinate of spawner
+   * @param y                y coordinate of spawner
+   * @param bulletBuilder    a builder to create bullet models
+   * @param physicsEngine    {@link PhysicsEngine} to add bullets to
+   * @param bulletFamilyPool pool for bullet families
+   * @param bulletModelPool  pool for bullet models
    */
-  public Spawner(float x, float y, BulletModel.Builder bulletBuilder, PhysicsEngine physicsEngine) {
-    this(bulletBuilder, physicsEngine);
+  public Spawner(float x, float y, BulletModel.Builder bulletBuilder, PhysicsEngine physicsEngine,
+      BulletFamilyPool bulletFamilyPool, BulletModelPool bulletModelPool) {
+    this(bulletBuilder, physicsEngine, bulletFamilyPool, bulletModelPool);
     this.x = x;
     this.y = y;
   }
@@ -699,6 +715,8 @@ public class Spawner {
         b.markRemoved(true);
       }
     }
+    physicsEngine.removeMarked();
+    freeRemovedBullets();
   }
 
   /**
@@ -708,27 +726,35 @@ public class Spawner {
     for (BulletModel b : added) {
       b.markRemoved(true);
     }
+    physicsEngine.removeMarked();
+    freeRemovedBullets();
   }
 
   /**
-   * Frees all bullets marked as removed. This should NEVER be called after a call
-   * to {@link removeFarFrom} or {@link removeAll} without a step to the physics
-   * engine in between.
+   * Frees all bullets marked as removed.
    */
   public void freeRemovedBullets() {
     for (BulletModel b : added) {
       if (b.isRemoved()) {
-        added.remove(b);
-        // TODO: hopefully there are few enough delayed actions this is fine but
+        bulletRemoveCache.add(b);
+        // hopefully there are few enough delayed actions this is fine but
         // consider optimizing
         for (DelayedAction a : delayedActionsList) {
           if (a.model == b) {
-            delayedActionsList.remove(a);
+            delayedActionRemoveCache.add(a);
           }
         }
-        bulletBasePool.free(b);
+        for (DelayedAction a : delayedActionRemoveCache) {
+          delayedActionsList.remove(a);
+        }
+        delayedActionRemoveCache.clear();
       }
     }
+    for (BulletModel b : bulletRemoveCache) {
+      added.remove(b);
+      bulletBasePool.free(b);
+    }
+    bulletRemoveCache.clear();
   }
 
   /**
@@ -737,6 +763,7 @@ public class Spawner {
   private void addBullets() {
     while (hasNext()) {
       BulletModel b = next();
+      assert b != null;
       assert !Float.isNaN(b.getX()) && !Float.isNaN(b.getY());
       physicsEngine.addObject(b);
       added.add(b);
@@ -778,11 +805,11 @@ public class Spawner {
         .setVX(f.bvx)
         .setVY(f.bvy)
         .setRadius(f.radius);
-    if (unbreakable) bulletBuilder.setType(BulletModel.Builder.Type.UNBREAKABLE);
-    BulletModel m = bulletBuilder.build();
+    if (unbreakable)
+      bulletBuilder.setType(BulletModel.Builder.Type.UNBREAKABLE);
     bulletBuilder.setType(BulletModel.Builder.Type.DEFAULT);
-    //Disabled pooling for now
-    //BulletModel m = BulletModel.construct(bulletBuilder, bulletBasePool);
+    // Disabled pooling for now
+    BulletModel m = BulletModel.construct(bulletBuilder, bulletBasePool);
 
     for (DelayedAction a : f.delayedActions) {
       a.setModel(m);
@@ -814,6 +841,7 @@ public class Spawner {
         curBullets.add(np, np.getTimestamp());
       }
       bulletFamilyCache.clear();
+      bulletFamilyPool.free(p);
 
       if (curBullets.isEmpty() || curBullets.peek().getTimestamp() > timer)
         return false;
