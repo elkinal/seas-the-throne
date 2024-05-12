@@ -346,7 +346,6 @@ public class Level {
       // get frames in animation if animated
       try {
         obs.framesInAnimation = JsonHandler.getIntProperty(obsWrapper, "framesInAnimation");
-        ;
       } catch (Error e) {
         obs.framesInAnimation = 1;
       }

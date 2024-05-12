@@ -260,20 +260,20 @@
                          "y":198
                         }, 
                         {
-                         "x":-849.636363636364,
-                         "y":198
+                         "x":-854.727272727273,
+                         "y":198.363636363636
                         }, 
                         {
-                         "x":-850.181818181818,
-                         "y":349.818181818182
+                         "x":-854.909090909091,
+                         "y":349.090909090909
                         }, 
                         {
-                         "x":-831.454545454545,
-                         "y":349.818181818182
+                         "x":-854.90909090909,
+                         "y":364.545454545455
                         }, 
                         {
-                         "x":-830.545454545455,
-                         "y":360.545454545455
+                         "x":-831.09090909091,
+                         "y":364.727272727273
                         }, 
                         {
                          "x":-820,
@@ -432,16 +432,12 @@
                          "y":100
                         }, 
                         {
-                         "x":-880,
-                         "y":220
+                         "x":-879.75,
+                         "y":218.375
                         }, 
                         {
-                         "x":-850.375,
-                         "y":219.875
-                        }, 
-                        {
-                         "x":-845,
-                         "y":219.9375
+                         "x":-844.75,
+                         "y":218.3125
                         }, 
                         {
                          "x":-844.625,
@@ -1668,6 +1664,182 @@
                  "width":39.24468,
                  "x":660.119326666667,
                  "y":817.649833333333
+                }, 
+                {
+                 "height":16.905,
+                 "id":316,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":137.674,
+                 "x":615.496333333333,
+                 "y":1168.40508166667
+                }, 
+                {
+                 "height":4.21217,
+                 "id":317,
+                 "name":"levels\/gate.png",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":false
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":49.5780333333333,
+                 "x":655.229,
+                 "y":1156.049415
+                }, 
+                {
+                 "height":76.5717,
+                 "id":326,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":27.2195,
+                 "x":781.072,
+                 "y":1364.89
+                }, 
+                {
+                 "height":57.4849,
+                 "id":327,
+                 "name":"levels\/gate.png",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":false
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":7.97197,
+                 "x":815.138,
+                 "y":1374.78
+                }, 
+                {
+                 "height":110.155,
+                 "id":328,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":3
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":37.4242,
+                 "x":944.135993333333,
+                 "y":1344.08916666667
+                }, 
+                {
+                 "height":53.2121666666667,
+                 "id":329,
+                 "name":"levels\/gate.png",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":3
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":false
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":2.24468,
+                 "x":935.619326666667,
+                 "y":1364.8165
+                }, 
+                {
+                 "height":110.155,
+                 "id":330,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":3
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":37.4242,
+                 "x":1276.5464,
+                 "y":1336.25583333333
+                }, 
+                {
+                 "height":54.5455333333332,
+                 "id":331,
+                 "name":"levels\/gate.png",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":3
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":false
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":2.24468,
+                 "x":1320.69606666667,
+                 "y":1362.31916666667
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1756,7 +1928,7 @@
                  "gid":40,
                  "height":20,
                  "id":300,
-                 "name":"fixed_clam270",
+                 "name":"fixed_clam90",
                  "properties":[
                         {
                          "name":"id",
@@ -1767,8 +1939,8 @@
                  "type":"",
                  "visible":true,
                  "width":20,
-                 "x":1020,
-                 "y":500
+                 "x":1080,
+                 "y":760
                 }, 
                 {
                  "gid":40,
@@ -1792,7 +1964,7 @@
                  "gid":40,
                  "height":20,
                  "id":302,
-                 "name":"fixed_clam270",
+                 "name":"fixed_clam90",
                  "properties":[
                         {
                          "name":"id",
@@ -1803,8 +1975,8 @@
                  "type":"",
                  "visible":true,
                  "width":20,
-                 "x":1060,
-                 "y":500
+                 "x":1000,
+                 "y":760
                 }, 
                 {
                  "gid":40,
@@ -1821,8 +1993,170 @@
                  "type":"",
                  "visible":true,
                  "width":20,
-                 "x":680,
-                 "y":680
+                 "x":590.666666666667,
+                 "y":906
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":311,
+                 "name":"fixed_clam100",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":1
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":850,
+                 "y":929.333333333333
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":312,
+                 "name":"fixed_clam0",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":1
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":409.333333333333,
+                 "y":729.333333333333
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":320,
+                 "name":"fixed_clam180",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":2
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":780,
+                 "y":1240
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":321,
+                 "name":"fixed_clam0",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":2
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":560,
+                 "y":1280
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":322,
+                 "name":"fixed_clam180",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":2
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":780,
+                 "y":1340
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":323,
+                 "name":"fixed_clam90",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":2
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":620,
+                 "y":1440
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":324,
+                 "name":"fixed_clam90",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":2
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":720,
+                 "y":1440
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":325,
+                 "name":"arc_jelly",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":3
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":1140,
+                 "y":1400
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":336,
+                 "name":"chasing_jelly",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":-1
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":1561,
+                 "y":1269.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1866,12 +2200,12 @@
                         {
                          "name":"playerX",
                          "type":"float",
-                         "value":300
+                         "value":440
                         }, 
                         {
                          "name":"playerY",
                          "type":"float",
-                         "value":300
+                         "value":400
                         }, 
                         {
                          "name":"target",
@@ -1919,7 +2253,7 @@
          "y":0
         }],
  "nextlayerid":16,
- "nextobjectid":311,
+ "nextobjectid":337,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
