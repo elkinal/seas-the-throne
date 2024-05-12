@@ -2,9 +2,11 @@ package edu.cornell.jade.seasthethrone.bpedit.patterns;
 
 import com.badlogic.gdx.math.MathUtils;
 
+import edu.cornell.jade.seasthethrone.bpedit.BulletFamilyPool;
 import edu.cornell.jade.seasthethrone.bpedit.Spawner;
 import edu.cornell.jade.seasthethrone.bpedit.Spawner.BulletFamily;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
+import edu.cornell.jade.seasthethrone.gamemodel.BulletModelPool;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
@@ -15,6 +17,12 @@ import edu.cornell.jade.seasthethrone.bpedit.Spawner.DelayedTarget;
  * {@link SpawnerFactory}.
  */
 public final class SpawnerFactory {
+
+  // FIXME: this is pretty evil just having static global pools here
+  // really we should make these all non-static and then instantiate in gameplay
+  // controller and pass stuff down
+  public static BulletModelPool bulletModelPool = new BulletModelPool(100, Integer.MAX_VALUE);
+  public static BulletFamilyPool bulletFamilyPool = new BulletFamilyPool(100, Integer.MAX_VALUE);
 
   /**
    * Constructs a single repeatedly shooting bullet whose origin
@@ -27,7 +35,7 @@ public final class SpawnerFactory {
    */
   public static Spawner constructRepeatingRing(int dups, int delay, BulletModel.Builder builder,
       PhysicsEngine physicsEngine) {
-    Spawner out = new Spawner(builder, physicsEngine);
+    Spawner out = new Spawner(builder, physicsEngine, bulletFamilyPool, bulletModelPool);
     BulletFamily f = new BulletFamily(1f, 0f, 8f, 0f, 0.5f, 0);
     f.addEffect(new Arc(0, MathUtils.PI * 2, dups));
     f.addEffect(new Periodic(delay));
@@ -52,7 +60,7 @@ public final class SpawnerFactory {
    */
   public static Spawner constructOscillatingRing(int dups, int delay, int oscilationDelay, int pauseTime, int sleepTime,
       BulletModel.Builder builder, PhysicsEngine physicsEngine) {
-    Spawner out = new Spawner(builder, physicsEngine);
+    Spawner out = new Spawner(builder, physicsEngine, bulletFamilyPool, bulletModelPool);
     int ringsPerPeriod = oscilationDelay / dups;
     for (int i = 0; i <= ringsPerPeriod; i++) {
       BulletFamily f = new BulletFamily(1f, 0f, 5f, 5f, 0.5f, i * delay);
@@ -79,7 +87,7 @@ public final class SpawnerFactory {
    */
   public static Spawner constructRepeatingLeftFacingStream(int delay, BulletModel.Builder builder,
       PhysicsEngine physicsEngine) {
-    Spawner out = new Spawner(builder, physicsEngine);
+    Spawner out = new Spawner(builder, physicsEngine, bulletFamilyPool, bulletModelPool);
     BulletFamily f = new BulletFamily(0f, 0f, 14f, 0f, 0.5f, 0);
     f.addEffect(new Periodic(delay));
     out.addFamily(f);
@@ -96,7 +104,7 @@ public final class SpawnerFactory {
    */
   public static Spawner constructTrackingRepeatingBullet(int delay, BulletModel.Builder builder,
       PhysicsEngine physicsEngine) {
-    Spawner out = new Spawner(builder, physicsEngine);
+    Spawner out = new Spawner(builder, physicsEngine, bulletFamilyPool, bulletModelPool);
     BulletFamily f = new BulletFamily(-1f, 0f, -8f, -0f, 0.5f, 0);
     f.addEffect(new Periodic(delay));
     out.addFamily(f);
@@ -118,7 +126,7 @@ public final class SpawnerFactory {
    */
   public static Spawner constructRepeatingAimedBullet(int delay, BossModel model, BulletModel.Builder builder,
       PhysicsEngine physicsEngine) {
-    Spawner out = new Spawner(builder, physicsEngine);
+    Spawner out = new Spawner(builder, physicsEngine, bulletFamilyPool, bulletModelPool);
     BulletFamily f = new BulletFamily(0f, 0f, 14f, -0f, 0.5f, 0);
     f.addEffect(new Periodic(delay));
     f.addEffect(new PlaysAttackAnimation(model));
@@ -139,7 +147,7 @@ public final class SpawnerFactory {
    */
   public static Spawner constructRepeatingDownwardsFacingArc(int dups, float centralAngle, int delay, BossModel model,
       BulletModel.Builder builder, PhysicsEngine physicsEngine) {
-    Spawner out = new Spawner(builder, physicsEngine);
+    Spawner out = new Spawner(builder, physicsEngine, bulletFamilyPool, bulletModelPool);
     BulletFamily f = new BulletFamily(0f, 0f, 0f, -8f, 0.5f, 0);
     f.addEffect(new Periodic(delay));
     f.addEffect(new PlaysAttackAnimation(model));
@@ -161,7 +169,7 @@ public final class SpawnerFactory {
    */
   public static Spawner constructRepeatingAimedArc(int dups, float centralAngle, int delay, BossModel model,
       PlayerModel player, BulletModel.Builder builder, PhysicsEngine physicsEngine) {
-    Spawner out = new Spawner(builder, physicsEngine);
+    Spawner out = new Spawner(builder, physicsEngine, bulletFamilyPool, bulletModelPool);
     BulletFamily f = new BulletFamily(0f, 0f, 0f, 8f, 0.5f, 0);
     f.addEffect(new Periodic(delay));
     f.addEffect(new TargetsModel(out, player));
@@ -181,8 +189,8 @@ public final class SpawnerFactory {
    * @param physicsEngine {@link PhysicsEngine} to add bullets to
    */
   public static Spawner constructRepeatingRandomStream(float angleRange, int delay, BulletModel.Builder builder,
-                                                           PhysicsEngine physicsEngine) {
-    Spawner out = new Spawner(builder, physicsEngine);
+      PhysicsEngine physicsEngine) {
+    Spawner out = new Spawner(builder, physicsEngine, bulletFamilyPool, bulletModelPool);
     BulletFamily f = new BulletFamily(0f, 0f, 14f, 0f, 0.5f, 0);
     f.addEffect(new Periodic(delay));
     f.addEffect(new RandomSpray(angleRange));
@@ -200,8 +208,8 @@ public final class SpawnerFactory {
    * @param physicsEngine {@link PhysicsEngine} to add bullets to
    */
   public static Spawner constructSpinningRing(int dups, int delay, BossModel model,
-                                               BulletModel.Builder builder, PhysicsEngine physicsEngine) {
-    Spawner out = new Spawner(builder, physicsEngine);
+      BulletModel.Builder builder, PhysicsEngine physicsEngine) {
+    Spawner out = new Spawner(builder, physicsEngine, bulletFamilyPool, bulletModelPool);
     BulletFamily f = new BulletFamily(4.5f, 0f, 0f, 0f, 0.5f, 0);
     f.addEffect(new Arc(0f, MathUtils.PI * 2, dups));
     f.addDelayedAction(new Spawner.DelayedIndefiniteRotate(delay, model));

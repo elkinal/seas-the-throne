@@ -836,6 +836,7 @@ public abstract class SimpleModel extends Model {
     if (body != null) {
       // Snapshot the values
       setBodyState(body);
+      releaseFixtures();
       world.destroyBody(body);
       body = null;
       bodyinfo.active = false;

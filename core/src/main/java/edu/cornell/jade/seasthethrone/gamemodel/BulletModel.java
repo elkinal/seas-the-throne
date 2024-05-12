@@ -8,10 +8,10 @@ import com.badlogic.gdx.math.Vector2;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerBulletModel;
 import edu.cornell.jade.seasthethrone.model.SimpleModel;
 import com.badlogic.gdx.utils.Pool;
-import edu.cornell.jade.seasthethrone.physics.CollisionMask;
+import com.badlogic.gdx.utils.Pool.Poolable;
+
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
-import edu.cornell.jade.seasthethrone.util.Direction;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
 /**
@@ -21,7 +21,7 @@ import edu.cornell.jade.seasthethrone.util.FilmStrip;
  *
  * <p>TODO: make this implement Fish Renderable
  */
-public class BulletModel extends SimpleModel implements Renderable {
+public class BulletModel extends SimpleModel implements Renderable, Poolable {
   /** Shape of the bullet, modeled as a circle */
   public CircleShape shape;
 
@@ -67,23 +67,22 @@ public class BulletModel extends SimpleModel implements Renderable {
    */
   public BulletModel() {
     super(0, 0);
-    shape = new CircleShape();
-    shape.setRadius(0);
     setName("bullet");
   }
 
   public static BulletModel construct(Builder builder, Pool<BulletModel> pool) {
-    // TODO: remove these allocations, pool!!!
-    // TODO: fix this so it actually works
     BulletModel res = pool.obtain();
     res.setX(builder.x);
     res.setY(builder.y);
     res.setVX(builder.vx);
     res.setVY(builder.vy);
-    res.shape = new CircleShape();
     res.shape.setRadius(builder.radius);
     res.setBodyType(BodyDef.BodyType.DynamicBody);
-    res.filmStrip = new FilmStrip(builder.FISH_TEXTURE, 1, 1);
+    res.knockbackForce = 20f;
+    res.fishTexture = builder.FISH_TEXTURE;
+    res.filmStrip.setTexture(builder.FISH_TEXTURE);
+    res.filmStrip.setRegion(0, 0, builder.FISH_TEXTURE.getWidth(), builder.FISH_TEXTURE.getHeight());
+    res.markRemoved(false);
     return res;
   }
 
@@ -170,6 +169,10 @@ public class BulletModel extends SimpleModel implements Renderable {
       else return (float) (-0.5 * Math.PI);
     } else if (vx > 0) return (float) Math.atan(vy / vx);
     else return (float) Math.atan(vy / vx) + (float) (Math.PI);
+  }
+
+  @Override
+  public void reset() {
   }
 
   public static class Builder {

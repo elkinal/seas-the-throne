@@ -180,6 +180,7 @@ abstract class JellyBossController implements BossController {
           }
         }
       case DEAD:
+        attack.cleanup();
         break;
     }
   }

@@ -1,5 +1,7 @@
 package edu.cornell.jade.seasthethrone.ui;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import edu.cornell.jade.seasthethrone.ai.BossController;
@@ -30,6 +32,8 @@ public class UIModel implements Renderable {
 
   /** The gradient for water */
   private Gradient gradient;
+  private TextureRegion foreground = new TextureRegion(new Texture("ui/enemy_hp_full.png"));
+  private TextureRegion background = new TextureRegion(new Texture("ui/enemy_hp_empty.png"));
 
   /**
    * Constructs a new UIModel. All UI elements are initially empty.
@@ -100,7 +104,7 @@ public class UIModel implements Renderable {
         this.boss.changeHP(boss.getHealth());
       }
       else{
-        EnemyHealthBar newEnemy = new EnemyHealthBar();
+        EnemyHealthBar newEnemy = new EnemyHealthBar(foreground, background);
         newEnemy.changeHP(boss.getHealth(), boss.getBoss().getFullHealth());
         newEnemy.changeEnemyPosition(boss.getBoss().getPosition());
         this.enemies.add(newEnemy);
