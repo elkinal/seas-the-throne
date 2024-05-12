@@ -48,13 +48,11 @@ public class ObstacleModel extends BoxModel implements Renderable {
     float y_offset = (WORLD_SCALE * texture.getRegionHeight() - getHeight())/ 2f;
     float x_offset = WORLD_SCALE * texture.getRegionWidth()/2f - getWidth() / 2f;
     if (animated) {
-      renderer.draw(filmStrip, pos.x, pos.y);
+      renderer.draw(filmStrip, pos.x, pos.y+y_offset);
     } else {
       renderer.draw(texture, pos.x, pos.y + y_offset);
     }
   }
-
-  @Override
   public void progressFrame() {
     FilmStrip filmStrip = getFilmStrip();
     int frame = getFrameNumber();
