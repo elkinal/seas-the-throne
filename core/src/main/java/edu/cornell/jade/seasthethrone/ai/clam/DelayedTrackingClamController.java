@@ -14,7 +14,7 @@ public final class DelayedTrackingClamController extends ClamController {
 
   private static final int DELAY = 120;
 
-  private static final float CENTRAL_ANGLE = MathUtils.PI/3;
+  private static final float CENTRAL_ANGLE = 2*MathUtils.PI/5;
 
 
 

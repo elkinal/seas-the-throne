@@ -18285,7 +18285,7 @@
                  "type":"",
                  "visible":true,
                  "width":13.8369,
-                 "x":664.185356416791,
+                 "x":662.208485802973,
                  "y":2147.31531767432
                 }, 
                 {
@@ -18309,6 +18309,116 @@
                  "width":2.21836,
                  "x":519.132199310345,
                  "y":1661.3069678698
+                }, 
+                {
+                 "height":79.7777267907268,
+                 "id":998,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":10
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":14.8765091069758,
+                 "x":497.638503252244,
+                 "y":1640.81252621548
+                }, 
+                {
+                 "height":58.1528,
+                 "id":999,
+                 "name":"levels\/gate.png",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":11
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":false
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":2.21836,
+                 "x":522.269402202112,
+                 "y":1661.72299668175
+                }, 
+                {
+                 "height":58.6615612368025,
+                 "id":1000,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":11
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":14.4455583925878,
+                 "x":541.103110286531,
+                 "y":1661.41525311256
+                }, 
+                {
+                 "height":57.4837721619244,
+                 "id":1001,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":11
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":13.116453065415,
+                 "x":1089.65767255794,
+                 "y":1660.31648880903
+                }, 
+                {
+                 "height":60.5840308974716,
+                 "id":1002,
+                 "name":"levels\/gate.png",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":11
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":false
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":2.21836,
+                 "x":1107.18479054737,
+                 "y":1656.1139306474
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -18734,6 +18844,60 @@
                  "width":20,
                  "x":408,
                  "y":1720.66666666667
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":1003,
+                 "name":"delay_track_clam90",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":11
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":957.236653178436,
+                 "y":1804.19742513881
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":1004,
+                 "name":"delay_track_clam270",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":11
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":680.510377235348,
+                 "y":1579.47077280004
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":1005,
+                 "name":"chasing_jelly",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":11
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":1039.46813110784,
+                 "y":1699.76390210153
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -18884,7 +19048,7 @@
          "y":0
         }],
  "nextlayerid":15,
- "nextobjectid":998,
+ "nextobjectid":1006,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

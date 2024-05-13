@@ -45,6 +45,7 @@ class Arc implements Effect {
         b.rotate(theta, 0, 0);
         bullets.add(b);
       }
+      orig.markInactive();
     }
   }
 }

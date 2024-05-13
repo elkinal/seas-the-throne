@@ -232,8 +232,8 @@ public final class SpawnerFactory {
                                   BossModel model, BulletModel.Builder builder, PhysicsEngine physicsEngine) {
     Spawner out = new Spawner(builder, physicsEngine, bulletFamilyPool, bulletModelPool);
     BulletFamily f = new BulletFamily(0f, 0f, 12f, 0f, 0.5f, 0);
-    f.addEffect(new Periodic(delay));
     f.addEffect(new PlaysAttackAnimation(model));
+    f.addEffect(new Periodic(delay));
     f.addEffect(new TargetsModel(out, player));
     f.addEffect(new RandomSpray(angleRange));
     out.addFamily(f);
