@@ -374,6 +374,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     private FilmStrip getHitRightAnimation;
     private FilmStrip getHitDownAnimation;
     private FilmStrip getHitUpAnimation;
+    FilmStrip spawnAnimation;
 
     /** The number of frames between animation updates */
     private int frameDelay;
@@ -506,6 +507,11 @@ public abstract class BossModel extends EnemyModel implements Renderable {
       shootDownAnimation = new FilmStrip(texture, 1, width / frameSize);
       return this;
     }
+    public Builder setSpawnAnimation (Texture texture){
+      int width = texture.getWidth();
+      spawnAnimation = new FilmStrip(texture, 1, width / frameSize);
+      return this;
+    }
 
     public Builder setFrameDelay(int frameDelay) {
       this.frameDelay = frameDelay;
@@ -543,7 +549,9 @@ public abstract class BossModel extends EnemyModel implements Renderable {
         return new HeadBossModel(this);
       } else if (type.contains("swordfish")){
         return new SwordfishBossModel(this);
-      }else {
+      } else if (type.contains("final")){
+        return new FinalBossModel(this);
+      } else {
         return new JellyBossModel(this);
       }
     }
@@ -581,6 +589,8 @@ public abstract class BossModel extends EnemyModel implements Renderable {
         return new HeadBossController (model, player, bulletBuilder, physicsEngine);
       } else if (type.equals("swordfish")) {
         return new SwordfishBossController (model, player, bulletBuilder, physicsEngine);
+      } else if (type.equals("final")){
+        return new FinalBossController(model, player, bulletBuilder, physicsEngine);
       }
       throw new RuntimeException("boss type not supported");
     }

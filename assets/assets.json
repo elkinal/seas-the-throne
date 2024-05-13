@@ -169,6 +169,20 @@
       "death": {
         "file": "bosses/swordfish/death.png"
       }
+    },
+    "final": {
+      "idle": {
+        "file": "bosses/final/idle.png"
+      },
+      "shoot": {
+        "file": "bosses/final/shoot.png"
+      },
+      "hurt": {
+        "file": "bosses/final/hurt.png"
+      },
+      "death": {
+        "file": "bosses/final/death.png"
+      }
     }
   },
   "fonts": {
@@ -183,6 +197,7 @@
     "shark": "bosses/shark/shark.json",
     "crab": "bosses/crab/crab.json",
     "head": "bosses/head/head.json",
-    "swordfish": "bosses/swordfish/swordfish.json"
+    "swordfish": "bosses/swordfish/swordfish.json",
+    "final": "bosses/final/final.json"
   }
 }
