@@ -357,7 +357,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -577,7 +577,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -617,8 +617,8 @@
                  "type":"",
                  "visible":true,
                  "width":20,
-                 "x":427.878787878788,
-                 "y":407.787878787879
+                 "x":440,
+                 "y":390
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -687,18 +687,18 @@
                 }, 
                 {
                  "height":18,
-                 "id":381,
+                 "id":382,
                  "name":"levels\/portal_lobby.png",
                  "properties":[
                         {
                          "name":"playerX",
                          "type":"float",
-                         "value":2308
+                         "value":2459
                         }, 
                         {
                          "name":"playerY",
                          "type":"float",
-                         "value":1388
+                         "value":1417
                         }, 
                         {
                          "name":"requiredCheckpoint",
@@ -714,8 +714,168 @@
                  "type":"",
                  "visible":true,
                  "width":18,
-                 "x":492,
-                 "y":320
+                 "x":490.900444852852,
+                 "y":380.842513730315
+                }, 
+                {
+                 "height":18,
+                 "id":383,
+                 "name":"levels\/portal_lobby.png",
+                 "properties":[
+                        {
+                         "name":"playerX",
+                         "type":"float",
+                         "value":2425
+                        }, 
+                        {
+                         "name":"playerY",
+                         "type":"float",
+                         "value":945
+                        }, 
+                        {
+                         "name":"requiredCheckpoint",
+                         "type":"int",
+                         "value":-1
+                        }, 
+                        {
+                         "name":"target",
+                         "type":"string",
+                         "value":"levels\/shallow_map.json"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":18,
+                 "x":490.735536679881,
+                 "y":321.133971821743
+                }, 
+                {
+                 "height":18,
+                 "id":384,
+                 "name":"levels\/portal_lobby.png",
+                 "properties":[
+                        {
+                         "name":"playerX",
+                         "type":"float",
+                         "value":725
+                        }, 
+                        {
+                         "name":"playerY",
+                         "type":"float",
+                         "value":2175
+                        }, 
+                        {
+                         "name":"requiredCheckpoint",
+                         "type":"int",
+                         "value":-1
+                        }, 
+                        {
+                         "name":"target",
+                         "type":"string",
+                         "value":"levels\/shallow_map.json"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":18,
+                 "x":430.832270635189,
+                 "y":440.631201374154
+                }, 
+                {
+                 "height":18,
+                 "id":385,
+                 "name":"levels\/portal_lobby.png",
+                 "properties":[
+                        {
+                         "name":"playerX",
+                         "type":"float",
+                         "value":1100
+                        }, 
+                        {
+                         "name":"playerY",
+                         "type":"float",
+                         "value":2465
+                        }, 
+                        {
+                         "name":"requiredCheckpoint",
+                         "type":"int",
+                         "value":-1
+                        }, 
+                        {
+                         "name":"target",
+                         "type":"string",
+                         "value":"levels\/shallow_map.json"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":18,
+                 "x":491.11989988311,
+                 "y":440.243869881914
+                }, 
+                {
+                 "height":18,
+                 "id":386,
+                 "name":"levels\/portal_lobby.png",
+                 "properties":[
+                        {
+                         "name":"playerX",
+                         "type":"float",
+                         "value":750
+                        }, 
+                        {
+                         "name":"playerY",
+                         "type":"float",
+                         "value":750
+                        }, 
+                        {
+                         "name":"requiredCheckpoint",
+                         "type":"int",
+                         "value":-1
+                        }, 
+                        {
+                         "name":"target",
+                         "type":"string",
+                         "value":"levels\/shallow_map.json"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":18,
+                 "x":371.216006202248,
+                 "y":380.341288758666
+                }, 
+                {
+                 "height":18,
+                 "id":387,
+                 "name":"levels\/portal_lobby.png",
+                 "properties":[
+                        {
+                         "name":"playerX",
+                         "type":"float",
+                         "value":873
+                        }, 
+                        {
+                         "name":"playerY",
+                         "type":"float",
+                         "value":1180
+                        }, 
+                        {
+                         "name":"requiredCheckpoint",
+                         "type":"int",
+                         "value":-1
+                        }, 
+                        {
+                         "name":"target",
+                         "type":"string",
+                         "value":"levels\/shallow_map.json"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":18,
+                 "x":370.588765675678,
+                 "y":440.381555621668
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -724,7 +884,7 @@
          "y":0
         }],
  "nextlayerid":17,
- "nextobjectid":382,
+ "nextobjectid":388,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

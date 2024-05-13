@@ -126,7 +126,8 @@ class TargetsModel implements Effect {
   public void apply(Array<BulletFamily> bullets, Pool<BulletFamily> familyPool, Pool<BulletModel> basePool) {
     float dx = model.getX() - spawner.getX();
     float dy = model.getY() - spawner.getY();
-    float theta = MathUtils.atan(dy / dx);
+    float theta = MathUtils.atan2(dy, dx);
+    System.out.println(dx + " " + dy + " " + theta);
     int numBullets = bullets.size;
     for (int i = 0; i < numBullets; i++) {
       BulletFamily orig = bullets.get(i);

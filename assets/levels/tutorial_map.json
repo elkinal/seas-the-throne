@@ -2151,7 +2151,7 @@
                         {
                          "name":"playerY",
                          "type":"float",
-                         "value":400
+                         "value":390
                         }, 
                         {
                          "name":"target",

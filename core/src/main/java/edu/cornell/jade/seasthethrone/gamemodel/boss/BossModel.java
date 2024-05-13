@@ -7,13 +7,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 
 import edu.cornell.jade.seasthethrone.ai.*;
-import edu.cornell.jade.seasthethrone.ai.clam.FixedStreamClamController;
-import edu.cornell.jade.seasthethrone.ai.clam.OscillatingRingClamController;
-import edu.cornell.jade.seasthethrone.ai.clam.RandomStreamClamController;
-import edu.cornell.jade.seasthethrone.ai.clam.UnbreakableRingClamController;
+import edu.cornell.jade.seasthethrone.ai.clam.*;
 import edu.cornell.jade.seasthethrone.ai.jelly.AimedArcJellyBossController;
 import edu.cornell.jade.seasthethrone.ai.jelly.AimedSingleBulletJellyBossController;
 import edu.cornell.jade.seasthethrone.ai.jelly.ChasingJellyBossController;
+import edu.cornell.jade.seasthethrone.ai.jelly.DelayedRotateRingJellyBossController;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
@@ -129,7 +127,11 @@ public class BossModel extends EnemyModel implements Renderable {
     isExecute = false;
     color = Color.WHITE;
     inRoom = roomId == -1;
-    setBodyType(BodyDef.BodyType.KinematicBody);
+
+    //Hack so that the chasing jellies dont shove you past walls
+    setBodyType(BodyDef.BodyType.DynamicBody);
+    setMass(1000000f);
+    setDensity(100000f);
   }
 
   @Override
@@ -514,6 +516,11 @@ public class BossModel extends EnemyModel implements Renderable {
         return new RandomStreamClamController(angle, model, player, bulletBuilder, physicsEngine);
       } else if (type.equals("unbreak_ring_clam")) {
         return new UnbreakableRingClamController(model, player, bulletBuilder, physicsEngine);
+      } else if (type.contains("delay_track_clam")) {
+        float angle = MathUtils.degRad * Float.parseFloat(type.replaceAll("[^\\d.]", ""));
+        return new DelayedTrackingClamController(angle, model, player, bulletBuilder, physicsEngine);
+      } else if (type.equals("delay_rotate_jelly")) {
+        return new DelayedRotateRingJellyBossController(model, player, bulletBuilder, physicsEngine);
       }
       return new EmptyBossController(model);
     }
