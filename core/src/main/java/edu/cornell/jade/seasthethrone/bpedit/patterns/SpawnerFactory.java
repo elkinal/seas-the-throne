@@ -96,14 +96,13 @@ public final class SpawnerFactory {
   }
 
   /**
-   * Constructs a single repeatedly shooting bullet whose origin
-   * changes based on the tracked model.
+   * Constructs a repeating stream going in both directions
    *
    * @param delay         delay in between firings
    * @param builder       a builder to create bullet models
    * @param physicsEngine {@link PhysicsEngine} to add bullets to
    */
-  public static Spawner constructTrackingRepeatingBullet(int delay, BulletModel.Builder builder,
+  public static Spawner constructRepeatingStream(int delay, BulletModel.Builder builder,
       PhysicsEngine physicsEngine) {
     Spawner out = new Spawner(builder, physicsEngine, bulletFamilyPool, bulletModelPool);
     BulletFamily f = new BulletFamily(-1f, 0f, -8f, -0f, 0.5f, 0);
@@ -214,6 +213,29 @@ public final class SpawnerFactory {
     BulletFamily f = new BulletFamily(4.5f, 0f, 0f, 0f, 0.5f, 0);
     f.addEffect(new Arc(0f, MathUtils.PI * 2, dups));
     f.addDelayedAction(new Spawner.DelayedIndefiniteRotate(delay, model));
+    out.addFamily(f);
+    return out;
+  }
+
+  /**
+   * Constructs a randomly spraying bullet stream of bullet aimed in a certain
+   * direction
+   *
+   * @param angleRange    the full angle the spawner can spray in (radians)
+   * @param delay         delay inbetween firing
+   * @param player        the player to track
+   * @param model         the boss used to play animations
+   * @param builder       a builder to create bullet models
+   * @param physicsEngine {@link PhysicsEngine} to add bullets to
+   */
+  public static Spawner constructRepeatingAimedRandomStream(float angleRange, int delay, PlayerModel player,
+                                  BossModel model, BulletModel.Builder builder, PhysicsEngine physicsEngine) {
+    Spawner out = new Spawner(builder, physicsEngine, bulletFamilyPool, bulletModelPool);
+    BulletFamily f = new BulletFamily(0f, 0f, 14f, 0f, 0.5f, 0);
+    f.addEffect(new Periodic(delay));
+    f.addEffect(new TargetsModel(out, player));
+    f.addEffect(new PlaysAttackAnimation(model));
+    f.addEffect(new RandomSpray(angleRange));
     out.addFamily(f);
     return out;
   }

@@ -81,7 +81,7 @@ public class PlayerController implements Controllable {
     this.dashToggleCounter = 0;
 
     bulletBuilder = BulletModel.Builder.newInstance()
-            .setBaseTexture(new Texture("bullet/yellowfish_east.png"))
+            .setBaseTexture(new Texture("bullet/whitefish.png"))
             .setType(BulletModel.Builder.Type.PLAYER);
   }
 

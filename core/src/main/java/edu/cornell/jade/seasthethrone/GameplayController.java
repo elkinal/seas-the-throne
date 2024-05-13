@@ -278,7 +278,7 @@ public class GameplayController implements Screen {
     // Load fish bullets builder
     fishBulletBuilder =
         BulletModel.Builder.newInstance()
-                .setBaseTexture(new Texture("bullet/yellowfish_east.png"))
+                .setBaseTexture(new Texture("bullet/whitefish.png"))
                 .setUnbreakableTexture(new Texture("bullet/urchinbullet.png"));
     // Load bosses
     bossControllers.clear();
@@ -316,6 +316,7 @@ public class GameplayController implements Screen {
               .setHealth(bossInfo.getInt("health", 0))
               .setHealthThresholds(bossInfo.get("thresholds").asIntArray())
               .setHitbox(bossInfo.get("hitbox").asFloatArray())
+              .setScale(bossInfo.getFloat("scale", 1))
               .setFalloverAnimation(new Texture("bosses/" + assetName + "/fallover.png"))
               .setShootAnimation(new Texture("bosses/" + assetName + "/shoot.png"))
               .setGetHitAnimation(new Texture("bosses/" + assetName + "/hurt.png"))

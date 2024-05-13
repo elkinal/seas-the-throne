@@ -110,6 +110,7 @@ public class BossModel extends EnemyModel implements Renderable {
     frameDelay = builder.frameDelay;
     health = builder.health;
     fullHealth = builder.health;
+    scale = builder.scale;
     deathCount = frameDelay * 16;
     attackCount = 0;
     hitCount = 0;
@@ -131,7 +132,7 @@ public class BossModel extends EnemyModel implements Renderable {
       progressFrame();
     }
     Vector2 pos = getPosition();
-    renderer.draw(filmStrip, pos.x, pos.y, 0.16f, color);
+    renderer.draw(filmStrip, pos.x, pos.y, 0.16f*scale, color);
   }
 
   /** Sets the color of this boss model */
@@ -357,6 +358,9 @@ public class BossModel extends EnemyModel implements Renderable {
     /** ID for the room this boss is in */
     private int roomId;
 
+    /** Scale of the boss size */
+    private float scale;
+
     public static Builder newInstance() {
       return new Builder();
     }
@@ -380,6 +384,11 @@ public class BossModel extends EnemyModel implements Renderable {
 
     public Builder setHealth(int health) {
       this.health = health;
+      return this;
+    }
+
+    public Builder setScale(float scale) {
+      this.scale = scale;
       return this;
     }
 
@@ -473,7 +482,7 @@ public class BossModel extends EnemyModel implements Renderable {
       } else if (type.equals("shark")) {
         return new SharkBossController(model, player, bulletBuilder, physicsEngine);
       } else if (type.equals("head")) {
-      return new SharkBossController(model, player, bulletBuilder, physicsEngine);
+      return new HeadBossController(model, player, bulletBuilder, physicsEngine);
       } else if (type.equals("aimed_jelly")) {
         return new AimedSingleBulletJellyBossController(model, player, bulletBuilder, physicsEngine);
       } else if (type.equals("arc_jelly")) {
