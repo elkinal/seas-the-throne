@@ -25,7 +25,7 @@ public class ChasingJellyBossController extends JellyBossController {
   protected void nextState() {
     switch (state) {
       case IDLE:
-        if (boss.getPosition().dst(player.getPosition()) < AGRO_DISTANCE) {
+        if (boss.getPosition().dst(player.getPosition()) < AGRO_DISTANCE && boss.isInRoom()) {
           state = State.MOVE;
         }
         break;

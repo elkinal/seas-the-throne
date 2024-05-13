@@ -18406,6 +18406,28 @@
                         {
                          "name":"id",
                          "type":"int",
+                         "value":12
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":false
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":2.21836,
+                 "x":1108.0282453382,
+                 "y":1656.1139306474
+                }, 
+                {
+                 "height":60.584,
+                 "id":1007,
+                 "name":"levels\/gate.png",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
                          "value":11
                         }, 
                         {
@@ -18417,8 +18439,74 @@
                  "type":"",
                  "visible":true,
                  "width":2.21836,
-                 "x":1107.18479054737,
-                 "y":1656.1139306474
+                 "x":1107.43347790589,
+                 "y":1656.11024763072
+                }, 
+                {
+                 "height":79.1106172533941,
+                 "id":1008,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":12
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":11.9150101525893,
+                 "x":1132.45412534543,
+                 "y":1640.12749805359
+                }, 
+                {
+                 "height":11.4344794162052,
+                 "id":1009,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":12
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":157.806988173125,
+                 "x":821.998294920857,
+                 "y":1207.51590603335
+                }, 
+                {
+                 "height":1.47096094853669,
+                 "id":1010,
+                 "name":"levels\/gate.png",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":12
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":false
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":119.123191908675,
+                 "x":821.522701074629,
+                 "y":1200.69240038692
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -18898,6 +18986,24 @@
                  "width":20,
                  "x":1039.46813110784,
                  "y":1699.76390210153
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":1006,
+                 "name":"delay_rotate_clam",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":12
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":1195.39486035965,
+                 "y":1530.57624718072
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -19048,7 +19154,7 @@
          "y":0
         }],
  "nextlayerid":15,
- "nextobjectid":1006,
+ "nextobjectid":1011,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

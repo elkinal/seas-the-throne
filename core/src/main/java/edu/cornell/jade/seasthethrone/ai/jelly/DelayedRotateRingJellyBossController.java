@@ -1,6 +1,7 @@
 package edu.cornell.jade.seasthethrone.ai.jelly;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.MathUtils;
 import edu.cornell.jade.seasthethrone.bpedit.patterns.DelayedRotateRingAttack;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
@@ -21,8 +22,8 @@ public class DelayedRotateRingJellyBossController extends JellyBossController {
 
   public DelayedRotateRingJellyBossController(BossModel boss, PlayerModel player, BulletModel.Builder builder,
                                               PhysicsEngine physicsEngine) {
-    super(boss, player, new DelayedRotateRingAttack(PERIOD, DUPS, DELAY, boss, builder, physicsEngine),
-            builder, physicsEngine);
+    super(boss, player, new DelayedRotateRingAttack(PERIOD, DUPS, DELAY, MathUtils.PI*2, boss,
+                    builder, physicsEngine), builder, physicsEngine);
     boss.setColor(new Color(0.9f, 1f, 0.20f, 1));
   }
 }

@@ -1,5 +1,6 @@
 package edu.cornell.jade.seasthethrone.bpedit.patterns;
 
+import com.badlogic.gdx.math.MathUtils;
 import edu.cornell.jade.seasthethrone.bpedit.AttackPattern;
 import edu.cornell.jade.seasthethrone.bpedit.Spawner;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
@@ -20,13 +21,15 @@ public class DelayedRotateRingAttack extends AttackPattern {
    * @param period        the length of one repeition of the attack in ticks
    * @param dups          the number of bullets in the arc
    * @param delay         the delay until the rotate
+   * @param centralAngle  the central angle in radians
    * @param model         boss shooting the bullet
    * @param builder       a builder to create bullet models
    * @param physicsEngine {@link PhysicsEngine} to add bullets to
    */
-  public DelayedRotateRingAttack(int period, int dups,  int delay, BossModel model,
+  public DelayedRotateRingAttack(int period, int dups,  int delay, float centralAngle, BossModel model,
                                  BulletModel.Builder builder, PhysicsEngine physicsEngine) {
-    this.spawner = SpawnerFactory.constructRepeatingDelayedRotateRing(dups, period, delay, builder, physicsEngine);
+    this.spawner = SpawnerFactory.constructRepeatingDelayedRotateArc(dups, centralAngle, period,
+            delay, builder, physicsEngine);
     this.model = model;
 
     this.addSpawner(spawner);

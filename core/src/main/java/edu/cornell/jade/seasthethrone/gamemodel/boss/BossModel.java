@@ -521,6 +521,8 @@ public class BossModel extends EnemyModel implements Renderable {
         return new DelayedTrackingClamController(angle, model, player, bulletBuilder, physicsEngine);
       } else if (type.equals("delay_rotate_jelly")) {
         return new DelayedRotateRingJellyBossController(model, player, bulletBuilder, physicsEngine);
+      } else if (type.equals("delay_rotate_clam")) {
+        return new DelayedRotateArcClamController(model, player, bulletBuilder, physicsEngine);
       }
       return new EmptyBossController(model);
     }
