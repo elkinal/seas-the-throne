@@ -1855,44 +1855,8 @@
                 {
                  "gid":40,
                  "height":20,
-                 "id":295,
-                 "name":"fixed_clam270",
-                 "properties":[
-                        {
-                         "name":"id",
-                         "type":"int",
-                         "value":-1
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":20,
-                 "x":1460,
-                 "y":120
-                }, 
-                {
-                 "gid":40,
-                 "height":20,
-                 "id":296,
-                 "name":"fixed_clam270",
-                 "properties":[
-                        {
-                         "name":"id",
-                         "type":"int",
-                         "value":-1
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":20,
-                 "x":1560,
-                 "y":120
-                }, 
-                {
-                 "gid":40,
-                 "height":20,
                  "id":297,
-                 "name":"fixed_clam270",
+                 "name":"clam",
                  "properties":[
                         {
                          "name":"id",
@@ -1903,32 +1867,14 @@
                  "type":"",
                  "visible":true,
                  "width":20,
-                 "x":1660,
-                 "y":120
-                }, 
-                {
-                 "gid":40,
-                 "height":20,
-                 "id":298,
-                 "name":"fixed_clam270",
-                 "properties":[
-                        {
-                         "name":"id",
-                         "type":"int",
-                         "value":-1
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":20,
-                 "x":1360,
-                 "y":120
+                 "x":1720.30097524078,
+                 "y":353.804329927468
                 }, 
                 {
                  "gid":40,
                  "height":20,
                  "id":300,
-                 "name":"fixed_clam90",
+                 "name":"fixed_clam0",
                  "properties":[
                         {
                          "name":"id",
@@ -1939,26 +1885,8 @@
                  "type":"",
                  "visible":true,
                  "width":20,
-                 "x":1080,
-                 "y":760
-                }, 
-                {
-                 "gid":40,
-                 "height":20,
-                 "id":301,
-                 "name":"fixed_clam90",
-                 "properties":[
-                        {
-                         "name":"id",
-                         "type":"int",
-                         "value":-1
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":20,
-                 "x":1040,
-                 "y":760
+                 "x":1058.29232995658,
+                 "y":561.013024602026
                 }, 
                 {
                  "gid":40,
@@ -1975,26 +1903,8 @@
                  "type":"",
                  "visible":true,
                  "width":20,
-                 "x":1000,
+                 "x":1020.50168837434,
                  "y":760
-                }, 
-                {
-                 "gid":40,
-                 "height":20,
-                 "id":309,
-                 "name":"oscillating_ring_clam",
-                 "properties":[
-                        {
-                         "name":"id",
-                         "type":"int",
-                         "value":1
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":20,
-                 "x":590.666666666667,
-                 "y":906
                 }, 
                 {
                  "gid":40,
@@ -2157,6 +2067,42 @@
                  "width":20,
                  "x":1561,
                  "y":1269.5
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":337,
+                 "name":"fixed_clam45",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":1
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":589.393676916414,
+                 "y":909.012559549589
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":338,
+                 "name":"clam",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":-1
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":1376.19483120071,
+                 "y":350.680095868273
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -2253,7 +2199,7 @@
          "y":0
         }],
  "nextlayerid":16,
- "nextobjectid":337,
+ "nextobjectid":339,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

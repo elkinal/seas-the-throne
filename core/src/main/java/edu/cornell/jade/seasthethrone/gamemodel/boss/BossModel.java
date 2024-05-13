@@ -21,6 +21,8 @@ import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
+import java.util.EmptyStackException;
+
 public class BossModel extends EnemyModel implements Renderable {
 
   /** Boss-unique move animation TODO: make left right up down filmstrips */
@@ -501,7 +503,7 @@ public class BossModel extends EnemyModel implements Renderable {
       } else if (type.equals("unbreak_ring_clam")) {
         return new UnbreakableRingClamController(model, player, bulletBuilder, physicsEngine);
       }
-      throw new RuntimeException("boss type not supported");
+      return new EmptyBossController(model);
     }
   }
 }
