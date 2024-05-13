@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 
-import com.badlogic.gdx.utils.Array;
 import edu.cornell.jade.seasthethrone.ai.*;
 import edu.cornell.jade.seasthethrone.ai.clam.FixedStreamClamController;
 import edu.cornell.jade.seasthethrone.ai.clam.OscillatingRingClamController;
@@ -16,14 +15,13 @@ import edu.cornell.jade.seasthethrone.ai.jelly.AimedArcJellyBossController;
 import edu.cornell.jade.seasthethrone.ai.jelly.AimedSingleBulletJellyBossController;
 import edu.cornell.jade.seasthethrone.ai.jelly.ChasingJellyBossController;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
-import edu.cornell.jade.seasthethrone.gamemodel.EnemyModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
-public abstract class BossModel extends EnemyModel implements Renderable {
+public class BossModel extends EnemyModel implements Renderable {
 
   /** Boss-unique move animation TODO: make left right up down filmstrips */
   private FilmStrip moveAnimation;
@@ -112,6 +110,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     frameDelay = builder.frameDelay;
     health = builder.health;
     fullHealth = builder.health;
+    scale = builder.scale;
     deathCount = frameDelay * 16;
     attackCount = 0;
     hitCount = 0;
@@ -133,7 +132,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
       progressFrame();
     }
     Vector2 pos = getPosition();
-    renderer.draw(filmStrip, pos.x, pos.y, 0.16f, color);
+    renderer.draw(filmStrip, pos.x, pos.y, 0.16f*scale, color);
   }
 
   /** Sets the color of this boss model */
@@ -359,6 +358,9 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     /** ID for the room this boss is in */
     private int roomId;
 
+    /** Scale of the boss size */
+    private float scale;
+
     public static Builder newInstance() {
       return new Builder();
     }
@@ -382,6 +384,11 @@ public abstract class BossModel extends EnemyModel implements Renderable {
 
     public Builder setHealth(int health) {
       this.health = health;
+      return this;
+    }
+
+    public Builder setScale(float scale) {
+      this.scale = scale;
       return this;
     }
 
@@ -462,15 +469,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     }
 
     public BossModel build() {
-      if (type.equals("crab")) {
-        return new CrabBossModel(this);
-      } else if (type.contains("clam")) {
-        return new ClamModel(this);
-      } else if (type.contains("shark")) {
-        return new SharkBossModel(this);
-      } else {
-        return new JellyBossModel(this);
-      }
+      return new BossModel(this);
     }
 
     public BossController buildController(
@@ -479,18 +478,17 @@ public abstract class BossModel extends EnemyModel implements Renderable {
         BulletModel.Builder bulletBuilder,
         PhysicsEngine physicsEngine) {
       if (type.equals("crab")) {
-        return new CrabBossController((CrabBossModel) model, player, bulletBuilder, physicsEngine);
+        return new CrabBossController(model, player, bulletBuilder, physicsEngine);
       } else if (type.equals("shark")) {
         return new SharkBossController(model, player, bulletBuilder, physicsEngine);
+      } else if (type.equals("head")) {
+      return new HeadBossController(model, player, bulletBuilder, physicsEngine);
       } else if (type.equals("aimed_jelly")) {
-        return new AimedSingleBulletJellyBossController(
-            (JellyBossModel) model, player, bulletBuilder, physicsEngine);
+        return new AimedSingleBulletJellyBossController(model, player, bulletBuilder, physicsEngine);
       } else if (type.equals("arc_jelly")) {
-        return new AimedArcJellyBossController(
-            (JellyBossModel) model, player, bulletBuilder, physicsEngine);
+        return new AimedArcJellyBossController(model, player, bulletBuilder, physicsEngine);
       }  else if (type.equals("chasing_jelly")) {
-        return new ChasingJellyBossController(
-                (JellyBossModel) model, player, bulletBuilder, physicsEngine);
+        return new ChasingJellyBossController(model, player, bulletBuilder, physicsEngine);
       } else if (type.contains("fixed_clam")) {
         // invarient, this is a float and won't fail
         float angle = MathUtils.degRad * Float.parseFloat(type.replaceAll("[^\\d.]", ""));

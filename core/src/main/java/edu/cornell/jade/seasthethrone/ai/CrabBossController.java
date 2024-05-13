@@ -1,11 +1,9 @@
 package edu.cornell.jade.seasthethrone.ai;
 
-import edu.cornell.jade.seasthethrone.ai.BossController;
 import edu.cornell.jade.seasthethrone.bpedit.AttackPattern;
 import edu.cornell.jade.seasthethrone.bpedit.patterns.ArcsAcrossTheTopAttack;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
-import edu.cornell.jade.seasthethrone.gamemodel.boss.CrabBossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 
@@ -52,7 +50,7 @@ public class CrabBossController implements BossController {
    * -------------------------------
    */
   /** The model being controlled */
-  private CrabBossModel boss;
+  private BossModel boss;
 
   /** The player model being attacked */
   private PlayerModel player;
@@ -75,7 +73,7 @@ public class CrabBossController implements BossController {
    * @param physicsEngine physics engine to add bullet attack to
    */
   public CrabBossController(
-      CrabBossModel boss,
+      BossModel boss,
       PlayerModel player,
       BulletModel.Builder builder,
       PhysicsEngine physicsEngine) {

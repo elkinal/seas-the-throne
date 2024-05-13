@@ -4300,8 +4300,8 @@
                  "type":"",
                  "visible":true,
                  "width":18.5,
-                 "x":2801.66666666667,
-                 "y":249.666666666667
+                 "x":2760,
+                 "y":240
                 }, 
                 {
                  "height":10,
@@ -4311,7 +4311,7 @@
                         {
                          "name":"checkpointID",
                          "type":"int",
-                         "value":2
+                         "value":6
                         }, 
                         {
                          "name":"type",
@@ -4322,8 +4322,8 @@
                  "type":"",
                  "visible":true,
                  "width":18.5,
-                 "x":750.25,
-                 "y":758
+                 "x":750.916666666667,
+                 "y":740
                 }, 
                 {
                  "height":7.5,
@@ -4343,23 +4343,6 @@
                  "y":412.083333333333
                 }, 
                 {
-                 "height":7.5,
-                 "id":324,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"healthpack"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":10,
-                 "x":2443.16666666667,
-                 "y":964.25
-                }, 
-                {
                  "height":10,
                  "id":325,
                  "name":"",
@@ -4367,7 +4350,7 @@
                         {
                          "name":"checkpointID",
                          "type":"int",
-                         "value":0
+                         "value":2
                         }, 
                         {
                          "name":"type",
@@ -4378,18 +4361,18 @@
                  "type":"",
                  "visible":true,
                  "width":18.5,
-                 "x":2480,
-                 "y":1440
+                 "x":2540,
+                 "y":1400
                 }, 
                 {
                  "height":10,
-                 "id":326,
+                 "id":965,
                  "name":"",
                  "properties":[
                         {
                          "name":"checkpointID",
                          "type":"int",
-                         "value":0
+                         "value":1
                         }, 
                         {
                          "name":"type",
@@ -4400,12 +4383,56 @@
                  "type":"",
                  "visible":true,
                  "width":18.5,
-                 "x":2360,
-                 "y":1360
+                 "x":2434.41666666667,
+                 "y":941.166666666667
+                }, 
+                {
+                 "height":10,
+                 "id":966,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"checkpointID",
+                         "type":"int",
+                         "value":3
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"checkpoint"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":18.5,
+                 "x":1100.5,
+                 "y":2455.25
+                }, 
+                {
+                 "height":10,
+                 "id":967,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"checkpointID",
+                         "type":"int",
+                         "value":4
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"checkpoint"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":18.5,
+                 "x":729.083333333333,
+                 "y":2169
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -17982,7 +18009,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -18434,33 +18461,6 @@
                  "y":478.966
                 }, 
                 {
-                 "height":20,
-                 "id":174,
-                 "name":"levels\/portal.png",
-                 "properties":[
-                        {
-                         "name":"playerX",
-                         "type":"float",
-                         "value":400
-                        }, 
-                        {
-                         "name":"playerY",
-                         "type":"float",
-                         "value":440
-                        }, 
-                        {
-                         "name":"target",
-                         "type":"string",
-                         "value":"levels\/hub_world.json"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":20,
-                 "x":980,
-                 "y":1240
-                }, 
-                {
                  "height":18.6875,
                  "id":175,
                  "name":"",
@@ -18513,6 +18513,28 @@
                  "width":20.102272727273,
                  "x":2295.40340909091,
                  "y":1312.47443181818
+                }, 
+                {
+                 "height":10,
+                 "id":968,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"checkpointID",
+                         "type":"int",
+                         "value":5
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"checkpoint"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":18.5,
+                 "x":950.083333333333,
+                 "y":1224.33333333333
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -18521,7 +18543,7 @@
          "y":0
         }],
  "nextlayerid":15,
- "nextobjectid":959,
+ "nextobjectid":969,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
