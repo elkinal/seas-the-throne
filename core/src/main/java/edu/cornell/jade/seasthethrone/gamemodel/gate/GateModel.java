@@ -130,6 +130,9 @@ public class GateModel extends ComplexModel implements Renderable {
                 sensor.setRaised(false);
             }
         }
+        for (BossModel b : bosses) {
+            b.setInRoom(true);
+        }
     }
 
     /** Resets all sensors and walls to inactive */
@@ -140,6 +143,9 @@ public class GateModel extends ComplexModel implements Renderable {
         }
         for (GateSensorModel sensor : sensors) {
             sensor.setRaised(false);
+        }
+        for (BossModel b : bosses) {
+            b.setInRoom(false);
         }
     }
 

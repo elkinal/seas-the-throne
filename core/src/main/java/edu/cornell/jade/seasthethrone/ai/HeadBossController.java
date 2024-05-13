@@ -174,7 +174,7 @@ public class HeadBossController implements BossController {
 
     switch (state) {
       case IDLE:
-        if (boss.getPosition().dst(player.getPosition()) < AGRO_DISTANCE) {
+        if (boss.getPosition().dst(player.getPosition()) < AGRO_DISTANCE && boss.isInRoom()) {
           state = State.RANDOM_ATTACK;
           timer = rand.nextInt(360, 480);
         }

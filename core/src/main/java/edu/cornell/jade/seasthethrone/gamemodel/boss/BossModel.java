@@ -94,6 +94,9 @@ public class BossModel extends EnemyModel implements Renderable {
   /** Tint of the boss */
   private Color color;
 
+  /** If the player is in the room as the boss */
+  private boolean inRoom;
+
   /**
    * {@link BossModel} constructor using an x and y coordinate.
    *
@@ -125,6 +128,7 @@ public class BossModel extends EnemyModel implements Renderable {
     thresholdPointer = 0;
     isExecute = false;
     color = Color.WHITE;
+    inRoom = roomId == -1;
     setBodyType(BodyDef.BodyType.KinematicBody);
   }
 
@@ -141,6 +145,14 @@ public class BossModel extends EnemyModel implements Renderable {
   public void setColor(Color color) {
     this.color = color;
   }
+
+  /** Sets if the boss is in the same room as the player */
+  public void setInRoom(boolean value) {
+    inRoom = value;
+  }
+
+  /** Returns whether the boss is in the same room as the player */
+  public boolean isInRoom() { return inRoom; }
 
   /**
    * Returns whether the boss is finished playing its death animation.

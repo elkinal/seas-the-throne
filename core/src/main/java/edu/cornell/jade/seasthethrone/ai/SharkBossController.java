@@ -172,7 +172,7 @@ public class SharkBossController implements BossController {
 
     switch (state) {
       case IDLE:
-        if (boss.getPosition().dst(player.getPosition()) < AGRO_DISTANCE) {
+        if (boss.getPosition().dst(player.getPosition()) < AGRO_DISTANCE && boss.isInRoom()) {
           state = State.ARC_ATTACK;
           timer = rand.nextInt(240, 480);
         }

@@ -56,7 +56,7 @@ abstract class ClamController implements BossController {
   public void update(float delta) {
     switch (state) {
       case IDLE:
-        if (boss.getPosition().dst(player.getPosition()) < AGRO_DISTANCE) {
+        if (boss.getPosition().dst(player.getPosition()) < AGRO_DISTANCE && boss.isInRoom()) {
           state = State.ATTACK;
         }
         break;
