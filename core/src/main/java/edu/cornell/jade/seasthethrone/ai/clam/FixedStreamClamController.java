@@ -12,6 +12,6 @@ public final class FixedStreamClamController extends ClamController {
 
   public FixedStreamClamController(float angle, BossModel boss, PlayerModel player, BulletModel.Builder builder,
       PhysicsEngine physicsEngine) {
-    super(boss, new FixedAngleStreamAttack(angle, PERIOD, boss, player, builder, physicsEngine), player);
+    super(boss, new FixedAngleStreamAttack(angle, PERIOD, false, boss, player, builder, physicsEngine), player);
   }
 }

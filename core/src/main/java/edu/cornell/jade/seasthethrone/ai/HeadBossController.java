@@ -13,7 +13,7 @@ import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 
 import java.util.Random;
 
-/** A controller defining the bahavior of a shark boss. */
+/** A controller defining the behavior of a head boss. */
 public class HeadBossController implements BossController {
   /** Enumeration of AI states. */
   private static enum State {

@@ -17594,6 +17594,17 @@
                  "width":6,
                  "x":1269.66666666667,
                  "y":2164.83333333333
+                }, 
+                {
+                 "height":18,
+                 "id":1015,
+                 "name":"levels\/pinkdemonstatue.png",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":29,
+                 "x":1031.73726090667,
+                 "y":2301.8589788644
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -18534,8 +18545,8 @@
                  "type":"",
                  "visible":true,
                  "width":20,
-                 "x":800,
-                 "y":1020
+                 "x":818.940379863822,
+                 "y":1027.49542616798
                 }, 
                 {
                  "gid":40,
@@ -19004,6 +19015,60 @@
                  "width":20,
                  "x":1195.39486035965,
                  "y":1530.57624718072
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":1011,
+                 "name":"fixed_unbreak_clam45",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":12
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":899.958038500642,
+                 "y":1426.34698630769
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":1012,
+                 "name":"fixed_unbreak_clam225",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":12
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":1180.89764864711,
+                 "y":1288.09422694285
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":1014,
+                 "name":"aimed_jelly",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":12
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":920.023154103422,
+                 "y":1267.33470542835
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -19154,7 +19219,7 @@
          "y":0
         }],
  "nextlayerid":15,
- "nextobjectid":1011,
+ "nextobjectid":1016,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

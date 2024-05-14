@@ -523,6 +523,9 @@ public class BossModel extends EnemyModel implements Renderable {
         return new DelayedRotateRingJellyBossController(model, player, bulletBuilder, physicsEngine);
       } else if (type.equals("delay_rotate_clam")) {
         return new DelayedRotateArcClamController(model, player, bulletBuilder, physicsEngine);
+      } else if (type.contains("fixed_unbreak_clam")) {
+        float angle = MathUtils.degRad * Float.parseFloat(type.replaceAll("[^\\d.]", ""));
+        return new UnbreakableFixedStreamClamController(angle, model, player, bulletBuilder, physicsEngine);
       }
       return new EmptyBossController(model);
     }

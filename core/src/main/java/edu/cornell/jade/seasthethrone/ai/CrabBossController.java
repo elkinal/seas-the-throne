@@ -1,12 +1,16 @@
 package edu.cornell.jade.seasthethrone.ai;
 
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import edu.cornell.jade.seasthethrone.bpedit.AttackPattern;
-import edu.cornell.jade.seasthethrone.bpedit.patterns.ArcsAcrossTheTopAttack;
+import edu.cornell.jade.seasthethrone.bpedit.patterns.*;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 
+import java.util.Random;
 /** A controller defining the bahavior of a crab boss. */
 public class CrabBossController implements BossController {
   /** Enumeration of AI states. */
@@ -73,24 +77,24 @@ public class CrabBossController implements BossController {
    * @param physicsEngine physics engine to add bullet attack to
    */
   public CrabBossController(
-      BossModel boss,
-      PlayerModel player,
-      BulletModel.Builder builder,
-      PhysicsEngine physicsEngine) {
+          BossModel boss,
+          PlayerModel player,
+          BulletModel.Builder builder,
+          PhysicsEngine physicsEngine) {
     this.boss = boss;
     this.player = player;
     this.state = State.IDLE;
 
     this.attack1 =
-        new ArcsAcrossTheTopAttack(
-            boss.getX() + X_OFFSET,
-            boss.getY() + Y_OFFSET,
-            ARC_LINE_LENGTH,
-            ARC_PERIOD,
-            ARC_SHOTS,
-            boss,
-            builder,
-            physicsEngine);
+            new ArcsAcrossTheTopAttack(
+                    boss.getX() + X_OFFSET,
+                    boss.getY() + Y_OFFSET,
+                    ARC_LINE_LENGTH,
+                    ARC_PERIOD,
+                    ARC_SHOTS,
+                    boss,
+                    builder,
+                    physicsEngine);
   }
 
   @Override
