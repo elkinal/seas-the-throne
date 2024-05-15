@@ -24,12 +24,22 @@ import java.util.EmptyStackException;
 public class BossModel extends EnemyModel implements Renderable {
 
   /** Boss-unique move animation TODO: make left right up down filmstrips */
-  private FilmStrip moveAnimation;
+  protected FilmStrip moveAnimation;
 
-  private FilmStrip falloverAnimation;
-  private FilmStrip getHitAnimation;
-  private FilmStrip deathAnimation;
-  private FilmStrip attackAnimation;
+  protected FilmStrip falloverAnimation;
+  protected FilmStrip getHitAnimation;
+  protected FilmStrip deathAnimation;
+  protected FilmStrip attackAnimation;
+  protected FilmStrip attackRightAnimation;
+  protected FilmStrip attackUpAnimation;
+  protected FilmStrip attackDownAnimation;
+  protected FilmStrip shootAnimation;
+  protected FilmStrip shootRightAnimation;
+  protected FilmStrip shootUpAnimation;
+  protected FilmStrip shootDownAnimation;
+  protected FilmStrip getHitRightAnimation;
+  protected FilmStrip getHitDownAnimation;
+  protected FilmStrip getHitUpAnimation;
 
   /** The current filmstrip being used */
   public FilmStrip filmStrip;
@@ -46,10 +56,10 @@ public class BossModel extends EnemyModel implements Renderable {
   protected float scale;
 
   /** Flag for executing the boss */
-  private boolean isExecute;
+  protected boolean isExecute;
 
   /** Flag for the boss attack */
-  private int attackCount;
+  protected int attackCount;
 
   /** Array indicating polygon hitbox */
   protected float[] hitbox;
@@ -64,10 +74,10 @@ public class BossModel extends EnemyModel implements Renderable {
   protected int health;
 
   /** Hit animation countdown */
-  private int hitCount;
+  protected int hitCount;
 
   /** Death animation countdown */
-  private int deathCount;
+  protected int deathCount;
 
   /** Execute animation countdown */
   private int executeCount;
@@ -108,6 +118,17 @@ public class BossModel extends EnemyModel implements Renderable {
     falloverAnimation = builder.falloverAnimation;
     deathAnimation = builder.deathAnimation;
     attackAnimation = builder.attackAnimation;
+    shootAnimation = builder.shootAnimation;
+    attackRightAnimation = builder.attackRightAnimation;
+    attackUpAnimation = builder.attackUpAnimation;
+    attackDownAnimation = builder.attackDownAnimation;
+    getHitRightAnimation = builder.getHitRightAnimation;
+    getHitUpAnimation = builder.getHitUpAnimation;
+    getHitDownAnimation = builder.getHitDownAnimation;
+    shootRightAnimation = builder.shootRightAnimation;
+    shootUpAnimation = builder.shootUpAnimation;
+    shootDownAnimation = builder.shootDownAnimation;
+
     this.filmStrip = shootAnimation;
     frameCounter = 1;
     frameDelay = builder.frameDelay;
@@ -165,7 +186,7 @@ public class BossModel extends EnemyModel implements Renderable {
     return deathCount;
   }
 
-  private boolean isHit() {
+  boolean isHit() {
     if (hitCount > 0) {
       return true;
     } else {
@@ -336,6 +357,7 @@ public class BossModel extends EnemyModel implements Renderable {
     if (isDead()) setActive(false);
   }
 
+
   public static class Builder {
     /** boss x position */
     private float x;
@@ -358,6 +380,16 @@ public class BossModel extends EnemyModel implements Renderable {
     private FilmStrip shootAnimation;
     private FilmStrip idleAnimation;
     private FilmStrip attackAnimation;
+    private FilmStrip attackRightAnimation;
+    private FilmStrip attackUpAnimation;
+    private FilmStrip attackDownAnimation;
+    private FilmStrip shootRightAnimation;
+    private FilmStrip shootUpAnimation;
+    private FilmStrip shootDownAnimation;
+    private FilmStrip getHitRightAnimation;
+    private FilmStrip getHitDownAnimation;
+    private FilmStrip getHitUpAnimation;
+    FilmStrip spawnAnimation;
 
     /** The number of frames between animation updates */
     private int frameDelay;
@@ -424,14 +456,12 @@ public class BossModel extends EnemyModel implements Renderable {
     public Builder setGetHitAnimation(Texture texture) {
       int width = texture.getWidth();
       getHitAnimation = new FilmStrip(texture, 1, width / frameSize);
-      ;
       return this;
     }
 
     public Builder setMoveAnimation(Texture texture) {
       int width = texture.getWidth();
       moveAnimation = new FilmStrip(texture, 1, width / frameSize);
-      ;
       return this;
     }
 
@@ -441,21 +471,68 @@ public class BossModel extends EnemyModel implements Renderable {
       if (type.equals("crab")) {
         falloverAnimation = new FilmStrip(texture, 1, 16);
       }
-      ;
       return this;
     }
 
     public Builder setDeathAnimation(Texture texture) {
       int width = texture.getWidth();
       deathAnimation = new FilmStrip(texture, 1, width / frameSize);
-      ;
       return this;
     }
 
     public Builder setAttackAnimation(Texture texture) {
       int width = texture.getWidth();
       attackAnimation = new FilmStrip(texture, 1, width / frameSize);
-      ;
+      return this;
+    }
+    public Builder setAttackRightAnimation(Texture texture) {
+      int width = texture.getWidth();
+      attackRightAnimation = new FilmStrip(texture, 1, width / frameSize);
+      return this;
+    }
+    public Builder setAttackUpAnimation(Texture texture) {
+      int width = texture.getWidth();
+      attackUpAnimation = new FilmStrip(texture, 1, width / frameSize);
+      return this;
+    }
+    public Builder setAttackDownAnimation(Texture texture) {
+      int width = texture.getWidth();
+      attackDownAnimation = new FilmStrip(texture, 1, width / frameSize);
+      return this;
+    }
+    public Builder setGetHitRightAnimation(Texture texture) {
+      int width = texture.getWidth();
+      getHitRightAnimation = new FilmStrip(texture, 1, width / frameSize);
+      return this;
+    }
+    public Builder setGetHitUpAnimation(Texture texture) {
+      int width = texture.getWidth();
+      getHitUpAnimation = new FilmStrip(texture, 1, width / frameSize);
+      return this;
+    }
+    public Builder setGetHitDownAnimation(Texture texture) {
+      int width = texture.getWidth();
+      getHitDownAnimation = new FilmStrip(texture, 1, width / frameSize);
+      return this;
+    }
+    public Builder setShootRightAnimation(Texture texture) {
+      int width = texture.getWidth();
+      shootRightAnimation = new FilmStrip(texture, 1, width / frameSize);
+      return this;
+    }
+    public Builder setShootUpAnimation(Texture texture) {
+      int width = texture.getWidth();
+      shootUpAnimation = new FilmStrip(texture, 1, width / frameSize);
+      return this;
+    }
+    public Builder setShootDownAnimation(Texture texture) {
+      int width = texture.getWidth();
+      shootDownAnimation = new FilmStrip(texture, 1, width / frameSize);
+      return this;
+    }
+    public Builder setSpawnAnimation (Texture texture){
+      int width = texture.getWidth();
+      spawnAnimation = new FilmStrip(texture, 1, width / frameSize);
       return this;
     }
 
@@ -485,7 +562,14 @@ public class BossModel extends EnemyModel implements Renderable {
     }
 
     public BossModel build() {
-      return new BossModel(this);
+      if (type.contains("swordfish")){
+        return new SwordfishBossModel(this);
+      } else if (type.contains("final")){
+        return new FinalBossModel(this);
+      } else {
+        // Other bosses don't need specific functionality
+        return new BossModel(this);
+      }
     }
 
     public BossController buildController(
@@ -499,6 +583,10 @@ public class BossModel extends EnemyModel implements Renderable {
         return new SharkBossController(model, player, bulletBuilder, physicsEngine);
       } else if (type.equals("head")) {
       return new HeadBossController(model, player, bulletBuilder, physicsEngine);
+      } else if (type.equals("swordfish")) {
+        return new SwordfishBossController (model, player, bulletBuilder, physicsEngine);
+      } else if (type.equals("final")){
+        return new FinalBossController(model, player, bulletBuilder, physicsEngine);
       } else if (type.equals("aimed_jelly")) {
         return new AimedSingleBulletJellyBossController(model, player, bulletBuilder, physicsEngine);
       } else if (type.equals("arc_jelly")) {
