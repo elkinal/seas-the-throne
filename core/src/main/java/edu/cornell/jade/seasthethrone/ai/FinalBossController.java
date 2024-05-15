@@ -27,9 +27,14 @@ public class FinalBossController implements BossController {
     F_AIMED_SINGLE,
 
     /** SECOND PHASE STATES: */
-    S_DELAY_SPIRAL_ROTATE,
+    CHASE_PLAYER,
+    RESET,
+    S_DELAY_ROTATE_RING,
+    S_DELAY_ROTATE_SPIRAL,
     S_DELAY_SPEED_RING,
     S_DELAY_SLOW_RING,
+    S_ALTERNATE_RING,
+    S_RING_STACK,
     /** The boss is dead */
     DEAD,
   }
@@ -43,7 +48,7 @@ public class FinalBossController implements BossController {
   private static float AGRO_DISTANCE = 20f;
 
   /** The minimum distance the boss must move during a movement cycle. */
-  private static float MIN_MOVE_DIST = 30f;
+  private static float MIN_MOVE_DIST = 25f;
 
   /*
    * -------------------------------
@@ -94,14 +99,22 @@ public class FinalBossController implements BossController {
 
   /** The unbreakable spinning ring  */
   private final AttackPattern unbreakableRing;
+  private final AttackPattern unbreakableAimedSingleAttack;
   private final AttackPattern oscRingAttack;
-
-  /** The unbreakable spiral with a delayed rotate attack */
   private final AttackPattern unbreakableDelayRotateSpiralAttack;
+  private final AttackPattern unbreakableHomingSpeedAttack;
 
   private final AttackPattern unbreakableDelaySpeedRingAttack;
   private final AttackPattern unbreakableDelaySlowRingAttack;
+  private final AttackPattern aimedRandomAttack;
   private final AttackPattern alternatingRingAttack;
+  private final AttackPattern ringStack1Attack;
+  private final AttackPattern ringStack2Attack;
+  private final AttackPattern ringStack3Attack;
+  private final AttackPattern denseRingAttack;
+  private final AttackPattern homingSpeedAttack;
+  private final AttackPattern homingRingAttack;
+
 
 
   /**
@@ -121,10 +134,10 @@ public class FinalBossController implements BossController {
     this.player = player;
     this.state = State.IDLE;
 
-    this.firstThreshold = true;
+    //this.firstThreshold = true;
     this.goalPos = new Vector2();
     this.rand = new Random();
-    this.bounds = new Rectangle(boss.getX() - 25, boss.getY() - 15, 50, 40);
+    this.bounds = new Rectangle(boss.getX() - 20, boss.getY() - 25, 40, 35);
 
     this.aimedArcAttack = new AimedArcAttack(40, boss, player, builder, physicsEngine);
     this.fastRingAttack = new RingAttack(boss, 100, 13, 18f, false, builder, physicsEngine);
@@ -132,11 +145,17 @@ public class FinalBossController implements BossController {
             true, builder, physicsEngine);
     this.delayRotateRingAttack = new DelayedRotateRingAttack(70, 19, 110, MathUtils.PI*2,
             -MathUtils.PI/3, boss, builder, physicsEngine);
-    this.aimedSingleAttack = new SingleBulletAttack(15, boss, builder, physicsEngine);
+    this.aimedSingleAttack = new SingleBulletAttack(15, false, boss, builder, physicsEngine);
 
+    this.homingSpeedAttack = new DelayedTrackingSpeedArcAttack(70, 6, 2*MathUtils.PI, 0,
+            50, boss, player, builder, physicsEngine);
+    this.unbreakableHomingSpeedAttack = new UnbreakableDelayedTrackingSpeedArcAttack(70, 3, 2*MathUtils.PI, 0,
+            50, boss, player, builder, physicsEngine);
+    this.homingRingAttack = new DelayedTrackingArcAttack(100, 11, 2* MathUtils.PI, 0,
+            50, boss, player, builder, physicsEngine);
 
     this.oscRingAttack = new OscillatingRingAttack(boss, player, builder, physicsEngine);
-    this.unbreakableDelayRotateSpiralAttack = new DelayedRotateSpiralAttack(boss, 7, 25, 100,
+    this.unbreakableDelayRotateSpiralAttack = new DelayedRotateSpiralAttack(boss, 7, 28, 100,
             3*MathUtils.PI/4, true, builder, physicsEngine);
     this.unbreakableDelaySpeedRingAttack = new DelayedSpeedRingAttack(120, 15, 70,
       2*MathUtils.PI, 6f, 24f, true, boss, builder, physicsEngine);
@@ -144,9 +163,17 @@ public class FinalBossController implements BossController {
             2*MathUtils.PI, 18f, 6f, true, boss, builder, physicsEngine);
     this.alternatingRingAttack = new AlternatingRingAttack(boss, 50, 15, 9f,
             false, builder, physicsEngine);
+    this.aimedRandomAttack = new AimedRandomStreamAttack(MathUtils.PI/5, 10, boss,
+            player, builder, physicsEngine);
 
+    this.ringStack1Attack = new RingAttack(boss, 100, 11, 10f, false, builder, physicsEngine);
+    this.ringStack2Attack = new RingAttack(boss, 100, 11, 11f, false, builder, physicsEngine);
+    this.ringStack3Attack = new RingAttack(boss, 100, 11, 12f, false, builder, physicsEngine);
+    this.denseRingAttack = new RingAttack(boss, 70, 35, 10f, false, builder, physicsEngine);
+    this.unbreakableAimedSingleAttack = new SingleBulletAttack(20, true, boss,
+            builder, physicsEngine);
 
-    this.unbreakableRing = new UnbreakableSpinningRing(5f,9, 150, boss, builder, physicsEngine);
+    this.unbreakableRing = new UnbreakableSpinningRing(7f,13, 150, boss, builder, physicsEngine);
 
   }
 
@@ -181,11 +208,26 @@ public class FinalBossController implements BossController {
 
   /** Cleans up this boss's attack pattern */
   public void dispose() {
-//    unbreakableRingAttack.cleanup();
-//    unbreakableSpiralAttack.cleanup();
-//    unbreakableRing.cleanup();
-//    aimedRandomAttack.cleanup();
-//    ringAttack.cleanup();
+    aimedArcAttack.cleanup();
+    fastRingAttack.cleanup();
+    slowUnbreakableRingAttack.cleanup();
+    delayRotateRingAttack.cleanup();
+    aimedSingleAttack.cleanup();
+    homingSpeedAttack.cleanup();
+    unbreakableHomingSpeedAttack.cleanup();
+    homingRingAttack.cleanup();
+    oscRingAttack.cleanup();
+    unbreakableDelayRotateSpiralAttack.cleanup();
+    unbreakableDelaySpeedRingAttack.cleanup();
+    unbreakableDelaySlowRingAttack.cleanup();
+    alternatingRingAttack.cleanup();
+    aimedRandomAttack.cleanup();
+    ringStack1Attack.cleanup();
+    ringStack2Attack.cleanup();
+    ringStack3Attack.cleanup();
+    denseRingAttack.cleanup();
+    unbreakableAimedSingleAttack.cleanup();
+    unbreakableRing.cleanup();
   }
 
   /** Returns the boss of this controller */
@@ -212,19 +254,20 @@ public class FinalBossController implements BossController {
       if (firstThreshold) {
         firstThreshold = false;
         state = State.PHASE_SWITCH;
-        timer = 50;
+        timer = 150;
+        boss.launchPhaseTwo();
       } else {
-        state = State.S_DELAY_SLOW_RING;
+        state = State.CHASE_PLAYER;
+        goalPos.set(player.getX(), player.getY());
+        boss.setLinearVelocity(boss.getPosition().sub(goalPos).nor().scl(-17));
       }
     }
 
     switch (state) {
       case IDLE:
         if (boss.getPosition().dst(player.getPosition()) < AGRO_DISTANCE && boss.isInRoom()) {
-          state = State.PHASE_SWITCH;
-          boss.launchPhaseTwo();
-//          state = State.F_START;
-//          timer = 300;
+          state = State.F_START;
+          timer = 300;
         }
         break;
       case F_START:
@@ -245,17 +288,48 @@ public class FinalBossController implements BossController {
           timer = rand.nextInt(400, 800);
         }
         break;
+      case PHASE_SWITCH:
+        if (timer <= 0) {
+          state = State.S_DELAY_ROTATE_RING;
+          timer = rand.nextInt(300, 500);
+        }
+        break;
+      case S_RING_STACK, S_ALTERNATE_RING, S_DELAY_ROTATE_RING,
+              S_DELAY_ROTATE_SPIRAL, S_DELAY_SLOW_RING, S_DELAY_SPEED_RING:
+        if (timer <= 0) {
+          state = chooseRandomState();
+          if (rand.nextInt(0, 3) <= 1) findNewGoalPos(6);
+          timer = rand.nextInt(350, 800);
+        }
+        break;
+      case CHASE_PLAYER:
+        if (goalPosReached()) {
+          state = State.RESET;
+          goalPos.set(bounds.getX() + bounds.getWidth() / 2, bounds.getY() + bounds.getHeight() / 2);
+          boss.setLinearVelocity(boss.getPosition().sub(goalPos).nor().scl(-7));
+        }
+        break;
+      case RESET:
+        if (goalPosReached()) {
+          boss.setVX(0);
+          boss.setVY(0);
+          state = chooseRandomState();
+          timer = rand.nextInt(350, 800);
+        }
+        break;
       case DEAD:
         dispose();
         break;
+    }
+    if (goalPosReached()) {
+      boss.setVX(0);
+      boss.setVY(0);
     }
   }
 
   /** Performs actions based on the controller state */
   private void act() {
     switch (state) {
-      case IDLE:
-        break;
       case F_START:
         aimedArcAttack.update(player.getX(), player.getY());
         if (timer < 100) slowUnbreakableRingAttack.update(player.getX(), player.getY());
@@ -272,20 +346,59 @@ public class FinalBossController implements BossController {
         aimedSingleAttack.update(player.getX(), player.getY());
         timer -=1;
         break;
-      case S_DELAY_SPIRAL_ROTATE:
+      case S_DELAY_ROTATE_SPIRAL:
         unbreakableDelayRotateSpiralAttack.update(player.getX(), player.getY());
+        if (timer < 200) homingSpeedAttack.update(player.getX(), player.getY());
+        timer -=1;
         break;
       case S_DELAY_SPEED_RING:
         unbreakableDelaySpeedRingAttack.update(player.getX(), player.getY());
+        oscRingAttack.update(player.getX(), player.getY());
+        aimedSingleAttack.update(player.getX(), player.getY());
+        timer -=1;
         break;
       case S_DELAY_SLOW_RING:
-//        unbreakableDelaySlowRingAttack.update(player.getX(), player.getY());
-        alternatingRingAttack.update(player.getX(), player.getY());
+        unbreakableDelaySlowRingAttack.update(player.getX(), player.getY());
+        homingRingAttack.update(player.getX(), player.getY());
+        timer -=1;
         break;
-      case DEAD:
+      case S_RING_STACK:
+        ringStack1Attack.update(player.getX(), player.getY());
+        ringStack2Attack.update(player.getX(), player.getY());
+        ringStack3Attack.update(player.getX(), player.getY());
+        denseRingAttack.update(player.getX(), player.getY());
+        unbreakableAimedSingleAttack.update(player.getX(), player.getY());
+        timer -=1;
+        break;
+      case S_DELAY_ROTATE_RING:
+        delayRotateRingAttack.update(player.getX(), player.getY());
+        aimedRandomAttack.update(player.getX(), player.getY());
+        if (timer < 200) fastRingAttack.update(player.getX(), player.getY());
+        timer -=1;
+        break;
+      case S_ALTERNATE_RING:
+        alternatingRingAttack.update(player.getX(), player.getY());
+        if (timer < 300) unbreakableHomingSpeedAttack.update(player.getX(), player.getY());
+        timer -=1;
+        break;
+      default:
         break;
     }
-    if (state != State.IDLE && state != State.DEAD) unbreakableRing.update(player.getX(), player.getY());
+    if (state != State.IDLE && state != State.DEAD && state != State.F_START && state
+            != State.F_AIMED_ARC && state != State.F_AIMED_SINGLE)
+      unbreakableRing.update(player.getX(), player.getY());
+  }
+
+  /** randomly chooses the next state (for phase two boss) */
+  private State chooseRandomState() {
+    return switch (rand.nextInt(0, 6)) {
+      case 0 -> State.S_DELAY_ROTATE_RING;
+      case 1 -> State.S_DELAY_ROTATE_SPIRAL;
+      case 2 -> State.S_DELAY_SPEED_RING;
+      case 3 -> State.S_DELAY_SLOW_RING;
+      case 4 -> State.S_ALTERNATE_RING;
+      default -> State.S_RING_STACK;
+    };
   }
 
   /** If the goal pos was reached */

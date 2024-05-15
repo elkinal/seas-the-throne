@@ -276,12 +276,13 @@ public final class SpawnerFactory {
    * @param physicsEngine {@link PhysicsEngine} to add bullets to
    */
   public static Spawner constructRepeatingDelayedTrackingSpeedArc(int dups, float centralAngle, float angle,
-                     int period, int delay, BossModel model, BulletModel.Builder builder, PhysicsEngine physicsEngine) {
+                                          int period, int delay, float startVel, float endVel, BossModel model,
+                                          BulletModel.Builder builder, PhysicsEngine physicsEngine) {
     Spawner out = new Spawner(builder, physicsEngine, bulletFamilyPool, bulletModelPool);
-    BulletFamily f = new BulletFamily(0f, 0f, 12f, 0f, 0.5f, 0);
+    BulletFamily f = new BulletFamily(0f, 0f, startVel, 0f, 0.5f, 0);
     f.addEffect(new PlaysAttackAnimation(model));
     f.addDelayedAction(new DelayedTarget(delay));
-    f.addDelayedAction(new Spawner.DelayedSpeedChange(24f, delay));
+    f.addDelayedAction(new Spawner.DelayedSpeedChange(endVel, delay));
     f.addEffect(new Periodic(period));
     f.addEffect(new Arc(angle-centralAngle/2, centralAngle, dups));
     out.addFamily(f);

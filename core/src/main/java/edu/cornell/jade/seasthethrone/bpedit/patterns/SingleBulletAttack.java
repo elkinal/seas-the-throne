@@ -21,9 +21,10 @@ public final class SingleBulletAttack extends AttackPattern {
    * @param builder       a builder to create bullet models
    * @param physicsEngine {@link PhysicsEngine} to add bullets to
    */
-  public SingleBulletAttack(int period, BossModel model, BulletModel.Builder builder,
+  public SingleBulletAttack(int period, boolean unbreakable, BossModel model, BulletModel.Builder builder,
       PhysicsEngine physicsEngine) {
     this.spawner = SpawnerFactory.constructRepeatingAimedBullet(period, model, builder, physicsEngine);
+    if (unbreakable) this.spawner.setUnbreakable();
     this.model = model;
 
     this.addSpawner(spawner);
