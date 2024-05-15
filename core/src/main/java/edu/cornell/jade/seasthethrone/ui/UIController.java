@@ -123,7 +123,7 @@ public class UIController {
     uiModel.update(player.getAmmo(), player.getLocation());
 
     for (BossController b : bosses) {
-      if (b.isBoss() && b.getBoss().isAttack()) {
+      if (b.isBoss() && b.getBoss().isInRoom()) {
         boss = b;
       }
       else{

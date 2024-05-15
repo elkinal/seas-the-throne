@@ -37,6 +37,9 @@ public class BulletModel extends SimpleModel implements Renderable, Poolable {
   /** Amount of knockback force applied to player on collision */
   private float knockbackForce;
 
+  /** If the bullet is unbreakable */
+  private boolean isUnbreakable;
+
   /**
    * {@link BulletModel} constructor using an x and y coordinate & radius. NOTE: as of now, you must
    * call activatePhysics after constructing the BulletModel for it to be properly created.
@@ -51,14 +54,17 @@ public class BulletModel extends SimpleModel implements Renderable, Poolable {
     shape.setRadius(builder.radius);
     knockbackForce = 20f;
     setBodyType(BodyDef.BodyType.DynamicBody);
-    fishTexture = builder.FISH_TEXTURE;
+    fishTexture = builder.type == Builder.Type.UNBREAKABLE ? builder.UNBREAKABLE_TEXTURE : builder.BASE_TEXTURE;
     filmStrip = new FilmStrip(fishTexture, 1, 1);
+    isUnbreakable = builder.type == Builder.Type.UNBREAKABLE;
   }
 
   /** Returns knockback force to apply to player on collision */
   public float getKnockbackForce() {
     return knockbackForce;
   }
+
+  public boolean isUnbreakable() { return isUnbreakable; }
 
   /**
    * {@link BulletModel} constructor using no arguments for compatability with pooling. NOTE: as of
@@ -67,7 +73,6 @@ public class BulletModel extends SimpleModel implements Renderable, Poolable {
    */
   public BulletModel() {
     super(0, 0);
-    setName("bullet");
   }
 
   public static BulletModel construct(Builder builder, Pool<BulletModel> pool) {
@@ -79,9 +84,11 @@ public class BulletModel extends SimpleModel implements Renderable, Poolable {
     res.shape.setRadius(builder.radius);
     res.setBodyType(BodyDef.BodyType.DynamicBody);
     res.knockbackForce = 20f;
-    res.fishTexture = builder.FISH_TEXTURE;
-    res.filmStrip.setTexture(builder.FISH_TEXTURE);
-    res.filmStrip.setRegion(0, 0, builder.FISH_TEXTURE.getWidth(), builder.FISH_TEXTURE.getHeight());
+    res.fishTexture = builder.type == Builder.Type.UNBREAKABLE
+            ? builder.UNBREAKABLE_TEXTURE : builder.BASE_TEXTURE;
+    res.filmStrip.setTexture(res.fishTexture);
+    res.filmStrip.setRegion(0, 0, res.fishTexture.getWidth(), res.fishTexture.getHeight());
+    res.isUnbreakable = builder.type == Builder.Type.UNBREAKABLE;
     res.markRemoved(false);
     return res;
   }
@@ -102,6 +109,11 @@ public class BulletModel extends SimpleModel implements Renderable, Poolable {
     fixture.shape = shape;
     geometry = body.createFixture(fixture);
     markDirty(false);
+    // Making unbreakable bullets essentially unmovable
+    if (isUnbreakable) {
+      setMass(1000000f);
+      setDensity(100000f);
+    }
   }
 
   /**
@@ -198,8 +210,11 @@ public class BulletModel extends SimpleModel implements Renderable, Poolable {
     /** bullet velocity y component */
     private float vy;
 
-    /** Texture for bullet */
-    private Texture FISH_TEXTURE;
+    /** Texture for base bullet */
+    private Texture BASE_TEXTURE;
+
+    /** Texture for unbreakable bullet */
+    private Texture UNBREAKABLE_TEXTURE;
 
     /** Radius of shape of bullet */
     private float radius;
@@ -216,8 +231,13 @@ public class BulletModel extends SimpleModel implements Renderable, Poolable {
 
     private Builder() { this.type = Type.DEFAULT; }
 
-    public Builder setFishTexture(Texture texture) {
-      FISH_TEXTURE = texture;
+    public Builder setBaseTexture(Texture texture) {
+      BASE_TEXTURE = texture;
+      return this;
+    }
+
+    public Builder setUnbreakableTexture(Texture texture) {
+      UNBREAKABLE_TEXTURE = texture;
       return this;
     }
 
@@ -255,8 +275,6 @@ public class BulletModel extends SimpleModel implements Renderable, Poolable {
       switch (type) {
         case PLAYER:
           return new PlayerBulletModel(this);
-        case UNBREAKABLE:
-          return new UnbreakableBulletModel(this);
         default:
           return new BulletModel(this);
       }

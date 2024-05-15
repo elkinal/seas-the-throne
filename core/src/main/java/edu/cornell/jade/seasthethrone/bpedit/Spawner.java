@@ -300,6 +300,8 @@ public class Spawner {
     protected float bvy;
     /** The radius of the constructed bullet */
     protected float radius;
+    /** If the bullet family is to be used */
+    protected boolean active;
 
     /** An ordered list of effects to be applied to the base bullet. */
     protected Queue<Effect> effect;
@@ -326,6 +328,7 @@ public class Spawner {
       this.bvy = bvy;
       this.radius = radius;
 
+      this.active = true;
       this.effect = new Queue<Effect>();
       this.delayedActions = new Array<>();
     }
@@ -354,7 +357,7 @@ public class Spawner {
       res.bvx = bvx;
       res.bvy = bvy;
       res.radius = radius;
-
+      res.active = true;
       return res;
     }
 
@@ -468,6 +471,9 @@ public class Spawner {
     public void prependEffect(Effect e) {
       effect.addFirst(e);
     }
+
+    /** Mark the bullet family as inactive (will be skipped) */
+    public void markInactive() { active = false; }
 
     /**
      * Clones the bullet family, with the base also a clone with some subset of its
@@ -807,10 +813,8 @@ public class Spawner {
         .setRadius(f.radius);
     if (unbreakable)
       bulletBuilder.setType(BulletModel.Builder.Type.UNBREAKABLE);
-    bulletBuilder.setType(BulletModel.Builder.Type.DEFAULT);
-    // Disabled pooling for now
     BulletModel m = BulletModel.construct(bulletBuilder, bulletBasePool);
-
+    bulletBuilder.setType(BulletModel.Builder.Type.DEFAULT);
     for (DelayedAction a : f.delayedActions) {
       a.setModel(m);
       delayedActions.add(a, a.delay + f.timestamp);
@@ -838,7 +842,7 @@ public class Spawner {
       Effect e = p.effect.removeFirst();
       e.apply(bulletFamilyCache, bulletFamilyPool, bulletBasePool);
       for (BulletFamily np : bulletFamilyCache) {
-        curBullets.add(np, np.getTimestamp());
+        if (np.active) curBullets.add(np, np.getTimestamp());
       }
       bulletFamilyCache.clear();
       bulletFamilyPool.free(p);

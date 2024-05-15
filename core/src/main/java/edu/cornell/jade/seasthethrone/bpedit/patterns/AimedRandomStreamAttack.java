@@ -7,9 +7,9 @@ import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 
-/** An attack spawning a pattern at a given angle */
-public final class FixedAngleStreamAttack extends AttackPattern {
-  /** the spawner actually creating the arc */
+/** An attack spawning an aimed random stream attack */
+public final class AimedRandomStreamAttack extends AttackPattern {
+  /** the spawner actually creating the stream */
   private final Spawner spawner;
 
   /** the model of the attacking boss */
@@ -18,26 +18,23 @@ public final class FixedAngleStreamAttack extends AttackPattern {
   /**
    * Constructs the attack
    *
-   * @param angle         the angle (relative to hard right) the spawner points in
+   * @param angleRange    the full angle the spawner can spray in (radians)
    * @param period        the length of one repeition of the attack in ticks
-   * @param unbreakable   if the bullets are unbreakable
    * @param model         boss shooting the bullet
    * @param player        player to track
    * @param builder       a builder to create bullet models
    * @param physicsEngine {@link PhysicsEngine} to add bullets to
    */
-  public FixedAngleStreamAttack(float angle, int period, boolean unbreakable, BossModel model, PlayerModel player,
-      BulletModel.Builder builder, PhysicsEngine physicsEngine) {
-    this.spawner = SpawnerFactory.constructRepeatingLeftFacingStream(period, builder, physicsEngine);
-    this.spawner.rotates(angle);
-    if (unbreakable) this.spawner.setUnbreakable();
+  public AimedRandomStreamAttack(float angleRange, int period, BossModel model, PlayerModel player,
+                            BulletModel.Builder builder, PhysicsEngine physicsEngine) {
+    this.spawner = SpawnerFactory.constructRepeatingAimedRandomStream(angleRange, period, player,
+            model, builder, physicsEngine);
     this.model = model;
 
     this.addSpawner(spawner);
   }
 
   @Override
-  protected void animateStep() {
-    this.spawner.moveSpawner(model.getX(), model.getY());
-  }
+  protected void animateStep() { this.spawner.moveSpawner(model.getX(), model.getY()); }
 }
+

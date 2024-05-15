@@ -6,7 +6,6 @@ import edu.cornell.jade.seasthethrone.ai.BossController;
 import edu.cornell.jade.seasthethrone.bpedit.AttackPattern;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
-import edu.cornell.jade.seasthethrone.gamemodel.boss.JellyBossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 
@@ -45,7 +44,7 @@ abstract class JellyBossController implements BossController {
    * -------------------------------
    */
   /** The model being controlled */
-  protected JellyBossModel boss;
+  protected BossModel boss;
 
   /** The player model being attacked */
   protected PlayerModel player;
@@ -77,7 +76,7 @@ abstract class JellyBossController implements BossController {
    * @param physicsEngine physics engine to add bullet attack to
    */
   public JellyBossController(
-      JellyBossModel boss,
+      BossModel boss,
       PlayerModel player,
       AttackPattern attack1,
       BulletModel.Builder builder,
@@ -142,7 +141,7 @@ abstract class JellyBossController implements BossController {
   protected void nextState() {
     switch (state) {
       case IDLE:
-        if (boss.getPosition().dst(player.getPosition()) < AGRO_DISTANCE) {
+        if (boss.getPosition().dst(player.getPosition()) < AGRO_DISTANCE && boss.isInRoom()) {
           state = State.ATTACK;
           timer = rand.nextInt(240, 480);
         }

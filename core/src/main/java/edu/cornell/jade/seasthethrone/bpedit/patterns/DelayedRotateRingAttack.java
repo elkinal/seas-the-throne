@@ -5,18 +5,11 @@ import edu.cornell.jade.seasthethrone.bpedit.AttackPattern;
 import edu.cornell.jade.seasthethrone.bpedit.Spawner;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
-import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 
-public class RingAttack extends AttackPattern {
+public class DelayedRotateRingAttack extends AttackPattern {
 
-  /*
-   * -------------------------------
-   * STATE RELATED TO THE ATTACK
-   * -------------------------------
-   */
-
-  /** the spawner actually creating the arc */
+  /** the spawner actually creating the ring */
   private final Spawner spawner;
 
   /** the model of the attacking boss */
@@ -25,19 +18,19 @@ public class RingAttack extends AttackPattern {
   /**
    * Constructs the attack
    *
-   * @param delay         the length of time between successive bullets
-   * @param shots         the number of bullets in one ring
-   * @param vel           the velocity of the bullets
-   * @param unbreakable   if the bullets are unbreakable
+   * @param period        the length of one repeition of the attack in ticks
+   * @param dups          the number of bullets in the arc
+   * @param delay         the delay until the rotate
+   * @param centralAngle  the central angle in radians
+   * @param rotateAngle   the angle to rotate after a delay
+   * @param model         boss shooting the bullet
    * @param builder       a builder to create bullet models
    * @param physicsEngine {@link PhysicsEngine} to add bullets to
    */
-  public RingAttack(BossModel model, int delay, int shots, float vel, boolean unbreakable,
-                    BulletModel.Builder builder, PhysicsEngine physicsEngine) {
-
-    this.spawner = SpawnerFactory.constructRepeatingRing(shots, delay, vel, builder, physicsEngine);
-    if (unbreakable) this.spawner.setUnbreakable();
-
+  public DelayedRotateRingAttack(int period, int dups,  int delay, float centralAngle, float rotateAngle, BossModel model,
+                                 BulletModel.Builder builder, PhysicsEngine physicsEngine) {
+    this.spawner = SpawnerFactory.constructRepeatingDelayedRotateArc(dups, centralAngle, period,
+            delay, rotateAngle, model,  builder, physicsEngine);
     this.model = model;
 
     this.addSpawner(spawner);

@@ -1,5 +1,6 @@
 package edu.cornell.jade.seasthethrone.bpedit.patterns;
 
+import com.badlogic.gdx.math.MathUtils;
 import edu.cornell.jade.seasthethrone.bpedit.AttackPattern;
 import edu.cornell.jade.seasthethrone.bpedit.Spawner;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
@@ -7,8 +8,9 @@ import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 
-/** An attack spawning a pattern at a given angle */
-public final class FixedAngleStreamAttack extends AttackPattern {
+/** An attack which tracks the player after a delay */
+public class DelayedTrackingArcAttack extends AttackPattern {
+
   /** the spawner actually creating the arc */
   private final Spawner spawner;
 
@@ -18,19 +20,20 @@ public final class FixedAngleStreamAttack extends AttackPattern {
   /**
    * Constructs the attack
    *
-   * @param angle         the angle (relative to hard right) the spawner points in
    * @param period        the length of one repeition of the attack in ticks
-   * @param unbreakable   if the bullets are unbreakable
+   * @param dups          the number of bullets in the arc
+   * @param centralAngle  the range of angle to fire the arc (radians)
+   * @param angle         the angle to shoot in (radians)
+   * @param delay         the delay until homing on the player
    * @param model         boss shooting the bullet
    * @param player        player to track
    * @param builder       a builder to create bullet models
    * @param physicsEngine {@link PhysicsEngine} to add bullets to
    */
-  public FixedAngleStreamAttack(float angle, int period, boolean unbreakable, BossModel model, PlayerModel player,
-      BulletModel.Builder builder, PhysicsEngine physicsEngine) {
-    this.spawner = SpawnerFactory.constructRepeatingLeftFacingStream(period, builder, physicsEngine);
-    this.spawner.rotates(angle);
-    if (unbreakable) this.spawner.setUnbreakable();
+  public DelayedTrackingArcAttack(int period, int dups, float centralAngle, float angle, int delay, BossModel model,
+                                  PlayerModel player, BulletModel.Builder builder, PhysicsEngine physicsEngine) {
+    this.spawner = SpawnerFactory.constructRepeatingDelayedTrackingArc(dups, centralAngle, angle, period, delay,
+            builder, physicsEngine);
     this.model = model;
 
     this.addSpawner(spawner);

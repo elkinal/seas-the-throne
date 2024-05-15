@@ -36,16 +36,18 @@ public class SpiralAttack extends AttackPattern {
    * @param model         boss shooting the bullet
    * @param delay         the length of time between successive bullets
    * @param shots         the number of bullets in one circular rotation
+   * @param unbreakable   if the bullets are unbreakable
    * @param builder       a builder to create bullet models
    * @param physicsEngine {@link PhysicsEngine} to add bullets to
    */
-  public SpiralAttack(BossModel model, int delay, int shots,
+  public SpiralAttack(BossModel model, int delay, int shots, boolean unbreakable,
                               BulletModel.Builder builder, PhysicsEngine physicsEngine) {
     this.delay = delay;
     this.angle = MathUtils.PI * 2f / shots;
 
     this.stepsTaken = 0;
-    this.spawner = SpawnerFactory.constructTrackingRepeatingBullet(delay, builder, physicsEngine);
+    this.spawner = SpawnerFactory.constructRepeatingStream(delay, builder, physicsEngine);
+    if (unbreakable) this.spawner.setUnbreakable();
     this.model = model;
 
     this.addSpawner(spawner);

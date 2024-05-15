@@ -12,9 +12,10 @@ package edu.cornell.jade.seasthethrone;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
-import edu.cornell.jade.seasthethrone.gamemodel.EnemyModel;
+import edu.cornell.jade.seasthethrone.gamemodel.boss.EnemyModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.util.Direction;
@@ -71,6 +72,9 @@ public class PlayerController implements Controllable {
   /** The vector direction the player is moving */
   Vector2 moveDirection;
 
+  /** Bullet model builder */
+  BulletModel.Builder bulletBuilder;
+
   /** Constructs PlayerController */
   public PlayerController(PhysicsEngine physicsEngine, PlayerModel player) {
     this.physicsEngine = physicsEngine;
@@ -89,6 +93,10 @@ public class PlayerController implements Controllable {
 
     if (!savedEasyMode.isEmpty()) toggleEasyMode = savedEasyMode.equals("On");
     else this.toggleEasyMode = false;
+    bulletBuilder = BulletModel.Builder.newInstance()
+            .setBaseTexture(new Texture("bullet/whitefish.png"))
+            .setType(BulletModel.Builder.Type.PLAYER);
+
   }
 
   /**
@@ -211,7 +219,7 @@ public class PlayerController implements Controllable {
     Vector2 playerPos = player.getPosition();
     // TODO: stop hardcoding the offset
     Vector2 startPos = playerPos.add(indicatorDirection.x * 1.5f, indicatorDirection.y * 1.5f);
-    physicsEngine.spawnBullet(startPos, indicatorDirection, 30, BulletModel.Builder.Type.PLAYER);
+    physicsEngine.spawnBullet(startPos, indicatorDirection, 30, bulletBuilder);
 
     player.decrementFishCount();
   }
@@ -240,8 +248,8 @@ public class PlayerController implements Controllable {
 
   /**
    * Sets the {@link #indicatorDirection} field to point in the direction
-   * of the nearest enemy. If no enemies are close enough, this method will
-   * not do anything.
+   * of the nearest enemy, if the indicator is already close enough.
+   * If no enemies are near the player, this method will not do anything.
    */
   public void pointToClosestEnemy() {
     EnemyModel closestEnemy = null;
@@ -250,6 +258,9 @@ public class PlayerController implements Controllable {
       if (!b.isActive()) continue;
       float dist = player.getPosition().dst(b.getPosition());
       if (dist < closestDist) {
+        //Check if the angle is "close enough"
+        float angle = b.getPosition().sub(player.getPosition()).angleDeg(indicatorDirection);
+        if (angle > 45 && angle < 315) continue;
         closestEnemy = b;
         closestDist = dist;
       }

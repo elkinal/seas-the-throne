@@ -6,24 +6,22 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 
-import com.badlogic.gdx.utils.Array;
 import edu.cornell.jade.seasthethrone.ai.*;
-import edu.cornell.jade.seasthethrone.ai.clam.FixedStreamClamController;
-import edu.cornell.jade.seasthethrone.ai.clam.OscillatingRingClamController;
-import edu.cornell.jade.seasthethrone.ai.clam.RandomStreamClamController;
-import edu.cornell.jade.seasthethrone.ai.clam.UnbreakableRingClamController;
+import edu.cornell.jade.seasthethrone.ai.clam.*;
 import edu.cornell.jade.seasthethrone.ai.jelly.AimedArcJellyBossController;
 import edu.cornell.jade.seasthethrone.ai.jelly.AimedSingleBulletJellyBossController;
 import edu.cornell.jade.seasthethrone.ai.jelly.ChasingJellyBossController;
+import edu.cornell.jade.seasthethrone.ai.jelly.DelayedRotateRingJellyBossController;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
-import edu.cornell.jade.seasthethrone.gamemodel.EnemyModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
-public abstract class BossModel extends EnemyModel implements Renderable {
+import java.util.EmptyStackException;
+
+public class BossModel extends EnemyModel implements Renderable {
 
   /** Boss-unique move animation TODO: make left right up down filmstrips */
   protected FilmStrip moveAnimation;
@@ -104,6 +102,9 @@ public abstract class BossModel extends EnemyModel implements Renderable {
   /** Tint of the boss */
   private Color color;
 
+  /** If the player is in the room as the boss */
+  private boolean inRoom;
+
   /**
    * {@link BossModel} constructor using an x and y coordinate.
    *
@@ -133,6 +134,7 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     frameDelay = builder.frameDelay;
     health = builder.health;
     fullHealth = builder.health;
+    scale = builder.scale;
     deathCount = frameDelay * 16;
     attackCount = 0;
     hitCount = 0;
@@ -145,7 +147,12 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     thresholdPointer = 0;
     isExecute = false;
     color = Color.WHITE;
-    setBodyType(BodyDef.BodyType.KinematicBody);
+    inRoom = roomId == -1;
+
+    //Hack so that the chasing jellies dont shove you past walls
+    setBodyType(BodyDef.BodyType.DynamicBody);
+    setMass(1000000f);
+    setDensity(100000f);
   }
 
   @Override
@@ -154,13 +161,21 @@ public abstract class BossModel extends EnemyModel implements Renderable {
       progressFrame();
     }
     Vector2 pos = getPosition();
-    renderer.draw(filmStrip, pos.x, pos.y, 0.16f, color);
+    renderer.draw(filmStrip, pos.x, pos.y, 0.16f*scale, color);
   }
 
   /** Sets the color of this boss model */
   public void setColor(Color color) {
     this.color = color;
   }
+
+  /** Sets if the boss is in the same room as the player */
+  public void setInRoom(boolean value) {
+    inRoom = value;
+  }
+
+  /** Returns whether the boss is in the same room as the player */
+  public boolean isInRoom() { return inRoom; }
 
   /**
    * Returns whether the boss is finished playing its death animation.
@@ -391,6 +406,9 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     /** ID for the room this boss is in */
     private int roomId;
 
+    /** Scale of the boss size */
+    private float scale;
+
     public static Builder newInstance() {
       return new Builder();
     }
@@ -414,6 +432,11 @@ public abstract class BossModel extends EnemyModel implements Renderable {
 
     public Builder setHealth(int health) {
       this.health = health;
+      return this;
+    }
+
+    public Builder setScale(float scale) {
+      this.scale = scale;
       return this;
     }
 
@@ -539,20 +562,13 @@ public abstract class BossModel extends EnemyModel implements Renderable {
     }
 
     public BossModel build() {
-      if (type.equals("crab")) {
-        return new CrabBossModel(this);
-      } else if (type.contains("clam")) {
-        return new ClamModel(this);
-      } else if (type.contains("shark")) {
-        return new SharkBossModel(this);
-      } else if (type.contains("head")){
-        return new HeadBossModel(this);
-      } else if (type.contains("swordfish")){
+      if (type.contains("swordfish")){
         return new SwordfishBossModel(this);
       } else if (type.contains("final")){
         return new FinalBossModel(this);
       } else {
-        return new JellyBossModel(this);
+        // Other bosses don't need specific functionality
+        return new BossModel(this);
       }
     }
 
@@ -562,18 +578,21 @@ public abstract class BossModel extends EnemyModel implements Renderable {
         BulletModel.Builder bulletBuilder,
         PhysicsEngine physicsEngine) {
       if (type.equals("crab")) {
-        return new CrabBossController((CrabBossModel) model, player, bulletBuilder, physicsEngine);
+        return new CrabBossController(model, player, bulletBuilder, physicsEngine);
       } else if (type.equals("shark")) {
         return new SharkBossController(model, player, bulletBuilder, physicsEngine);
+      } else if (type.equals("head")) {
+      return new HeadBossController(model, player, bulletBuilder, physicsEngine);
+      } else if (type.equals("swordfish")) {
+        return new SwordfishBossController (model, player, bulletBuilder, physicsEngine);
+      } else if (type.equals("final")){
+        return new FinalBossController(model, player, bulletBuilder, physicsEngine);
       } else if (type.equals("aimed_jelly")) {
-        return new AimedSingleBulletJellyBossController(
-            (JellyBossModel) model, player, bulletBuilder, physicsEngine);
+        return new AimedSingleBulletJellyBossController(model, player, bulletBuilder, physicsEngine);
       } else if (type.equals("arc_jelly")) {
-        return new AimedArcJellyBossController(
-            (JellyBossModel) model, player, bulletBuilder, physicsEngine);
+        return new AimedArcJellyBossController(model, player, bulletBuilder, physicsEngine);
       }  else if (type.equals("chasing_jelly")) {
-        return new ChasingJellyBossController(
-                (JellyBossModel) model, player, bulletBuilder, physicsEngine);
+        return new ChasingJellyBossController(model, player, bulletBuilder, physicsEngine);
       } else if (type.contains("fixed_clam")) {
         // invarient, this is a float and won't fail
         float angle = MathUtils.degRad * Float.parseFloat(type.replaceAll("[^\\d.]", ""));
@@ -585,14 +604,18 @@ public abstract class BossModel extends EnemyModel implements Renderable {
         return new RandomStreamClamController(angle, model, player, bulletBuilder, physicsEngine);
       } else if (type.equals("unbreak_ring_clam")) {
         return new UnbreakableRingClamController(model, player, bulletBuilder, physicsEngine);
-      } else if (type.equals("head")) {
-        return new HeadBossController (model, player, bulletBuilder, physicsEngine);
-      } else if (type.equals("swordfish")) {
-        return new SwordfishBossController (model, player, bulletBuilder, physicsEngine);
-      } else if (type.equals("final")){
-        return new FinalBossController(model, player, bulletBuilder, physicsEngine);
+      } else if (type.contains("delay_track_clam")) {
+        float angle = MathUtils.degRad * Float.parseFloat(type.replaceAll("[^\\d.]", ""));
+        return new DelayedTrackingClamController(angle, model, player, bulletBuilder, physicsEngine);
+      } else if (type.equals("delay_rotate_jelly")) {
+        return new DelayedRotateRingJellyBossController(model, player, bulletBuilder, physicsEngine);
+      } else if (type.equals("delay_rotate_clam")) {
+        return new DelayedRotateArcClamController(model, player, bulletBuilder, physicsEngine);
+      } else if (type.contains("fixed_unbreak_clam")) {
+        float angle = MathUtils.degRad * Float.parseFloat(type.replaceAll("[^\\d.]", ""));
+        return new UnbreakableFixedStreamClamController(angle, model, player, bulletBuilder, physicsEngine);
       }
-      throw new RuntimeException("boss type not supported");
+      return new EmptyBossController(model);
     }
   }
 }
