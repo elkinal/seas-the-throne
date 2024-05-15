@@ -18,6 +18,8 @@ public class FinalBossController implements BossController {
   private static enum State {
     /** The boss is stationary */
     IDLE,
+    /** Phase switch (animation time) */
+    PHASE_SWTITCH,
 
     /** FIRST PHASE STATES: */
     F_START,
@@ -69,6 +71,9 @@ public class FinalBossController implements BossController {
   /** The bounds of which the boss can move */
   private Rectangle bounds;
 
+  /** If the boss has reached the first threshold yet (to check phase switching) */
+  private boolean firstThreshold;
+
   /*
    * -------------------------------
    * FIRST PHASE ATTACKS
@@ -116,6 +121,7 @@ public class FinalBossController implements BossController {
     this.player = player;
     this.state = State.IDLE;
 
+    this.firstThreshold = true;
     this.goalPos = new Vector2();
     this.rand = new Random();
     this.bounds = new Rectangle(boss.getX() - 25, boss.getY() - 15, 50, 40);
@@ -203,6 +209,13 @@ public class FinalBossController implements BossController {
     if (boss.isDead()) {
       state = State.DEAD;
     } else if (boss.reachedHealthThreshold()) {
+      if (firstThreshold) {
+        firstThreshold = false;
+        state = State.PHASE_SWTITCH;
+        timer = 50;
+      } else {
+        state = State.S_DELAY_SLOW_RING;
+      }
     }
 
     switch (state) {
