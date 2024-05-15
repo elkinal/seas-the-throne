@@ -319,6 +319,20 @@ public class GameplayController implements Screen {
               .setAttackAnimation(new Texture("bosses/" + assetName + "/attack.png"))
               .setFrameDelay(12)
               .setRoomId(bossContainer.roomId);
+      if (name.contains("swordfish")){
+        bossBuilder.setShootDownAnimation(new Texture("bosses/" + assetName + "/shoot_vertical.png"))
+            .setShootUpAnimation(new Texture("bosses/" + assetName + "/shoot_vertical_up.png"))
+            .setShootRightAnimation(new Texture("bosses/" + assetName + "/shoot_side_right.png"))
+            .setAttackDownAnimation(new Texture("bosses/" + assetName + "/attack_vertical.png"))
+            .setAttackUpAnimation(new Texture("bosses/" + assetName + "/attack_vertical_up.png"))
+            .setAttackRightAnimation(new Texture("bosses/" + assetName + "/attack_side_right.png"))
+            .setGetHitDownAnimation(new Texture("bosses/" + assetName + "/front_hurt.png"))
+            .setGetHitUpAnimation(new Texture("bosses/" + assetName + "/up_hurt.png"))
+            .setGetHitRightAnimation(new Texture("bosses/" + assetName + "/right_hurt.png"));
+      }
+      if (name.contains("final")){
+        bossBuilder.setSpawnAnimation(new Texture("bosses/" + assetName + "/spawn.png"));
+      }
       BossModel boss = bossBuilder.build();
       BossController bossController = bossBuilder.buildController(boss, player, fishBulletBuilder, physicsEngine);
       renderEngine.addRenderable(boss);
