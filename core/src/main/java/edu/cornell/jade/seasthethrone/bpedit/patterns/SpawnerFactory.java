@@ -170,7 +170,7 @@ public final class SpawnerFactory {
   public static Spawner constructRepeatingAimedArc(int dups, float centralAngle, int delay, BossModel model,
       PlayerModel player, BulletModel.Builder builder, PhysicsEngine physicsEngine) {
     Spawner out = new Spawner(builder, physicsEngine, bulletFamilyPool, bulletModelPool);
-    BulletFamily f = new BulletFamily(0f, 0f, 0f, 8f, 0.5f, 0);
+    BulletFamily f = new BulletFamily(0f, 0f, 8f, 0f, 0.5f, 0);
     f.addEffect(new Periodic(delay));
     f.addEffect(new TargetsModel(out, player));
     f.addEffect(new PlaysAttackAnimation(model));
@@ -178,6 +178,7 @@ public final class SpawnerFactory {
     out.addFamily(f);
     return out;
   }
+
 
   /**
    * Constructs a randomly spraying bullet stream of bullet aimed in a certain
@@ -207,10 +208,10 @@ public final class SpawnerFactory {
    * @param builder       a builder to create bullet models
    * @param physicsEngine {@link PhysicsEngine} to add bullets to
    */
-  public static Spawner constructSpinningRing(int dups, int delay, BossModel model,
+  public static Spawner constructSpinningRing(float offset, int dups, int delay, BossModel model,
       BulletModel.Builder builder, PhysicsEngine physicsEngine) {
     Spawner out = new Spawner(builder, physicsEngine, bulletFamilyPool, bulletModelPool);
-    BulletFamily f = new BulletFamily(4.5f, 0f, 0f, 0f, 0.5f, 0);
+    BulletFamily f = new BulletFamily(offset, 0f, 0f, 0f, 0.5f, 0);
     f.addEffect(new Arc(0f, MathUtils.PI * 2, dups));
     f.addDelayedAction(new Spawner.DelayedIndefiniteRotate(delay, model));
     out.addFamily(f);
@@ -231,11 +232,77 @@ public final class SpawnerFactory {
   public static Spawner constructRepeatingAimedRandomStream(float angleRange, int delay, PlayerModel player,
                                   BossModel model, BulletModel.Builder builder, PhysicsEngine physicsEngine) {
     Spawner out = new Spawner(builder, physicsEngine, bulletFamilyPool, bulletModelPool);
-    BulletFamily f = new BulletFamily(0f, 0f, 14f, 0f, 0.5f, 0);
+    BulletFamily f = new BulletFamily(0f, 0f, 11f, 0f, 0.5f, 0);
+    f.addEffect(new PlaysAttackAnimation(model));
     f.addEffect(new Periodic(delay));
     f.addEffect(new TargetsModel(out, player));
-    f.addEffect(new PlaysAttackAnimation(model));
     f.addEffect(new RandomSpray(angleRange));
+    out.addFamily(f);
+    return out;
+  }
+
+  /**
+   * Constructs an arc pointed to the player
+   *
+   * @param dups          number of bullets in the arc
+   * @param centralAngle  size of the arc in radians
+   * @param period        delay inbetween firings
+   * @param delay         delay until homing on the player
+   * @param builder       a builder to create bullet models
+   * @param physicsEngine {@link PhysicsEngine} to add bullets to
+   */
+  public static Spawner constructRepeatingDelayedTrackingSpeedArc(int dups, float centralAngle, float angle,
+                     int period, int delay, BossModel model, BulletModel.Builder builder, PhysicsEngine physicsEngine) {
+    Spawner out = new Spawner(builder, physicsEngine, bulletFamilyPool, bulletModelPool);
+    BulletFamily f = new BulletFamily(0f, 0f, 12f, 0f, 0.5f, 0);
+    f.addEffect(new PlaysAttackAnimation(model));
+    f.addDelayedAction(new DelayedTarget(delay));
+    f.addDelayedAction(new Spawner.DelayedSpeedChange(24f, delay));
+    f.addEffect(new Periodic(period));
+    f.addEffect(new Arc(angle-centralAngle/2, centralAngle, dups));
+    out.addFamily(f);
+    return out;
+  }
+
+  /**
+   * Constructs a ring with a delayed rotate
+   *
+   * @param dups          number of bullets in the arc
+   * @param centralAngle  size of the arc in radians
+   * @param period        delay in between firings
+   * @param delay         delay until rotating
+   * @param builder       a builder to create bullet models
+   * @param physicsEngine {@link PhysicsEngine} to add bullets to
+   */
+  public static Spawner constructRepeatingDelayedRotateArc(int dups, float centralAngle, int period, int delay,
+                       float rotateAngle, BossModel model, BulletModel.Builder builder, PhysicsEngine physicsEngine) {
+    Spawner out = new Spawner(builder, physicsEngine, bulletFamilyPool, bulletModelPool);
+    BulletFamily f = new BulletFamily(0f, 0f, 10f, 0f, 0.5f, 0);
+    f.addEffect(new PlaysAttackAnimation(model));
+    f.addDelayedAction(new Spawner.DelayedVelocityRotate(rotateAngle, delay));
+    f.addEffect(new Periodic(period));
+    f.addEffect(new Arc(-centralAngle/2, centralAngle, dups));
+    out.addFamily(f);
+    return out;
+  }
+
+  /**
+   * Constructs an arc pointed to the player
+   *
+   * @param dups          number of bullets in the arc
+   * @param centralAngle  size of the arc in radians
+   * @param period        delay inbetween firings
+   * @param delay         delay until homing on the player
+   * @param builder       a builder to create bullet models
+   * @param physicsEngine {@link PhysicsEngine} to add bullets to
+   */
+  public static Spawner constructRepeatingDelayedTrackingArc(int dups, float centralAngle, float angle,
+                                                             int period, int delay, BulletModel.Builder builder, PhysicsEngine physicsEngine) {
+    Spawner out = new Spawner(builder, physicsEngine, bulletFamilyPool, bulletModelPool);
+    BulletFamily f = new BulletFamily(0f, 0f, 10f, 0f, 0.5f, 0);
+    f.addDelayedAction(new DelayedTarget(delay));
+    f.addEffect(new Periodic(period));
+    f.addEffect(new Arc(angle-centralAngle/2, centralAngle, dups));
     out.addFamily(f);
     return out;
   }

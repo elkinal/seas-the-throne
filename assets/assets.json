@@ -151,6 +151,52 @@
       "death": {
         "file": "bosses/head/death.png"
       }
+    },
+    "swordfish": {
+      "idle": {
+        "file": "bosses/swordfish/side_idle.png"
+      },
+      "front_idle": {
+        "file": "bosses/swordfish/front_idle.png"
+      },
+      "shoot": {
+        "file": "bosses/swordfish/shoot.png"
+      },
+      "shoot_right": {
+        "file": "bosses/swordfish/shoot_side_right.png"
+      },
+      "shoot_up": {
+        "file": "bosses/swordfish/shoot_vertical_up.png"
+      },
+      "shoot_down": {
+        "file": "bosses/swordfish/shoot_vertical.png"
+      },
+      "hurt": {
+        "file": "bosses/swordfish/hurt.png"
+      },
+      "hurt_front": {
+        "file": "bosses/swordfish/front_hurt.png"
+      },
+      "hurt_right": {
+        "file": "bosses/swordfish/right_hurt.png"
+      },
+      "death": {
+        "file": "bosses/swordfish/death.png"
+      }
+    },
+    "final": {
+      "idle": {
+        "file": "bosses/final/idle.png"
+      },
+      "shoot": {
+        "file": "bosses/final/shoot.png"
+      },
+      "hurt": {
+        "file": "bosses/final/hurt.png"
+      },
+      "death": {
+        "file": "bosses/final/death.png"
+      }
     }
   },
   "fonts": {
@@ -164,6 +210,8 @@
     "jelly": "bosses/jelly/jelly.json",
     "shark": "bosses/shark/shark.json",
     "crab": "bosses/crab/crab.json",
-    "head": "bosses/head/head.json"
+    "head": "bosses/head/head.json",
+    "swordfish": "bosses/swordfish/swordfish.json",
+    "final": "bosses/final/final.json"
   }
 }

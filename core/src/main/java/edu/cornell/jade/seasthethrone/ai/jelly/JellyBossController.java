@@ -141,7 +141,7 @@ abstract class JellyBossController implements BossController {
   protected void nextState() {
     switch (state) {
       case IDLE:
-        if (boss.getPosition().dst(player.getPosition()) < AGRO_DISTANCE) {
+        if (boss.getPosition().dst(player.getPosition()) < AGRO_DISTANCE && boss.isInRoom()) {
           state = State.ATTACK;
           timer = rand.nextInt(240, 480);
         }

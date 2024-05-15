@@ -17,7 +17,7 @@ public class ChasingJellyBossController extends JellyBossController {
   public ChasingJellyBossController(BossModel boss, PlayerModel player, BulletModel.Builder builder,
                                     PhysicsEngine physicsEngine) {
     super(boss, player, null, builder, physicsEngine);
-    boss.setColor(new Color(0.8f, 0f, 0f, 1));
+    boss.setColor(new Color(0.9f, 0.20f, .9f, 1));
     AGRO_DISTANCE = 35f;
   }
 
@@ -25,7 +25,7 @@ public class ChasingJellyBossController extends JellyBossController {
   protected void nextState() {
     switch (state) {
       case IDLE:
-        if (boss.getPosition().dst(player.getPosition()) < AGRO_DISTANCE) {
+        if (boss.getPosition().dst(player.getPosition()) < AGRO_DISTANCE && boss.isInRoom()) {
           state = State.MOVE;
         }
         break;

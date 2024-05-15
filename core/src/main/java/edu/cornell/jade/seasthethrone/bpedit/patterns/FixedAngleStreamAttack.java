@@ -20,15 +20,17 @@ public final class FixedAngleStreamAttack extends AttackPattern {
    *
    * @param angle         the angle (relative to hard right) the spawner points in
    * @param period        the length of one repeition of the attack in ticks
+   * @param unbreakable   if the bullets are unbreakable
    * @param model         boss shooting the bullet
    * @param player        player to track
    * @param builder       a builder to create bullet models
    * @param physicsEngine {@link PhysicsEngine} to add bullets to
    */
-  public FixedAngleStreamAttack(float angle, int period, BossModel model, PlayerModel player,
+  public FixedAngleStreamAttack(float angle, int period, boolean unbreakable, BossModel model, PlayerModel player,
       BulletModel.Builder builder, PhysicsEngine physicsEngine) {
     this.spawner = SpawnerFactory.constructRepeatingLeftFacingStream(period, builder, physicsEngine);
     this.spawner.rotates(angle);
+    if (unbreakable) this.spawner.setUnbreakable();
     this.model = model;
 
     this.addSpawner(spawner);

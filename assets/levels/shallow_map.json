@@ -4361,8 +4361,8 @@
                  "type":"",
                  "visible":true,
                  "width":18.5,
-                 "x":2540,
-                 "y":1400
+                 "x":2459.95658949944,
+                 "y":1409.00305718913
                 }, 
                 {
                  "height":10,
@@ -4383,8 +4383,8 @@
                  "type":"",
                  "visible":true,
                  "width":18.5,
-                 "x":2434.41666666667,
-                 "y":941.166666666667
+                 "x":2425.28841472692,
+                 "y":939.506984495803
                 }, 
                 {
                  "height":10,
@@ -4427,8 +4427,8 @@
                  "type":"",
                  "visible":true,
                  "width":18.5,
-                 "x":729.083333333333,
-                 "y":2169
+                 "x":725.163721018624,
+                 "y":2168.28734321551
                 }, 
                 {
                  "height":10,
@@ -4449,8 +4449,25 @@
                  "type":"",
                  "visible":true,
                  "width":18.5,
-                 "x":950.083,
-                 "y":1224.33
+                 "x":873.256667632278,
+                 "y":1169.77338727969
+                }, 
+                {
+                 "height":7.5,
+                 "id":995,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"healthpack"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":10,
+                 "x":668.206048928592,
+                 "y":1875.73852688737
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -6665,50 +6682,6 @@
                 }, 
                 {
                  "height":5,
-                 "id":430,
-                 "name":"levels\/kelplight_2.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":501,
-                 "y":2212.5
-                }, 
-                {
-                 "height":5,
-                 "id":431,
-                 "name":"levels\/kelplight_2.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":431,
-                 "y":2174.5
-                }, 
-                {
-                 "height":5,
                  "id":432,
                  "name":"levels\/kelplight_2.png",
                  "properties":[
@@ -7696,8 +7669,7 @@
                  "width":6,
                  "x":1875.66666666667,
                  "y":1421.5
-                },
-            
+                }, 
                 {
                  "height":5,
                  "id":490,
@@ -7741,7 +7713,8 @@
                  "width":6,
                  "x":1974.33333333333,
                  "y":1352.83333333333
-                }, 
+                },
+            
                 {
                  "height":5,
                  "id":492,
@@ -8071,28 +8044,6 @@
                  "width":6,
                  "x":1926.33333333333,
                  "y":1210.83333333333
-                }, 
-                {
-                 "height":5,
-                 "id":507,
-                 "name":"levels\/kelplight_2.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":1987,
-                 "y":1175.5
                 }, 
                 {
                  "height":5,
@@ -8665,28 +8616,6 @@
                  "width":6,
                  "x":2015,
                  "y":829.5
-                }, 
-                {
-                 "height":5,
-                 "id":534,
-                 "name":"levels\/kelplight_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":2101,
-                 "y":841.5
                 }, 
                 {
                  "height":5,
@@ -11129,8 +11058,7 @@
                  "width":6,
                  "x":2585,
                  "y":1611.5
-                },
-            
+                }, 
                 {
                  "height":5,
                  "id":650,
@@ -11218,7 +11146,8 @@
                  "width":6,
                  "x":2384,
                  "y":1783.5
-                }, 
+                },
+            
                 {
                  "height":5,
                  "id":654,
@@ -11944,28 +11873,6 @@
                  "width":6,
                  "x":464.333333333333,
                  "y":2266.83333333333
-                }, 
-                {
-                 "height":5,
-                 "id":687,
-                 "name":"levels\/kelpdark_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":439.666666666667,
-                 "y":2143.5
                 }, 
                 {
                  "height":5,
@@ -13135,50 +13042,6 @@
                 }, 
                 {
                  "height":5,
-                 "id":742,
-                 "name":"levels\/kelpdark_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":837,
-                 "y":1746.5
-                }, 
-                {
-                 "height":5,
-                 "id":743,
-                 "name":"levels\/kelpdark_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":948,
-                 "y":1741.5
-                }, 
-                {
-                 "height":5,
                  "id":744,
                  "name":"levels\/kelpdark_1.png",
                  "properties":[
@@ -13245,50 +13108,6 @@
                 }, 
                 {
                  "height":5,
-                 "id":747,
-                 "name":"levels\/kelpdark_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":1022,
-                 "y":1778.5
-                }, 
-                {
-                 "height":5,
-                 "id":748,
-                 "name":"levels\/kelpdark_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":949,
-                 "y":1773.5
-                }, 
-                {
-                 "height":5,
                  "id":749,
                  "name":"levels\/kelpdark_1.png",
                  "properties":[
@@ -13352,50 +13171,6 @@
                  "width":6,
                  "x":625,
                  "y":1603.5
-                }, 
-                {
-                 "height":5,
-                 "id":752,
-                 "name":"levels\/kelpdark_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":692,
-                 "y":1602.5
-                }, 
-                {
-                 "height":5,
-                 "id":753,
-                 "name":"levels\/kelpdark_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":751,
-                 "y":1625.5
                 }, 
                 {
                  "height":5,
@@ -13506,28 +13281,6 @@
                  "width":6,
                  "x":854,
                  "y":1617.5
-                }, 
-                {
-                 "height":5,
-                 "id":761,
-                 "name":"levels\/kelpdark_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":666,
-                 "y":1641.5
                 }, 
                 {
                  "height":5,
@@ -14037,94 +13790,6 @@
                 }, 
                 {
                  "height":5,
-                 "id":785,
-                 "name":"levels\/kelpdark_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":1188.33333333333,
-                 "y":1580.83333333333
-                }, 
-                {
-                 "height":5,
-                 "id":786,
-                 "name":"levels\/kelpdark_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":1215.66666666667,
-                 "y":1552.16666666667
-                }, 
-                {
-                 "height":5,
-                 "id":787,
-                 "name":"levels\/kelpdark_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":1235,
-                 "y":1543.5
-                }, 
-                {
-                 "height":5,
-                 "id":788,
-                 "name":"levels\/kelpdark_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":1184.33333333333,
-                 "y":1496.83333333333
-                }, 
-                {
-                 "height":5,
                  "id":789,
                  "name":"levels\/kelpdark_1.png",
                  "properties":[
@@ -14562,8 +14227,7 @@
                  "width":6,
                  "x":1517,
                  "y":1420.16666666667
-                },
-            
+                }, 
                 {
                  "height":5,
                  "id":813,
@@ -14915,7 +14579,8 @@
                  "width":6,
                  "x":1087.66666666667,
                  "y":1053.5
-                }, 
+                },
+            
                 {
                  "height":5,
                  "id":829,
@@ -15419,30 +15084,8 @@
                  "type":"",
                  "visible":true,
                  "width":6,
-                 "x":1137,
-                 "y":1294.5
-                }, 
-                {
-                 "height":5,
-                 "id":852,
-                 "name":"levels\/kelplight_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":1191,
-                 "y":1287.5
+                 "x":1139.92013432618,
+                 "y":1258.582347788
                 }, 
                 {
                  "height":5,
@@ -15644,28 +15287,6 @@
                 }, 
                 {
                  "height":5,
-                 "id":862,
-                 "name":"levels\/kelplight_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":1198,
-                 "y":1559.5
-                }, 
-                {
-                 "height":5,
                  "id":863,
                  "name":"levels\/kelplight_1.png",
                  "properties":[
@@ -15798,28 +15419,6 @@
                 }, 
                 {
                  "height":5,
-                 "id":869,
-                 "name":"levels\/kelplight_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":764,
-                 "y":1622.5
-                }, 
-                {
-                 "height":5,
                  "id":870,
                  "name":"levels\/kelplight_1.png",
                  "properties":[
@@ -15838,28 +15437,6 @@
                  "visible":true,
                  "width":6,
                  "x":804,
-                 "y":1638.5
-                }, 
-                {
-                 "height":5,
-                 "id":871,
-                 "name":"levels\/kelplight_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":628,
                  "y":1638.5
                 }, 
                 {
@@ -15883,28 +15460,6 @@
                  "width":6,
                  "x":674,
                  "y":1557.5
-                }, 
-                {
-                 "height":5,
-                 "id":873,
-                 "name":"levels\/kelplight_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":721,
-                 "y":1640.5
                 }, 
                 {
                  "height":5,
@@ -15949,72 +15504,6 @@
                  "width":6,
                  "x":1069,
                  "y":1742.5
-                }, 
-                {
-                 "height":5,
-                 "id":876,
-                 "name":"levels\/kelplight_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":985,
-                 "y":1781.5
-                }, 
-                {
-                 "height":5,
-                 "id":877,
-                 "name":"levels\/kelplight_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":907,
-                 "y":1771.5
-                }, 
-                {
-                 "height":5,
-                 "id":878,
-                 "name":"levels\/kelplight_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":854,
-                 "y":1755.5
                 }, 
                 {
                  "height":5,
@@ -16675,72 +16164,6 @@
                  "width":6,
                  "x":383.666666666667,
                  "y":2076.16666666667
-                }, 
-                {
-                 "height":5,
-                 "id":909,
-                 "name":"levels\/kelplight_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":423,
-                 "y":2114.83333333333
-                }, 
-                {
-                 "height":5,
-                 "id":910,
-                 "name":"levels\/kelplight_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":470.333333333333,
-                 "y":2155.5
-                }, 
-                {
-                 "height":5,
-                 "id":911,
-                 "name":"levels\/kelplight_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":477,
-                 "y":2180.16666666667
                 }, 
                 {
                  "height":5,
@@ -17577,6 +17000,17 @@
                  "width":6,
                  "x":1269.66666666667,
                  "y":2164.83333333333
+                }, 
+                {
+                 "height":18,
+                 "id":1015,
+                 "name":"levels\/pinkdemonstatue.png",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":29,
+                 "x":913.889167099587,
+                 "y":2182.24316365021
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -17832,7 +17266,7 @@
                  "y":874.231700627901
                 }, 
                 {
-                 "height":37.17109608803,
+                 "height":48.7657790976784,
                  "id":242,
                  "name":"levels\/gate.png",
                  "properties":[
@@ -17850,8 +17284,8 @@
                  "type":"",
                  "visible":true,
                  "width":2.21836,
-                 "x":2400.65835454924,
-                 "y":933.197149179049
+                 "x":2377.05489270817,
+                 "y":927.813903495998
                 }, 
                 {
                  "height":52.2122176232299,
@@ -18028,10 +17462,472 @@
                  "width":2.21836,
                  "x":1294.47167329418,
                  "y":2345.88481960392
+                }, 
+                {
+                 "height":66.8792613343162,
+                 "id":979,
+                 "name":"levels\/gate.png",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":9
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":false
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":2.21836,
+                 "x":1059.39668374001,
+                 "y":2420.19024385334
+                }, 
+                {
+                 "height":38.658252229463,
+                 "id":980,
+                 "name":"levels\/gate.png",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":9
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":false
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":2.21836,
+                 "x":758.998946317923,
+                 "y":2180.48617478785
+                }, 
+                {
+                 "height":39.9735,
+                 "id":983,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":19.3333,
+                 "x":1723.93175954274,
+                 "y":341.84227584493
+                }, 
+                {
+                 "height":65.2856179466222,
+                 "id":984,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":5
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":18.4222111462415,
+                 "x":2354.79660070838,
+                 "y":925.011236122824
+                }, 
+                {
+                 "height":74.4921621976034,
+                 "id":985,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":6
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":18.6345,
+                 "x":2625.20682867963,
+                 "y":1383.16992613611
+                }, 
+                {
+                 "height":53.0309777961497,
+                 "id":986,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":7
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":8.39868251249936,
+                 "x":2023.81905079636,
+                 "y":1602.31139438749
+                }, 
+                {
+                 "height":192.936792619633,
+                 "id":987,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":8
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":50.105077998735,
+                 "x":1312.87171087766,
+                 "y":2282.84437159124
+                }, 
+                {
+                 "height":77.7524744020143,
+                 "id":989,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":9
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":24.0783060380479,
+                 "x":1029.71258588572,
+                 "y":2399.98373182974
+                }, 
+                {
+                 "height":37.8108762193715,
+                 "id":990,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":9
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":13.8368580049671,
+                 "x":764.262153223494,
+                 "y":2180.95630242338
+                }, 
+                {
+                 "height":98.3258380654952,
+                 "id":992,
+                 "name":"levels\/gate.png",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":10
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":false
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":2.21836,
+                 "x":680.747270921419,
+                 "y":2160.12038194303
+                }, 
+                {
+                 "height":110.966446331846,
+                 "id":994,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":10
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":13.8369,
+                 "x":662.208485802973,
+                 "y":2147.31531767432
+                }, 
+                {
+                 "height":58.1528490922763,
+                 "id":996,
+                 "name":"levels\/gate.png",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":10
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":false
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":2.21836,
+                 "x":519.132199310345,
+                 "y":1661.3069678698
+                }, 
+                {
+                 "height":79.7777267907268,
+                 "id":998,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":10
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":14.8765091069758,
+                 "x":497.638503252244,
+                 "y":1640.81252621548
+                }, 
+                {
+                 "height":58.1528,
+                 "id":999,
+                 "name":"levels\/gate.png",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":11
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":false
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":2.21836,
+                 "x":522.269402202112,
+                 "y":1661.72299668175
+                }, 
+                {
+                 "height":58.6615612368025,
+                 "id":1000,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":11
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":14.4455583925878,
+                 "x":541.103110286531,
+                 "y":1661.41525311256
+                }, 
+                {
+                 "height":57.4837721619244,
+                 "id":1001,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":11
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":13.116453065415,
+                 "x":1089.65767255794,
+                 "y":1660.31648880903
+                }, 
+                {
+                 "height":60.5840308974716,
+                 "id":1002,
+                 "name":"levels\/gate.png",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":12
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":false
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":2.21836,
+                 "x":1108.0282453382,
+                 "y":1656.1139306474
+                }, 
+                {
+                 "height":60.584,
+                 "id":1007,
+                 "name":"levels\/gate.png",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":11
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":false
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":2.21836,
+                 "x":1107.43347790589,
+                 "y":1656.11024763072
+                }, 
+                {
+                 "height":79.1106172533941,
+                 "id":1008,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":12
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":11.9150101525893,
+                 "x":1132.45412534543,
+                 "y":1640.12749805359
+                }, 
+                {
+                 "height":11.4344794162052,
+                 "id":1009,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":12
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":157.806988173125,
+                 "x":821.998294920857,
+                 "y":1207.51590603335
+                }, 
+                {
+                 "height":1.47096094853669,
+                 "id":1010,
+                 "name":"levels\/gate.png",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":12
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":false
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":119.123191908675,
+                 "x":821.522701074629,
+                 "y":1200.69240038692
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -18055,20 +17951,8 @@
                  "type":"",
                  "visible":true,
                  "width":20,
-                 "x":800,
-                 "y":1020
-                }, 
-                {
-                 "gid":41,
-                 "height":20,
-                 "id":159,
-                 "name":"aimed_jelly",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":20,
-                 "x":380,
-                 "y":1720
+                 "x":818.940379863822,
+                 "y":1027.49542616798
                 }, 
                 {
                  "gid":40,
@@ -18187,7 +18071,7 @@
                         {
                          "name":"id",
                          "type":"int",
-                         "value":4
+                         "value":-1
                         }],
                  "rotation":0,
                  "type":"",
@@ -18393,10 +18277,208 @@
                  "width":20,
                  "x":2004.48989795579,
                  "y":1878.27120375516
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":981,
+                 "name":"head",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":9
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":929.019059679103,
+                 "y":2312.33144102137
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":982,
+                 "name":"aimed_jelly",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":9
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":794.849947879519,
+                 "y":2313.47616173808
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":991,
+                 "name":"delay_track_clam45",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":10
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":402.99560225304,
+                 "y":2208.77943215535
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":997,
+                 "name":"delay_rotate_jelly",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":10
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":408,
+                 "y":1720.66666666667
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":1003,
+                 "name":"delay_track_clam90",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":11
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":957.236653178436,
+                 "y":1804.19742513881
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":1004,
+                 "name":"delay_track_clam270",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":11
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":680.510377235348,
+                 "y":1579.47077280004
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":1005,
+                 "name":"chasing_jelly",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":11
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":1039.46813110784,
+                 "y":1699.76390210153
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":1006,
+                 "name":"delay_rotate_clam",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":12
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":1195.39486035965,
+                 "y":1530.57624718072
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":1011,
+                 "name":"fixed_unbreak_clam45",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":12
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":899.958038500642,
+                 "y":1426.34698630769
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":1012,
+                 "name":"fixed_unbreak_clam225",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":12
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":1180.89764864711,
+                 "y":1288.09422694285
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":1014,
+                 "name":"aimed_jelly",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":12
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":920.023154103422,
+                 "y":1267.33470542835
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -18463,12 +18545,12 @@
                         {
                          "name":"playerX",
                          "type":"float",
-                         "value":400
+                         "value":440
                         }, 
                         {
                          "name":"playerY",
                          "type":"float",
-                         "value":440
+                         "value":390
                         }, 
                         {
                          "name":"target",
@@ -18517,17 +18599,17 @@
                         {
                          "name":"playerX",
                          "type":"float",
-                         "value":400
+                         "value":480
                         }, 
                         {
                          "name":"playerY",
                          "type":"float",
-                         "value":440
+                         "value":720
                         }, 
                         {
                          "name":"target",
                          "type":"string",
-                         "value":"levels\/hub_world.json"
+                         "value":"levels\/final_arena.json"
                         }],
                  "rotation":0,
                  "type":"",
@@ -18543,7 +18625,7 @@
          "y":0
         }],
  "nextlayerid":15,
- "nextobjectid":978,
+ "nextobjectid":1016,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

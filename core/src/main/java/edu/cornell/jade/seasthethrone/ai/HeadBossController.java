@@ -13,7 +13,7 @@ import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 
 import java.util.Random;
 
-/** A controller defining the bahavior of a shark boss. */
+/** A controller defining the behavior of a head boss. */
 public class HeadBossController implements BossController {
   /** Enumeration of AI states. */
   private static enum State {
@@ -38,7 +38,7 @@ public class HeadBossController implements BossController {
   private static float AGRO_DISTANCE = 30f;
 
   /** The minimum distance the boss must move during a movement cycle. */
-  private static float MIN_MOVE_DIST = 15f;
+  private static float MIN_MOVE_DIST = 13f;
 
   /*
    * -------------------------------
@@ -100,16 +100,16 @@ public class HeadBossController implements BossController {
 
     this.goalPos = new Vector2();
     this.rand = new Random();
-    this.bounds = new Rectangle(boss.getX() - 15, boss.getY() - 15, 30, 30);
+    this.bounds = new Rectangle(boss.getX() - 13, boss.getY() - 13, 26, 26);
 
-    this.unbreakableSpiralAttack = new SpiralAttack(boss, 10, 20, true, builder, physicsEngine);
-    this.unbreakableRingAttack = new RingAttack(boss, 100, 9, 6f, true,
+    this.unbreakableSpiralAttack = new SpiralAttack(boss, 10, 16, true, builder, physicsEngine);
+    this.unbreakableRingAttack = new RingAttack(boss, 100, 7, 6f, true,
             builder, physicsEngine);
-    this.ringAttack = new RingAttack(boss, 100, 17, 12f, false,
+    this.ringAttack = new RingAttack(boss, 100, 15, 12f, false,
             builder, physicsEngine);
     this.aimedRandomAttack = new AimedRandomStreamAttack(MathUtils.PI/5, 10, boss,
             player, builder, physicsEngine);
-    this.unbreakableRing = new UnbreakableSpinningRing(5, 240, boss, builder, physicsEngine);
+    this.unbreakableRing = new UnbreakableSpinningRing(5f,5, 240, boss, builder, physicsEngine);
   }
 
   @Override
@@ -174,7 +174,7 @@ public class HeadBossController implements BossController {
 
     switch (state) {
       case IDLE:
-        if (boss.getPosition().dst(player.getPosition()) < AGRO_DISTANCE) {
+        if (boss.getPosition().dst(player.getPosition()) < AGRO_DISTANCE && boss.isInRoom()) {
           state = State.RANDOM_ATTACK;
           timer = rand.nextInt(360, 480);
         }
@@ -182,7 +182,7 @@ public class HeadBossController implements BossController {
       case RANDOM_ATTACK:
         if (timer <= 0) {
           state = State.SPIRAL_ATTACK;
-          timer = rand.nextInt(300, 400);
+          timer = rand.nextInt(200, 300);
         }
         break;
       case SPIRAL_ATTACK:
@@ -197,10 +197,11 @@ public class HeadBossController implements BossController {
           boss.setVY(0);
           if (rand.nextBoolean()) {
             state = State.SPIRAL_ATTACK;
+            timer = rand.nextInt(200, 300);
           } else {
             state = State.RANDOM_ATTACK;
+            timer = rand.nextInt(360, 480);
           }
-          timer = rand.nextInt(360, 480);
         }
         break;
       case DEAD:
