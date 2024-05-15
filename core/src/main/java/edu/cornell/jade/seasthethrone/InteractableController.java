@@ -61,9 +61,6 @@ public class InteractableController implements Controllable {
           if (BuildConfig.DEBUG) System.out.println("Health restored!");
           player.setHealth(5);
           ((HealthpackModel) interactable).setUsed(true);
-
-          // Trying to remove healthpack after use is super buggy
-//          ((HealthpackModel) interactable).markRemoved(true);
         }
 
         // interact with checkpoints
@@ -76,7 +73,6 @@ public class InteractableController implements Controllable {
           ((CheckpointModel) interactable).setActivated(true);
           this.checkpointID = ((CheckpointModel) interactable).getCheckpointID();
           this.checkpointActivated = true;
-
         }
       }
     }

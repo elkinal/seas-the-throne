@@ -194,10 +194,6 @@ public class GameplayController implements Screen {
   public void setupGameplay() {
     dispose();
 
-    AssetDirectory assetDirectory = new AssetDirectory("assets.json");
-    assetDirectory.loadAssets();
-    assetDirectory.finishLoading();
-
     gameState = GameState.PLAY;
 
     World world = new World(new Vector2(0, 0), false);
@@ -306,7 +302,7 @@ public class GameplayController implements Screen {
       // Assuming that names are going to be of the format "_..._(boss)"
       String assetName = splitName[splitName.length-1];
 
-      JsonValue bossInfo = assetDirectory.getEntry(assetName, JsonValue.class);
+      JsonValue bossInfo = assets.getEntry(assetName, JsonValue.class);
       var bossBuilder =
           BossModel.Builder.newInstance()
               .setType(name)
