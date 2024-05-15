@@ -18,8 +18,16 @@ public class FinalBossController implements BossController {
   private static enum State {
     /** The boss is stationary */
     IDLE,
-    DELAY_SPIRAL_ROTATE,
-    DELAY_SPEED_RING,
+
+    /** FIRST PHASE STATES: */
+    F_START,
+    F_AIMED_ARC,
+    F_AIMED_SINGLE,
+
+    /** SECOND PHASE STATES: */
+    S_DELAY_SPIRAL_ROTATE,
+    S_DELAY_SPEED_RING,
+    S_DELAY_SLOW_RING,
     /** The boss is dead */
     DEAD,
   }
@@ -30,7 +38,7 @@ public class FinalBossController implements BossController {
    * -----------------------------------
    */
   /** The distance the player must be from the boss before it begins attacking. */
-  private static float AGRO_DISTANCE = 15f;
+  private static float AGRO_DISTANCE = 20f;
 
   /** The minimum distance the boss must move during a movement cycle. */
   private static float MIN_MOVE_DIST = 30f;
@@ -61,14 +69,35 @@ public class FinalBossController implements BossController {
   /** The bounds of which the boss can move */
   private Rectangle bounds;
 
+  /*
+   * -------------------------------
+   * FIRST PHASE ATTACKS
+   * -------------------------------
+   */
+  private final AttackPattern aimedArcAttack;
+  private final AttackPattern fastRingAttack;
+  private final AttackPattern slowUnbreakableRingAttack;
+  private final AttackPattern delayRotateRingAttack;
+  private final AttackPattern aimedSingleAttack;
 
-  /** The unbreakable spinning ring for the first phase */
+
+  /*
+   * -------------------------------
+   * SECOND PHASE ATTACKS
+   * -------------------------------
+   */
+
+  /** The unbreakable spinning ring  */
   private final AttackPattern unbreakableRing;
+  private final AttackPattern oscRingAttack;
 
   /** The unbreakable spiral with a delayed rotate attack */
   private final AttackPattern unbreakableDelayRotateSpiralAttack;
 
   private final AttackPattern unbreakableDelaySpeedRingAttack;
+  private final AttackPattern unbreakableDelaySlowRingAttack;
+  private final AttackPattern alternatingRingAttack;
+
 
   /**
    * Constructs a head boss controller
@@ -91,10 +120,26 @@ public class FinalBossController implements BossController {
     this.rand = new Random();
     this.bounds = new Rectangle(boss.getX() - 25, boss.getY() - 15, 50, 40);
 
+    this.aimedArcAttack = new AimedArcAttack(40, boss, player, builder, physicsEngine);
+    this.fastRingAttack = new RingAttack(boss, 100, 13, 18f, false, builder, physicsEngine);
+    this.slowUnbreakableRingAttack = new RingAttack(boss, 120, 15, 8f,
+            true, builder, physicsEngine);
+    this.delayRotateRingAttack = new DelayedRotateRingAttack(70, 19, 110, MathUtils.PI*2,
+            -MathUtils.PI/3, boss, builder, physicsEngine);
+    this.aimedSingleAttack = new SingleBulletAttack(15, boss, builder, physicsEngine);
+
+
+    this.oscRingAttack = new OscillatingRingAttack(boss, player, builder, physicsEngine);
     this.unbreakableDelayRotateSpiralAttack = new DelayedRotateSpiralAttack(boss, 7, 25, 100,
             3*MathUtils.PI/4, true, builder, physicsEngine);
-    this.unbreakableDelaySpeedRingAttack = new DelayedSpeedRingAttack(100, 13, 70,
-      2*MathUtils.PI, 6f, 20f, true, boss, builder, physicsEngine);
+    this.unbreakableDelaySpeedRingAttack = new DelayedSpeedRingAttack(120, 15, 70,
+      2*MathUtils.PI, 6f, 24f, true, boss, builder, physicsEngine);
+    this.unbreakableDelaySlowRingAttack = new DelayedSpeedRingAttack(120, 13, 60,
+            2*MathUtils.PI, 18f, 6f, true, boss, builder, physicsEngine);
+    this.alternatingRingAttack = new AlternatingRingAttack(boss, 50, 15, 9f,
+            false, builder, physicsEngine);
+
+
     this.unbreakableRing = new UnbreakableSpinningRing(5f,9, 150, boss, builder, physicsEngine);
 
   }
@@ -163,7 +208,26 @@ public class FinalBossController implements BossController {
     switch (state) {
       case IDLE:
         if (boss.getPosition().dst(player.getPosition()) < AGRO_DISTANCE && boss.isInRoom()) {
-          state = State.IDLE;
+          state = State.F_START;
+          timer = 300;
+        }
+        break;
+      case F_START:
+        if (timer <= 0) {
+          state = State.F_AIMED_ARC;
+          timer = rand.nextInt(150, 300);
+        }
+        break;
+      case F_AIMED_ARC:
+        if (timer <= 0) {
+          state = State.F_AIMED_SINGLE;
+          timer = rand.nextInt(450, 650);
+        }
+        break;
+      case F_AIMED_SINGLE:
+        if (timer <= 0) {
+          state = State.F_AIMED_ARC;
+          timer = rand.nextInt(400, 800);
         }
         break;
       case DEAD:
@@ -177,11 +241,31 @@ public class FinalBossController implements BossController {
     switch (state) {
       case IDLE:
         break;
-      case DELAY_SPIRAL_ROTATE:
+      case F_START:
+        aimedArcAttack.update(player.getX(), player.getY());
+        if (timer < 100) slowUnbreakableRingAttack.update(player.getX(), player.getY());
+        timer -=1;
+        break;
+      case F_AIMED_ARC:
+        aimedArcAttack.update(player.getX(), player.getY());
+        fastRingAttack.update(player.getX(), player.getY());
+        slowUnbreakableRingAttack.update(player.getX(), player.getY());
+        timer -=1;
+        break;
+      case F_AIMED_SINGLE:
+        delayRotateRingAttack.update(player.getX(), player.getY());
+        aimedSingleAttack.update(player.getX(), player.getY());
+        timer -=1;
+        break;
+      case S_DELAY_SPIRAL_ROTATE:
         unbreakableDelayRotateSpiralAttack.update(player.getX(), player.getY());
         break;
-      case DELAY_SPEED_RING:
+      case S_DELAY_SPEED_RING:
         unbreakableDelaySpeedRingAttack.update(player.getX(), player.getY());
+        break;
+      case S_DELAY_SLOW_RING:
+//        unbreakableDelaySlowRingAttack.update(player.getX(), player.getY());
+        alternatingRingAttack.update(player.getX(), player.getY());
         break;
       case DEAD:
         break;
