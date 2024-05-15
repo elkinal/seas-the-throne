@@ -1,6 +1,6 @@
 {
   "frame_size": 60,
-  "health": 10,
+  "health": 15,
   "scale": 0.8,
   "hitbox": [
     -2,    1.2,
