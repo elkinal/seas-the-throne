@@ -19,7 +19,7 @@ public class FinalBossController implements BossController {
     /** The boss is stationary */
     IDLE,
     /** Phase switch (animation time) */
-    PHASE_SWTITCH,
+    PHASE_SWITCH,
 
     /** FIRST PHASE STATES: */
     F_START,
@@ -211,7 +211,7 @@ public class FinalBossController implements BossController {
     } else if (boss.reachedHealthThreshold()) {
       if (firstThreshold) {
         firstThreshold = false;
-        state = State.PHASE_SWTITCH;
+        state = State.PHASE_SWITCH;
         timer = 50;
       } else {
         state = State.S_DELAY_SLOW_RING;
@@ -221,8 +221,10 @@ public class FinalBossController implements BossController {
     switch (state) {
       case IDLE:
         if (boss.getPosition().dst(player.getPosition()) < AGRO_DISTANCE && boss.isInRoom()) {
-          state = State.F_START;
-          timer = 300;
+          state = State.PHASE_SWITCH;
+          boss.launchPhaseTwo();
+//          state = State.F_START;
+//          timer = 300;
         }
         break;
       case F_START:

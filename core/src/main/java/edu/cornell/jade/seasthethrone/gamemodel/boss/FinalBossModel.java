@@ -3,11 +3,8 @@ package edu.cornell.jade.seasthethrone.gamemodel.boss;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
 public class FinalBossModel extends BossModel{
-  private boolean isSpawning = false;
   private boolean isHard;
   private int transformTimer;
-  private int spawnTimer;
-  private FilmStrip spawnAnimation;
   private FilmStrip transformAnimation;
   private FilmStrip finalAttackAnimation;
   private FilmStrip finalShootAnimation;
@@ -15,8 +12,10 @@ public class FinalBossModel extends BossModel{
 
   public FinalBossModel (Builder builder) {
     super(builder);
-    spawnAnimation = builder.spawnAnimation;
     transformAnimation = builder.transformAnimation;
+    finalAttackAnimation = builder.finalAttackAnimation;
+    finalShootAnimation = builder.finalShootAnimation;
+    finalGetHitAnimation = builder.finalGetHitAnimation;
   }
 
   /**
@@ -29,18 +28,11 @@ public class FinalBossModel extends BossModel{
     isHard = true;
     transformTimer = transformAnimation.getSize() * frameDelay;
   }
-  public void setSpawned(){
-    setFrameNumber(0);
-    isSpawning = true;
-    spawnTimer = spawnAnimation.getSize() * frameDelay;
-  }
   @Override
   public void progressFrame() {
     int frame = getFrameNumber();
     if (transformTimer>0)
       filmStrip = transformAnimation;
-    if (isSpawning)
-      filmStrip = spawnAnimation;
     else if (isDead()) {
       if (isExecute) filmStrip = deathAnimation;
       else filmStrip = falloverAnimation;
@@ -64,18 +56,6 @@ public class FinalBossModel extends BossModel{
       }
     }
     filmStrip.setFrame(frame);
-    if (isSpawning){
-      if (frameCounter % frameDelay == 0 && getFrameNumber() < getFramesInAnimation() - 1) {
-        setFrameNumber(getFrameNumber() + 1);
-        spawnTimer -= 1;
-      } else {
-        setFrameNumber(getFrameNumber());
-        spawnTimer -= 1;
-      }
-      if (spawnTimer <= 0){
-        isSpawning = false;
-      }
-    }
     if (isDead()) {
       if (frameCounter % frameDelay == 0 && getFrameNumber() < getFramesInAnimation() - 1) {
         setFrameNumber(getFrameNumber() + 1);

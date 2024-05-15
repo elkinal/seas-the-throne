@@ -389,7 +389,6 @@ public class BossModel extends EnemyModel implements Renderable {
     private FilmStrip getHitRightAnimation;
     private FilmStrip getHitDownAnimation;
     private FilmStrip getHitUpAnimation;
-    FilmStrip spawnAnimation;
     FilmStrip transformAnimation;
     FilmStrip finalAttackAnimation;
     FilmStrip finalGetHitAnimation;
@@ -533,11 +532,6 @@ public class BossModel extends EnemyModel implements Renderable {
     public Builder setShootDownAnimation(Texture texture) {
       int width = texture.getWidth();
       shootDownAnimation = new FilmStrip(texture, 1, width / frameSize);
-      return this;
-    }
-    public Builder setSpawnAnimation (Texture texture){
-      int width = texture.getWidth();
-      spawnAnimation = new FilmStrip(texture, 1, width / frameSize);
       return this;
     }
     public Builder setTransformAnimation (Texture texture){
