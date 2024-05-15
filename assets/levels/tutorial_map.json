@@ -1717,7 +1717,7 @@
                         {
                          "name":"id",
                          "type":"int",
-                         "value":1
+                         "value":2
                         }, 
                         {
                          "name":"sensor",
@@ -1739,7 +1739,7 @@
                         {
                          "name":"id",
                          "type":"int",
-                         "value":1
+                         "value":2
                         }, 
                         {
                          "name":"sensor",
@@ -2036,7 +2036,7 @@
                  "gid":40,
                  "height":20,
                  "id":325,
-                 "name":"arc_jelly",
+                 "name":"swordfish",
                  "properties":[
                         {
                          "name":"id",
@@ -2049,24 +2049,6 @@
                  "width":20,
                  "x":1140,
                  "y":1400
-                }, 
-                {
-                 "gid":40,
-                 "height":20,
-                 "id":336,
-                 "name":"chasing_jelly",
-                 "properties":[
-                        {
-                         "name":"id",
-                         "type":"int",
-                         "value":-1
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":20,
-                 "x":1561,
-                 "y":1269.5
                 }, 
                 {
                  "gid":40,
@@ -2199,7 +2181,7 @@
          "y":0
         }],
  "nextlayerid":16,
- "nextobjectid":339,
+ "nextobjectid":340,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

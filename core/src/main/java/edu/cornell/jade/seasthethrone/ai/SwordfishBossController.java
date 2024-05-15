@@ -17,12 +17,12 @@ public class SwordfishBossController implements BossController {
   private static enum State {
     /** The boss is stationary */
     IDLE,
-    /** The boss is attacking with aimed random stream */
-    RANDOM_ATTACK,
-    /** The boss is attacking with spiral */
-    SPIRAL_ATTACK,
-    /** The boss is attacking and moving at the same time */
-    ATTACK_MOVE,
+    /** The boss reached a threshold */
+    THRESHOLD,
+    /** The boss is attacking with aimed arcs */
+    ARC_ATTACK,
+    /** The boss is attacking with rings */
+    RING_ATTACK,
     /** The boss has been defeated */
     DEAD,
   }
@@ -36,7 +36,7 @@ public class SwordfishBossController implements BossController {
   private static float AGRO_DISTANCE = 30f;
 
   /** The minimum distance the boss must move during a movement cycle. */
-  private static float MIN_MOVE_DIST = 13f;
+  private static float MIN_MOVE_DIST = 20f;
 
   /*
    * -------------------------------
@@ -64,23 +64,18 @@ public class SwordfishBossController implements BossController {
   /** The bounds of which the boss can move */
   private Rectangle bounds;
 
-  /** The unbreakable spiral attack */
-  private final AttackPattern unbreakableSpiralAttack;
-
-  /** The unbreakable ring attack  */
-  private final AttackPattern unbreakableRingAttack;
+  /** The arc attack */
+  private final AttackPattern arcAttack;
 
   /** The ring attack  */
   private final AttackPattern ringAttack;
 
-  /** The aimed random stream attack */
-  private final AttackPattern aimedRandomAttack;
 
-  /** The unbreakable ring around the boss */
-  private final AttackPattern unbreakableRing;
+  /** The fast ring attack  */
+  private final AttackPattern speedRingAttack;
 
   /**
-   * Constructs a head boss controller
+   * Constructs a swordfish boss controller
    *
    * @param boss head model being mutated
    * @param player player model being attacked
@@ -98,16 +93,13 @@ public class SwordfishBossController implements BossController {
 
     this.goalPos = new Vector2();
     this.rand = new Random();
-    this.bounds = new Rectangle(boss.getX() - 13, boss.getY() - 13, 26, 26);
+    this.bounds = new Rectangle(boss.getX() - 15, boss.getY() - 15, 30, 30);
 
-    this.unbreakableSpiralAttack = new SpiralAttack(boss, 10, 16, true, builder, physicsEngine);
-    this.unbreakableRingAttack = new RingAttack(boss, 100, 7, 6f, true,
+    this.arcAttack = new AimedArcAttack(100, boss, player, builder, physicsEngine);
+    this.ringAttack = new RingAttack(boss, 100, 10, 12f, false,
             builder, physicsEngine);
-    this.ringAttack = new RingAttack(boss, 100, 15, 12f, false,
+    this.speedRingAttack = new RingAttack(boss, 100, 11, 18f, false,
             builder, physicsEngine);
-    this.aimedRandomAttack = new AimedRandomStreamAttack(MathUtils.PI/5, 10, boss,
-            player, builder, physicsEngine);
-    this.unbreakableRing = new UnbreakableSpinningRing(5f,5, 240, boss, builder, physicsEngine);
   }
 
   @Override
@@ -138,10 +130,7 @@ public class SwordfishBossController implements BossController {
 
   /** Cleans up this boss's attack pattern */
   public void dispose() {
-    unbreakableRingAttack.cleanup();
-    unbreakableSpiralAttack.cleanup();
-    unbreakableRing.cleanup();
-    aimedRandomAttack.cleanup();
+    arcAttack.cleanup();
     ringAttack.cleanup();
   }
 
@@ -166,40 +155,41 @@ public class SwordfishBossController implements BossController {
     if (boss.isDead()) {
       state = State.DEAD;
     } else if (boss.reachedHealthThreshold()) {
-      state = State.ATTACK_MOVE;
-      findNewGoalPos();
+      state = State.THRESHOLD;
+      boss.setVX(0);
+      boss.setVY(0);
+      timer = rand.nextInt(240, 360);
     }
 
     switch (state) {
       case IDLE:
         if (boss.getPosition().dst(player.getPosition()) < AGRO_DISTANCE && boss.isInRoom()) {
-          state = State.RANDOM_ATTACK;
-          timer = rand.nextInt(360, 480);
+          state = State.ARC_ATTACK;
+          findNewGoalPos();
         }
         break;
-      case RANDOM_ATTACK:
+      case ARC_ATTACK:
         if (timer <= 0) {
-          state = State.SPIRAL_ATTACK;
-          timer = rand.nextInt(200, 300);
+          state = State.RING_ATTACK;
+          findNewGoalPos();
         }
         break;
-      case SPIRAL_ATTACK:
+      case THRESHOLD:
         if (timer <= 0) {
-          state = State.RANDOM_ATTACK;
-          timer = rand.nextInt(360, 480);
+          if (rand.nextBoolean()) {
+            state = State.ARC_ATTACK;
+          } else {
+            state = State.RING_ATTACK;
+          }
+          findNewGoalPos();
         }
         break;
-      case ATTACK_MOVE:
+      case RING_ATTACK:
         if (goalPosReached()) {
           boss.setVX(0);
           boss.setVY(0);
-          if (rand.nextBoolean()) {
-            state = State.SPIRAL_ATTACK;
-            timer = rand.nextInt(200, 300);
-          } else {
-            state = State.RANDOM_ATTACK;
-            timer = rand.nextInt(360, 480);
-          }
+          state = State.ARC_ATTACK;
+          findNewGoalPos();
         }
         break;
       case DEAD:
@@ -213,23 +203,19 @@ public class SwordfishBossController implements BossController {
     switch (state) {
       case IDLE:
         break;
-      case RANDOM_ATTACK:
-        aimedRandomAttack.update(player.getX(), player.getY());
-        unbreakableRingAttack.update(player.getX(), player.getY());
+      case THRESHOLD:
+        speedRingAttack.update(player.getX(), player.getY());
         timer -= 1;
         break;
-      case SPIRAL_ATTACK:
-        unbreakableSpiralAttack.update(player.getX(), player.getY());
-        timer -= 1;
+      case ARC_ATTACK:
+        arcAttack.update(player.getX(), player.getY());
         break;
-      case ATTACK_MOVE:
-        unbreakableRingAttack.update(player.getX(), player.getY());
+      case RING_ATTACK:
         ringAttack.update(player.getX(), player.getY());
         break;
       case DEAD:
         break;
     }
-    if (state != State.IDLE && state != State.DEAD) unbreakableRing.update(player.getX(), player.getY());
   }
 
   /** If the goal pos was reached */
@@ -247,7 +233,7 @@ public class SwordfishBossController implements BossController {
               rand.nextFloat(bounds.getX(), bounds.getX() + bounds.getWidth()),
               rand.nextFloat(bounds.getY(), bounds.getY() + bounds.getHeight()));
     }
-    boss.setLinearVelocity(boss.getPosition().sub(goalPos).nor().scl(-3));
+    boss.setLinearVelocity(boss.getPosition().sub(goalPos).nor().scl(-5));
   }
 }
 
