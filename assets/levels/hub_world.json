@@ -876,6 +876,38 @@
                  "width":18,
                  "x":370.588765675678,
                  "y":440.381555621668
+                }, 
+                {
+                 "height":18,
+                 "id":388,
+                 "name":"levels\/portal_lobby.png",
+                 "properties":[
+                        {
+                         "name":"playerX",
+                         "type":"float",
+                         "value":470
+                        }, 
+                        {
+                         "name":"playerY",
+                         "type":"float",
+                         "value":730
+                        }, 
+                        {
+                         "name":"requiredCheckpoint",
+                         "type":"int",
+                         "value":-1
+                        }, 
+                        {
+                         "name":"target",
+                         "type":"string",
+                         "value":"levels\/final_arena.json"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":18,
+                 "x":431.347693189416,
+                 "y":383.110039163244
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -884,7 +916,7 @@
          "y":0
         }],
  "nextlayerid":17,
- "nextobjectid":388,
+ "nextobjectid":389,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

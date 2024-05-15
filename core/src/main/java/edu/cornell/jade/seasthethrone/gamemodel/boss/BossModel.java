@@ -584,9 +584,9 @@ public class BossModel extends EnemyModel implements Renderable {
       } else if (type.equals("head")) {
       return new HeadBossController(model, player, bulletBuilder, physicsEngine);
       } else if (type.equals("swordfish")) {
-        return new SwordfishBossController (model, player, bulletBuilder, physicsEngine);
+        return new SwordfishBossController ((SwordfishBossModel) model, player, bulletBuilder, physicsEngine);
       } else if (type.equals("final")){
-        return new FinalBossController(model, player, bulletBuilder, physicsEngine);
+        return new FinalBossController((FinalBossModel) model, player, bulletBuilder, physicsEngine);
       } else if (type.equals("aimed_jelly")) {
         return new AimedSingleBulletJellyBossController(model, player, bulletBuilder, physicsEngine);
       } else if (type.equals("arc_jelly")) {

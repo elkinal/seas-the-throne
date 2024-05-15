@@ -7,6 +7,7 @@ import edu.cornell.jade.seasthethrone.bpedit.AttackPattern;
 import edu.cornell.jade.seasthethrone.bpedit.patterns.*;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
+import edu.cornell.jade.seasthethrone.gamemodel.boss.FinalBossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 
@@ -17,13 +18,9 @@ public class FinalBossController implements BossController {
   private static enum State {
     /** The boss is stationary */
     IDLE,
-    /** The boss is attacking with aimed random stream */
-    RANDOM_ATTACK,
-    /** The boss is attacking with spiral */
-    SPIRAL_ATTACK,
-    /** The boss is attacking and moving at the same time */
-    ATTACK_MOVE,
-    /** The boss has been defeated */
+    DELAY_SPIRAL_ROTATE,
+    DELAY_SPEED_RING,
+    /** The boss is dead */
     DEAD,
   }
 
@@ -33,10 +30,10 @@ public class FinalBossController implements BossController {
    * -----------------------------------
    */
   /** The distance the player must be from the boss before it begins attacking. */
-  private static float AGRO_DISTANCE = 30f;
+  private static float AGRO_DISTANCE = 15f;
 
   /** The minimum distance the boss must move during a movement cycle. */
-  private static float MIN_MOVE_DIST = 13f;
+  private static float MIN_MOVE_DIST = 30f;
 
   /*
    * -------------------------------
@@ -44,7 +41,7 @@ public class FinalBossController implements BossController {
    * -------------------------------
    */
   /** The model being controlled */
-  private BossModel boss;
+  private FinalBossModel boss;
 
   /** The player model being attacked */
   private PlayerModel player;
@@ -64,20 +61,14 @@ public class FinalBossController implements BossController {
   /** The bounds of which the boss can move */
   private Rectangle bounds;
 
-  /** The unbreakable spiral attack */
-  private final AttackPattern unbreakableSpiralAttack;
 
-  /** The unbreakable ring attack  */
-  private final AttackPattern unbreakableRingAttack;
-
-  /** The ring attack  */
-  private final AttackPattern ringAttack;
-
-  /** The aimed random stream attack */
-  private final AttackPattern aimedRandomAttack;
-
-  /** The unbreakable ring around the boss */
+  /** The unbreakable spinning ring for the first phase */
   private final AttackPattern unbreakableRing;
+
+  /** The unbreakable spiral with a delayed rotate attack */
+  private final AttackPattern unbreakableDelayRotateSpiralAttack;
+
+  private final AttackPattern unbreakableDelaySpeedRingAttack;
 
   /**
    * Constructs a head boss controller
@@ -88,7 +79,7 @@ public class FinalBossController implements BossController {
    * @param physicsEngine physics engine to add bullet attack to
    */
   public FinalBossController(
-          BossModel boss,
+          FinalBossModel boss,
           PlayerModel player,
           BulletModel.Builder builder,
           PhysicsEngine physicsEngine) {
@@ -98,22 +89,23 @@ public class FinalBossController implements BossController {
 
     this.goalPos = new Vector2();
     this.rand = new Random();
-    this.bounds = new Rectangle(boss.getX() - 13, boss.getY() - 13, 26, 26);
+    this.bounds = new Rectangle(boss.getX() - 25, boss.getY() - 15, 50, 40);
 
-    this.unbreakableSpiralAttack = new SpiralAttack(boss, 10, 16, true, builder, physicsEngine);
-    this.unbreakableRingAttack = new RingAttack(boss, 100, 7, 6f, true,
-            builder, physicsEngine);
-    this.ringAttack = new RingAttack(boss, 100, 15, 12f, false,
-            builder, physicsEngine);
-    this.aimedRandomAttack = new AimedRandomStreamAttack(MathUtils.PI/5, 10, boss,
-            player, builder, physicsEngine);
-    this.unbreakableRing = new UnbreakableSpinningRing(5f,5, 240, boss, builder, physicsEngine);
+    this.unbreakableDelayRotateSpiralAttack = new DelayedRotateSpiralAttack(boss, 7, 25, 100,
+            3*MathUtils.PI/4, true, builder, physicsEngine);
+    this.unbreakableDelaySpeedRingAttack = new DelayedSpeedRingAttack(100, 13, 70,
+      2*MathUtils.PI, 6f, 20f, true, boss, builder, physicsEngine);
+    this.unbreakableRing = new UnbreakableSpinningRing(5f,9, 150, boss, builder, physicsEngine);
+
   }
 
   @Override
   public int getHealth() {
     return boss.getHealth();
   }
+
+  @Override
+  public int getMaxHealth() { return boss.getFullHealth(); }
 
   @Override
   public boolean isDead() {
@@ -138,11 +130,11 @@ public class FinalBossController implements BossController {
 
   /** Cleans up this boss's attack pattern */
   public void dispose() {
-    unbreakableRingAttack.cleanup();
-    unbreakableSpiralAttack.cleanup();
-    unbreakableRing.cleanup();
-    aimedRandomAttack.cleanup();
-    ringAttack.cleanup();
+//    unbreakableRingAttack.cleanup();
+//    unbreakableSpiralAttack.cleanup();
+//    unbreakableRing.cleanup();
+//    aimedRandomAttack.cleanup();
+//    ringAttack.cleanup();
   }
 
   /** Returns the boss of this controller */
@@ -166,40 +158,12 @@ public class FinalBossController implements BossController {
     if (boss.isDead()) {
       state = State.DEAD;
     } else if (boss.reachedHealthThreshold()) {
-      state = State.ATTACK_MOVE;
-      findNewGoalPos();
     }
 
     switch (state) {
       case IDLE:
         if (boss.getPosition().dst(player.getPosition()) < AGRO_DISTANCE && boss.isInRoom()) {
-          state = State.RANDOM_ATTACK;
-          timer = rand.nextInt(360, 480);
-        }
-        break;
-      case RANDOM_ATTACK:
-        if (timer <= 0) {
-          state = State.SPIRAL_ATTACK;
-          timer = rand.nextInt(200, 300);
-        }
-        break;
-      case SPIRAL_ATTACK:
-        if (timer <= 0) {
-          state = State.RANDOM_ATTACK;
-          timer = rand.nextInt(360, 480);
-        }
-        break;
-      case ATTACK_MOVE:
-        if (goalPosReached()) {
-          boss.setVX(0);
-          boss.setVY(0);
-          if (rand.nextBoolean()) {
-            state = State.SPIRAL_ATTACK;
-            timer = rand.nextInt(200, 300);
-          } else {
-            state = State.RANDOM_ATTACK;
-            timer = rand.nextInt(360, 480);
-          }
+          state = State.IDLE;
         }
         break;
       case DEAD:
@@ -213,18 +177,11 @@ public class FinalBossController implements BossController {
     switch (state) {
       case IDLE:
         break;
-      case RANDOM_ATTACK:
-        aimedRandomAttack.update(player.getX(), player.getY());
-        unbreakableRingAttack.update(player.getX(), player.getY());
-        timer -= 1;
+      case DELAY_SPIRAL_ROTATE:
+        unbreakableDelayRotateSpiralAttack.update(player.getX(), player.getY());
         break;
-      case SPIRAL_ATTACK:
-        unbreakableSpiralAttack.update(player.getX(), player.getY());
-        timer -= 1;
-        break;
-      case ATTACK_MOVE:
-        unbreakableRingAttack.update(player.getX(), player.getY());
-        ringAttack.update(player.getX(), player.getY());
+      case DELAY_SPEED_RING:
+        unbreakableDelaySpeedRingAttack.update(player.getX(), player.getY());
         break;
       case DEAD:
         break;
@@ -238,7 +195,7 @@ public class FinalBossController implements BossController {
   }
 
   /** Helper function to generate new goal position & set boss velocity. * */
-  private void findNewGoalPos() {
+  private void findNewGoalPos(int vel) {
     goalPos.set(
             rand.nextFloat(bounds.getX(), bounds.getX() + bounds.getWidth()),
             rand.nextFloat(bounds.getY(), bounds.getY() + bounds.getHeight()));
@@ -247,6 +204,6 @@ public class FinalBossController implements BossController {
               rand.nextFloat(bounds.getX(), bounds.getX() + bounds.getWidth()),
               rand.nextFloat(bounds.getY(), bounds.getY() + bounds.getHeight()));
     }
-    boss.setLinearVelocity(boss.getPosition().sub(goalPos).nor().scl(-3));
+    boss.setLinearVelocity(boss.getPosition().sub(goalPos).nor().scl(-vel));
   }
 }

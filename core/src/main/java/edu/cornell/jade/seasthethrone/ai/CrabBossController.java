@@ -142,6 +142,11 @@ public class CrabBossController implements BossController {
   }
 
   @Override
+  public int getMaxHealth() {
+    return boss.getFullHealth();
+  }
+
+  @Override
   public boolean isDead() {
     return boss.isDead();
   }

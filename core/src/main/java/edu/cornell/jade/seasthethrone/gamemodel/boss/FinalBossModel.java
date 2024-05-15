@@ -11,6 +11,15 @@ public class FinalBossModel extends BossModel{
     super(builder);
     spawnAnimation = builder.spawnAnimation;
   }
+
+  /**
+   * TODO: this function should set the animation to the spawn animation,
+   * change all relevant assets to the "final" asset version, and (optionally?)
+   * center the screen on the boss/freeze the player during the spawn animation
+   * (this might be a bit hard though, it kinda ties into the execute animations)
+   */
+  public void launchPhaseTwo(){
+  }
   public void setSpawned(){
     setFrameNumber(0);
     isSpawning = true;

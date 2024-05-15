@@ -101,7 +101,7 @@ public class UIModel implements Renderable {
     } else {
       if (boss.isBoss()) {
         isBoss = true;
-        this.boss.changeHP(boss.getHealth());
+        this.boss.changeHP(boss.getHealth(), boss.getMaxHealth());
       }
       else{
         EnemyHealthBar newEnemy = new EnemyHealthBar(foreground, background);

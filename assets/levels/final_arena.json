@@ -423,7 +423,25 @@
          "draworder":"topdown",
          "id":2,
          "name":"bosses",
-         "objects":[],
+         "objects":[
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":389,
+                 "name":"final",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":-1
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":469.66241878226,
+                 "y":475.678181977142
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -465,7 +483,7 @@
          "y":0
         }],
  "nextlayerid":17,
- "nextobjectid":389,
+ "nextobjectid":390,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

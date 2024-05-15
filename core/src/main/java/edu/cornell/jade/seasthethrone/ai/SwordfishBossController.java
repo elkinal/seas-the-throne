@@ -7,6 +7,7 @@ import edu.cornell.jade.seasthethrone.bpedit.AttackPattern;
 import edu.cornell.jade.seasthethrone.bpedit.patterns.*;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
+import edu.cornell.jade.seasthethrone.gamemodel.boss.SwordfishBossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 
@@ -44,7 +45,7 @@ public class SwordfishBossController implements BossController {
    * -------------------------------
    */
   /** The model being controlled */
-  private BossModel boss;
+  private SwordfishBossModel boss;
 
   /** The player model being attacked */
   private PlayerModel player;
@@ -83,7 +84,7 @@ public class SwordfishBossController implements BossController {
    * @param physicsEngine physics engine to add bullet attack to
    */
   public SwordfishBossController(
-          BossModel boss,
+          SwordfishBossModel boss,
           PlayerModel player,
           BulletModel.Builder builder,
           PhysicsEngine physicsEngine) {
@@ -106,6 +107,9 @@ public class SwordfishBossController implements BossController {
   public int getHealth() {
     return boss.getHealth();
   }
+
+  @Override
+  public int getMaxHealth() { return boss.getFullHealth(); }
 
   @Override
   public boolean isDead() {

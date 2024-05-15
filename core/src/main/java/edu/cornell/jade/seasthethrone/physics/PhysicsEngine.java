@@ -121,7 +121,6 @@ public class PhysicsEngine implements ContactListener {
           // Resolve knockback flag
           PlayerBodyModel body = ((PlayerModel) obj).getBodyModel();
           if (body.isJustKnocked()) {
-            System.out.println("nono");
             applyKnockback(body, body.getKnockingBodyPos(), body.getKnockbackForce());
             body.setJustKnocked(false);
           }

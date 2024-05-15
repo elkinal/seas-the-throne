@@ -116,6 +116,30 @@ public final class SpawnerFactory {
   }
 
   /**
+   * Constructs a repeating stream going in both directions with a delayed rotate
+   *
+   * @param delay         delay in between firings
+   * @param delayRotate   the length of time until rotation
+   * @param theta         the angle to rotate by (radians)
+   * @param builder       a builder to create bullet models
+   * @param physicsEngine {@link PhysicsEngine} to add bullets to
+   */
+  public static Spawner constructRepeatingDelayedRotateStream(int delay, int delayRotate, float theta,
+                                                    BulletModel.Builder builder, PhysicsEngine physicsEngine) {
+    Spawner out = new Spawner(builder, physicsEngine, bulletFamilyPool, bulletModelPool);
+    BulletFamily f = new BulletFamily(-1f, 0f, -10f, -0f, 0.5f, 0);
+    f.addEffect(new Periodic(delay));
+    f.addDelayedAction(new Spawner.DelayedVelocityRotate(theta, delayRotate));
+    out.addFamily(f);
+
+    f = new BulletFamily(1f, 0f, 10f, -0f, 0.5f, 0);
+    f.addEffect(new Periodic(delay));
+    f.addDelayedAction(new Spawner.DelayedVelocityRotate(theta, delayRotate));
+    out.addFamily(f);
+    return out;
+  }
+
+  /**
    * Constructs a single repeatedly shooting bullet whose origin changes based on
    * the tracked model which will reangle to home in on the player after a given
    * amount of time.
@@ -280,6 +304,31 @@ public final class SpawnerFactory {
     BulletFamily f = new BulletFamily(0f, 0f, 10f, 0f, 0.5f, 0);
     f.addEffect(new PlaysAttackAnimation(model));
     f.addDelayedAction(new Spawner.DelayedVelocityRotate(rotateAngle, delay));
+    f.addEffect(new Periodic(period));
+    f.addEffect(new Arc(-centralAngle/2, centralAngle, dups));
+    out.addFamily(f);
+    return out;
+  }
+
+  /**
+   * Constructs a ring with a delayed speed increase
+   *
+   * @param dups          number of bullets in the arc
+   * @param centralAngle  size of the arc in radians
+   * @param period        delay in between firings
+   * @param delay         delay until rotating
+   * @param startVel      the starting velocity
+   * @param endVel        the ending velocity
+   * @param model         the model to play animations
+   * @param builder       a builder to create bullet models
+   * @param physicsEngine {@link PhysicsEngine} to add bullets to
+   */
+  public static Spawner constructRepeatingDelayedSpeedArc(int dups, float centralAngle, int period, int delay,
+           float startVel, float endVel, BossModel model, BulletModel.Builder builder, PhysicsEngine physicsEngine) {
+    Spawner out = new Spawner(builder, physicsEngine, bulletFamilyPool, bulletModelPool);
+    BulletFamily f = new BulletFamily(0f, 0f, startVel, 0f, 0.5f, 0);
+    f.addEffect(new PlaysAttackAnimation(model));
+    f.addDelayedAction(new Spawner.DelayedSpeedChange(endVel, delay));
     f.addEffect(new Periodic(period));
     f.addEffect(new Arc(-centralAngle/2, centralAngle, dups));
     out.addFamily(f);
