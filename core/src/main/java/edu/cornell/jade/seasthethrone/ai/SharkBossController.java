@@ -28,6 +28,8 @@ public class SharkBossController implements BossController {
     ATTACK_MOVE,
     /** The boss is moving towards where the player was */
     CHASE_PLAYER,
+    /** The boss is moving towards where the player was */
+    CHASE_PLAYER2,
     /** The boss is resetting its position */
     RESET,
     /** The boss has been defeated */
@@ -213,9 +215,16 @@ public class SharkBossController implements BossController {
         break;
       case CHASE_PLAYER:
         if (goalPosReached()) {
+          state = State.CHASE_PLAYER2;
+          goalPos.set(player.getX(), player.getY());
+          boss.setLinearVelocity(boss.getPosition().sub(goalPos).nor().scl(-15));
+        }
+        break;
+      case CHASE_PLAYER2:
+        if (goalPosReached()) {
           state = State.RESET;
           goalPos.set(
-              bounds.getX() + bounds.getWidth() / 2, bounds.getY() + bounds.getHeight() / 2);
+                  bounds.getX() + bounds.getWidth() / 2, bounds.getY() + bounds.getHeight() / 2);
           boss.setLinearVelocity(boss.getPosition().sub(goalPos).nor().scl(-5));
         }
         break;
@@ -236,8 +245,6 @@ public class SharkBossController implements BossController {
   /** Performs actions based on the controller state */
   private void act() {
     switch (state) {
-      case IDLE:
-        break;
       case ARC_ATTACK:
         aimedArcAttack.update(player.getX(), player.getY());
         ringAttack.update(player.getX(), player.getY());
@@ -251,11 +258,7 @@ public class SharkBossController implements BossController {
       case ATTACK_MOVE:
         aimedArcAttack.update(player.getX(), player.getY());
         break;
-      case CHASE_PLAYER:
-        break;
-      case RESET:
-        break;
-      case DEAD:
+      default:
         break;
     }
     if (state != State.IDLE && state != State.DEAD) unbreakableRing.update(player.getX(), player.getY());

@@ -38,7 +38,7 @@ public class HeadBossController implements BossController {
   private static float AGRO_DISTANCE = 30f;
 
   /** The minimum distance the boss must move during a movement cycle. */
-  private static float MIN_MOVE_DIST = 15f;
+  private static float MIN_MOVE_DIST = 13f;
 
   /*
    * -------------------------------
@@ -100,12 +100,12 @@ public class HeadBossController implements BossController {
 
     this.goalPos = new Vector2();
     this.rand = new Random();
-    this.bounds = new Rectangle(boss.getX() - 15, boss.getY() - 15, 30, 30);
+    this.bounds = new Rectangle(boss.getX() - 13, boss.getY() - 13, 26, 26);
 
-    this.unbreakableSpiralAttack = new SpiralAttack(boss, 10, 20, true, builder, physicsEngine);
-    this.unbreakableRingAttack = new RingAttack(boss, 100, 9, 6f, true,
+    this.unbreakableSpiralAttack = new SpiralAttack(boss, 10, 16, true, builder, physicsEngine);
+    this.unbreakableRingAttack = new RingAttack(boss, 100, 7, 6f, true,
             builder, physicsEngine);
-    this.ringAttack = new RingAttack(boss, 100, 17, 12f, false,
+    this.ringAttack = new RingAttack(boss, 100, 15, 12f, false,
             builder, physicsEngine);
     this.aimedRandomAttack = new AimedRandomStreamAttack(MathUtils.PI/5, 10, boss,
             player, builder, physicsEngine);

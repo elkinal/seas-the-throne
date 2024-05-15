@@ -30,7 +30,7 @@ public class DelayedRotateRingAttack extends AttackPattern {
   public DelayedRotateRingAttack(int period, int dups,  int delay, float centralAngle, float rotateAngle, BossModel model,
                                  BulletModel.Builder builder, PhysicsEngine physicsEngine) {
     this.spawner = SpawnerFactory.constructRepeatingDelayedRotateArc(dups, centralAngle, period,
-            delay, rotateAngle, builder, physicsEngine);
+            delay, rotateAngle, model,  builder, physicsEngine);
     this.model = model;
 
     this.addSpawner(spawner);

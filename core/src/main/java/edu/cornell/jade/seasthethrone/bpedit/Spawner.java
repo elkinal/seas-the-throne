@@ -816,7 +816,6 @@ public class Spawner {
     BulletModel m = BulletModel.construct(bulletBuilder, bulletBasePool);
     bulletBuilder.setType(BulletModel.Builder.Type.DEFAULT);
     for (DelayedAction a : f.delayedActions) {
-      System.out.println(m);
       a.setModel(m);
       delayedActions.add(a, a.delay + f.timestamp);
       delayedActionsList.add(a);

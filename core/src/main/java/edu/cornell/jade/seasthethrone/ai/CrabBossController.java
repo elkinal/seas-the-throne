@@ -19,12 +19,12 @@ public class CrabBossController implements BossController {
     IDLE,
     /** The boss reached a threshold*/
     THRESHOLD,
-    /** The boss is attacking with a delayed homing ring */
-    HOMING_RING_ATTACK,
     /** The boss is attacking with delayed rotating arcs */
     ROTATE_RING_ATTACK,
     /** The boss is attacking with delayed homing sped up bullets */
     HOMING_SPEED_ATTACK,
+    /** The boss is attacking with a delayed homing ring while moving */
+    ATTACK_MOVE,
     /** The boss is moving */
     MOVE,
     /** The boss has been defeated */
@@ -117,19 +117,19 @@ public class CrabBossController implements BossController {
 
     this.goalPos = new Vector2();
     this.rand = new Random();
-    this.bounds = new Rectangle(boss.getX() - 15, boss.getY() - 15, 30, 30);
+    this.bounds = new Rectangle(boss.getX() - 16, boss.getY() - 13, 32, 26);
 
     this.ringStack1Attack = new RingAttack(boss, 100, 9, 10f, false, builder, physicsEngine);
     this.ringStack2Attack = new RingAttack(boss, 100, 9, 11f, false, builder, physicsEngine);
     this.ringStack3Attack = new RingAttack(boss, 100, 9, 12f, false, builder, physicsEngine);
     this.denseRingAttack = new RingAttack(boss, 70, 30, 10f, false, builder, physicsEngine);
-    this.speedRingAttack = new RingAttack(boss, 100, 11, 18f, false, builder, physicsEngine);
+    this.speedRingAttack = new RingAttack(boss, 100, 13, 20f, false, builder, physicsEngine);
 
-    this.delayRotateRingAttack = new DelayedRotateRingAttack(70, 13, 50, MathUtils.PI*2,
+    this.delayRotateRingAttack = new DelayedRotateRingAttack(70, 15, 50, MathUtils.PI*2,
             -MathUtils.PI/3, boss, builder, physicsEngine);
     this.homingSpeedAttack = new DelayedTrackingSpeedArcAttack(70, 4, 2*MathUtils.PI, 0,
             50, boss, player, builder, physicsEngine);
-    this.homingRingAttack = new DelayedTrackingArcAttack(100, 9, 2* MathUtils.PI, 0,
+    this.homingRingAttack = new DelayedTrackingArcAttack(100, 11, 2* MathUtils.PI, 0,
             50, boss, player, builder, physicsEngine);
     this.backRotateRingAttack = new DelayedRotateRingAttack(120, 10, 60, MathUtils.PI*2,
             MathUtils.PI, boss, builder, physicsEngine) ;
@@ -196,14 +196,74 @@ public class CrabBossController implements BossController {
     if (boss.isDead()) {
       state = State.DEAD;
     } else if (boss.reachedHealthThreshold()) {
-      state = State.MOVE;
-      findNewGoalPos();
+      state = State.THRESHOLD;
+      timer = rand.nextInt(480, 600);
+      boss.setVX(0);
+      boss.setVY(0);
     }
 
     switch (state) {
       case IDLE:
         if (boss.getPosition().dst(player.getPosition()) < AGRO_DISTANCE && boss.isInRoom()) {
-          state = State.ROTATE_RING_ATTACK;
+          state = State.ATTACK_MOVE;
+          findNewGoalPos();
+        }
+        break;
+      case THRESHOLD:
+        if (timer <= 0) {
+          int r = rand.nextInt(0, 2);
+          if (r == 0) {
+            state = State.MOVE;
+            findNewGoalPos();
+          } else if (r == 1) {
+            state = State.HOMING_SPEED_ATTACK;
+            timer = rand.nextInt(360, 480);
+          } else {
+            state = State.ROTATE_RING_ATTACK;
+            timer = rand.nextInt(240, 480);
+          }
+        }
+        break;
+      case HOMING_SPEED_ATTACK:
+        if (timer <= 0) {
+          int r = rand.nextInt(0, 2);
+          if (r == 0) {
+            state = State.MOVE;
+            findNewGoalPos();
+          } else if (r == 1) {
+            state = State.ATTACK_MOVE;
+            findNewGoalPos();
+          } else {
+            state = State.ROTATE_RING_ATTACK;
+            timer = rand.nextInt(240, 480);
+          }
+        }
+        break;
+      case ROTATE_RING_ATTACK:
+        if (timer <= 0) {
+          int r = rand.nextInt(0, 2);
+          if (r == 0) {
+            state = State.MOVE;
+            findNewGoalPos();
+          } else if (r == 1) {
+            state = State.ATTACK_MOVE;
+            findNewGoalPos();
+          } else {
+            state = State.HOMING_SPEED_ATTACK;
+            timer = rand.nextInt(240, 480);
+          }
+        }
+        break;
+      case ATTACK_MOVE, MOVE:
+        if (goalPosReached()) {
+          boss.setVX(0);
+          boss.setVY(0);
+          if (rand.nextBoolean()) {
+            state = State.HOMING_SPEED_ATTACK;
+          } else {
+            state = State.ROTATE_RING_ATTACK;
+          }
+          timer = rand.nextInt(300, 600);
         }
         break;
       case DEAD:
@@ -215,7 +275,7 @@ public class CrabBossController implements BossController {
   /** Performs actions based on the controller state */
   private void act() {
     switch (state) {
-      case IDLE:
+      case IDLE, DEAD, MOVE:
         break;
       case THRESHOLD:
         ringStack1Attack.update(player.getX(), player.getY());
@@ -223,19 +283,20 @@ public class CrabBossController implements BossController {
         ringStack3Attack.update(player.getX(), player.getY());
         denseRingAttack.update(player.getX(), player.getY());
         homingRingAttack.update(player.getX(), player.getY());
+        timer -= 1;
         break;
       case ROTATE_RING_ATTACK:
         delayRotateRingAttack.update(player.getX(), player.getY());
         speedRingAttack.update(player.getX(), player.getY());
-        break;
-      case HOMING_RING_ATTACK:
-        homingRingAttack.update(player.getX(), player.getY());
+        timer -= 1;
         break;
       case HOMING_SPEED_ATTACK:
         homingSpeedAttack.update(player.getX(), player.getY());
         backRotateRingAttack.update(player.getX(), player.getY());
+        timer -= 1;
         break;
-      case DEAD:
+      case ATTACK_MOVE:
+        homingRingAttack.update(player.getX(), player.getY());
         break;
     }
     if (state != State.IDLE && state != State.DEAD) unbreakableRing.update(player.getX(), player.getY());
@@ -256,6 +317,6 @@ public class CrabBossController implements BossController {
               rand.nextFloat(bounds.getX(), bounds.getX() + bounds.getWidth()),
               rand.nextFloat(bounds.getY(), bounds.getY() + bounds.getHeight()));
     }
-    boss.setLinearVelocity(boss.getPosition().sub(goalPos).nor().scl(-5));
+    boss.setLinearVelocity(boss.getPosition().sub(goalPos).nor().scl(-6));
   }
 }
