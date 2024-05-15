@@ -209,7 +209,8 @@ public class GameplayController implements Screen {
     // Load player
     // TODO: make this come from the information JSON
     Vector2 playerLoc;
-    if (physicsEngine == null || physicsEngine.getSpawnPoint() == null) {
+    if (restart) playerLoc = stateController.getRespawnLoc();
+    else if (physicsEngine == null || physicsEngine.getSpawnPoint() == null) {
       playerLoc = level.getPlayerLoc();
     } else {
       playerLoc = level.tiledToWorldCoords(physicsEngine.getSpawnPoint());
@@ -255,17 +256,6 @@ public class GameplayController implements Screen {
             .setCooldownLimit(10)
             .setShootCooldownLimit(20)
             .build();
-
-    if (restart) {
-      try {
-        System.out.println("respawn loc " + stateController.getRespawnLoc());
-        player.setPosition(stateController.getRespawnLoc());
-      } catch (NullPointerException e) {
-        System.out.println("respawn to default loc");
-        player.setPosition(level.getPlayerLoc());
-      }
-      restart = false;
-    }
 
     renderEngine.addRenderable(player);
     // Initialize physics engine
@@ -556,19 +546,22 @@ public class GameplayController implements Screen {
       returnToHub = false;
     }
 
-    if (restart) {
-      respawn();
-    }
+    if (restart) restart();
+
 
     if (quit) {
+      if (BuildConfig.DEBUG) {
+        System.out.println("Exiting game");
+      }
       ((GDXRoot) listener).dispose();
       System.exit(0);
+//      listener.exitScreen(this, 4);
     }
 
     // Draw reset and debug screen for wins and losses
     if (gameState == GameState.OVER || gameState == GameState.WIN) {
       if (inputController.didReset()) {
-        respawn();
+        restart = true;
         pauseController.continueGame();
       } else {
         renderEngine.drawGameState(gameState);
@@ -614,18 +607,19 @@ public class GameplayController implements Screen {
     }
   }
 
-  private void respawn() {
+  private void restart() {
     if (BuildConfig.DEBUG) {
       System.out.println("Respawning");
     }
-
-    Vector2 respawnLoc = (stateController.getRespawnLoc() == null) ? null : stateController.getRespawnLoc().cpy();
-
     setupGameplay();
-    stateController.loadState();
-    transferState(stateController.getLevel(level.name));
-
-    if (respawnLoc != null) stateController.setRespawnLoc(respawnLoc);
+//    try {
+//      System.out.println("respawn loc " + stateController.getRespawnLoc());
+//      playerController.setPlayerLocation(stateController.getRespawnLoc());
+//    } catch (NullPointerException e) {
+//      System.out.println("respawn to default loc");
+//      playerController.setPlayerLocation(level.getPlayerLoc());
+//    }
+    restart = false;
   }
 
   /**

@@ -45,13 +45,18 @@ public class PauseMenuController implements Controllable {
       case RESUME -> pauseMenu.setPaused(false);
       case RESTART -> restart();
       case OPTIONS -> pauseMenu.getDialogueBox().show();
-      case LEVEL_SELECT -> gameplayController.setReturnToHub(true);
+      case LEVEL_SELECT -> levelSelect();
       case QUIT -> gameplayController.setQuit(true);
     }
   }
 
   private void restart() {
     gameplayController.setRestart(true);
+    pauseMenu.setPaused(false);
+  }
+
+  private void levelSelect() {
+    gameplayController.setReturnToHub(true);
     pauseMenu.setPaused(false);
   }
 

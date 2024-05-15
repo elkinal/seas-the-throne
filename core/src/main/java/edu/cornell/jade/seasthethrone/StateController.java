@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.*;
 import edu.cornell.jade.seasthethrone.ai.BossController;
+import edu.cornell.jade.seasthethrone.gamemodel.CheckpointModel;
 import edu.cornell.jade.seasthethrone.level.LevelObject;
 import edu.cornell.jade.seasthethrone.level.LevelState;
 import com.badlogic.gdx.Preferences;
@@ -68,7 +69,8 @@ public class StateController {
   /** Serializes the state of this controller to a json */
   public void saveGame() {
     if (BuildConfig.DEBUG) {
-      System.out.println("saving game");
+      System.out.println("Saving game");
+      System.out.println("Checkpoint "+this.checkpoint+" activated");
     }
     prefs.putInteger("checkpoint", this.checkpoint);
     prefs.putInteger("player health", this.playerHealth);
@@ -76,7 +78,11 @@ public class StateController {
     try {
       prefs.putFloat("respawn x", this.respawnLoc.x);
       prefs.putFloat("respawn y", this.respawnLoc.y);
+      if (BuildConfig.DEBUG) {
+        System.out.println("Saved respawn loc: "+respawnLoc);
+      }
     } catch (NullPointerException e) {
+      System.out.println("NullPointer on save respawn loc");
     }
 
     String storedLevelsString = json.prettyPrint(json.toJson(storedLevels));
@@ -97,8 +103,6 @@ public class StateController {
       }
 
       String storedLevelsString = prefs.getString("stored levels", "");
-      System.out.println("sl string "+storedLevelsString);
-
       this.storedLevels.clear();
 
      JsonValue levelsRoot = new JsonReader().parse(storedLevelsString);
@@ -106,8 +110,6 @@ public class StateController {
         LevelState thisLevel = new LevelState(levelsRoot.get(i).get("bossHps").asIntArray());
         storedLevels.put(levelsRoot.get(i).name, thisLevel);
       }
-      System.out.println("stored l "+storedLevels);
-
     } catch (Exception e) {
       if (BuildConfig.DEBUG) {
         System.out.println("Loading defaults");
