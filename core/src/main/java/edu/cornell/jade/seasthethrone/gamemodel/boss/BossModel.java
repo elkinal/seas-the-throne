@@ -141,8 +141,8 @@ public class BossModel extends EnemyModel implements Renderable {
     shouldUpdate = true;
     alwaysAnimate = false;
     roomId = builder.roomId;
-    bodyKnockbackForce = 60f;
-    spearKnockbackForce = 100f;
+    bodyKnockbackForce = 50f;
+    spearKnockbackForce = 80f;
     healthThresholds = builder.healthThresholds;
     thresholdPointer = 0;
     isExecute = false;
