@@ -57,7 +57,7 @@ public class InteractableController implements Controllable {
     for (Interactable interactable : interactables) {
       // interact with healthpacks
       if (interactable instanceof HealthpackModel) {
-        if (interactable.getPlayerInRange() && !((HealthpackModel) interactable).isUsed()) {
+        if (canUseHealthpack((HealthpackModel) interactable)) {
           if (BuildConfig.DEBUG) System.out.println("Health restored!");
           player.setHealth(5);
           ((HealthpackModel) interactable).setUsed(true);
@@ -72,7 +72,7 @@ public class InteractableController implements Controllable {
           if (BuildConfig.DEBUG) {
             System.out.println("Checkpoint "+((CheckpointModel) interactable).getCheckpointID()+" activated");
           }
-          // player.setHealth(5);
+           player.setHealth(5);
           ((CheckpointModel) interactable).setActivated(true);
           this.checkpointID = ((CheckpointModel) interactable).getCheckpointID();
           this.checkpointActivated = true;
@@ -81,6 +81,10 @@ public class InteractableController implements Controllable {
       }
     }
     interactPressed = false;
+  }
+
+  private boolean canUseHealthpack(HealthpackModel model) {
+    return model.getPlayerInRange() && !model.isUsed() && player.getHealth() < 5;
   }
 
   public boolean isCheckpointActivated() {
