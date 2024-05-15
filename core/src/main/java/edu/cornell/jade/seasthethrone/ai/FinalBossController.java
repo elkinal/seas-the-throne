@@ -266,11 +266,11 @@ public class FinalBossController implements BossController {
     switch (state) {
       case IDLE:
         if (boss.getPosition().dst(player.getPosition()) < AGRO_DISTANCE && boss.isInRoom()) {
-          state = State.F_START;
-          timer = 300;
-//          state = State.PHASE_SWITCH;
-//          timer = 150;
-//          boss.launchPhaseTwo();
+//          state = State.F_START;
+//          timer = 300;
+          state = State.PHASE_SWITCH;
+          timer = 150;
+          boss.launchPhaseTwo();
         }
         break;
       case F_START:

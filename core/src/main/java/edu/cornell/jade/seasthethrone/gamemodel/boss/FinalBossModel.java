@@ -83,6 +83,9 @@ public class FinalBossModel extends BossModel{
         setFrameNumber(getFrameNumber());
         transformTimer -= 1;
       }
+      if (transformTimer == 0) {
+        setFrameNumber(0);
+      }
     } else {
       if (frameCounter % frameDelay == 0) {
         setFrameNumber((getFrameNumber() + 1) % getFramesInAnimation());
