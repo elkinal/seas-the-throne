@@ -18599,17 +18599,17 @@
                         {
                          "name":"playerX",
                          "type":"float",
-                         "value":440
+                         "value":480
                         }, 
                         {
                          "name":"playerY",
                          "type":"float",
-                         "value":390
+                         "value":720
                         }, 
                         {
                          "name":"target",
                          "type":"string",
-                         "value":"levels\/hub_world.json"
+                         "value":"levels\/final_arena.json"
                         }],
                  "rotation":0,
                  "type":"",
