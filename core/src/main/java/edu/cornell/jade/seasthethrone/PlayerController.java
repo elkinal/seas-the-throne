@@ -10,6 +10,8 @@
 
 package edu.cornell.jade.seasthethrone;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.math.Vector2;
 import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import edu.cornell.jade.seasthethrone.gamemodel.EnemyModel;
@@ -48,6 +50,9 @@ public class PlayerController implements Controllable {
   /** If assisted shooting pressed in since last update */
   boolean assistedShootingPressed;
 
+  /** If easy mode is on and aim assist should be used on all shots */
+  boolean toggleEasyMode;
+
   /** If interact pressed in since last update */
   boolean interactPressed;
 
@@ -73,8 +78,17 @@ public class PlayerController implements Controllable {
     // start dash indicator down
     indicatorDirection = new Vector2(0, -1);
     moveDirection = new Vector2();
-    this.isAimToDashMode = true;
+
+    Preferences prefs = Gdx.app.getPreferences("options");
+    String savedDashControl = prefs.getString("dashControl");
+    String savedEasyMode = prefs.getString("easyMode");
+
+    if (!savedDashControl.isEmpty()) this.isAimToDashMode = savedDashControl.equals("Indicator");
+    else this.isAimToDashMode = true;
     this.dashToggleCounter = 0;
+
+    if (!savedEasyMode.isEmpty()) toggleEasyMode = savedEasyMode.equals("On");
+    else this.toggleEasyMode = false;
   }
 
   /**
@@ -98,7 +112,10 @@ public class PlayerController implements Controllable {
     dashingPressed = true;
   }
 
-  public void pressSecondary() { shootingPressed = true; }
+  public void pressSecondary() {
+    if (toggleEasyMode) assistedShootingPressed = true;
+    else shootingPressed = true;
+  }
 
   public void pressTertiary() { assistedShootingPressed = true; }
 

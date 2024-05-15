@@ -105,6 +105,9 @@ public class OptionScreen implements Screen {
   /** The screen listener to know when to exit screen */
   private ScreenListener listener;
 
+  /** Preference file to save settings */
+  private Preferences prefs;
+
   /** The table that contains and orients all the buttons and labels */
   private Table controlsTable;
 
@@ -115,6 +118,8 @@ public class OptionScreen implements Screen {
     internal = new AssetDirectory(file);
     internal.loadAssets();
     internal.finishLoading();
+
+    this.prefs = Gdx.app.getPreferences("options");
 
     this.canvas = canvas;
     defaultSettings = new HashMap<>();
@@ -145,6 +150,7 @@ public class OptionScreen implements Screen {
 
     setDefault();
     makeControls();
+    loadPrefs();
   }
 
   public void setViewport(FitViewport v) {
@@ -418,8 +424,34 @@ public class OptionScreen implements Screen {
     draw();
     stage.act(delta);
     if (exit) {
+      saveOptions();
       listener.exitScreen(this, 4);
     }
+  }
+
+  /** Saves the current options to a preference file */
+  private void saveOptions() {
+    prefs.putString("easyMode", buttonNames.get(easyModeButton));
+    prefs.putString("dashControl", buttonNames.get(dashControlButton));
+    prefs.flush();
+    if (BuildConfig.DEBUG) {
+      System.out.println("Saved options: " + prefs.get());
+    }
+  }
+
+  /** Loads in option settings from the options preference file */
+  private void loadPrefs() {
+    String savedEasyMode = prefs.getString("easyMode");
+    String savedDashControl = prefs.getString("dashControl");
+    if (!savedEasyMode.isEmpty()) {
+      buttonNames.put(easyModeButton, savedEasyMode);
+      easyModeButton.setText(savedEasyMode);
+    }
+    if (!savedDashControl.isEmpty()) {
+      buttonNames.put(dashControlButton, savedDashControl);
+      dashControlButton.setText(savedDashControl);
+    }
+
   }
 
   @Override
