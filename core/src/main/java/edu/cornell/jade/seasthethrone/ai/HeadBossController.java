@@ -182,7 +182,7 @@ public class HeadBossController implements BossController {
       case RANDOM_ATTACK:
         if (timer <= 0) {
           state = State.SPIRAL_ATTACK;
-          timer = rand.nextInt(300, 400);
+          timer = rand.nextInt(200, 300);
         }
         break;
       case SPIRAL_ATTACK:
@@ -197,10 +197,11 @@ public class HeadBossController implements BossController {
           boss.setVY(0);
           if (rand.nextBoolean()) {
             state = State.SPIRAL_ATTACK;
+            timer = rand.nextInt(200, 300);
           } else {
             state = State.RANDOM_ATTACK;
+            timer = rand.nextInt(360, 480);
           }
-          timer = rand.nextInt(360, 480);
         }
         break;
       case DEAD:
