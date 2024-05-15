@@ -4,12 +4,19 @@ import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
 public class FinalBossModel extends BossModel{
   private boolean isSpawning = false;
+  private boolean isHard;
+  private int transformTimer;
   private int spawnTimer;
   private FilmStrip spawnAnimation;
+  private FilmStrip transformAnimation;
+  private FilmStrip finalAttackAnimation;
+  private FilmStrip finalShootAnimation;
+  private FilmStrip finalGetHitAnimation;
 
   public FinalBossModel (Builder builder) {
     super(builder);
     spawnAnimation = builder.spawnAnimation;
+    transformAnimation = builder.transformAnimation;
   }
 
   /**
@@ -19,6 +26,8 @@ public class FinalBossModel extends BossModel{
    * (this might be a bit hard though, it kinda ties into the execute animations)
    */
   public void launchPhaseTwo(){
+    isHard = true;
+    transformTimer = transformAnimation.getSize() * frameDelay;
   }
   public void setSpawned(){
     setFrameNumber(0);
@@ -28,16 +37,31 @@ public class FinalBossModel extends BossModel{
   @Override
   public void progressFrame() {
     int frame = getFrameNumber();
+    if (transformTimer>0)
+      filmStrip = transformAnimation;
     if (isSpawning)
       filmStrip = spawnAnimation;
     else if (isDead()) {
       if (isExecute) filmStrip = deathAnimation;
       else filmStrip = falloverAnimation;
     } else if (isHit()) {
-      filmStrip = getHitAnimation;
+      if (isHard)
+        filmStrip = finalGetHitAnimation;
+      else
+        filmStrip = getHitAnimation;
     } else {
-      if (isAttack()) filmStrip = attackAnimation;
-      else filmStrip = shootAnimation;
+      if (isAttack()) {
+        if (isHard)
+          filmStrip = finalAttackAnimation;
+        else
+          filmStrip = attackAnimation;
+      }
+      else {
+        if (isHard)
+          filmStrip = finalShootAnimation;
+        else
+          filmStrip = shootAnimation;
+      }
     }
     filmStrip.setFrame(frame);
     if (isSpawning){
@@ -70,6 +94,14 @@ public class FinalBossModel extends BossModel{
       }
       if (hitCount == 0) {
         setFrameNumber(0);
+      }
+    } else if (transformTimer > 0){
+      if (frameCounter % frameDelay == 0 && getFrameNumber() < getFramesInAnimation() - 1) {
+        setFrameNumber(getFrameNumber() + 1);
+        transformTimer -= 1;
+      } else {
+        setFrameNumber(getFrameNumber());
+        transformTimer -= 1;
       }
     } else {
       if (frameCounter % frameDelay == 0) {
