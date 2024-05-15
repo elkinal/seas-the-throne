@@ -22,14 +22,15 @@ public class DelayedRotateRingAttack extends AttackPattern {
    * @param dups          the number of bullets in the arc
    * @param delay         the delay until the rotate
    * @param centralAngle  the central angle in radians
+   * @param rotateAngle   the angle to rotate after a delay
    * @param model         boss shooting the bullet
    * @param builder       a builder to create bullet models
    * @param physicsEngine {@link PhysicsEngine} to add bullets to
    */
-  public DelayedRotateRingAttack(int period, int dups,  int delay, float centralAngle, BossModel model,
+  public DelayedRotateRingAttack(int period, int dups,  int delay, float centralAngle, float rotateAngle, BossModel model,
                                  BulletModel.Builder builder, PhysicsEngine physicsEngine) {
     this.spawner = SpawnerFactory.constructRepeatingDelayedRotateArc(dups, centralAngle, period,
-            delay, builder, physicsEngine);
+            delay, rotateAngle, builder, physicsEngine);
     this.model = model;
 
     this.addSpawner(spawner);

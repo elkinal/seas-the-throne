@@ -109,7 +109,7 @@ public class HeadBossController implements BossController {
             builder, physicsEngine);
     this.aimedRandomAttack = new AimedRandomStreamAttack(MathUtils.PI/5, 10, boss,
             player, builder, physicsEngine);
-    this.unbreakableRing = new UnbreakableSpinningRing(5, 240, boss, builder, physicsEngine);
+    this.unbreakableRing = new UnbreakableSpinningRing(5f,5, 240, boss, builder, physicsEngine);
   }
 
   @Override

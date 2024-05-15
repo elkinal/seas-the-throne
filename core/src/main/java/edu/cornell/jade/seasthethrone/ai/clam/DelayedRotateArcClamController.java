@@ -13,16 +13,19 @@ public class DelayedRotateArcClamController extends ClamController {
   private static final int PERIOD = 40;
 
   /** Number of bullets in the arc */
-  private static final int DUPS = 3;
+  private static final int DUPS = 6;
 
   /** Delay until rotate */
   private static final int DELAY = 130;
 
   /** Central angle of the arc */
-  private static final float CENTRAL_ANGLE = MathUtils.PI;
+  private static final float CENTRAL_ANGLE = 4*MathUtils.PI/5;
+
+  private static final float ROTATE_ANGLE = -MathUtils.PI/3;
 
   public DelayedRotateArcClamController(BossModel boss, PlayerModel player, BulletModel.Builder builder,
                                               PhysicsEngine physicsEngine) {
-    super(boss, new DelayedRotateRingAttack(PERIOD, DUPS, DELAY, CENTRAL_ANGLE, boss, builder, physicsEngine), player);
+    super(boss, new DelayedRotateRingAttack(PERIOD, DUPS, DELAY, CENTRAL_ANGLE, ROTATE_ANGLE,
+            boss, builder, physicsEngine), player);
   }
 }

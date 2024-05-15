@@ -20,9 +20,11 @@ public class DelayedRotateRingJellyBossController extends JellyBossController {
   /** Delay until rotate */
   private static final int DELAY = 80;
 
+  private static final float ROTATE_ANGLE = -MathUtils.PI/2;
+
   public DelayedRotateRingJellyBossController(BossModel boss, PlayerModel player, BulletModel.Builder builder,
                                               PhysicsEngine physicsEngine) {
-    super(boss, player, new DelayedRotateRingAttack(PERIOD, DUPS, DELAY, MathUtils.PI*2, boss,
+    super(boss, player, new DelayedRotateRingAttack(PERIOD, DUPS, DELAY, MathUtils.PI*2, ROTATE_ANGLE, boss,
                     builder, physicsEngine), builder, physicsEngine);
     boss.setColor(new Color(0.9f, 1f, 0.20f, 1));
   }

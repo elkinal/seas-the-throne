@@ -179,6 +179,7 @@ public final class SpawnerFactory {
     return out;
   }
 
+
   /**
    * Constructs a randomly spraying bullet stream of bullet aimed in a certain
    * direction
@@ -207,10 +208,10 @@ public final class SpawnerFactory {
    * @param builder       a builder to create bullet models
    * @param physicsEngine {@link PhysicsEngine} to add bullets to
    */
-  public static Spawner constructSpinningRing(int dups, int delay, BossModel model,
+  public static Spawner constructSpinningRing(float offset, int dups, int delay, BossModel model,
       BulletModel.Builder builder, PhysicsEngine physicsEngine) {
     Spawner out = new Spawner(builder, physicsEngine, bulletFamilyPool, bulletModelPool);
-    BulletFamily f = new BulletFamily(5f, 0f, 0f, 0f, 0.5f, 0);
+    BulletFamily f = new BulletFamily(offset, 0f, 0f, 0f, 0.5f, 0);
     f.addEffect(new Arc(0f, MathUtils.PI * 2, dups));
     f.addDelayedAction(new Spawner.DelayedIndefiniteRotate(delay, model));
     out.addFamily(f);
@@ -253,9 +254,9 @@ public final class SpawnerFactory {
   public static Spawner constructRepeatingDelayedTrackingSpeedArc(int dups, float centralAngle, float angle,
                                  int period, int delay, BulletModel.Builder builder, PhysicsEngine physicsEngine) {
     Spawner out = new Spawner(builder, physicsEngine, bulletFamilyPool, bulletModelPool);
-    BulletFamily f = new BulletFamily(0f, 0f, 10f, 0f, 0.5f, 0);
+    BulletFamily f = new BulletFamily(0f, 0f, 12f, 0f, 0.5f, 0);
     f.addDelayedAction(new DelayedTarget(delay));
-    f.addDelayedAction(new Spawner.DelayedSpeedChange(20f, 70));
+    f.addDelayedAction(new Spawner.DelayedSpeedChange(24f, delay));
     f.addEffect(new Periodic(period));
     f.addEffect(new Arc(angle-centralAngle/2, centralAngle, dups));
     out.addFamily(f);
@@ -273,12 +274,12 @@ public final class SpawnerFactory {
    * @param physicsEngine {@link PhysicsEngine} to add bullets to
    */
   public static Spawner constructRepeatingDelayedRotateArc(int dups, float centralAngle, int period, int delay,
-                                                            BulletModel.Builder builder, PhysicsEngine physicsEngine) {
+                                       float rotateAngle, BulletModel.Builder builder, PhysicsEngine physicsEngine) {
     Spawner out = new Spawner(builder, physicsEngine, bulletFamilyPool, bulletModelPool);
     BulletFamily f = new BulletFamily(0f, 0f, 10f, 0f, 0.5f, 0);
-    f.addDelayedAction(new Spawner.DelayedVelocityRotate(-MathUtils.PI/2, delay));
+    f.addDelayedAction(new Spawner.DelayedVelocityRotate(rotateAngle, delay));
     f.addEffect(new Periodic(period));
-    f.addEffect(new Arc(-MathUtils.PI/2, centralAngle, dups));
+    f.addEffect(new Arc(-centralAngle/2, centralAngle, dups));
     out.addFamily(f);
     return out;
   }

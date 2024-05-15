@@ -30,7 +30,7 @@ public class DelayedTrackingSpeedArcAttack extends AttackPattern {
    */
   public DelayedTrackingSpeedArcAttack(int period, int dups, float centralAngle, float angle, int delay, BossModel model,
                                   PlayerModel player, BulletModel.Builder builder, PhysicsEngine physicsEngine) {
-    this.spawner = SpawnerFactory.constructRepeatingDelayedTrackingArc(dups, centralAngle, angle, period, delay,
+    this.spawner = SpawnerFactory.constructRepeatingDelayedTrackingSpeedArc(dups, centralAngle, angle, period, delay,
             builder, physicsEngine);
     this.model = model;
 

@@ -6682,50 +6682,6 @@
                 }, 
                 {
                  "height":5,
-                 "id":430,
-                 "name":"levels\/kelplight_2.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":501,
-                 "y":2212.5
-                }, 
-                {
-                 "height":5,
-                 "id":431,
-                 "name":"levels\/kelplight_2.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":431,
-                 "y":2174.5
-                }, 
-                {
-                 "height":5,
                  "id":432,
                  "name":"levels\/kelplight_2.png",
                  "properties":[
@@ -7713,8 +7669,7 @@
                  "width":6,
                  "x":1875.66666666667,
                  "y":1421.5
-                },
-            
+                }, 
                 {
                  "height":5,
                  "id":490,
@@ -7758,7 +7713,8 @@
                  "width":6,
                  "x":1974.33333333333,
                  "y":1352.83333333333
-                }, 
+                },
+            
                 {
                  "height":5,
                  "id":492,
@@ -8088,28 +8044,6 @@
                  "width":6,
                  "x":1926.33333333333,
                  "y":1210.83333333333
-                }, 
-                {
-                 "height":5,
-                 "id":507,
-                 "name":"levels\/kelplight_2.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":1987,
-                 "y":1175.5
                 }, 
                 {
                  "height":5,
@@ -8682,28 +8616,6 @@
                  "width":6,
                  "x":2015,
                  "y":829.5
-                }, 
-                {
-                 "height":5,
-                 "id":534,
-                 "name":"levels\/kelplight_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":2101,
-                 "y":841.5
                 }, 
                 {
                  "height":5,
@@ -11146,8 +11058,7 @@
                  "width":6,
                  "x":2585,
                  "y":1611.5
-                },
-            
+                }, 
                 {
                  "height":5,
                  "id":650,
@@ -11235,7 +11146,8 @@
                  "width":6,
                  "x":2384,
                  "y":1783.5
-                }, 
+                },
+            
                 {
                  "height":5,
                  "id":654,
@@ -11961,28 +11873,6 @@
                  "width":6,
                  "x":464.333333333333,
                  "y":2266.83333333333
-                }, 
-                {
-                 "height":5,
-                 "id":687,
-                 "name":"levels\/kelpdark_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":439.666666666667,
-                 "y":2143.5
                 }, 
                 {
                  "height":5,
@@ -13152,50 +13042,6 @@
                 }, 
                 {
                  "height":5,
-                 "id":742,
-                 "name":"levels\/kelpdark_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":837,
-                 "y":1746.5
-                }, 
-                {
-                 "height":5,
-                 "id":743,
-                 "name":"levels\/kelpdark_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":948,
-                 "y":1741.5
-                }, 
-                {
-                 "height":5,
                  "id":744,
                  "name":"levels\/kelpdark_1.png",
                  "properties":[
@@ -13262,50 +13108,6 @@
                 }, 
                 {
                  "height":5,
-                 "id":747,
-                 "name":"levels\/kelpdark_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":1022,
-                 "y":1778.5
-                }, 
-                {
-                 "height":5,
-                 "id":748,
-                 "name":"levels\/kelpdark_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":949,
-                 "y":1773.5
-                }, 
-                {
-                 "height":5,
                  "id":749,
                  "name":"levels\/kelpdark_1.png",
                  "properties":[
@@ -13369,50 +13171,6 @@
                  "width":6,
                  "x":625,
                  "y":1603.5
-                }, 
-                {
-                 "height":5,
-                 "id":752,
-                 "name":"levels\/kelpdark_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":692,
-                 "y":1602.5
-                }, 
-                {
-                 "height":5,
-                 "id":753,
-                 "name":"levels\/kelpdark_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":751,
-                 "y":1625.5
                 }, 
                 {
                  "height":5,
@@ -13523,28 +13281,6 @@
                  "width":6,
                  "x":854,
                  "y":1617.5
-                }, 
-                {
-                 "height":5,
-                 "id":761,
-                 "name":"levels\/kelpdark_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":666,
-                 "y":1641.5
                 }, 
                 {
                  "height":5,
@@ -14054,94 +13790,6 @@
                 }, 
                 {
                  "height":5,
-                 "id":785,
-                 "name":"levels\/kelpdark_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":1188.33333333333,
-                 "y":1580.83333333333
-                }, 
-                {
-                 "height":5,
-                 "id":786,
-                 "name":"levels\/kelpdark_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":1215.66666666667,
-                 "y":1552.16666666667
-                }, 
-                {
-                 "height":5,
-                 "id":787,
-                 "name":"levels\/kelpdark_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":1235,
-                 "y":1543.5
-                }, 
-                {
-                 "height":5,
-                 "id":788,
-                 "name":"levels\/kelpdark_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":1184.33333333333,
-                 "y":1496.83333333333
-                }, 
-                {
-                 "height":5,
                  "id":789,
                  "name":"levels\/kelpdark_1.png",
                  "properties":[
@@ -14579,8 +14227,7 @@
                  "width":6,
                  "x":1517,
                  "y":1420.16666666667
-                },
-            
+                }, 
                 {
                  "height":5,
                  "id":813,
@@ -14932,7 +14579,8 @@
                  "width":6,
                  "x":1087.66666666667,
                  "y":1053.5
-                }, 
+                },
+            
                 {
                  "height":5,
                  "id":829,
@@ -15436,30 +15084,8 @@
                  "type":"",
                  "visible":true,
                  "width":6,
-                 "x":1137,
-                 "y":1294.5
-                }, 
-                {
-                 "height":5,
-                 "id":852,
-                 "name":"levels\/kelplight_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":1191,
-                 "y":1287.5
+                 "x":1139.92013432618,
+                 "y":1258.582347788
                 }, 
                 {
                  "height":5,
@@ -15661,28 +15287,6 @@
                 }, 
                 {
                  "height":5,
-                 "id":862,
-                 "name":"levels\/kelplight_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":1198,
-                 "y":1559.5
-                }, 
-                {
-                 "height":5,
                  "id":863,
                  "name":"levels\/kelplight_1.png",
                  "properties":[
@@ -15815,28 +15419,6 @@
                 }, 
                 {
                  "height":5,
-                 "id":869,
-                 "name":"levels\/kelplight_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":764,
-                 "y":1622.5
-                }, 
-                {
-                 "height":5,
                  "id":870,
                  "name":"levels\/kelplight_1.png",
                  "properties":[
@@ -15855,28 +15437,6 @@
                  "visible":true,
                  "width":6,
                  "x":804,
-                 "y":1638.5
-                }, 
-                {
-                 "height":5,
-                 "id":871,
-                 "name":"levels\/kelplight_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":628,
                  "y":1638.5
                 }, 
                 {
@@ -15900,28 +15460,6 @@
                  "width":6,
                  "x":674,
                  "y":1557.5
-                }, 
-                {
-                 "height":5,
-                 "id":873,
-                 "name":"levels\/kelplight_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":721,
-                 "y":1640.5
                 }, 
                 {
                  "height":5,
@@ -15966,72 +15504,6 @@
                  "width":6,
                  "x":1069,
                  "y":1742.5
-                }, 
-                {
-                 "height":5,
-                 "id":876,
-                 "name":"levels\/kelplight_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":985,
-                 "y":1781.5
-                }, 
-                {
-                 "height":5,
-                 "id":877,
-                 "name":"levels\/kelplight_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":907,
-                 "y":1771.5
-                }, 
-                {
-                 "height":5,
-                 "id":878,
-                 "name":"levels\/kelplight_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":854,
-                 "y":1755.5
                 }, 
                 {
                  "height":5,
@@ -16692,72 +16164,6 @@
                  "width":6,
                  "x":383.666666666667,
                  "y":2076.16666666667
-                }, 
-                {
-                 "height":5,
-                 "id":909,
-                 "name":"levels\/kelplight_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":423,
-                 "y":2114.83333333333
-                }, 
-                {
-                 "height":5,
-                 "id":910,
-                 "name":"levels\/kelplight_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":470.333333333333,
-                 "y":2155.5
-                }, 
-                {
-                 "height":5,
-                 "id":911,
-                 "name":"levels\/kelplight_1.png",
-                 "properties":[
-                        {
-                         "name":"animated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"framesInAnimation",
-                         "type":"int",
-                         "value":22
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":6,
-                 "x":477,
-                 "y":2180.16666666667
                 }, 
                 {
                  "height":5,
@@ -17603,12 +17009,12 @@
                  "type":"",
                  "visible":true,
                  "width":29,
-                 "x":1031.73726090667,
-                 "y":2301.8589788644
+                 "x":913.889167099587,
+                 "y":2182.24316365021
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 

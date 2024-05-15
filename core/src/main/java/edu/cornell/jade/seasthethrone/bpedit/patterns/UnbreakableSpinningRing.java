@@ -27,15 +27,16 @@ public final class UnbreakableSpinningRing extends AttackPattern {
   /**
    * Constructs the attack
    *
+   * @param offset        the offset form the center of the boss
    * @param dups          the number of bullets in the ring
    * @param period        the length of full rotation of the bullet in ticks
    * @param model         boss shooting the bullet
    * @param builder       a builder to create bullet models
    * @param physicsEngine {@link PhysicsEngine} to add bullets to
    */
-  public UnbreakableSpinningRing(int dups, int period, BossModel model, BulletModel.Builder builder,
+  public UnbreakableSpinningRing(float offset, int dups, int period, BossModel model, BulletModel.Builder builder,
                         PhysicsEngine physicsEngine) {
-    this.spawner = SpawnerFactory.constructSpinningRing(dups, period, model, builder, physicsEngine);
+    this.spawner = SpawnerFactory.constructSpinningRing(offset, dups, period, model, builder, physicsEngine);
     this.model = model;
 
     this.spawner.translate(model.getX(), model.getY());
