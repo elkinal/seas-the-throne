@@ -196,7 +196,9 @@ public class GameplayController implements Screen {
     this.interactController = new InteractableController();
     inputController.add(interactController);
     this.renderEngine = new RenderingEngine(worldWidth, worldHeight, viewport, worldScale);
-
+    // Initialize physics engine
+    World world = new World(new Vector2(0, 0), false);
+    physicsEngine = new PhysicsEngine(bounds, world);
     setupGameplay();
   }
 
@@ -227,7 +229,6 @@ public class GameplayController implements Screen {
 
     gameState = GameState.PLAY;
 
-    World world = new World(new Vector2(0, 0), false);
     HashMap<String, Array<LevelObject>> layers = level.getLayers();
 
     // Load background
@@ -280,8 +281,7 @@ public class GameplayController implements Screen {
             .build();
 
     renderEngine.addRenderable(player);
-    // Initialize physics engine
-    physicsEngine = new PhysicsEngine(bounds, world);
+
     physicsEngine.addObject(player);
     // Load fish bullets builder
     fishBulletBuilder =
@@ -585,7 +585,7 @@ public class GameplayController implements Screen {
     }
 
     // Draw reset and debug screen for wins and losses
-    if (gameState == GameState.OVER || gameState == GameState.WIN) {
+    if (gameState == GameState.OVER) {
       if (inputController.didReset()) {
         restart = true;
         pauseController.continueGame();
@@ -600,24 +600,25 @@ public class GameplayController implements Screen {
     if (BuildConfig.DEBUG) {
       System.out.println("Changing level to: " + physicsEngine.getTarget());
     }
-    System.out.println("exit screen called");
 
+    // Load in new level
     if (loadedLevels.containsKey(physicsEngine.getTarget())) {
       level = loadedLevels.get(physicsEngine.getTarget());
     } else {
-      System.out.println("pre level load");
       level = new Level(physicsEngine.getTarget());
-      System.out.println("post level load");
       loadedLevels.put(level.name, level);
     }
-
-//    System.out.println("level reassigned");
     stateController.setCurrentLevel(level.name);
+
+    // Clear game
     this.renderEngine.clear();
+    physicsEngine.dispose();
+    playerController = null;
+    pauseController = null;
+    uiController = null;
     bossControllers.clear();
-//    System.out.println("begin setup");
+    // Reload
     setupGameplay();
-//    System.out.println("end setup");
 
     transferState(stateController.getLevel(level.name));
   }
@@ -694,6 +695,10 @@ public class GameplayController implements Screen {
    */
   public void setScreenListener(ScreenListener listener) {
     this.listener = listener;
+  }
+
+  public void setAssets(AssetDirectory assets) {
+    this.assets = assets;
   }
 
   public void setReturnToHub(boolean returnToHub) {
