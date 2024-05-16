@@ -22,9 +22,9 @@ import java.util.HashMap;
 /**
  * Options screen which contians settings for player preferences and keybindings.
  *
- * <p>Keybindings: Keybindings are saved into a hashmap with key = action, value = keybind. This
- * hashmap will be saved in the save file (has default values which are there from beginning) and
- * will be loaded by InputController to get keybindings.
+ * <p>Keybindings: Keybindings are saved into a hashmap with key = action, value = keybind (string).
+ * This hashmap will be saved in the save file (has default values which are there from beginning)
+ * and will be loaded by InputController to get keybindings.
  */
 public class OptionScreen implements Screen {
   /** Internal assets for this title screen */
@@ -40,7 +40,6 @@ public class OptionScreen implements Screen {
   private Color blue = new Color(90 / 255f, 148 / 255f, 156 / 255f, 1);
 
   private Color coral = new Color(185 / 255f, 75 / 255f, 78 / 255f, 1);
-  private Color sand = new Color(223 / 255f, 209 / 255f, 160 / 255f, 1);
 
   /** XBox Controller support */
   private XBoxController xbox;
@@ -83,13 +82,6 @@ public class OptionScreen implements Screen {
   /** Hashmap containing default values for keybindings/preferences */
   private HashMap<TextButton, String> defaultSettings;
 
-  // todo: xbox controller support-- cycle through buttons when going up/down
-  // todo: for keymapping, press a on xbox to select the keybinding, then click button to change
-  // todo: for preference (true/false), press a on xbox to change to the other preference
-
-  /** Hashmap containing player's CURRENT keybindings/preferences TODO: Use? */
-  private HashMap<String, String> currentControls;
-
   /** Dictionary that maps buttons to text (to change button appearance when changing settings) */
   private HashMap<TextButton, String> buttonNames;
 
@@ -122,8 +114,8 @@ public class OptionScreen implements Screen {
     this.prefs = Gdx.app.getPreferences("options");
 
     this.canvas = canvas;
+    background = internal.getEntry("title:options_background", Texture.class);
     defaultSettings = new HashMap<>();
-    currentControls = new HashMap<>();
     buttonNames = new HashMap<>();
 
     // initialize controller
@@ -451,7 +443,6 @@ public class OptionScreen implements Screen {
       buttonNames.put(dashControlButton, savedDashControl);
       dashControlButton.setText(savedDashControl);
     }
-
   }
 
   @Override
