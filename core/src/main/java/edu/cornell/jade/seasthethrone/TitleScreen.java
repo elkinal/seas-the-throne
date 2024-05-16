@@ -37,6 +37,8 @@ public class TitleScreen implements Screen, Controllable {
 
   private boolean toggle;
 
+  private float MENU_SPACING = 200f;
+
   public enum TitleSelection {
     PLAY(0, "Play"),
     OPTIONS(1, "Options"),
@@ -108,17 +110,20 @@ public class TitleScreen implements Screen, Controllable {
     canvas.getSpriteBatch().setProjectionMatrix(viewport.getCamera().combined);
 
     // draw the background
-    //    canvas.draw(background, Color.WHITE, 0, 0, background.getWidth(), background.getHeight());
+    float ox = -canvas.getWidth()/2f;
+    float oy = -canvas.getHeight()/2f;
+    canvas.draw(background, Color.WHITE, ox, oy, canvas.getWidth(), canvas.getHeight());
 
     // draw the logo
     float scale = Math.min(2 / 3f, (float) canvas.getWidth() / logo.getWidth());
     float width = logo.getWidth() * scale;
+    ox = -canvas.getWidth()/2f + 10f;
 
-    canvas.draw(logo, Color.WHITE, -width / 2f, 0, width, scale * logo.getHeight());
+    canvas.draw(logo, Color.WHITE, ox, 0, width, scale * logo.getHeight());
 
     // draw the menu
-    float y_offset = -200f;
-    float x_offset = -20f;
+    float y_offset = -100f;
+    float x_offset = 50f - canvas.getWidth()/2f;
     for (TitleSelection s : TitleSelection.values()) {
       if (selection == s) {
         canvas.drawText(s.optionName, textFont, x_offset, y_offset, Color.GOLDENROD);
@@ -127,7 +132,7 @@ public class TitleScreen implements Screen, Controllable {
         canvas.drawText(s.optionName, textFont, x_offset, y_offset, Color.WHITE);
       }
 
-      y_offset -= 150f;
+      y_offset -= MENU_SPACING;
     }
     canvas.end();
   }
