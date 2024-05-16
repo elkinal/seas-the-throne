@@ -536,6 +536,18 @@ public class XBoxController implements Controller, ControllerListener {
       if (getRightTrigger() != 0) {
         return "RT";
       }
+      if (getDPadUp()) {
+        return "DU";
+      }
+      if (getDPadDown()) {
+        return "DD";
+      }
+      if (getDPadLeft()) {
+        return "DL";
+      }
+      if (getDPadRight()) {
+        return "DR";
+      }
     }
 
     return null;

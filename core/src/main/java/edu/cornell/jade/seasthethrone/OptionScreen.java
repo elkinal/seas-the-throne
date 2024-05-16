@@ -17,10 +17,12 @@ import edu.cornell.jade.seasthethrone.render.GameCanvas;
 import edu.cornell.jade.seasthethrone.util.Controllers;
 import edu.cornell.jade.seasthethrone.util.ScreenListener;
 import edu.cornell.jade.seasthethrone.util.XBoxController;
+import org.w3c.dom.Text;
+
 import java.util.HashMap;
 
 /**
- * Options screen which contians settings for player preferences and keybindings.
+ * Options screen which contains settings for player preferences and keybindings.
  *
  * <p>Keybindings: Keybindings are saved into a hashmap with key = action, value = keybind (string).
  * This hashmap will be saved in the save file (has default values which are there from beginning)
@@ -39,7 +41,7 @@ public class OptionScreen implements Screen {
   /** === Custom colors */
   private Color blue = new Color(90 / 255f, 148 / 255f, 156 / 255f, 1);
 
-  private Color coral = new Color(185 / 255f, 75 / 255f, 78 / 255f, 1);
+  //  private Color coral = new Color(185 / 255f, 75 / 255f, 78 / 255f, 1);
 
   /** XBox Controller support */
   private XBoxController xbox;
@@ -59,8 +61,8 @@ public class OptionScreen implements Screen {
   /** Button for going back to previous screen */
   private TextButton backButton;
 
-  /** Button for toggling easy mode (aim assist) True = off, False = on */
-  private TextButton easyModeButton;
+  /** Button for toggling aim assist True = off, False = on */
+  private TextButton aimAssistButton;
 
   /**
    * Button for setting dash direction as indicator or movement direction True = movement direction,
@@ -82,16 +84,22 @@ public class OptionScreen implements Screen {
   /** Hashmap containing default values for keybindings/preferences */
   private HashMap<TextButton, String> defaultSettings;
 
-  /** Dictionary that maps buttons to text (to change button appearance when changing settings) */
-  private HashMap<TextButton, String> buttonNames;
+  /** Hashmap containing player's CURRENT keybindings/preferences (to update preferences) */
+  private HashMap<String, String> currentControls;
+
+  /** Dictionary that maps buttons to text (to update button, contains current player mapping) */
+  private HashMap<TextButton, String> buttonMaps;
 
   /** Array of all buttons (for controller) */
   private TextButton[] buttons;
 
+  /** Array of all button names (for preferences) */
+  private String[] buttonNames;
+
   /** The hover index of the controller */
   private int hoverIndex;
 
-  private int cooldown = 10;
+  private int cooldown = 9;
   private int moveCount;
 
   /** The screen listener to know when to exit screen */
@@ -114,9 +122,13 @@ public class OptionScreen implements Screen {
     this.prefs = Gdx.app.getPreferences("options");
 
     this.canvas = canvas;
-    background = internal.getEntry("title:options_background", Texture.class);
     defaultSettings = new HashMap<>();
-    buttonNames = new HashMap<>();
+    buttonMaps = new HashMap<>();
+    currentControls = new HashMap<>();
+    buttonNames =
+        new String[] {
+          "aimAssist", "dashControl", "attackButton", "dashButton", "backButton", "resetButton"
+        };
 
     // initialize controller
     if (Controllers.get().getControllers().size > 0) {
@@ -125,9 +137,9 @@ public class OptionScreen implements Screen {
     hoverIndex = 0;
     moveCount = 0;
 
-    background = internal.getEntry("title:background", Texture.class);
+    background = internal.getEntry("title:options_background", Texture.class);
     textFont = internal.getEntry("loading:alagard", BitmapFont.class);
-    headingStyle = new Label.LabelStyle(textFont, blue);
+    headingStyle = new Label.LabelStyle(textFont, Color.WHITE);
     buttonStyle = new Label.LabelStyle(textFont, Color.WHITE);
     // make stage for options screen
     stage = new Stage();
@@ -136,8 +148,6 @@ public class OptionScreen implements Screen {
     // make table for all the controls options
     controlsTable = new Table();
     controlsTable.setFillParent(true);
-    //    controlsTable.setDebug(true);
-    //    controlsTable.align(Align.topLeft);
     stage.addActor(controlsTable);
 
     setDefault();
@@ -153,13 +163,13 @@ public class OptionScreen implements Screen {
   private void makeControls() {
     // make labels for all buttons
     Label controls = new Label("CONTROLS", headingStyle);
-    Label easyMode = new Label("Easy Mode", buttonStyle);
+    Label aimAssist = new Label("Aim Assist", buttonStyle);
     Label dashControl = new Label("Dash Direction", buttonStyle);
     Label attackBindController = new Label("Attack (Controller Only)", buttonStyle);
     Label dashBindController = new Label("Dash (Controller Only)", buttonStyle);
 
     // make text smaller
-    easyMode.setFontScale(.5f);
+    aimAssist.setFontScale(.5f);
     dashControl.setFontScale(.5f);
     attackBindController.setFontScale(.5f);
     dashBindController.setFontScale(.5f);
@@ -168,10 +178,10 @@ public class OptionScreen implements Screen {
     TextButton.TextButtonStyle buttonStyle =
         new TextButton.TextButtonStyle(null, null, null, textFont);
     // color on hover (mouse)
-    buttonStyle.overFontColor = coral;
+    buttonStyle.overFontColor = blue;
 
-    easyModeButton = new TextButton("", buttonStyle);
-    easyModeButton.getLabel().setFontScale(.5f);
+    aimAssistButton = new TextButton("", buttonStyle);
+    aimAssistButton.getLabel().setFontScale(.5f);
 
     dashControlButton = new TextButton("", buttonStyle);
     dashControlButton.getLabel().setFontScale(.5f);
@@ -186,18 +196,23 @@ public class OptionScreen implements Screen {
     stage.addActor(dashButton);
 
     // add all defaults to the maps and array
-    defaultSettings.put(easyModeButton, "Off");
+    defaultSettings.put(aimAssistButton, "Off");
     defaultSettings.put(dashControlButton, "Movement");
     defaultSettings.put(attackButton, "LT");
     defaultSettings.put(dashButton, "RT");
 
-    buttonNames.put(easyModeButton, "Off");
-    buttonNames.put(dashControlButton, "Movement");
-    buttonNames.put(attackButton, "LT");
-    buttonNames.put(dashButton, "RT");
+    // fill controls as default
+    buttonMaps.put(aimAssistButton, "Off");
+    currentControls.put("aimAssist", "Off");
+    buttonMaps.put(dashControlButton, "Movement");
+    currentControls.put("dashControl", "Movement");
+    buttonMaps.put(attackButton, "LT");
+    currentControls.put("attackButton", "LT");
+    buttonMaps.put(dashButton, "RT");
+    currentControls.put("dashButton", "RT");
 
     TextButton[] button =
-        new TextButton[] {easyModeButton, dashControlButton, attackButton, dashButton};
+        new TextButton[] {aimAssistButton, dashControlButton, attackButton, dashButton};
 
     for (TextButton t : button) {
       t.setText(defaultSettings.get(t));
@@ -213,8 +228,8 @@ public class OptionScreen implements Screen {
     controlsTable.add(controls).padBottom(40);
     controlsTable.row();
 
-    controlsTable.add(easyMode).pad(80, 100, 0, 0);
-    controlsTable.add(easyModeButton);
+    controlsTable.add(aimAssist).pad(80, 100, 0, 0);
+    controlsTable.add(aimAssistButton);
     controlsTable.row();
 
     controlsTable.add(dashControl).pad(80, 100, 0, 0);
@@ -235,7 +250,7 @@ public class OptionScreen implements Screen {
 
     buttons =
         new TextButton[] {
-          easyModeButton, dashControlButton, attackButton, dashButton, backButton, resetButton
+          aimAssistButton, dashControlButton, attackButton, dashButton, backButton, resetButton
         };
 
     addListeners();
@@ -259,15 +274,17 @@ public class OptionScreen implements Screen {
     dashButton.addListener(buttonListener);
 
     // custom click listeners
-    easyModeButton.addListener(
+    aimAssistButton.addListener(
         new ClickListener() {
           public void clicked(InputEvent event, float x, float y) {
-            if (buttonNames.get(easyModeButton).equals("Off")) {
-              buttonNames.put(easyModeButton, "On");
-              easyModeButton.setText("On");
+            if (buttonMaps.get(aimAssistButton).equals("Off")) {
+              buttonMaps.put(aimAssistButton, "On");
+              currentControls.put("aimAssist", "On");
+              aimAssistButton.setText("On");
             } else {
-              buttonNames.put(easyModeButton, "Off");
-              easyModeButton.setText("Off");
+              buttonMaps.put(aimAssistButton, "Off");
+              currentControls.put("aimAssist", "Off");
+              aimAssistButton.setText("Off");
             }
           }
         });
@@ -275,11 +292,13 @@ public class OptionScreen implements Screen {
     dashControlButton.addListener(
         new ClickListener() {
           public void clicked(InputEvent event, float x, float y) {
-            if (buttonNames.get(dashControlButton).equals("Movement")) {
-              buttonNames.put(dashControlButton, "Indicator");
+            if (buttonMaps.get(dashControlButton).equals("Movement")) {
+              buttonMaps.put(dashControlButton, "Indicator");
+              currentControls.put("dashControl", "Indicator");
               dashControlButton.setText("Indicator");
             } else {
-              buttonNames.put(dashControlButton, "Movement");
+              buttonMaps.put(dashControlButton, "Movement");
+              currentControls.put("dashControl", "Movement");
               dashControlButton.setText("Movement");
             }
           }
@@ -307,7 +326,7 @@ public class OptionScreen implements Screen {
     style.fontColor = Color.WHITE;
     TextButton.TextButtonStyle hoverStyle =
         new TextButton.TextButtonStyle(null, null, null, textFont);
-    hoverStyle.fontColor = coral;
+    hoverStyle.fontColor = blue;
 
     // go down
     if (moveCount == 0) {
@@ -335,22 +354,22 @@ public class OptionScreen implements Screen {
       buttons[hoverIndex].setStyle(hoverStyle);
 
       /** --------- selecting the option */
-      if (xbox.getA()) {
+      if (xbox.getB()) {
         // 2 options only
         if (hoverIndex == 0) {
-          if (buttonNames.get(easyModeButton).equals("Off")) {
-            buttonNames.put(easyModeButton, "On");
-            easyModeButton.setText("On");
+          if (buttonMaps.get(aimAssistButton).equals("Off")) {
+            buttonMaps.put(aimAssistButton, "On");
+            aimAssistButton.setText("On");
           } else {
-            buttonNames.put(easyModeButton, "Off");
-            easyModeButton.setText("Off");
+            buttonMaps.put(aimAssistButton, "Off");
+            aimAssistButton.setText("Off");
           }
         } else if (hoverIndex == 1) {
-          if (buttonNames.get(dashControlButton).equals("Movement")) {
-            buttonNames.put(dashControlButton, "Indicator");
+          if (buttonMaps.get(dashControlButton).equals("Movement")) {
+            buttonMaps.put(dashControlButton, "Indicator");
             dashControlButton.setText("Indicator");
           } else {
-            buttonNames.put(dashControlButton, "Movement");
+            buttonMaps.put(dashControlButton, "Movement");
             dashControlButton.setText("Movement");
           }
         } else if (hoverIndex == 4) {
@@ -361,10 +380,13 @@ public class OptionScreen implements Screen {
       }
       // any key
       if (hoverIndex == 2 && xbox.getPressed() != null) {
-        buttonNames.put(attackButton, xbox.getPressed());
+        buttonMaps.put(attackButton, xbox.getPressed());
+        currentControls.put("attackButton", xbox.getPressed());
         attackButton.setText(xbox.getPressed());
       } else if (hoverIndex == 3 && xbox.getPressed() != null) {
-        buttonNames.put(dashButton, xbox.getPressed());
+        buttonMaps.put(dashButton, xbox.getPressed());
+        currentControls.put("dashButton", xbox.getPressed());
+
         dashButton.setText(xbox.getPressed());
       }
     }
@@ -385,24 +407,34 @@ public class OptionScreen implements Screen {
     this.listener = listener;
   }
 
-  // TODO: set controls back to normal but need to update the buttons
   private void setDefault() {
-    for (TextButton k : buttonNames.keySet()) {
+    for (TextButton k : buttonMaps.keySet()) {
       k.setText(defaultSettings.get(k));
     }
   }
 
   public void draw() {
-    canvas.clear(Color.DARK_GRAY);
+    canvas.clear(Color.BLACK);
+    canvas.begin();
     stage.getBatch().begin();
     stage.getBatch().setProjectionMatrix(stage.getCamera().combined);
-    // draw background
-    //      stage.getBatch().draw(background.getRegion(), 0, 0, stage.getViewport().getWorldWidth(),
-    // stage.getViewport().getWorldHeight());
+
+    // draw the background
+    float ox = -canvas.getWidth() / 2f;
+    float oy = -canvas.getHeight() / 2f;
+    canvas.draw(
+        background,
+        Color.WHITE,
+        0,
+        0,
+        stage.getViewport().getWorldWidth(),
+        stage.getViewport().getWorldHeight());
+
     if (xbox != null) {
       xboxListener();
     }
     stage.getBatch().end();
+    canvas.end();
     stage.draw();
   }
 
@@ -423,8 +455,9 @@ public class OptionScreen implements Screen {
 
   /** Saves the current options to a preference file */
   private void saveOptions() {
-    prefs.putString("easyMode", buttonNames.get(easyModeButton));
-    prefs.putString("dashControl", buttonNames.get(dashControlButton));
+    for (int i = 0; i < buttonMaps.size(); i++) {
+      prefs.putString(buttonNames[i], currentControls.get(buttonNames[i]));
+    }
     prefs.flush();
     if (BuildConfig.DEBUG) {
       System.out.println("Saved options: " + prefs.get());
@@ -436,11 +469,11 @@ public class OptionScreen implements Screen {
     String savedEasyMode = prefs.getString("easyMode");
     String savedDashControl = prefs.getString("dashControl");
     if (!savedEasyMode.isEmpty()) {
-      buttonNames.put(easyModeButton, savedEasyMode);
-      easyModeButton.setText(savedEasyMode);
+      buttonMaps.put(aimAssistButton, savedEasyMode);
+      aimAssistButton.setText(savedEasyMode);
     }
     if (!savedDashControl.isEmpty()) {
-      buttonNames.put(dashControlButton, savedDashControl);
+      buttonMaps.put(dashControlButton, savedDashControl);
       dashControlButton.setText(savedDashControl);
     }
   }

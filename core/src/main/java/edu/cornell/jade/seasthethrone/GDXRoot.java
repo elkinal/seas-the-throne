@@ -94,17 +94,7 @@ public class GDXRoot extends Game implements ScreenListener {
 
     // to loading (options)
     if (screen instanceof TitleScreen && exitCode == EXIT_OPTIONS) {
-      loading = new LoadScreen("assets.json", canvas, MIN_LOAD_TIME, EXIT_OPTIONS);
-      loading.setScreenListener(this);
-      setScreen(loading);
-    }
-
-    // ------- loading screen exits
-    // to options menu
-    if (screen == loading && exitCode == EXIT_OPTIONS) {
       setScreen(options);
-      loading.dispose();
-      loading = null;
     }
 
     // to title
@@ -125,9 +115,7 @@ public class GDXRoot extends Game implements ScreenListener {
     // ----- options screen exits
     // to loading (to title)
     if (screen == options && exitCode == EXIT_TITLE) {
-      loading = new LoadScreen("assets.json", canvas, MIN_LOAD_TIME, EXIT_TITLE);
-      loading.setScreenListener(this);
-      setScreen(loading);
+      setScreen(menus);
     }
 
     // ---- game screen exits

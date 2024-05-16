@@ -121,9 +121,9 @@ public class InputController {
     float hind = xbox.getRightX();
     float vind = -xbox.getRightY();
 
-    Vector2 location = obj.getLocation();
-    dashCoordCache.set(location.x + hind, location.y + vind);
-    obj.updateDirection(dashCoordCache);
+    //    Vector2 location = obj.getLocation();
+    //    dashCoordCache.set(location.x + hind, location.y + vind);
+    //    obj.updateDirection(dashCoordCache);
 
     // dashing
     if (xbox.getRightTrigger() > 0.6f) {
