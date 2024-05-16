@@ -793,6 +793,9 @@ public class PlayerModel extends ComplexModel implements Renderable {
       } else if (Math.abs(vx) < Math.abs(vy)) {
         if (vy > 0) faceDirection = Direction.UP;
         else faceDirection = Direction.DOWN;
+      } else if (Math.abs(vx) == Math.abs(vy) && Math.abs(vx) > 0) {
+        if (vx > 0) faceDirection = Direction.RIGHT;
+        else faceDirection = Direction.LEFT;
       }
     }
   }
