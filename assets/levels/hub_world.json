@@ -647,6 +647,11 @@
                          "value":225
                         }, 
                         {
+                         "name":"requiredCheckpoint",
+                         "type":"int",
+                         "value":-1
+                        }, 
+                        {
                          "name":"target",
                          "type":"string",
                          "value":"levels\/tutorial_map.json"
@@ -672,6 +677,11 @@
                          "name":"playerY",
                          "type":"float",
                          "value":200
+                        }, 
+                        {
+                         "name":"requiredCheckpoint",
+                         "type":"int",
+                         "value":-1
                         }, 
                         {
                          "name":"target",
