@@ -106,6 +106,9 @@ public class GameplayController implements Screen {
   /** Map of previously loaded levels */
   private HashMap<String, Level> loadedLevels;
 
+  /** If the player has entered a portal and the level should be changed */
+  private boolean changeLevelFlag;
+
   /** Sub-controller for saving/loading the game */
   protected StateController stateController;
 
@@ -506,16 +509,21 @@ public class GameplayController implements Screen {
       }
     }
 
-
-    // Load new level if the player has touched a portal, thus setting a target
-    if (physicsEngine.hasTarget()) {
+    if (changeLevelFlag) {
       changeLevel();
       // Reset target so player doesn't teleport again on next frame
       physicsEngine.setTarget(null);
       physicsEngine.setSpawnPoint(null);
+      changeLevelFlag = false;
     }
 
-
+    // Load new level if the player has touched a portal, thus setting a target
+    if (physicsEngine.hasTarget()) {
+      changeLevelFlag = true;
+      // Save the current level state
+      stateController.updateState(level.name, playerController, bossControllers);
+      listener.exitScreen(this, GDXRoot.EXIT_SWAP);
+    }
 
     // Render frame
     renderEngine.clear();
@@ -544,8 +552,6 @@ public class GameplayController implements Screen {
         }
       }
     }
-
-
     objectCache.sort(comp);
 
     for (Model r : objectCache) {
@@ -574,8 +580,7 @@ public class GameplayController implements Screen {
       if (BuildConfig.DEBUG) {
         System.out.println("Exiting game");
       }
-      ((GDXRoot) listener).dispose();
-      System.exit(0);
+      quitGame();
 //      listener.exitScreen(this, 4);
     }
 
@@ -595,16 +600,14 @@ public class GameplayController implements Screen {
     if (BuildConfig.DEBUG) {
       System.out.println("Changing level to: " + physicsEngine.getTarget());
     }
-
-    // Save the current level state
-    stateController.updateState(level.name, playerController, bossControllers);
-    listener.exitScreen(this, GDXRoot.EXIT_SWAP);
     System.out.println("exit screen called");
 
     if (loadedLevels.containsKey(physicsEngine.getTarget())) {
       level = loadedLevels.get(physicsEngine.getTarget());
     } else {
+      System.out.println("pre level load");
       level = new Level(physicsEngine.getTarget());
+      System.out.println("post level load");
       loadedLevels.put(level.name, level);
     }
 
@@ -703,6 +706,16 @@ public class GameplayController implements Screen {
 
   public void setQuit(boolean quit) {
     this.quit = quit;
+  }
+
+  private void quitGame() {
+    loadedLevels.clear();
+    renderEngine.clear();
+    bossControllers.clear();
+    assets.dispose();
+    dispose();
+    ((GDXRoot) listener).dispose();
+    System.exit(0);
   }
 
   public void pause() {
