@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.*;
 import edu.cornell.jade.seasthethrone.ai.BossController;
+import edu.cornell.jade.seasthethrone.gamemodel.CheckpointModel;
 import edu.cornell.jade.seasthethrone.level.LevelObject;
 import edu.cornell.jade.seasthethrone.level.LevelState;
 import com.badlogic.gdx.Preferences;
@@ -35,6 +36,9 @@ public class StateController {
   /** Where to respawn the player when they die or restart */
   private Vector2 respawnLoc;
 
+  /** The name of the level to respawn to */
+  private String respawnLevel;
+
   /** The index of the current save file */
   private int saveIndex;
 
@@ -55,11 +59,11 @@ public class StateController {
     // Update player state
     this.playerAmmo = player.getAmmo();
     this.playerHealth = player.getHealth();
-    System.out.println("setting respawn loc: " + player.getLocation());
 
     // Update level state in stored levels
     if (storedLevels.containsKey(levelName)) {
-      storedLevels.get(levelName).update(bosses);
+      LevelState levelState = storedLevels.get(levelName);
+      levelState.updateBosses(bosses);
     } else {
       storedLevels.put(levelName, new LevelState(bosses));
     }
@@ -68,15 +72,21 @@ public class StateController {
   /** Serializes the state of this controller to a json */
   public void saveGame() {
     if (BuildConfig.DEBUG) {
-      System.out.println("saving game");
+      System.out.println("Saving game");
+      System.out.println("Checkpoint "+this.checkpoint+" activated");
     }
     prefs.putInteger("checkpoint", this.checkpoint);
     prefs.putInteger("player health", this.playerHealth);
     prefs.putInteger("player ammo", this.playerAmmo);
+    prefs.putString("respawn level", this.respawnLevel);
     try {
       prefs.putFloat("respawn x", this.respawnLoc.x);
       prefs.putFloat("respawn y", this.respawnLoc.y);
+      if (BuildConfig.DEBUG) {
+        System.out.println("Saved respawn loc: "+respawnLoc);
+      }
     } catch (NullPointerException e) {
+      System.out.println("NullPointer on save respawn loc");
     }
 
     String storedLevelsString = json.prettyPrint(json.toJson(storedLevels));
@@ -97,8 +107,6 @@ public class StateController {
       }
 
       String storedLevelsString = prefs.getString("stored levels", "");
-      System.out.println("sl string "+storedLevelsString);
-
       this.storedLevels.clear();
 
      JsonValue levelsRoot = new JsonReader().parse(storedLevelsString);
@@ -106,8 +114,6 @@ public class StateController {
         LevelState thisLevel = new LevelState(levelsRoot.get(i).get("bossHps").asIntArray());
         storedLevels.put(levelsRoot.get(i).name, thisLevel);
       }
-      System.out.println("stored l "+storedLevels);
-
     } catch (Exception e) {
       if (BuildConfig.DEBUG) {
         System.out.println("Loading defaults");
@@ -129,6 +135,18 @@ public class StateController {
 
   public Vector2 getRespawnLoc() {
     return respawnLoc;
+  }
+
+  public boolean hasRespawnLoc() {
+    return respawnLoc != null && !respawnLevel.isEmpty();
+  }
+
+  public void setRespawnLevel(String respawnLevel) {
+    this.respawnLevel = respawnLevel;
+  }
+
+  public String getRespawnLevel() {
+    return this.respawnLevel;
   }
 
   /** Returns the specified level */

@@ -62,7 +62,6 @@ public class EnemyModel extends PolygonModel {
     HashMap<String, Object> specificBossTextures =
         (HashMap<String, Object>) bossTextures.get(enemyName);
 
-    System.out.println(enemyName);
     idleTexture =
         new Texture(
             (String) ((HashMap<String, Object>) specificBossTextures.get("idle")).get("file"));

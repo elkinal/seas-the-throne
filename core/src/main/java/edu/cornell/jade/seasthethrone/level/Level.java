@@ -57,7 +57,7 @@ public class Level {
   public Level(String fileName) {
     this.viewport = new ExtendViewport(DEFAULT_WIDTH, DEFAULT_HEIGHT);
     tempPos = new Vector2();
-    this.name = parseName(fileName);
+    this.name = fileName;
     if (BuildConfig.DEBUG) {
       System.out.println("Loading level:" + this.name);
     }

@@ -8,8 +8,6 @@ public class LevelState {
 
   private Array<Integer> bossHps = new Array<>();
 
-  private Vector2 respawnLoc;
-
   public LevelState(Array<BossController> bossControllers) {
     for (BossController bc : bossControllers) {
       this.bossHps.add(bc.getBoss().getHealth());
@@ -22,7 +20,7 @@ public class LevelState {
     }
   }
 
-  public void update(Array<BossController> bossControllers) {
+  public void updateBosses(Array<BossController> bossControllers) {
     this.getBossHps().clear();
     for (BossController bc : bossControllers) {
       this.bossHps.add(bc.getBoss().getHealth());
@@ -32,4 +30,5 @@ public class LevelState {
   public Array<Integer> getBossHps() {
     return bossHps;
   }
+
 }

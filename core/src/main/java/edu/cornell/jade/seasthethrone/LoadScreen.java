@@ -31,6 +31,9 @@ public class LoadScreen implements Screen {
   /** Whether or not this player mode is still active */
   private boolean active;
 
+  /** If the load screen has begun loading assets */
+  private boolean begunAssetLoading;
+
   /** The amount of time to devote to loading assets (as opposed to on screen hints, etc.) */
   private int budget;
 
@@ -73,6 +76,7 @@ public class LoadScreen implements Screen {
     timer = 0;
     frameCounter = 0;
     frameDelay = 4;
+    begunAssetLoading = false;
     this.exitCode = exitCode;
 
     internal = new AssetDirectory( "loading.json" );
@@ -87,9 +91,7 @@ public class LoadScreen implements Screen {
 
     textFont = internal.getEntry("loading:alagard", BitmapFont.class);
 
-    // Start loading the real assets
     assets = new AssetDirectory( file );
-    assets.loadAssets();
     active = true;
   }
 
@@ -159,6 +161,13 @@ public class LoadScreen implements Screen {
     if (active) {
       update(delta);
       draw();
+
+      if (!begunAssetLoading) {
+        // Start loading the real assets
+        assets.loadAssets();
+        assets.finishLoading();
+        begunAssetLoading = true;
+      }
 
       // We are are ready, notify our listener
       if (isReady() && listener != null) {
