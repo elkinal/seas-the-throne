@@ -56,13 +56,13 @@ public class PhysicsEngine implements ContactListener {
   }
 
   public void dispose() {
-    Iterator<PooledList<Model>.Entry> iterator = objects.entryIterator();
-    while (iterator.hasNext()) {
-      PooledList<Model>.Entry entry = iterator.next();
-      Model obj = entry.getValue();
-      obj.markRemoved(true);
-    }
-//    objects.clear();
+//    Iterator<PooledList<Model>.Entry> iterator = objects.entryIterator();
+//    while (iterator.hasNext()) {
+//      PooledList<Model>.Entry entry = iterator.next();
+//      Model obj = entry.getValue();
+//      obj.markRemoved(true);
+//    }
+    objects.clear();
     //    world.dispose();
   }
 

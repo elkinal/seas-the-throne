@@ -237,10 +237,6 @@ public class GameplayController implements Screen {
   public void setupGameplay() {
     dispose();
 
-    // Initialize physics engine
-    World world = new World(new Vector2(0, 0), false);
-    physicsEngine = new PhysicsEngine(bounds, world);
-
     // Load player
     // TODO: make this come from the information JSON
     Vector2 playerLoc;
@@ -258,6 +254,10 @@ public class GameplayController implements Screen {
     } else {
       playerLoc = level.getPlayerLoc();
     }
+
+    // Initialize physics engine
+    World world = new World(new Vector2(0, 0), false);
+    physicsEngine = new PhysicsEngine(bounds, world);
 
     gameState = GameState.PLAY;
 
@@ -626,7 +626,6 @@ public class GameplayController implements Screen {
 
     // Reload
     setupGameplay();
-    System.out.println("num objects "+physicsEngine.getObjects().size());
 
     transferState(stateController.getLevel(level.name));
   }
