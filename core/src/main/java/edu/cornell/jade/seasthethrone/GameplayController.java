@@ -103,6 +103,12 @@ public class GameplayController implements Screen {
   /** The level currently loaded */
   protected Level level;
 
+  /** Map of previously loaded levels */
+  private HashMap<String, Level> loadedLevels;
+
+  /** If the player has entered a portal and the level should be changed */
+  private boolean changeLevelFlag;
+
   /** Sub-controller for saving/loading the game */
   protected StateController stateController;
 
@@ -157,7 +163,10 @@ public class GameplayController implements Screen {
   protected GameplayController() {
     gameState = GameState.PLAY;
 
+    loadedLevels = new HashMap<>();
     this.level = new Level("levels/hub_world.json");
+    loadedLevels.put(level.name, level);
+
     this.assets = new AssetDirectory("assets.json");
     assets.loadAssets();
     assets.finishLoading();
@@ -187,7 +196,9 @@ public class GameplayController implements Screen {
     this.interactController = new InteractableController();
     inputController.add(interactController);
     this.renderEngine = new RenderingEngine(worldWidth, worldHeight, viewport, worldScale);
-
+    // Initialize physics engine
+    World world = new World(new Vector2(0, 0), false);
+    physicsEngine = new PhysicsEngine(bounds, world);
     setupGameplay();
   }
 
@@ -202,9 +213,15 @@ public class GameplayController implements Screen {
     // TODO: make this come from the information JSON
     Vector2 playerLoc;
     if (restart && stateController.hasRespawnLoc()) {
-      this.level = new Level("levels/"+stateController.getRespawnLevel()+".json");
+      String levelName = stateController.getRespawnLevel();
+      if (loadedLevels.containsKey(levelName)) {
+        level = loadedLevels.get(levelName);
+      } else {
+        level = new Level(levelName);
+        loadedLevels.put(level.name, level);
+      }
       playerLoc = stateController.getRespawnLoc();
-    } else if (physicsEngine != null && physicsEngine.hasTarget()) {
+    } else if (physicsEngine != null && physicsEngine.getSpawnPoint() != null) {
       playerLoc = level.tiledToWorldCoords(physicsEngine.getSpawnPoint());
     } else {
       playerLoc = level.getPlayerLoc();
@@ -212,7 +229,6 @@ public class GameplayController implements Screen {
 
     gameState = GameState.PLAY;
 
-    World world = new World(new Vector2(0, 0), false);
     HashMap<String, Array<LevelObject>> layers = level.getLayers();
 
     // Load background
@@ -265,8 +281,7 @@ public class GameplayController implements Screen {
             .build();
 
     renderEngine.addRenderable(player);
-    // Initialize physics engine
-    physicsEngine = new PhysicsEngine(bounds, world);
+
     physicsEngine.addObject(player);
     // Load fish bullets builder
     fishBulletBuilder =
@@ -494,16 +509,21 @@ public class GameplayController implements Screen {
       }
     }
 
-
-    // Load new level if the player has touched a portal, thus setting a target
-    if (physicsEngine.hasTarget()) {
+    if (changeLevelFlag) {
       changeLevel();
       // Reset target so player doesn't teleport again on next frame
       physicsEngine.setTarget(null);
       physicsEngine.setSpawnPoint(null);
+      changeLevelFlag = false;
     }
 
-
+    // Load new level if the player has touched a portal, thus setting a target
+    if (physicsEngine.hasTarget()) {
+      changeLevelFlag = true;
+      // Save the current level state
+      stateController.updateState(level.name, playerController, bossControllers);
+      listener.exitScreen(this, GDXRoot.EXIT_SWAP);
+    }
 
     // Render frame
     renderEngine.clear();
@@ -532,8 +552,6 @@ public class GameplayController implements Screen {
         }
       }
     }
-
-
     objectCache.sort(comp);
 
     for (Model r : objectCache) {
@@ -562,13 +580,12 @@ public class GameplayController implements Screen {
       if (BuildConfig.DEBUG) {
         System.out.println("Exiting game");
       }
-      ((GDXRoot) listener).dispose();
-      System.exit(0);
+      quitGame();
 //      listener.exitScreen(this, 4);
     }
 
     // Draw reset and debug screen for wins and losses
-    if (gameState == GameState.OVER || gameState == GameState.WIN) {
+    if (gameState == GameState.OVER) {
       if (inputController.didReset()) {
         restart = true;
         pauseController.continueGame();
@@ -584,13 +601,23 @@ public class GameplayController implements Screen {
       System.out.println("Changing level to: " + physicsEngine.getTarget());
     }
 
-    // Save the current level state
-    stateController.updateState(level.name, playerController, bossControllers);
-    listener.exitScreen(this, GDXRoot.EXIT_SWAP);
-    level = new Level(physicsEngine.getTarget());
+    // Load in new level
+    if (loadedLevels.containsKey(physicsEngine.getTarget())) {
+      level = loadedLevels.get(physicsEngine.getTarget());
+    } else {
+      level = new Level(physicsEngine.getTarget());
+      loadedLevels.put(level.name, level);
+    }
     stateController.setCurrentLevel(level.name);
+
+    // Clear game
     this.renderEngine.clear();
+    physicsEngine.dispose();
+    playerController = null;
+    pauseController = null;
+    uiController = null;
     bossControllers.clear();
+    // Reload
     setupGameplay();
 
     transferState(stateController.getLevel(level.name));
@@ -670,6 +697,10 @@ public class GameplayController implements Screen {
     this.listener = listener;
   }
 
+  public void setAssets(AssetDirectory assets) {
+    this.assets = assets;
+  }
+
   public void setReturnToHub(boolean returnToHub) {
     this.returnToHub = returnToHub;
   }
@@ -680,6 +711,16 @@ public class GameplayController implements Screen {
 
   public void setQuit(boolean quit) {
     this.quit = quit;
+  }
+
+  private void quitGame() {
+    loadedLevels.clear();
+    renderEngine.clear();
+    bossControllers.clear();
+    assets.dispose();
+    dispose();
+    ((GDXRoot) listener).dispose();
+    System.exit(0);
   }
 
   public void pause() {
