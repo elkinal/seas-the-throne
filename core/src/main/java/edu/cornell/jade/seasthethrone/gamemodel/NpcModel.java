@@ -1,14 +1,18 @@
 package edu.cornell.jade.seasthethrone.gamemodel;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import edu.cornell.jade.seasthethrone.level.LevelObject;
 import edu.cornell.jade.seasthethrone.model.BoxModel;
 import edu.cornell.jade.seasthethrone.physics.CollisionMask;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
+import edu.cornell.jade.seasthethrone.ui.DialogueBox;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
+
+import java.io.FileReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class NpcModel extends BoxModel implements Interactable, Renderable {
 
@@ -26,6 +30,8 @@ public class NpcModel extends BoxModel implements Interactable, Renderable {
 
   private int frameCounter;
 
+  private DialogueBox dialogue;
+
   /** Range within which the player can interact with this checkpoint */
   private final float INTERACT_RANGE = 5f;
 
@@ -40,13 +46,19 @@ public class NpcModel extends BoxModel implements Interactable, Renderable {
     this.filmStrip = new FilmStrip(obj.texture.getTexture(),1, 2);
     this.arrow = new FilmStrip(new Texture("levels/interactable_arrow.png"), 1, 20);
     CollisionMask.setCategoryMaskBits(this);
+
+    this.dialogue = new DialogueBox();
+    dialogue.setTexts(parseDialogue(obj.dialogue));
   }
 
+  @Override
   public void draw(RenderingEngine renderer) {
     float y_offset = WORLD_SCALE*filmStrip.getRegionHeight()/2f - getHeight()/2f;
 
+    // draw character
     renderer.draw(filmStrip, getX(), getY()+y_offset);
 
+    // draw arrow
     if (playerInRange) {
       renderer.draw(arrow, getX(), getY() + y_offset + WORLD_SCALE*0.4f*filmStrip.getRegionHeight());
     }
@@ -67,6 +79,16 @@ public class NpcModel extends BoxModel implements Interactable, Renderable {
       else filmStrip.setFrame(0);
     }
   }
+
+  private String parseDialogue(String file) {
+    try {
+      return new String(Files.readAllBytes(Paths.get(file)));
+    } catch (Exception e) {
+      return file;
+    }
+  }
+
+  public DialogueBox getDialogueBox() {return dialogue;}
 
   @Override
   public void alwaysUpdate() {

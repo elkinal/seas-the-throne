@@ -191,6 +191,7 @@ public class GameplayController implements Screen {
     this.portalController = new PortalController();
     this.interactController = new InteractableController();
     inputController.add(interactController);
+    inputController.add(interactController.getDialogueController());
     this.renderEngine = new RenderingEngine(worldWidth, worldHeight, viewport, worldScale);
 
 ////     Initialize physics engine
@@ -213,7 +214,6 @@ public class GameplayController implements Screen {
 
     // Load the Pause Menu's dialogue box
     DialogueBoxController pauseMenuDialogueBoxController = pauseMenu.getDialogueBoxController();
-    pauseMenuDialogueBoxController.setGameplayController(this);
     inputController.add(pauseMenuDialogueBoxController);
     uiController =
             new UIController(
@@ -221,6 +221,7 @@ public class GameplayController implements Screen {
                     renderEngine,
                     renderEngine.getGameCanvas(),
                     uiViewport);
+    uiController.setInteractController(interactController);
     uiController.gatherAssets(assets);
 
     setupGameplay();

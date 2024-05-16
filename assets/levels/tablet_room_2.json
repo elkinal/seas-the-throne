@@ -74,6 +74,39 @@
         }, 
         {
          "draworder":"topdown",
+         "id":10,
+         "name":"interactables",
+         "objects":[
+                {
+                 "height":14.5,
+                 "id":17,
+                 "name":"npc\/oldguy.png",
+                 "properties":[
+                        {
+                         "name":"dialogue",
+                         "type":"string",
+                         "value":"npc\/oldguy_1.txt"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"npc"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":18.5,
+                 "x":100,
+                 "y":160
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
          "id":3,
          "name":"walls",
          "objects":[
@@ -257,8 +290,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":10,
- "nextobjectid":17,
+ "nextlayerid":11,
+ "nextobjectid":18,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

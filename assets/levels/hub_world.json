@@ -368,13 +368,13 @@
          "objects":[
                 {
                  "height":14.5,
-                 "id":389,
-                 "name":"npc\/blueguy.png",
+                 "id":390,
+                 "name":"npc\/drunkguy.png",
                  "properties":[
                         {
-                         "name":"dialouge",
+                         "name":"dialogue",
                          "type":"string",
-                         "value":"npc\/npc_text.txt"
+                         "value":"npc\/drunkguy_1.txt"
                         }, 
                         {
                          "name":"type",
@@ -385,8 +385,8 @@
                  "type":"",
                  "visible":true,
                  "width":18.5,
-                 "x":481.25,
-                 "y":275
+                 "x":447.75,
+                 "y":255.75
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -916,7 +916,7 @@
          "y":0
         }],
  "nextlayerid":17,
- "nextobjectid":390,
+ "nextobjectid":391,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

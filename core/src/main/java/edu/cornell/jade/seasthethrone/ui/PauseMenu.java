@@ -104,7 +104,7 @@ public class PauseMenu implements Renderable {
     height = 780;
 
     // Creating the dialogue box
-    dialogueBox = new DialogueBox(viewport);
+    dialogueBox = new DialogueBox();
     dialogueBox.setTexts("Line1\nLine2\nLine3", "Line4\nLine5\nLine6", "Line7\nLine8\nLine9");
     dialogueBoxController = new DialogueBoxController(dialogueBox);
   }

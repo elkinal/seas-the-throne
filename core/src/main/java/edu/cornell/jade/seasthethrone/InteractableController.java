@@ -5,7 +5,9 @@ import com.badlogic.gdx.utils.Array;
 import edu.cornell.jade.seasthethrone.gamemodel.CheckpointModel;
 import edu.cornell.jade.seasthethrone.gamemodel.HealthpackModel;
 import edu.cornell.jade.seasthethrone.gamemodel.Interactable;
+import edu.cornell.jade.seasthethrone.gamemodel.NpcModel;
 import edu.cornell.jade.seasthethrone.input.Controllable;
+import edu.cornell.jade.seasthethrone.ui.DialogueBoxController;
 
 public class InteractableController implements Controllable {
 
@@ -24,11 +26,16 @@ public class InteractableController implements Controllable {
   /** PlayerController updated by certain interactables (health packs) */
   private PlayerController player;
 
+  /** Controller for npc dialogue */
+  private DialogueBoxController dialogueController;
+
   public InteractableController() {
     this.interactables = new Array<>();
     this.interactPressed = false;
     checkpointActivated = false;
     checkpointID = -1;
+
+    this.dialogueController = new DialogueBoxController();
   }
 
   public void setPlayerController(PlayerController player) {
@@ -60,21 +67,28 @@ public class InteractableController implements Controllable {
 
     // If interact pressed
     for (Interactable interactable : interactables) {
-      // interact with healthpacks
       if (interactable instanceof HealthpackModel) {
+        // interact with healthpacks
         if (canUseHealthpack((HealthpackModel) interactable)) {
           if (BuildConfig.DEBUG) System.out.println("Health restored!");
           player.setHealth(5);
           ((HealthpackModel) interactable).setUsed(true);
         }
-
-        // interact with checkpoints
       } else if (interactable instanceof CheckpointModel) {
+        // interact with checkpoints
         if (interactable.getPlayerInRange() && !checkpointActivated) {
            player.setHealth(5);
           ((CheckpointModel) interactable).setActivated(true);
           this.checkpointID = ((CheckpointModel) interactable).getCheckpointID();
           this.checkpointActivated = true;
+        }
+      } else if (interactable instanceof NpcModel) {
+        // interact with NPCs
+        if (interactable.getPlayerInRange()) {
+          if (BuildConfig.DEBUG) System.out.println("Npc interacted");
+          dialogueController.setDialogueBox(((NpcModel) interactable).getDialogueBox());
+          dialogueController.getDialogueBox().show();
+          dialogueController.setActive(true);
         }
       }
     }
@@ -98,6 +112,9 @@ public class InteractableController implements Controllable {
     interactPressed = true;
   }
 
+  public DialogueBoxController getDialogueController() {
+    return dialogueController;
+  }
 
   /*
   * ===============================

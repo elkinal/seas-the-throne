@@ -33,17 +33,19 @@ public class DialogueBox implements Renderable, Dialogueable {
   private final float fontSize = 2.0f;
   private ArrayList<String> texts;
   private int currentText;
+
   // private String text = "default text \nline 2\nline3";
 
   /** Constructor for the Pause Menu */
-  public DialogueBox(Viewport viewport) {
+  public DialogueBox() {
 
     // Loading scroll texture
     boxTextureRegion = new TextureRegion(boxTexture);
 
     // Setting up text
     FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Alagard.ttf"));
-    FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+    FreeTypeFontGenerator.FreeTypeFontParameter parameter =
+        new FreeTypeFontGenerator.FreeTypeFontParameter();
 
     menuFont = generator.generateFont(parameter);
     menuFont.setUseIntegerPositions(false);
@@ -69,16 +71,14 @@ public class DialogueBox implements Renderable, Dialogueable {
   }
 
   /**
-   * Ensures the dialogue box stays the same size and remains in the center
-   * of the screen when the window is resized.
+   * Ensures the dialogue box stays the same size and remains in the center of the screen when the
+   * window is resized.
    */
   public void resize(int screenWidth, int screenHeight) {
 
     // Initial scale
-    if (this.screenWidth == 0)
-      this.screenWidth = screenWidth;
-    if (this.screenHeight == 0)
-      this.screenHeight = screenHeight;
+    if (this.screenWidth == 0) this.screenWidth = screenWidth;
+    if (this.screenHeight == 0) this.screenHeight = screenHeight;
 
     // New position of dialogue box after resizing
     x = ((float) screenWidth / 2) - width / 2;
@@ -128,8 +128,7 @@ public class DialogueBox implements Renderable, Dialogueable {
   @Override
   public void draw(RenderingEngine renderer) {
     if (display) {
-      renderer.getGameCanvas().drawUI(
-          boxTextureRegion, x, y, width, height);
+      renderer.getGameCanvas().drawUI(boxTextureRegion, x, y, width, height);
       drawText(renderer);
     }
   }
@@ -138,35 +137,54 @@ public class DialogueBox implements Renderable, Dialogueable {
   private void drawText(RenderingEngine renderer) {
     if (display) {
       // Drawing the main text
-      renderer.getGameCanvas().drawTextUI(texts.get(currentText), menuFont, getTextX(),
-          getTextY() + textSpacingY * 1.5f, false);
+      if (!texts.isEmpty()) {
+        renderer
+            .getGameCanvas()
+            .drawTextUI(
+                texts.get(currentText),
+                menuFont,
+                getTextX(),
+                getTextY() + textSpacingY * 1.5f,
+                false);
+      }
 
       // Drawing info messages
       float xTextOffset = 120;
-      renderer.getGameCanvas().drawTextUI("Press [primary1] to hide", menuShadowFont, width - xTextOffset + 2,
-          getTextY() + textSpacingY * 1.5f - 2, false);
-      renderer.getGameCanvas().drawTextUI("Press [primary1] to hide", menuFont, width - xTextOffset,
-          getTextY() + textSpacingY * 1.5f, false);
-      renderer.getGameCanvas().drawTextUI(
-          "Page " + (currentText + 1) + "/" + (texts.size()),
-          menuFont,
-          x + width / 2,
-          110,
-          true);
+      renderer
+          .getGameCanvas()
+          .drawTextUI(
+              "Press [primary1] to hide",
+              menuShadowFont,
+              width - xTextOffset + 2,
+              getTextY() + textSpacingY * 1.5f - 2,
+              false);
+      renderer
+          .getGameCanvas()
+          .drawTextUI(
+              "Press [primary1] to hide",
+              menuFont,
+              width - xTextOffset,
+              getTextY() + textSpacingY * 1.5f,
+              false);
+      renderer
+          .getGameCanvas()
+          .drawTextUI(
+              "Page " + (currentText + 1) + "/" + (texts.size()),
+              menuFont,
+              x + width / 2,
+              110,
+              true);
     }
   }
 
   @Override
-  public void alwaysUpdate() {
-  }
+  public void alwaysUpdate() {}
 
   @Override
-  public void neverUpdate() {
-  }
+  public void neverUpdate() {}
 
   @Override
-  public void setAlwaysAnimate(boolean animate) {
-  }
+  public void setAlwaysAnimate(boolean animate) {}
 
   @Override
   public boolean alwaysAnimate() {
@@ -174,6 +192,5 @@ public class DialogueBox implements Renderable, Dialogueable {
   }
 
   @Override
-  public void progressFrame() {
-  }
+  public void progressFrame() {}
 }

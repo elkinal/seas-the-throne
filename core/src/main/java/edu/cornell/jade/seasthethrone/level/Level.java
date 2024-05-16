@@ -492,7 +492,7 @@ public class Level {
           layers.get("healthpacks").add(obj);
           break;
         case "npc":
-          obj.dialouge = JsonHandler.getStringProperty(interactWrapper, "dialouge");
+          obj.dialogue = JsonHandler.getStringProperty(interactWrapper, "dialogue");
           layers.get("npc").add(obj);
         default:
           break;
