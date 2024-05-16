@@ -40,6 +40,9 @@ public class InputController {
   /** Cache vector to return containing the dash coordinates of the previous read */
   Vector2 dashCoordCache;
 
+  /** Default cursor location for controllers */
+  Vector2 defaultLoc = new Vector2();
+
   /**
    * Returns true if the reset button was pressed.
    *
@@ -122,6 +125,7 @@ public class InputController {
     float vind = -xbox.getRightY();
 
     Vector2 location = obj.getLocation();
+    if (location == null) location = defaultLoc;
     dashCoordCache.set(location.x + hind, location.y + vind);
     obj.updateDirection(dashCoordCache);
 
