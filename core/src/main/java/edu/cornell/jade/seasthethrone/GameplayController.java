@@ -196,9 +196,10 @@ public class GameplayController implements Screen {
     this.interactController = new InteractableController();
     inputController.add(interactController);
     this.renderEngine = new RenderingEngine(worldWidth, worldHeight, viewport, worldScale);
-    // Initialize physics engine
-    World world = new World(new Vector2(0, 0), false);
-    physicsEngine = new PhysicsEngine(bounds, world);
+
+////     Initialize physics engine
+//    World world = new World(new Vector2(0, 0), false);
+//    physicsEngine = new PhysicsEngine(bounds, world);
 
     // Load UI
     PauseMenu pauseMenu = new PauseMenu(viewport);
@@ -206,13 +207,13 @@ public class GameplayController implements Screen {
     pauseMenuController.setGameplayController(this);
     inputController.add(pauseMenuController);
 
-    // Initlize controllers
-    playerController = new PlayerController(physicsEngine);
-    inputController.add(playerController);
-    interactController.setPlayerController(playerController);
+////     Initlize controllers
+//    playerController = new PlayerController(physicsEngine);
+//    inputController.add(playerController);
+//    interactController.setPlayerController(playerController);
 
     // Initialize pause controller
-    pauseController = new PauseController(renderEngine, physicsEngine, playerController);
+    pauseController = new PauseController(renderEngine);
 
     // Load the Pause Menu's dialogue box
     DialogueBoxController pauseMenuDialogueBoxController = pauseMenu.getDialogueBoxController();
@@ -220,7 +221,6 @@ public class GameplayController implements Screen {
     inputController.add(pauseMenuDialogueBoxController);
     uiController =
             new UIController(
-                    playerController,
                     pauseMenuController,
                     renderEngine,
                     renderEngine.getGameCanvas(),
@@ -236,6 +236,10 @@ public class GameplayController implements Screen {
 
   public void setupGameplay() {
     dispose();
+
+    // Initialize physics engine
+    World world = new World(new Vector2(0, 0), false);
+    physicsEngine = new PhysicsEngine(bounds, world);
 
     // Load player
     // TODO: make this come from the information JSON
@@ -308,15 +312,25 @@ public class GameplayController implements Screen {
             .setShootCooldownLimit(20)
             .build();
 
-    playerController.setPlayer(player);
-    renderEngine.addRenderable(player);
+//    playerController.setPlayer(player);
+    // Initlize controllers
+    playerController = new PlayerController(physicsEngine, player);
+    inputController.add(playerController);
+    interactController.setPlayerController(playerController);
 
+    renderEngine.addRenderable(player);
     physicsEngine.addObject(player);
+
+    // Initialize pause controller
+    pauseController.setPhysicsEngine(physicsEngine);
+    pauseController.setPlayerController(playerController);
+    uiController.setPlayer(playerController);
+
     // Load fish bullets builder
     fishBulletBuilder =
         BulletModel.Builder.newInstance()
-                .setBaseTexture(new Texture("bullet/whitefish.png"))
-                .setUnbreakableTexture(new Texture("bullet/urchinbullet.png"));
+            .setBaseTexture(new Texture("bullet/whitefish.png"))
+            .setUnbreakableTexture(new Texture("bullet/urchinbullet.png"));
     // Load bosses
     bossControllers.clear();
 
@@ -610,12 +624,9 @@ public class GameplayController implements Screen {
     }
     stateController.setCurrentLevel(level.name);
 
-    // Clear game
-    this.renderEngine.clear();
-    physicsEngine.dispose();
-    bossControllers.clear();
     // Reload
     setupGameplay();
+    System.out.println("num objects "+physicsEngine.getObjects().size());
 
     transferState(stateController.getLevel(level.name));
   }
@@ -733,7 +744,12 @@ public class GameplayController implements Screen {
   }
 
   public void dispose() {
-    if (physicsEngine != null) physicsEngine.dispose();
+//    playerController.setPlayer(null);
+//    bossControllers.clear();
+//    renderEngine.clear();
+//    interactController.dispose();
+//    portalController.dispose();
+    if (physicsEngine!=null) physicsEngine.dispose();
   }
 
   public boolean allBossesDefeated() {

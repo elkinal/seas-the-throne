@@ -39,6 +39,11 @@ public class InteractableController implements Controllable {
     this.interactables.add(interactable);
   }
 
+  public void dispose() {
+    interactables.clear();
+
+  }
+
   /** Checks if interact was pressed this frame. If so, interacts with all interactables in range */
   public void update() {
     this.checkpointActivated = false;
