@@ -103,6 +103,9 @@ public class GameplayController implements Screen {
   /** The level currently loaded */
   protected Level level;
 
+  /** Map of previously loaded levels */
+  private HashMap<String, Level> loadedLevels;
+
   /** Sub-controller for saving/loading the game */
   protected StateController stateController;
 
@@ -157,7 +160,10 @@ public class GameplayController implements Screen {
   protected GameplayController() {
     gameState = GameState.PLAY;
 
+    loadedLevels = new HashMap<>();
     this.level = new Level("levels/hub_world.json");
+    loadedLevels.put(level.name, level);
+
     this.assets = new AssetDirectory("assets.json");
     assets.loadAssets();
     assets.finishLoading();
@@ -202,9 +208,15 @@ public class GameplayController implements Screen {
     // TODO: make this come from the information JSON
     Vector2 playerLoc;
     if (restart && stateController.hasRespawnLoc()) {
-      this.level = new Level("levels/"+stateController.getRespawnLevel()+".json");
+      String levelName = stateController.getRespawnLevel();
+      if (loadedLevels.containsKey(levelName)) {
+        level = loadedLevels.get(levelName);
+      } else {
+        level = new Level(levelName);
+        loadedLevels.put(level.name, level);
+      }
       playerLoc = stateController.getRespawnLoc();
-    } else if (physicsEngine != null && physicsEngine.hasTarget()) {
+    } else if (physicsEngine != null && physicsEngine.getSpawnPoint() != null) {
       playerLoc = level.tiledToWorldCoords(physicsEngine.getSpawnPoint());
     } else {
       playerLoc = level.getPlayerLoc();
@@ -587,11 +599,22 @@ public class GameplayController implements Screen {
     // Save the current level state
     stateController.updateState(level.name, playerController, bossControllers);
     listener.exitScreen(this, GDXRoot.EXIT_SWAP);
-    level = new Level(physicsEngine.getTarget());
+    System.out.println("exit screen called");
+
+    if (loadedLevels.containsKey(physicsEngine.getTarget())) {
+      level = loadedLevels.get(physicsEngine.getTarget());
+    } else {
+      level = new Level(physicsEngine.getTarget());
+      loadedLevels.put(level.name, level);
+    }
+
+//    System.out.println("level reassigned");
     stateController.setCurrentLevel(level.name);
     this.renderEngine.clear();
     bossControllers.clear();
+//    System.out.println("begin setup");
     setupGameplay();
+//    System.out.println("end setup");
 
     transferState(stateController.getLevel(level.name));
   }
