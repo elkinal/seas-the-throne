@@ -115,7 +115,7 @@ public class TitleScreen implements Screen, Controllable {
     canvas.draw(background, Color.WHITE, ox, oy, canvas.getWidth(), canvas.getHeight());
 
     // draw the logo
-    float scale = Math.min(2 / 3f, (float) canvas.getWidth() / logo.getWidth());
+    float scale = Math.min(1 / 2f, (float) canvas.getWidth() / logo.getWidth());
     float width = logo.getWidth() * scale;
     ox = -canvas.getWidth()/2f + 10f;
 
