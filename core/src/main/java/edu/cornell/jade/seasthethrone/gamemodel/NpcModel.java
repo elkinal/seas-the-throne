@@ -10,7 +10,6 @@ import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.ui.DialogueBox;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
-import java.io.FileReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -33,7 +32,7 @@ public class NpcModel extends BoxModel implements Interactable, Renderable {
   private DialogueBox dialogue;
 
   /** Range within which the player can interact with this checkpoint */
-  private final float INTERACT_RANGE = 5f;
+  private final float INTERACT_RANGE = 7f;
 
   public NpcModel(LevelObject obj, float scale) {
     super(obj.x, obj.y, obj.width, obj.height);

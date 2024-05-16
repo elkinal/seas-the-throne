@@ -54,11 +54,20 @@ public class InteractableController implements Controllable {
   /** Checks if interact was pressed this frame. If so, interacts with all interactables in range */
   public void update() {
     this.checkpointActivated = false;
+    boolean nearNpc = false;
     for (Interactable interactable : interactables) {
       // Check if player is in range
       interactable.setPlayerInRange(interactable.isPlayerInRange(player.getShadowLocation()));
 
       if (interactable instanceof CheckpointModel) ((CheckpointModel) interactable).setActivated(false);
+      if (interactable instanceof NpcModel) {
+        nearNpc = nearNpc || interactable.getPlayerInRange();
+      }
+    }
+
+    if (!nearNpc) {
+      dialogueController.setDialogueBox(null);
+      dialogueController.setActive(false);
     }
 
     if (!interactPressed) {
