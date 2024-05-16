@@ -122,8 +122,9 @@ public class TitleScreen implements Screen, Controllable {
     canvas.draw(logo, Color.WHITE, ox, 0, width, scale * logo.getHeight());
 
     // draw the menu
-    float y_offset = -100f;
-    float x_offset = 50f - canvas.getWidth()/2f;
+    float y_offset = -canvas.getHeight()/15f;
+    float x_offset =  canvas.getWidth()*(1/20f - 1/2f);
+    float menuSpacing = canvas.getHeight() / 8f;
     for (TitleSelection s : TitleSelection.values()) {
       if (selection == s) {
         canvas.drawText(s.optionName, textFont, x_offset, y_offset, Color.GOLDENROD);
@@ -132,7 +133,7 @@ public class TitleScreen implements Screen, Controllable {
         canvas.drawText(s.optionName, textFont, x_offset, y_offset, Color.WHITE);
       }
 
-      y_offset -= MENU_SPACING;
+      y_offset -= menuSpacing;
     }
     canvas.end();
   }
@@ -179,7 +180,10 @@ public class TitleScreen implements Screen, Controllable {
   public void show() {}
 
   @Override
-  public void resize(int i, int i1) {}
+  public void resize(int width, int height) {
+    viewport.update(width, height);
+    canvas.resize();
+  }
 
   @Override
   public void pause() {}
