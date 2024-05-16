@@ -365,7 +365,29 @@
          "draworder":"topdown",
          "id":14,
          "name":"interactables",
-         "objects":[],
+         "objects":[
+                {
+                 "height":14.5,
+                 "id":389,
+                 "name":"npc\/blueguy.png",
+                 "properties":[
+                        {
+                         "name":"dialouge",
+                         "type":"string",
+                         "value":"npc\/npc_text.txt"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"npc"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":18.5,
+                 "x":481.25,
+                 "y":275
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -894,7 +916,7 @@
          "y":0
         }],
  "nextlayerid":17,
- "nextobjectid":389,
+ "nextobjectid":390,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

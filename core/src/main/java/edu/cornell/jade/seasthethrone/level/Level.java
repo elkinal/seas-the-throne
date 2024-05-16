@@ -461,6 +461,7 @@ public class Level {
   private void parseInteractableLayer(HashMap<String, Object> interactLayer) {
     layers.put("checkpoints", new Array<>());
     layers.put("healthpacks", new Array<>());
+    layers.put("npc", new Array<>());
     if (interactLayer.isEmpty()) {
       return;
     }
@@ -490,6 +491,9 @@ public class Level {
         case "healthpack":
           layers.get("healthpacks").add(obj);
           break;
+        case "npc":
+          obj.dialouge = JsonHandler.getStringProperty(interactWrapper, "dialouge");
+          layers.get("npc").add(obj);
         default:
           break;
       }
