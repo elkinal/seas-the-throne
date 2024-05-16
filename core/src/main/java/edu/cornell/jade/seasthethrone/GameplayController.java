@@ -196,9 +196,37 @@ public class GameplayController implements Screen {
     this.interactController = new InteractableController();
     inputController.add(interactController);
     this.renderEngine = new RenderingEngine(worldWidth, worldHeight, viewport, worldScale);
-    // Initialize physics engine
-    World world = new World(new Vector2(0, 0), false);
-    physicsEngine = new PhysicsEngine(bounds, world);
+
+////     Initialize physics engine
+//    World world = new World(new Vector2(0, 0), false);
+//    physicsEngine = new PhysicsEngine(bounds, world);
+
+    // Load UI
+    PauseMenu pauseMenu = new PauseMenu(viewport);
+    PauseMenuController pauseMenuController = new PauseMenuController(pauseMenu);
+    pauseMenuController.setGameplayController(this);
+    inputController.add(pauseMenuController);
+
+////     Initlize controllers
+//    playerController = new PlayerController(physicsEngine);
+//    inputController.add(playerController);
+//    interactController.setPlayerController(playerController);
+
+    // Initialize pause controller
+    pauseController = new PauseController(renderEngine);
+
+    // Load the Pause Menu's dialogue box
+    DialogueBoxController pauseMenuDialogueBoxController = pauseMenu.getDialogueBoxController();
+    pauseMenuDialogueBoxController.setGameplayController(this);
+    inputController.add(pauseMenuDialogueBoxController);
+    uiController =
+            new UIController(
+                    pauseMenuController,
+                    renderEngine,
+                    renderEngine.getGameCanvas(),
+                    uiViewport);
+    uiController.gatherAssets(assets);
+
     setupGameplay();
   }
 
@@ -226,6 +254,10 @@ public class GameplayController implements Screen {
     } else {
       playerLoc = level.getPlayerLoc();
     }
+
+    // Initialize physics engine
+    World world = new World(new Vector2(0, 0), false);
+    physicsEngine = new PhysicsEngine(bounds, world);
 
     gameState = GameState.PLAY;
 
@@ -280,14 +312,25 @@ public class GameplayController implements Screen {
             .setShootCooldownLimit(20)
             .build();
 
-    renderEngine.addRenderable(player);
+//    playerController.setPlayer(player);
+    // Initlize controllers
+    playerController = new PlayerController(physicsEngine, player);
+    inputController.add(playerController);
+    interactController.setPlayerController(playerController);
 
+    renderEngine.addRenderable(player);
     physicsEngine.addObject(player);
+
+    // Initialize pause controller
+    pauseController.setPhysicsEngine(physicsEngine);
+    pauseController.setPlayerController(playerController);
+    uiController.setPlayer(playerController);
+
     // Load fish bullets builder
     fishBulletBuilder =
         BulletModel.Builder.newInstance()
-                .setBaseTexture(new Texture("bullet/whitefish.png"))
-                .setUnbreakableTexture(new Texture("bullet/urchinbullet.png"));
+            .setBaseTexture(new Texture("bullet/whitefish.png"))
+            .setUnbreakableTexture(new Texture("bullet/urchinbullet.png"));
     // Load bosses
     bossControllers.clear();
 
@@ -405,33 +448,6 @@ public class GameplayController implements Screen {
       renderEngine.addRenderable(model);
       interactController.add(model);
     }
-
-    // Initlize controllers
-    playerController = new PlayerController(physicsEngine, player);
-    inputController.add(playerController);
-    interactController.setPlayerController(playerController);
-
-    // Initialize pause controller
-    pauseController = new PauseController(renderEngine, physicsEngine, playerController);
-
-    // Load UI
-    PauseMenu pauseMenu = new PauseMenu(viewport);
-    PauseMenuController pauseMenuController = new PauseMenuController(pauseMenu);
-    pauseMenuController.setGameplayController(this);
-    inputController.add(pauseMenuController);
-
-    // Load the Pause Menu's dialogue box
-    DialogueBoxController pauseMenuDialogueBoxController = pauseMenu.getDialogueBoxController();
-    pauseMenuDialogueBoxController.setGameplayController(this);
-    inputController.add(pauseMenuDialogueBoxController);
-    uiController =
-        new UIController(
-            playerController,
-            pauseMenuController,
-            renderEngine,
-            renderEngine.getGameCanvas(),
-            uiViewport);
-    uiController.gatherAssets(assets);
 
     // load foreground
     renderEngine.addRenderable(level.getForeground());
@@ -570,14 +586,12 @@ public class GameplayController implements Screen {
           physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
     }
 
-
     if (returnToHub) {
       physicsEngine.setTarget("levels/hub_world.json");
       returnToHub = false;
     }
 
     if (restart) restart();
-
 
     if (quit) {
       if (BuildConfig.DEBUG) {
@@ -613,13 +627,6 @@ public class GameplayController implements Screen {
     }
     stateController.setCurrentLevel(level.name);
 
-    // Clear game
-    this.renderEngine.clear();
-    physicsEngine.dispose();
-    playerController = null;
-    pauseController = null;
-    uiController = null;
-    bossControllers.clear();
     // Reload
     setupGameplay();
 
@@ -739,7 +746,12 @@ public class GameplayController implements Screen {
   }
 
   public void dispose() {
-    if (physicsEngine != null) physicsEngine.dispose();
+//    playerController.setPlayer(null);
+//    bossControllers.clear();
+//    renderEngine.clear();
+//    interactController.dispose();
+//    portalController.dispose();
+    if (physicsEngine!=null) physicsEngine.dispose();
   }
 
   public boolean allBossesDefeated() {

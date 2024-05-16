@@ -72,6 +72,27 @@ public class UIController {
     uiModel = new UIModel(viewport.getScreenWidth(), viewport.getScreenHeight());
   }
 
+  public UIController (
+          PauseMenuController pauseMenuController,
+          RenderingEngine render,
+          GameCanvas canvas,
+          ScreenViewport view
+  ) {
+    this.pauseMenuController = pauseMenuController;
+
+    this.render = render;
+    viewport = view;
+    boss = null;
+    drawSave = false;
+
+    this.canvas = canvas;
+    uiModel = new UIModel(viewport.getScreenWidth(), viewport.getScreenHeight());
+  }
+
+  public void setPlayer(PlayerController player) {
+    this.player = player;
+  }
+
   public void gatherAssets(AssetDirectory assets) {
     this.messageFont = assets.getEntry("ui:alagard", BitmapFont.class);
   }

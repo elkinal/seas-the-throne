@@ -33,6 +33,19 @@ public class PauseController {
     isPaused = false;
   }
 
+  public PauseController(RenderingEngine render) {
+    renderEngine = render;
+    isPaused = false;
+  }
+
+  public void setPhysicsEngine(PhysicsEngine physicsEngine) {
+    this.physicsEngine = physicsEngine;
+  }
+
+  public void setPlayerController(PlayerController player) {
+    this.playerController = player;
+  }
+
   /**
    * Pauses the game. Disables animation for all renderables that do not have the always render
    * flag.
