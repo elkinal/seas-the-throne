@@ -143,7 +143,7 @@ public class FinalBossController implements BossController {
     this.fastRingAttack = new RingAttack(boss, 100, 13, 18f, false, builder, physicsEngine);
     this.slowUnbreakableRingAttack = new RingAttack(boss, 120, 15, 8f,
             true, builder, physicsEngine);
-    this.delayRotateRingAttack = new DelayedRotateRingAttack(70, 19, 110, MathUtils.PI*2,
+    this.delayRotateRingAttack = new DelayedRotateRingAttack(70, 17, 110, MathUtils.PI*2,
             -MathUtils.PI/3, boss, builder, physicsEngine);
     this.aimedSingleAttack = new SingleBulletAttack(15, false, boss, builder, physicsEngine);
 
@@ -155,9 +155,9 @@ public class FinalBossController implements BossController {
             50, boss, player, builder, physicsEngine);
 
     this.oscRingAttack = new OscillatingRingAttack(boss, player, builder, physicsEngine);
-    this.unbreakableDelayRotateSpiralAttack = new DelayedRotateSpiralAttack(boss, 7, 28, 100,
+    this.unbreakableDelayRotateSpiralAttack = new DelayedRotateSpiralAttack(boss, 7, 25, 100,
             3*MathUtils.PI/4, true, builder, physicsEngine);
-    this.unbreakableDelaySpeedRingAttack = new DelayedSpeedRingAttack(120, 15, 70,
+    this.unbreakableDelaySpeedRingAttack = new DelayedSpeedRingAttack(120, 13, 70,
       2*MathUtils.PI, 6f, 24f, true, boss, builder, physicsEngine);
     this.unbreakableDelaySlowRingAttack = new DelayedSpeedRingAttack(120, 13, 60,
             2*MathUtils.PI, 18f, 6f, true, boss, builder, physicsEngine);
@@ -170,7 +170,7 @@ public class FinalBossController implements BossController {
     this.ringStack2Attack = new RingAttack(boss, 100, 11, 11f, false, builder, physicsEngine);
     this.ringStack3Attack = new RingAttack(boss, 100, 11, 12f, false, builder, physicsEngine);
     this.denseRingAttack = new RingAttack(boss, 70, 35, 10f, false, builder, physicsEngine);
-    this.unbreakableAimedSingleAttack = new SingleBulletAttack(20, true, boss,
+    this.unbreakableAimedSingleAttack = new SingleBulletAttack(25, true, boss,
             builder, physicsEngine);
 
     this.unbreakableRing = new UnbreakableSpinningRing(7f,13, 150, boss, builder, physicsEngine);
@@ -259,7 +259,7 @@ public class FinalBossController implements BossController {
       } else {
         state = State.CHASE_PLAYER;
         goalPos.set(player.getX(), player.getY());
-        boss.setLinearVelocity(boss.getPosition().sub(goalPos).nor().scl(-17));
+        boss.setLinearVelocity(boss.getPosition().sub(goalPos).nor().scl(-16));
       }
     }
 

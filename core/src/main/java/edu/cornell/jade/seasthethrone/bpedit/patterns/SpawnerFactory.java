@@ -305,6 +305,7 @@ public final class SpawnerFactory {
     BulletFamily f = new BulletFamily(0f, 0f, 10f, 0f, 0.5f, 0);
     f.addEffect(new PlaysAttackAnimation(model));
     f.addDelayedAction(new Spawner.DelayedVelocityRotate(rotateAngle, delay));
+    f.addDelayedAction(new Spawner.DelayedSpeedChange(15f, delay));
     f.addEffect(new Periodic(period));
     f.addEffect(new Arc(-centralAngle/2, centralAngle, dups));
     out.addFamily(f);
