@@ -333,6 +333,9 @@ public class FinalBossController implements BossController {
   /** Performs actions based on the controller state */
   private void act() {
     switch (state) {
+      case PHASE_SWITCH:
+        timer -=1;
+        break;
       case F_START:
         aimedArcAttack.update(player.getX(), player.getY());
         if (timer < 100) slowUnbreakableRingAttack.update(player.getX(), player.getY());
