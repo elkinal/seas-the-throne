@@ -390,7 +390,24 @@
          "draworder":"topdown",
          "id":14,
          "name":"interactables",
-         "objects":[],
+         "objects":[
+                {
+                 "height":7.5,
+                 "id":391,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"healthpack"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":10,
+                 "x":463.980302827281,
+                 "y":319.846408950824
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -441,23 +458,6 @@
                  "width":20,
                  "x":469.66241878226,
                  "y":475.678181977142
-                }, 
-                {
-                 "height":7.5,
-                 "id":390,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"healthpack"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":10,
-                 "x":465.655232480236,
-                 "y":321.186352673188
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -500,7 +500,7 @@
          "y":0
         }],
  "nextlayerid":17,
- "nextobjectid":391,
+ "nextobjectid":392,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
