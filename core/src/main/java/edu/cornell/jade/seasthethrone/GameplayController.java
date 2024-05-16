@@ -387,7 +387,10 @@ public class GameplayController implements Screen {
             .setGetHitRightAnimation(new Texture("bosses/" + assetName + "/right_hurt.png"));
       }
       if (name.contains("final")){
-        bossBuilder.setSpawnAnimation(new Texture("bosses/" + assetName + "/spawn.png"));
+        bossBuilder.setTransformAnimation(new Texture("bosses/" + assetName + "/transform.png"))
+            .setFinalAttackAnimation(new Texture("bosses/" + assetName + "/final_attack.png"))
+            .setFinalShootAnimation(new Texture("bosses/" + assetName + "/final_shoot.png"))
+            .setFinalGetHitAnimation(new Texture("bosses/" + assetName + "/final_hurt.png"));
       }
       BossModel boss = bossBuilder.build();
       BossController bossController = bossBuilder.buildController(boss, player, fishBulletBuilder, physicsEngine);

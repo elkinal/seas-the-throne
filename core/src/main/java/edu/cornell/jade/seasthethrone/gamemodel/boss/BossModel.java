@@ -141,8 +141,8 @@ public class BossModel extends EnemyModel implements Renderable {
     shouldUpdate = true;
     alwaysAnimate = false;
     roomId = builder.roomId;
-    bodyKnockbackForce = 60f;
-    spearKnockbackForce = 100f;
+    bodyKnockbackForce = 50f;
+    spearKnockbackForce = 80f;
     healthThresholds = builder.healthThresholds;
     thresholdPointer = 0;
     isExecute = false;
@@ -389,7 +389,11 @@ public class BossModel extends EnemyModel implements Renderable {
     private FilmStrip getHitRightAnimation;
     private FilmStrip getHitDownAnimation;
     private FilmStrip getHitUpAnimation;
-    FilmStrip spawnAnimation;
+    FilmStrip transformAnimation;
+    FilmStrip finalAttackAnimation;
+    FilmStrip finalGetHitAnimation;
+    FilmStrip finalShootAnimation;
+
 
     /** The number of frames between animation updates */
     private int frameDelay;
@@ -530,11 +534,28 @@ public class BossModel extends EnemyModel implements Renderable {
       shootDownAnimation = new FilmStrip(texture, 1, width / frameSize);
       return this;
     }
-    public Builder setSpawnAnimation (Texture texture){
+    public Builder setTransformAnimation (Texture texture){
       int width = texture.getWidth();
-      spawnAnimation = new FilmStrip(texture, 1, width / frameSize);
+      transformAnimation = new FilmStrip(texture, 1, width / frameSize);
       return this;
     }
+    public Builder setFinalAttackAnimation (Texture texture){
+      int width = texture.getWidth();
+      finalAttackAnimation = new FilmStrip(texture, 1, width / frameSize);
+      return this;
+    }
+    public Builder setFinalGetHitAnimation (Texture texture){
+      int width = texture.getWidth();
+      finalGetHitAnimation = new FilmStrip(texture, 1, width / frameSize);
+      return this;
+    }
+    public Builder setFinalShootAnimation (Texture texture){
+      int width = texture.getWidth();
+      finalShootAnimation = new FilmStrip(texture, 1, width / frameSize);
+      return this;
+    }
+
+
 
     public Builder setFrameDelay(int frameDelay) {
       this.frameDelay = frameDelay;
@@ -584,9 +605,9 @@ public class BossModel extends EnemyModel implements Renderable {
       } else if (type.equals("head")) {
       return new HeadBossController(model, player, bulletBuilder, physicsEngine);
       } else if (type.equals("swordfish")) {
-        return new SwordfishBossController (model, player, bulletBuilder, physicsEngine);
+        return new SwordfishBossController ((SwordfishBossModel) model, player, bulletBuilder, physicsEngine);
       } else if (type.equals("final")){
-        return new FinalBossController(model, player, bulletBuilder, physicsEngine);
+        return new FinalBossController((FinalBossModel) model, player, bulletBuilder, physicsEngine);
       } else if (type.equals("aimed_jelly")) {
         return new AimedSingleBulletJellyBossController(model, player, bulletBuilder, physicsEngine);
       } else if (type.equals("arc_jelly")) {

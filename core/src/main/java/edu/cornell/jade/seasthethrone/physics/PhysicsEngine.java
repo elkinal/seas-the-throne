@@ -37,6 +37,11 @@ public class PhysicsEngine implements ContactListener {
   /** The location to spawn in the player when the level is loaded */
   private Vector2 spawnPoint;
 
+  /** Flag to check if spear has made contact with boss in this frame
+   * (due to a strange bug where collisions were counted twice in one frame?)
+   */
+  private boolean hasSpeared;
+
   /** To keep track of the continuous player-boss collision */
   private Optional<Contact> playerBossCollision;
 
@@ -99,6 +104,7 @@ public class PhysicsEngine implements ContactListener {
   public void update(float delta) {
     // turn the physics engine crank
     world.step(delta, 8, 4);
+    hasSpeared = false;
     // Garbage collect the deleted objects.
     // Note how we use the linked list nodes to delete O(1) in place.
     // This is O(n) without copying.
@@ -353,7 +359,9 @@ public class PhysicsEngine implements ContactListener {
 
   /** Handle collision between player spear and boss */
   public void handleCollision(PlayerSpearModel ps, BossModel b) {
-    if (!b.isDead()) {
+    if(!b.isDead() && !hasSpeared){
+      hasSpeared = true;
+
       b.decrementHealth(ps.getDamage());
       ps.getMainBody().setKnockedBack(b.getPosition(), b.getSpearKnockbackForce(), 15);
 

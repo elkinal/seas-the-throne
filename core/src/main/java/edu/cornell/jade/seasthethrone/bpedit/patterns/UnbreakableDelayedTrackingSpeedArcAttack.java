@@ -7,7 +7,7 @@ import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 
-public class DelayedTrackingSpeedArcAttack extends AttackPattern {
+public class UnbreakableDelayedTrackingSpeedArcAttack extends AttackPattern {
 
   /** the spawner actually creating the arc */
   private final Spawner spawner;
@@ -28,10 +28,11 @@ public class DelayedTrackingSpeedArcAttack extends AttackPattern {
    * @param builder       a builder to create bullet models
    * @param physicsEngine {@link PhysicsEngine} to add bullets to
    */
-  public DelayedTrackingSpeedArcAttack(int period, int dups, float centralAngle, float angle, int delay, BossModel model,
-                                  PlayerModel player, BulletModel.Builder builder, PhysicsEngine physicsEngine) {
-    this.spawner = SpawnerFactory.constructRepeatingDelayedTrackingSpeedArc(dups, centralAngle, angle, period, delay,12, 24,
+  public UnbreakableDelayedTrackingSpeedArcAttack(int period, int dups, float centralAngle, float angle, int delay, BossModel model,
+                                                  PlayerModel player, BulletModel.Builder builder, PhysicsEngine physicsEngine) {
+    this.spawner = SpawnerFactory.constructRepeatingDelayedTrackingSpeedArc(dups, centralAngle, angle, period, delay, 10, 20,
            model, builder, physicsEngine);
+    this.spawner.setUnbreakable();
     this.model = model;
 
     this.addSpawner(spawner);

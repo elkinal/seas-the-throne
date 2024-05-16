@@ -6,9 +6,9 @@ import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
 
-/** An attack which spawns repeating bullets aimed at the player */
-public final class SingleBulletAttack extends AttackPattern {
-  /** the spawner actually creating the arc */
+public class DelayedSpeedRingAttack extends AttackPattern {
+
+  /** the spawner actually creating the ring */
   private final Spawner spawner;
 
   /** the model of the attacking boss */
@@ -18,12 +18,19 @@ public final class SingleBulletAttack extends AttackPattern {
    * Constructs the attack
    *
    * @param period        the length of one repeition of the attack in ticks
+   * @param dups          the number of bullets in the arc
+   * @param delay         the delay until the rotate
+   * @param centralAngle  the central angle in radians
+   * @param startVel      the starting velocity
+   * @param endVel        the ending velocity
+   * @param model         boss shooting the bullet
    * @param builder       a builder to create bullet models
    * @param physicsEngine {@link PhysicsEngine} to add bullets to
    */
-  public SingleBulletAttack(int period, boolean unbreakable, BossModel model, BulletModel.Builder builder,
-      PhysicsEngine physicsEngine) {
-    this.spawner = SpawnerFactory.constructRepeatingAimedBullet(period, model, builder, physicsEngine);
+  public DelayedSpeedRingAttack(int period, int dups, int delay, float centralAngle, float startVel, float endVel,
+                    boolean unbreakable, BossModel model, BulletModel.Builder builder, PhysicsEngine physicsEngine) {
+    this.spawner = SpawnerFactory.constructRepeatingDelayedSpeedArc(dups, centralAngle, period,
+            delay, startVel, endVel, model,  builder, physicsEngine);
     if (unbreakable) this.spawner.setUnbreakable();
     this.model = model;
 
