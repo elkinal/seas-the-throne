@@ -3,46 +3,59 @@ package edu.cornell.jade.seasthethrone.gamemodel.boss;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
 public class FinalBossModel extends BossModel{
-  private boolean isSpawning = false;
-  private int spawnTimer;
-  private FilmStrip spawnAnimation;
+  private boolean isHard;
+  private int transformTimer;
+  private FilmStrip transformAnimation;
+  private FilmStrip finalAttackAnimation;
+  private FilmStrip finalShootAnimation;
+  private FilmStrip finalGetHitAnimation;
 
   public FinalBossModel (Builder builder) {
     super(builder);
-    spawnAnimation = builder.spawnAnimation;
+    transformAnimation = builder.transformAnimation;
+    finalAttackAnimation = builder.finalAttackAnimation;
+    finalShootAnimation = builder.finalShootAnimation;
+    finalGetHitAnimation = builder.finalGetHitAnimation;
   }
-  public void setSpawned(){
-    setFrameNumber(0);
-    isSpawning = true;
-    spawnTimer = spawnAnimation.getSize() * frameDelay;
+
+  /**
+   * TODO: this function should set the animation to the spawn animation,
+   * change all relevant assets to the "final" asset version, and (optionally?)
+   * center the screen on the boss/freeze the player during the spawn animation
+   * (this might be a bit hard though, it kinda ties into the execute animations)
+   */
+  public void launchPhaseTwo(){
+    isHard = true;
+    transformTimer = transformAnimation.getSize() * frameDelay;
   }
   @Override
   public void progressFrame() {
     int frame = getFrameNumber();
-    if (isSpawning)
-      filmStrip = spawnAnimation;
+    if (transformTimer>0)
+      filmStrip = transformAnimation;
     else if (isDead()) {
       if (isExecute) filmStrip = deathAnimation;
       else filmStrip = falloverAnimation;
     } else if (isHit()) {
-      filmStrip = getHitAnimation;
+      if (isHard)
+        filmStrip = finalGetHitAnimation;
+      else
+        filmStrip = getHitAnimation;
     } else {
-      if (isAttack()) filmStrip = attackAnimation;
-      else filmStrip = shootAnimation;
+      if (isAttack()) {
+        if (isHard)
+          filmStrip = finalAttackAnimation;
+        else
+          filmStrip = attackAnimation;
+      }
+      else {
+        if (isHard)
+          filmStrip = finalShootAnimation;
+        else
+          filmStrip = shootAnimation;
+      }
     }
     filmStrip.setFrame(frame);
-    if (isSpawning){
-      if (frameCounter % frameDelay == 0 && getFrameNumber() < getFramesInAnimation() - 1) {
-        setFrameNumber(getFrameNumber() + 1);
-        spawnTimer -= 1;
-      } else {
-        setFrameNumber(getFrameNumber());
-        spawnTimer -= 1;
-      }
-      if (spawnTimer <= 0){
-        isSpawning = false;
-      }
-    }
     if (isDead()) {
       if (frameCounter % frameDelay == 0 && getFrameNumber() < getFramesInAnimation() - 1) {
         setFrameNumber(getFrameNumber() + 1);
@@ -60,6 +73,17 @@ public class FinalBossModel extends BossModel{
         hitCount -= 1;
       }
       if (hitCount == 0) {
+        setFrameNumber(0);
+      }
+    } else if (transformTimer > 0){
+      if (frameCounter % frameDelay == 0 && getFrameNumber() < getFramesInAnimation() - 1) {
+        setFrameNumber(getFrameNumber() + 1);
+        transformTimer -= 1;
+      } else {
+        setFrameNumber(getFrameNumber());
+        transformTimer -= 1;
+      }
+      if (transformTimer == 0) {
         setFrameNumber(0);
       }
     } else {
