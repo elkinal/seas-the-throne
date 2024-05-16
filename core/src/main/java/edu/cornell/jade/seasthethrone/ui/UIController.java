@@ -167,6 +167,6 @@ public class UIController {
 
   /** Clears all the UI elements */
   public void clear() {
-    uiModel.clear();
+    boss = null;
   }
 }

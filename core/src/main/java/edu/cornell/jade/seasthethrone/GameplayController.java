@@ -747,10 +747,11 @@ public class GameplayController implements Screen {
 
   public void dispose() {
 //    playerController.setPlayer(null);
-//    bossControllers.clear();
+    bossControllers.clear();
+    uiController.clear();
 //    renderEngine.clear();
-//    interactController.dispose();
-//    portalController.dispose();
+    interactController.dispose();
+    portalController.dispose();
     if (physicsEngine!=null) physicsEngine.dispose();
   }
 
