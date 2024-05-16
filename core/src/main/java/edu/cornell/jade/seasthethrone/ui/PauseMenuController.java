@@ -40,7 +40,6 @@ public class PauseMenuController implements Controllable {
   public void pressInteract() {
     if (!pauseMenu.isPaused())
       return;
-    // TODO: create actions
     switch (pauseMenu.getSelection()) {
       case RESUME -> pauseMenu.setPaused(false);
       case RESTART -> restart();

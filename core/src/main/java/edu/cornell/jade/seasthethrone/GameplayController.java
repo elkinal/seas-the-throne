@@ -177,6 +177,10 @@ public class GameplayController implements Screen {
     saveTimer = 0;
 
     this.stateController = new StateController();
+    stateController.setCurrentLevel(level.name);
+    stateController.setRespawnLevel(level.name);
+    stateController.setRespawnLoc(level.getPlayerLoc());
+
     this.bossControllers = new Array<>();
     this.inputController = new InputController(viewport);
     this.portalController = new PortalController();
@@ -194,6 +198,18 @@ public class GameplayController implements Screen {
   public void setupGameplay() {
     dispose();
 
+    // Load player
+    // TODO: make this come from the information JSON
+    Vector2 playerLoc;
+    if (restart && stateController.hasRespawnLoc()) {
+      this.level = new Level("levels/"+stateController.getRespawnLevel()+".json");
+      playerLoc = stateController.getRespawnLoc();
+    } else if (physicsEngine != null && physicsEngine.hasTarget()) {
+      playerLoc = level.tiledToWorldCoords(physicsEngine.getSpawnPoint());
+    } else {
+      playerLoc = level.getPlayerLoc();
+    }
+
     gameState = GameState.PLAY;
 
     World world = new World(new Vector2(0, 0), false);
@@ -205,15 +221,6 @@ public class GameplayController implements Screen {
     // Load tiles
     for (Tile tile : level.getTiles()) {
       renderEngine.addRenderable(tile);
-    }
-    // Load player
-    // TODO: make this come from the information JSON
-    Vector2 playerLoc;
-    if (restart) playerLoc = stateController.getRespawnLoc();
-    else if (physicsEngine == null || physicsEngine.getSpawnPoint() == null) {
-      playerLoc = level.getPlayerLoc();
-    } else {
-      playerLoc = level.tiledToWorldCoords(physicsEngine.getSpawnPoint());
     }
 
     PlayerModel player =
@@ -446,6 +453,8 @@ public class GameplayController implements Screen {
 
       if (interactController.isCheckpointActivated() && saveTimer == 0) {
         stateController.setRespawnLoc(playerController.getLocation().cpy());
+        stateController.setRespawnLevel(level.name);
+        stateController.updateState(level.name, playerController, bossControllers);
         stateController.saveGame();
         uiController.setDrawSave(true);
         saveTimer++;
@@ -489,12 +498,12 @@ public class GameplayController implements Screen {
     // Load new level if the player has touched a portal, thus setting a target
     if (physicsEngine.hasTarget()) {
       changeLevel();
-      stateController.setRespawnLoc(null);
+      // Reset target so player doesn't teleport again on next frame
+      physicsEngine.setTarget(null);
+      physicsEngine.setSpawnPoint(null);
     }
 
-    // Reset target so player doesn't teleport again on next frame
-    physicsEngine.setTarget(null);
-    physicsEngine.setSpawnPoint(null);
+
 
     // Render frame
     renderEngine.clear();
@@ -577,15 +586,13 @@ public class GameplayController implements Screen {
 
     // Save the current level state
     stateController.updateState(level.name, playerController, bossControllers);
-    stateController.saveGame();
-
     listener.exitScreen(this, GDXRoot.EXIT_SWAP);
     level = new Level(physicsEngine.getTarget());
+    stateController.setCurrentLevel(level.name);
     this.renderEngine.clear();
     bossControllers.clear();
     setupGameplay();
 
-    stateController.loadState();
     transferState(stateController.getLevel(level.name));
   }
 

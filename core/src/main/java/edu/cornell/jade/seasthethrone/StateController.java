@@ -36,6 +36,9 @@ public class StateController {
   /** Where to respawn the player when they die or restart */
   private Vector2 respawnLoc;
 
+  /** The name of the level to respawn to */
+  private String respawnLevel;
+
   /** The index of the current save file */
   private int saveIndex;
 
@@ -56,11 +59,11 @@ public class StateController {
     // Update player state
     this.playerAmmo = player.getAmmo();
     this.playerHealth = player.getHealth();
-    System.out.println("setting respawn loc: " + player.getLocation());
 
     // Update level state in stored levels
     if (storedLevels.containsKey(levelName)) {
-      storedLevels.get(levelName).update(bosses);
+      LevelState levelState = storedLevels.get(levelName);
+      levelState.updateBosses(bosses);
     } else {
       storedLevels.put(levelName, new LevelState(bosses));
     }
@@ -75,6 +78,7 @@ public class StateController {
     prefs.putInteger("checkpoint", this.checkpoint);
     prefs.putInteger("player health", this.playerHealth);
     prefs.putInteger("player ammo", this.playerAmmo);
+    prefs.putString("respawn level", this.respawnLevel);
     try {
       prefs.putFloat("respawn x", this.respawnLoc.x);
       prefs.putFloat("respawn y", this.respawnLoc.y);
@@ -131,6 +135,18 @@ public class StateController {
 
   public Vector2 getRespawnLoc() {
     return respawnLoc;
+  }
+
+  public boolean hasRespawnLoc() {
+    return respawnLoc != null && !respawnLevel.isEmpty();
+  }
+
+  public void setRespawnLevel(String respawnLevel) {
+    this.respawnLevel = respawnLevel;
+  }
+
+  public String getRespawnLevel() {
+    return this.respawnLevel;
   }
 
   /** Returns the specified level */
