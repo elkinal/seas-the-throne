@@ -496,6 +496,7 @@ public class GameplayController implements Screen {
         stateController.setRespawnLoc(playerController.getLocation().cpy());
         stateController.setRespawnLevel(level.name);
         stateController.updateState(level.name, playerController, bossControllers);
+        stateController.setCheckpoint(interactController.getCheckpointID());
         stateController.saveGame();
         uiController.setDrawSave(true);
         saveTimer++;
@@ -772,6 +773,10 @@ public class GameplayController implements Screen {
     for (BossController boss : bossControllers) {
       boss.dispose();
     }
+  }
+
+  public void loadState() {
+    stateController.loadState();
   }
 
   /** Compares Models based on height in the world */

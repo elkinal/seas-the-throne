@@ -31,7 +31,7 @@ public class InteractableController implements Controllable {
 
   private int interactTimer;
 
-  private int npcInteractDelay = 18;
+  private int npcInteractDelay = 12;
 
   public InteractableController() {
     this.interactables = new Array<>();
