@@ -4,6 +4,7 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -31,7 +32,7 @@ public class OptionScreen implements Screen {
   private AssetDirectory internal;
 
   /** Background texture for start-up */
-  private Texture background;
+  private TextureRegion background;
 
   /** The game canvas */
   private GameCanvas canvas;
@@ -133,7 +134,7 @@ public class OptionScreen implements Screen {
     hoverIndex = 0;
     moveCount = 0;
 
-    background = internal.getEntry("title:background", Texture.class);
+    background = new TextureRegion(internal.getEntry("options:background", Texture.class));
     textFont = internal.getEntry("loading:alagard", BitmapFont.class);
     headingStyle = new Label.LabelStyle(textFont, blue);
     buttonStyle = new Label.LabelStyle(textFont, Color.WHITE);
@@ -401,16 +402,20 @@ public class OptionScreen implements Screen {
   }
 
   public void draw() {
-    canvas.clear(Color.DARK_GRAY);
+    canvas.clear(Color.BLACK);
+    canvas.begin();
+    canvas.getSpriteBatch().setProjectionMatrix(stage.getCamera().combined);
     stage.getBatch().begin();
     stage.getBatch().setProjectionMatrix(stage.getCamera().combined);
-    // draw background
-    //      stage.getBatch().draw(background.getRegion(), 0, 0, stage.getViewport().getWorldWidth(),
-    // stage.getViewport().getWorldHeight());
+//     draw background
+    float ox = -stage.getWidth()/2f;
+    float oy = -stage.getHeight()/2f;
+    canvas.draw(background, Color.WHITE, 0, 0, 1.2f*stage.getWidth(), 1.2f*stage.getHeight());
     if (xbox != null) {
       xboxListener();
     }
     stage.getBatch().end();
+    canvas.end();
     stage.draw();
   }
 

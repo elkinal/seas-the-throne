@@ -41,8 +41,10 @@ public class TitleScreen implements Screen, Controllable {
 
   public enum TitleSelection {
     PLAY(0, "Play"),
-    OPTIONS(1, "Options"),
-    QUIT(2, "Quit");
+
+    NEW_GAME(1, "New Game"),
+    OPTIONS(2, "Options"),
+    QUIT(3, "Quit");
 
     public final String optionName;
     public final int optionValue;
@@ -57,7 +59,7 @@ public class TitleScreen implements Screen, Controllable {
     }
 
     public TitleSelection cycleDown() {
-      return values()[(optionValue < 2 ? optionValue + 1 : 0)];
+      return values()[(optionValue < TitleSelection.values().length-1 ? optionValue + 1 : 0)];
     }
   }
 
@@ -124,7 +126,7 @@ public class TitleScreen implements Screen, Controllable {
     // draw the menu
     float y_offset = -canvas.getHeight()/15f;
     float x_offset =  canvas.getWidth()*(1/20f - 1/2f);
-    float menuSpacing = canvas.getHeight() / 8f;
+    float menuSpacing = canvas.getHeight() / 10f;
     for (TitleSelection s : TitleSelection.values()) {
       if (selection == s) {
         canvas.drawText(s.optionName, textFont, x_offset, y_offset, Color.GOLDENROD);
@@ -147,6 +149,9 @@ public class TitleScreen implements Screen, Controllable {
   public void pressInteract() {
     switch (selection) {
       case PLAY -> {
+        listener.exitScreen(this, 1);
+      }
+      case NEW_GAME -> {
         listener.exitScreen(this, 1);
       }
       case OPTIONS -> {

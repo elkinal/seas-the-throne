@@ -20722,29 +20722,29 @@
                 {
                  "height":20,
                  "id":975,
-                 "name":"levels\/portal.png",
+                 "name":"",
                  "properties":[
                         {
                          "name":"playerX",
                          "type":"float",
-                         "value":440
+                         "value":1775
                         }, 
                         {
                          "name":"playerY",
                          "type":"float",
-                         "value":390
+                         "value":1374
                         }, 
                         {
                          "name":"target",
                          "type":"string",
-                         "value":"levels\/hub_world.json"
+                         "value":"levels\/tutorial_map.json"
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":20,
-                 "x":2765.67,
-                 "y":159.333
+                 "width":43.6363636363635,
+                 "x":2755.85181818182,
+                 "y":148.969363636364
                 }, 
                 {
                  "height":18.6875,
