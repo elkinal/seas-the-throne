@@ -370,6 +370,7 @@ public class GameplayController implements Screen {
               .setGetHitAnimation(new Texture("bosses/" + assetName + "/hurt.png"))
               .setDeathAnimation(new Texture("bosses/" + assetName + "/death.png"))
               .setAttackAnimation(new Texture("bosses/" + assetName + "/attack.png"))
+              .setIdleAnimation(new Texture("bosses/" + assetName + "/idle.png"))
               .setFrameDelay(12)
               .setRoomId(bossContainer.roomId);
       if (name.contains("swordfish")){

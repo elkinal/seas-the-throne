@@ -154,7 +154,7 @@
     },
     "swordfish": {
       "idle": {
-        "file": "bosses/swordfish/side_idle.png"
+        "file": "bosses/swordfish/idle.png"
       },
       "front_idle": {
         "file": "bosses/swordfish/front_idle.png"

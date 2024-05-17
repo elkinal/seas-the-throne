@@ -119,6 +119,7 @@ public class BossModel extends EnemyModel implements Renderable {
     deathAnimation = builder.deathAnimation;
     attackAnimation = builder.attackAnimation;
     shootAnimation = builder.shootAnimation;
+    idleAnimation = builder.idleAnimation;
     attackRightAnimation = builder.attackRightAnimation;
     attackUpAnimation = builder.attackUpAnimation;
     attackDownAnimation = builder.attackDownAnimation;
@@ -194,6 +195,10 @@ public class BossModel extends EnemyModel implements Renderable {
     }
   }
 
+  boolean isIdle() {
+    return (getVX()<=0.1 && getVY()<=0.1);
+  }
+
   @Override
   public void progressFrame() {
     int frame = getFrameNumber();
@@ -204,6 +209,7 @@ public class BossModel extends EnemyModel implements Renderable {
       filmStrip = getHitAnimation;
     } else {
       if (isAttack()) filmStrip = attackAnimation;
+      else if (isIdle()) filmStrip = idleAnimation;
       else filmStrip = shootAnimation;
     }
     filmStrip.setFrame(frame);
