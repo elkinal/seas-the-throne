@@ -268,7 +268,73 @@
          "draworder":"topdown",
          "id":7,
          "name":"obstacles",
-         "objects":[],
+         "objects":[
+                {
+                 "height":5,
+                 "id":18,
+                 "name":"levels\/shortseagrasslobby_filmstrip.png",
+                 "properties":[
+                        {
+                         "name":"animated",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"framesInAnimation",
+                         "type":"int",
+                         "value":6
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":6,
+                 "x":81,
+                 "y":206
+                }, 
+                {
+                 "height":5,
+                 "id":19,
+                 "name":"levels\/shortseagrasslobby_filmstrip.png",
+                 "properties":[
+                        {
+                         "name":"animated",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"framesInAnimation",
+                         "type":"int",
+                         "value":6
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":6,
+                 "x":198.5,
+                 "y":249
+                }, 
+                {
+                 "height":5,
+                 "id":20,
+                 "name":"levels\/shortseagrasslobby_filmstrip.png",
+                 "properties":[
+                        {
+                         "name":"animated",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"framesInAnimation",
+                         "type":"int",
+                         "value":6
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":6,
+                 "x":32,
+                 "y":238
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -314,7 +380,7 @@
          "y":0
         }],
  "nextlayerid":12,
- "nextobjectid":18,
+ "nextobjectid":21,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

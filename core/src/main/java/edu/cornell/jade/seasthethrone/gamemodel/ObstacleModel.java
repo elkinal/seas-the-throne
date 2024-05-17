@@ -39,11 +39,11 @@ public class ObstacleModel extends BoxModel implements Renderable {
 
     this.filmStrip = new FilmStrip(this.texture.getTexture(), 1, framesInAnimation);
     setBodyType(BodyDef.BodyType.StaticBody);
-    if (animated) setSensor(true);
   }
 
   @Override
   public void draw(RenderingEngine renderer) {
+    if (animated) setActive(false);
     progressFrame();
     Vector2 pos = getPosition();
 
