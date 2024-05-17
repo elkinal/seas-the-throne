@@ -365,7 +365,29 @@
          "draworder":"topdown",
          "id":14,
          "name":"interactables",
-         "objects":[],
+         "objects":[
+                {
+                 "height":14.5,
+                 "id":390,
+                 "name":"npc\/drunkguy.png",
+                 "properties":[
+                        {
+                         "name":"dialogue",
+                         "type":"string",
+                         "value":"npc\/drunkguy_1.txt"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"npc"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":18.5,
+                 "x":447.75,
+                 "y":255.75
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -894,7 +916,7 @@
          "y":0
         }],
  "nextlayerid":17,
- "nextobjectid":389,
+ "nextobjectid":391,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

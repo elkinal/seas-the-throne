@@ -1554,6 +1554,50 @@
                  "width":18.5,
                  "x":1152.75,
                  "y":334
+                }, 
+                {
+                 "height":14.5,
+                 "id":341,
+                 "name":"npc\/squidlady.png",
+                 "properties":[
+                        {
+                         "name":"dialogue",
+                         "type":"string",
+                         "value":"npc\/squidlady_1.txt"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"npc"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":18.5,
+                 "x":2028.75,
+                 "y":405.417
+                }, 
+                {
+                 "height":14.5,
+                 "id":345,
+                 "name":"npc\/redlady.png",
+                 "properties":[
+                        {
+                         "name":"dialogue",
+                         "type":"string",
+                         "value":"npc\/redlady_1.txt"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"npc"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":18.5,
+                 "x":2047.25,
+                 "y":301.25
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -2137,6 +2181,33 @@
                  "width":28.6666666666665,
                  "x":1936,
                  "y":1734.66666666667
+                }, 
+                {
+                 "height":9.375,
+                 "id":343,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"playerX",
+                         "type":"float",
+                         "value":468
+                        }, 
+                        {
+                         "name":"playerY",
+                         "type":"float",
+                         "value":411
+                        }, 
+                        {
+                         "name":"target",
+                         "type":"string",
+                         "value":"levels\/mural_room.json"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20.25,
+                 "x":1560.875,
+                 "y":844.5625
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -2145,7 +2216,7 @@
          "y":0
         }],
  "nextlayerid":16,
- "nextobjectid":340,
+ "nextobjectid":346,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

@@ -11,14 +11,11 @@ import com.badlogic.gdx.utils.viewport.*;
 
 import edu.cornell.jade.seasthethrone.ai.BossController;
 import edu.cornell.jade.seasthethrone.assets.AssetDirectory;
-import edu.cornell.jade.seasthethrone.gamemodel.CheckpointModel;
-import edu.cornell.jade.seasthethrone.gamemodel.PortalModel;
+import edu.cornell.jade.seasthethrone.gamemodel.*;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
-import edu.cornell.jade.seasthethrone.gamemodel.ObstacleModel;
 import edu.cornell.jade.seasthethrone.gamemodel.gate.GateModel;
 import edu.cornell.jade.seasthethrone.gamemodel.gate.GateWallModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
-import edu.cornell.jade.seasthethrone.gamemodel.HealthpackModel;
 import edu.cornell.jade.seasthethrone.input.InputController;
 import edu.cornell.jade.seasthethrone.bpedit.AttackPattern;
 import edu.cornell.jade.seasthethrone.level.*;
@@ -29,7 +26,6 @@ import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.ui.*;
 import edu.cornell.jade.seasthethrone.util.ScreenListener;
-import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -195,6 +191,7 @@ public class GameplayController implements Screen {
     this.portalController = new PortalController();
     this.interactController = new InteractableController();
     inputController.add(interactController);
+    inputController.add(interactController.getDialogueController());
     this.renderEngine = new RenderingEngine(worldWidth, worldHeight, viewport, worldScale);
 
 ////     Initialize physics engine
@@ -217,7 +214,6 @@ public class GameplayController implements Screen {
 
     // Load the Pause Menu's dialogue box
     DialogueBoxController pauseMenuDialogueBoxController = pauseMenu.getDialogueBoxController();
-    pauseMenuDialogueBoxController.setGameplayController(this);
     inputController.add(pauseMenuDialogueBoxController);
     uiController =
             new UIController(
@@ -225,6 +221,7 @@ public class GameplayController implements Screen {
                     renderEngine,
                     renderEngine.getGameCanvas(),
                     uiViewport);
+    uiController.setInteractController(interactController);
     uiController.gatherAssets(assets);
 
     setupGameplay();
@@ -444,6 +441,15 @@ public class GameplayController implements Screen {
     // Load healthpacks
     for (LevelObject hpack : layers.get("healthpacks")) {
       HealthpackModel model = new HealthpackModel(hpack, worldScale);
+      physicsEngine.addObject(model);
+      renderEngine.addRenderable(model);
+      interactController.add(model);
+    }
+
+    // Load NPCs
+    for (LevelObject npc : layers.get("npc")) {
+      NpcModel model = new NpcModel(npc, worldScale);
+      model.setBodyType(BodyDef.BodyType.StaticBody);
       physicsEngine.addObject(model);
       renderEngine.addRenderable(model);
       interactController.add(model);

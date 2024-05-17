@@ -4,7 +4,7 @@
  "layers":[
         {
          "id":9,
-         "image":"..\/..\/..\/Desktop\/seas-the-throne\/assets\/levels\/tablet_room.png",
+         "image":"tabletroom.png",
          "name":"background",
          "opacity":1,
          "properties":[
@@ -17,6 +17,29 @@
                  "name":"width",
                  "type":"string",
                  "value":"220"
+                }],
+         "type":"imagelayer",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "id":11,
+         "image":"tabletroom_foreground.png",
+         "name":"foreground",
+         "offsetx":-240,
+         "offsety":-80,
+         "opacity":1,
+         "properties":[
+                {
+                 "name":"height",
+                 "type":"string",
+                 "value":"560"
+                }, 
+                {
+                 "name":"width",
+                 "type":"string",
+                 "value":"700"
                 }],
          "type":"imagelayer",
          "visible":true,
@@ -65,6 +88,39 @@
                  "width":20,
                  "x":109.455,
                  "y":278.364
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":10,
+         "name":"interactables",
+         "objects":[
+                {
+                 "height":14.5,
+                 "id":17,
+                 "name":"npc\/oldguy.png",
+                 "properties":[
+                        {
+                         "name":"dialogue",
+                         "type":"string",
+                         "value":"npc\/oldguy_1.txt"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"npc"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":18.5,
+                 "x":100,
+                 "y":160
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -201,29 +257,6 @@
          "draworder":"topdown",
          "id":5,
          "name":"bosses",
-         "objects":[
-                {
-                 "gid":40,
-                 "height":20,
-                 "id":16,
-                 "name":"jelly",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":20,
-                 "x":100,
-                 "y":180
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "id":6,
-         "name":"enemies",
          "objects":[],
          "opacity":1,
          "type":"objectgroup",
@@ -280,8 +313,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":10,
- "nextobjectid":17,
+ "nextlayerid":12,
+ "nextobjectid":18,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
@@ -290,7 +323,7 @@
         {
          "columns":18,
          "firstgid":1,
-         "image":"levels\/boss-room-tileset.png",
+         "image":"boss-room-tileset.png",
          "imageheight":360,
          "imagewidth":360,
          "margin":0,
