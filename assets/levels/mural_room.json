@@ -32,7 +32,7 @@
                 {
                  "name":"height",
                  "type":"string",
-                 "value":" 600"
+                 "value":"600"
                 }, 
                 {
                  "name":"width",
@@ -316,7 +316,7 @@
                         {
                          "name":"playerY",
                          "type":"float",
-                         "value":870
+                         "value":1363
                         }, 
                         {
                          "name":"target",

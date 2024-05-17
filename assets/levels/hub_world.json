@@ -596,10 +596,76 @@
                  "width":6,
                  "x":405,
                  "y":282.833
+                }, 
+                {
+                 "height":5,
+                 "id":391,
+                 "name":"levels\/shortseagrasslobby_filmstrip.png",
+                 "properties":[
+                        {
+                         "name":"animated",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"framesInAnimation",
+                         "type":"int",
+                         "value":6
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":6,
+                 "x":470.666666666667,
+                 "y":302.5
+                }, 
+                {
+                 "height":5,
+                 "id":394,
+                 "name":"levels\/shortseagrasslobby_filmstrip.png",
+                 "properties":[
+                        {
+                         "name":"animated",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"framesInAnimation",
+                         "type":"int",
+                         "value":6
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":6,
+                 "x":361,
+                 "y":422.75
+                }, 
+                {
+                 "height":5,
+                 "id":395,
+                 "name":"levels\/shortseagrasslobby_filmstrip.png",
+                 "properties":[
+                        {
+                         "name":"animated",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"framesInAnimation",
+                         "type":"int",
+                         "value":6
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":6,
+                 "x":518.75,
+                 "y":415.5
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -703,7 +769,7 @@
                         {
                          "name":"requiredCheckpoint",
                          "type":"int",
-                         "value":-1
+                         "value":2
                         }, 
                         {
                          "name":"target",
@@ -735,7 +801,7 @@
                         {
                          "name":"requiredCheckpoint",
                          "type":"int",
-                         "value":-1
+                         "value":4
                         }, 
                         {
                          "name":"target",
@@ -757,17 +823,17 @@
                         {
                          "name":"playerX",
                          "type":"float",
-                         "value":2425
+                         "value":2510
                         }, 
                         {
                          "name":"playerY",
                          "type":"float",
-                         "value":945
+                         "value":955
                         }, 
                         {
                          "name":"requiredCheckpoint",
                          "type":"int",
-                         "value":-1
+                         "value":3
                         }, 
                         {
                          "name":"target",
@@ -799,7 +865,7 @@
                         {
                          "name":"requiredCheckpoint",
                          "type":"int",
-                         "value":-1
+                         "value":6
                         }, 
                         {
                          "name":"target",
@@ -831,7 +897,7 @@
                         {
                          "name":"requiredCheckpoint",
                          "type":"int",
-                         "value":-1
+                         "value":5
                         }, 
                         {
                          "name":"target",
@@ -863,7 +929,7 @@
                         {
                          "name":"requiredCheckpoint",
                          "type":"int",
-                         "value":-1
+                         "value":8
                         }, 
                         {
                          "name":"target",
@@ -895,7 +961,7 @@
                         {
                          "name":"requiredCheckpoint",
                          "type":"int",
-                         "value":-1
+                         "value":7
                         }, 
                         {
                          "name":"target",
@@ -916,7 +982,7 @@
          "y":0
         }],
  "nextlayerid":17,
- "nextobjectid":391,
+ "nextobjectid":396,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
