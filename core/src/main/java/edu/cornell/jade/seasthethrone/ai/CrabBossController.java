@@ -201,6 +201,7 @@ public class CrabBossController implements BossController {
   /** Progresses to the next state of the controller. */
   private void nextState() {
     if (boss.isDead()) {
+      dispose();
       state = State.DEAD;
       System.out.println("isdead");
       if (boss.isFinishExecute()){
@@ -281,7 +282,6 @@ public class CrabBossController implements BossController {
         }
         break;
       case DEAD:
-        dispose();
         break;
       case EXECUTED:
         System.out.println("executed");

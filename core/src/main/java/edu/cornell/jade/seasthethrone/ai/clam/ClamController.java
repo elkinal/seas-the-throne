@@ -1,6 +1,7 @@
 package edu.cornell.jade.seasthethrone.ai.clam;
 
 import edu.cornell.jade.seasthethrone.ai.BossController;
+import edu.cornell.jade.seasthethrone.ai.CrabBossController;
 import edu.cornell.jade.seasthethrone.bpedit.AttackPattern;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
@@ -12,6 +13,7 @@ abstract class ClamController implements BossController {
     IDLE,
     /** The enemy is attacking */
     ATTACK,
+    DEAD
   }
   /*
    * -----------------------------------
@@ -54,6 +56,11 @@ abstract class ClamController implements BossController {
 
   @Override
   public void update(float delta) {
+    if (boss.isDead()) {
+      dispose();
+      state = State.DEAD;
+    }
+
     switch (state) {
       case IDLE:
         if (boss.getPosition().dst(player.getPosition()) < AGRO_DISTANCE && boss.isInRoom()) {
@@ -62,6 +69,9 @@ abstract class ClamController implements BossController {
         break;
       case ATTACK:
         attack.update(player.getX(), player.getY());
+        break;
+      case DEAD:
+        break;
     }
   }
 
