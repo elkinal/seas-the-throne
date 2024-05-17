@@ -51,6 +51,7 @@ public abstract class AttackPattern {
    * physics engine step between it an a subsequent update.
    */
   public void cleanup() {
+    if (cleanedUp) return;
     for (Spawner s : spawners) {
       s.removeAll();
     }

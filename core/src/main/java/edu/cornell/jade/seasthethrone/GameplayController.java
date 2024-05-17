@@ -506,6 +506,8 @@ public class GameplayController implements Screen {
       for (BossController bc : bossControllers) {
         if (!bc.isDead()) {
           bc.update(delta);
+        } else {
+          bc.dispose();
         }
       }
 
