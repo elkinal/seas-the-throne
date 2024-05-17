@@ -1285,7 +1285,7 @@
                         {
                          "name":"checkpointID",
                          "type":"int",
-                         "value":0
+                         "value":1
                         }, 
                         {
                          "name":"type",
@@ -1296,8 +1296,8 @@
                  "type":"",
                  "visible":true,
                  "width":18.5,
-                 "x":1152.75,
-                 "y":334
+                 "x":865.5,
+                 "y":1400.41666666667
                 }, 
                 {
                  "height":14.5,

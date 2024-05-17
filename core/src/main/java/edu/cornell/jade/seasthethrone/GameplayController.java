@@ -496,6 +496,7 @@ public class GameplayController implements Screen {
         stateController.setRespawnLoc(playerController.getLocation().cpy());
         stateController.setRespawnLevel(level.name);
         stateController.updateState(level.name, playerController, bossControllers);
+        stateController.setCheckpoint(interactController.getCheckpointID());
         stateController.saveGame();
         uiController.setDrawSave(true);
         saveTimer++;
