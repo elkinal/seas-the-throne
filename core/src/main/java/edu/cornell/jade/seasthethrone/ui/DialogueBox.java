@@ -139,14 +139,14 @@ public class DialogueBox implements Renderable, Dialogueable {
 //              width - xTextOffset + 2,
 //              getTextY() + textSpacingY * 1.5f - 2,
 //              false);
-      renderer
-          .getGameCanvas()
-          .drawTextUI(
-              "Page " + (currentText + 1) + "/" + (texts.size()),
-              menuFont,
-              x + width / 2,
-              110,
-              true);
+//      renderer
+//          .getGameCanvas()
+//          .drawTextUI(
+//              "Page " + (currentText + 1) + "/" + (texts.size()),
+//              menuFont,
+//              x + width / 2,
+//              110,
+//              true);
     }
   }
 
