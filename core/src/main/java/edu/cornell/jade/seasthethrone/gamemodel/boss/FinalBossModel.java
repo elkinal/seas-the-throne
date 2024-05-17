@@ -45,6 +45,8 @@ public class FinalBossModel extends BossModel{
       if (isAttack()) {
         if (isHard)
           filmStrip = finalAttackAnimation;
+        else if (isIdle())
+          filmStrip = idleAnimation;
         else
           filmStrip = attackAnimation;
       }
