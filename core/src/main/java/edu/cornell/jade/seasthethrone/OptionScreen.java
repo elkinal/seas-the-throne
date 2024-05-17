@@ -394,7 +394,7 @@ public class OptionScreen implements Screen {
       }
     }
 
-    if (moveCount == cooldown) {
+    if (moveCount >= cooldown) {
       moveCount = 0;
     } else {
       moveCount++;
@@ -473,6 +473,7 @@ public class OptionScreen implements Screen {
 
   @Override
   public void show() {
+    hoverIndex = 0;
     exit = false;
   }
 

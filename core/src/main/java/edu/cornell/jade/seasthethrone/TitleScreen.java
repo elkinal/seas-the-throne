@@ -37,8 +37,8 @@ public class TitleScreen implements Screen, Controllable {
 
   private boolean toggle;
 
-  /** Whether to check for interacts (to prevent interact issues with option screen) */
-  private boolean leaveScreen;
+  private final int PRESS_DELAY = 10;
+  private int pressTimer;
 
   private float MENU_SPACING = 200f;
 
@@ -75,7 +75,7 @@ public class TitleScreen implements Screen, Controllable {
     background = internal.getEntry("title:background", Texture.class);
     logo = internal.getEntry("title:logo", Texture.class);
     textFont = internal.getEntry("loading:alagard", BitmapFont.class);
-    leaveScreen = false;
+    pressTimer = 0;
 
     // Calculating spacings between menu options
     canvas.resize();
@@ -90,15 +90,15 @@ public class TitleScreen implements Screen, Controllable {
     this.listener = listener;
   }
 
-  /**
-   * Whether you left the title screen
-   *
-   * @param left true if left screen, false if still on screen
-   */
-  public void leftScreen(boolean left) {
-    System.out.println("left screen: " + left);
-    leaveScreen = left;
-  }
+  //  /**
+  //   * Whether you left the title screen
+  //   *
+  //   * @param left true if left screen, false if still on screen
+  //   */
+  //  public void leftScreen(boolean left) {
+  //    System.out.println("left screen: " + left);
+  //    leaveScreen = left;
+  //  }
 
   public void update() {
     canvas.resize();
@@ -158,7 +158,7 @@ public class TitleScreen implements Screen, Controllable {
 
   /** Selects the current menu option */
   public void pressInteract() {
-    if (!leaveScreen) {
+    if (pressTimer == 0) {
       switch (selection) {
         case PLAY -> {
           listener.exitScreen(this, 1);
@@ -170,6 +170,8 @@ public class TitleScreen implements Screen, Controllable {
         case QUIT -> System.exit(0);
       }
     }
+    if (pressTimer >= PRESS_DELAY) pressTimer = 0;
+    else pressTimer++;
   }
 
   /** Selects between menu options */

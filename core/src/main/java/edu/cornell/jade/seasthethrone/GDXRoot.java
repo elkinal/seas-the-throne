@@ -95,7 +95,7 @@ public class GDXRoot extends Game implements ScreenListener {
       System.out.println("title to options");
       options.setExit(EXIT_TITLE);
       setScreen(options);
-      menus.leftScreen(true);
+      //      menus.leftScreen(true);
     }
 
     // anything to loading (to title)
@@ -119,7 +119,7 @@ public class GDXRoot extends Game implements ScreenListener {
       System.out.println("options to title");
       controller.getPrefs();
       setScreen(menus);
-      menus.leftScreen(false);
+      //      menus.leftScreen(false);
     }
 
     // options to pause menu (in game)

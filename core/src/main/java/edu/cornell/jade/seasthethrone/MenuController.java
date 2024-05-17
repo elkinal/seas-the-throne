@@ -27,9 +27,9 @@ public class MenuController implements Screen {
     inputController.update();
   }
 
-  public void leftScreen(boolean left) {
-    titleScreen.leftScreen(left);
-  }
+  //  public void leftScreen(boolean left) {
+  //    titleScreen.leftScreen(left);
+  //  }
 
   public void setScreenListener(ScreenListener listener) {
     this.listener = listener;

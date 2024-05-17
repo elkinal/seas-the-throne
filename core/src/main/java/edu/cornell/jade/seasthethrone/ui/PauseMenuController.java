@@ -8,11 +8,20 @@ public class PauseMenuController implements Controllable {
 
   private PauseMenu pauseMenu;
   private boolean toggle;
+  private final int PRESS_DELAY = 8;
+
+  /** Delay for player selecting an option on the pause menu */
+  private int pressTimer;
+
+  /** Delay for player pausing the game */
+  private int pressDisplayTimer;
 
   private GameplayController gameplayController;
 
   public PauseMenuController(PauseMenu pauseMenu) {
     this.pauseMenu = pauseMenu;
+    pressTimer = 0;
+    pressDisplayTimer = 0;
   }
 
   /** Sets the pause menu */
@@ -32,20 +41,30 @@ public class PauseMenuController implements Controllable {
   /** Shows / hides the pause menu */
   @Override
   public void pressPause() {
-    pauseMenu.setPaused(!pauseMenu.isPaused());
+    if (pressDisplayTimer == 0) {
+      pauseMenu.setPaused(!pauseMenu.isPaused());
+    }
+    if (pressDisplayTimer >= PRESS_DELAY) pressDisplayTimer = 0;
+    else {
+      pressDisplayTimer++;
+    }
   }
 
   /** Clicks on a pause menu item */
   @Override
   public void pressInteract() {
     if (!pauseMenu.isPaused()) return;
-    switch (pauseMenu.getSelection()) {
-      case RESUME -> pauseMenu.setPaused(false);
-      case RESTART -> restart();
-      case OPTIONS -> options();
-      case LEVEL_SELECT -> levelSelect();
-      case QUIT -> gameplayController.setQuit(true);
+    if (pressTimer == 0) {
+      switch (pauseMenu.getSelection()) {
+        case RESUME -> pauseMenu.setPaused(false);
+        case RESTART -> restart();
+        case OPTIONS -> options();
+        case LEVEL_SELECT -> levelSelect();
+        case QUIT -> gameplayController.setQuit(true);
+      }
     }
+    if (pressTimer >= PRESS_DELAY) pressTimer = 0;
+    else pressTimer++;
   }
 
   private void restart() {
