@@ -126,6 +126,13 @@ public class StateController {
     }
   }
 
+  public void restart() {
+    for (String key : storedLevels.keySet()) {
+      storedLevels.get(key).clear();
+    }
+  }
+
+
   /** Returns if this controller has saved state on the specified level */
   public boolean hasLevel(String name) {
     return storedLevels.containsKey(name);
