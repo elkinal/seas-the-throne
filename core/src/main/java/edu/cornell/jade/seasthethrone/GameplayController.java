@@ -775,6 +775,10 @@ public class GameplayController implements Screen {
     }
   }
 
+  public void loadState() {
+    stateController.loadState();
+  }
+
   /** Compares Models based on height in the world */
   class HeightComparator implements Comparator<Model> {
     @Override

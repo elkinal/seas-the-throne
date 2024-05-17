@@ -149,9 +149,11 @@ public class TitleScreen implements Screen, Controllable {
   public void pressInteract() {
     switch (selection) {
       case PLAY -> {
+        ((GDXRoot)listener).setLoadSave(true);
         listener.exitScreen(this, 1);
       }
       case NEW_GAME -> {
+        ((GDXRoot)listener).setLoadSave(false);
         listener.exitScreen(this, 1);
       }
       case OPTIONS -> {

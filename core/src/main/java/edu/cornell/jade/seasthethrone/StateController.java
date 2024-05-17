@@ -113,6 +113,8 @@ public class StateController {
       for (int i = 0; i < levelsRoot.size; i++) {
         LevelState thisLevel = new LevelState(levelsRoot.get(i).get("bossHps").asIntArray());
         storedLevels.put(levelsRoot.get(i).name, thisLevel);
+
+        if (BuildConfig.DEBUG) System.out.println("State loaded successfully");
       }
     } catch (Exception e) {
       if (BuildConfig.DEBUG) {
