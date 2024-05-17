@@ -37,6 +37,8 @@ public class TitleScreen implements Screen, Controllable {
   /** Font for display text */
   private BitmapFont textFont;
 
+  private float fontScale;
+
   private boolean toggle;
 
   private float MENU_SPACING = 200f;
@@ -68,6 +70,7 @@ public class TitleScreen implements Screen, Controllable {
   public TitleScreen(String file, GameCanvas canvas, ScreenViewport viewport) {
     this.canvas = canvas;
     this.viewport = viewport;
+    fontScale = (float) canvas.getHeight() / 275;
 
     internal = new AssetDirectory(file);
     internal.loadAssets();
@@ -126,17 +129,8 @@ public class TitleScreen implements Screen, Controllable {
 
     // draw the menu
     // NOTE: this is just a hardcoded magic number to get text scaling right
-    float fontScale = (float) canvas.getHeight() / 275;
-
-    FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Alagard.ttf"));
-    FreeTypeFontGenerator.FreeTypeFontParameter parameter =
-            new FreeTypeFontGenerator.FreeTypeFontParameter();
-
-    textFont = generator.generateFont(parameter);
-    textFont.setUseIntegerPositions(false);
-    textFont.getData().setScale(fontScale);
-    textFont.setColor(Color.WHITE);
-    generator.dispose();
+    textFont.dispose();
+    resizeFont();
 
     float y_offset = -canvas.getHeight()/15f;
     float x_offset =  canvas.getWidth()*(1/20f - 1/2f);
@@ -190,6 +184,21 @@ public class TitleScreen implements Screen, Controllable {
     if (movement == 0) {
       toggle = false;
     }
+  }
+
+  private void resizeFont() {
+    fontScale = (float) canvas.getHeight() / 275;
+
+    FreeTypeFontGenerator generator =
+            new FreeTypeFontGenerator(Gdx.files.internal("Alagard.ttf"));
+    FreeTypeFontGenerator.FreeTypeFontParameter parameter =
+            new FreeTypeFontGenerator.FreeTypeFontParameter();
+
+    textFont = generator.generateFont(parameter);
+    textFont.setUseIntegerPositions(false);
+    textFont.getData().setScale(fontScale);
+    textFont.setColor(Color.WHITE);
+    generator.dispose();
   }
 
   @Override

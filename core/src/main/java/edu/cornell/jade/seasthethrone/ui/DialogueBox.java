@@ -108,6 +108,7 @@ public class DialogueBox implements Renderable, Dialogueable {
   private void drawText(RenderingEngine renderer) {
     if (display) {
       // Drawing the main text
+      if (this.menuFont != null) menuFont.dispose();
       FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Alagard.ttf"));
       FreeTypeFontGenerator.FreeTypeFontParameter parameter =
               new FreeTypeFontGenerator.FreeTypeFontParameter();
