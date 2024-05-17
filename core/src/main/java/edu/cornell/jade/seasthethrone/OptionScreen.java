@@ -96,8 +96,13 @@ public class OptionScreen implements Screen {
   /** Scroll cooldown */
   private int cooldown = 10;
 
+  private int keyCooldown = 5;
+
   /** Int to check if cooldown is reached (prevents scrolling too fast) */
   private int moveCount;
+
+  /** Int to check if cooldown is reached (for clicks: faster cooldown than scroll) */
+  private int clickCount;
 
   /** The screen listener to know when to exit screen */
   private ScreenListener listener;
@@ -137,6 +142,7 @@ public class OptionScreen implements Screen {
     }
     hoverIndex = 0;
     moveCount = 0;
+    clickCount = 0;
 
     background = internal.getEntry("title:options_background", Texture.class);
     textFont = internal.getEntry("loading:alagard", BitmapFont.class);
@@ -400,9 +406,7 @@ public class OptionScreen implements Screen {
 
     if (moveCount >= cooldown) {
       moveCount = 0;
-    } else {
-      moveCount++;
-    }
+    } else moveCount++;
   }
 
   /**
@@ -443,6 +447,7 @@ public class OptionScreen implements Screen {
         stage.getViewport().getWorldWidth(),
         stage.getViewport().getWorldHeight());
 
+    keyboardListener();
     if (xbox != null) {
       xboxListener();
     }
@@ -474,6 +479,94 @@ public class OptionScreen implements Screen {
     }
     System.out.println(prefs.get());
     prefs.flush();
+  }
+
+  /**
+   * ======================================================================
+   *
+   * <p>Make OptionScreen scrollable on keyboard
+   *
+   * <p>======================================================================
+   */
+  private void keyboardListener() {
+    /** --------- scrolling to the option */
+    // controller buttonstyles
+    TextButton.TextButtonStyle style = new TextButton.TextButtonStyle(null, null, null, textFont);
+    style.fontColor = Color.WHITE;
+    TextButton.TextButtonStyle hoverStyle =
+        new TextButton.TextButtonStyle(null, null, null, textFont);
+    hoverStyle.fontColor = blue;
+
+    // go down
+    if (moveCount == 0) {
+      System.out.println("hover index prior " + hoverIndex);
+      if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+        if (hoverIndex >= buttons.length - 1) {
+          hoverIndex = 0;
+        } else if (hoverIndex == 1 || hoverIndex == 2) {
+          hoverIndex = 4;
+        } else {
+          hoverIndex++;
+        }
+        System.out.println("hover index posterior " + hoverIndex);
+      }
+
+      // go up
+      if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+        if (hoverIndex == 0) {
+          hoverIndex = buttons.length - 1;
+        } else if (hoverIndex == 3 || hoverIndex == 4) {
+          hoverIndex = 1;
+        } else {
+          hoverIndex--;
+        }
+      }
+
+      for (int i = 0; i < buttons.length; i++) {
+        buttons[i].setStyle(style);
+      }
+
+      buttons[hoverIndex].setStyle(hoverStyle);
+    }
+    /** selecting the option (can only select non controller settings) */
+    if (clickCount == 0) {
+      if (Gdx.input.isKeyPressed(Input.Keys.E) || Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
+        // 2 options only
+        if (hoverIndex == 0) {
+          if (buttonMaps.get(aimAssistButton).equals("Off")) {
+            buttonMaps.put(aimAssistButton, "On");
+            aimAssistButton.setText("On");
+            currentControls.put("aimAssist", "On");
+          } else {
+            buttonMaps.put(aimAssistButton, "Off");
+            aimAssistButton.setText("Off");
+            currentControls.put("aimAssist", "Off");
+          }
+        } else if (hoverIndex == 1) {
+          if (buttonMaps.get(dashControlButton).equals("Movement")) {
+            buttonMaps.put(dashControlButton, "Indicator");
+            dashControlButton.setText("Indicator");
+            currentControls.put("dashControl", "Indicator");
+          } else {
+            buttonMaps.put(dashControlButton, "Movement");
+            dashControlButton.setText("Movement");
+            currentControls.put("dashControl", "Movement");
+          }
+        } else if (hoverIndex == 4) {
+          exit = true;
+        } else if (hoverIndex == 5) {
+          setDefault();
+        }
+      }
+    }
+
+    if (moveCount >= cooldown) {
+      moveCount = 0;
+    } else moveCount++;
+
+    if (clickCount >= keyCooldown) {
+      clickCount = 0;
+    } else clickCount++;
   }
 
   @Override

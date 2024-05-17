@@ -90,16 +90,6 @@ public class TitleScreen implements Screen, Controllable {
     this.listener = listener;
   }
 
-  //  /**
-  //   * Whether you left the title screen
-  //   *
-  //   * @param left true if left screen, false if still on screen
-  //   */
-  //  public void leftScreen(boolean left) {
-  //    System.out.println("left screen: " + left);
-  //    leaveScreen = left;
-  //  }
-
   public void update() {
     canvas.resize();
     viewport.update(canvas.getWidth(), canvas.getHeight());
