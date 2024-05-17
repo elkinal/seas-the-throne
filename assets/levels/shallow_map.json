@@ -4755,8 +4755,8 @@
                  "type":"",
                  "visible":true,
                  "width":18.5,
-                 "x":693.083333333333,
-                 "y":755.416666666667
+                 "x":671.416666666666,
+                 "y":762.75
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -19193,10 +19193,87 @@
                  "width":6,
                  "x":2434.33333333333,
                  "y":361.5
+                }, 
+                {
+                 "height":17.25,
+                 "id":1140,
+                 "name":"levels\/column.png",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":17.25,
+                 "x":1961.25,
+                 "y":1060.75
+                }, 
+                {
+                 "height":17.25,
+                 "id":1141,
+                 "name":"levels\/column.png",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":17.25,
+                 "x":1981.26136363636,
+                 "y":1060.53409090909
+                }, 
+                {
+                 "height":17.25,
+                 "id":1142,
+                 "name":"levels\/columndelapitated.png",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":17.25,
+                 "x":1920.625,
+                 "y":1061.125
+                }, 
+                {
+                 "height":17.25,
+                 "id":1143,
+                 "name":"levels\/columndelapitated.png",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":17.25,
+                 "x":2101.375,
+                 "y":1060.375
+                }, 
+                {
+                 "height":17.25,
+                 "id":1144,
+                 "name":"levels\/column.png",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":17.25,
+                 "x":2241.125,
+                 "y":1380.375
+                }, 
+                {
+                 "height":17.25,
+                 "id":1145,
+                 "name":"levels\/column.png",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":17.25,
+                 "x":2161.375,
+                 "y":1380.625
+                }, 
+                {
+                 "height":17.25,
+                 "id":1146,
+                 "name":"levels\/column.png",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":17.25,
+                 "x":2301.375,
+                 "y":1381
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -20807,7 +20884,7 @@
          "y":0
         }],
  "nextlayerid":16,
- "nextobjectid":1139,
+ "nextobjectid":1147,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

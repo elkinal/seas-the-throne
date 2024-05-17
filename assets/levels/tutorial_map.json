@@ -1274,8 +1274,8 @@
                  "type":"",
                  "visible":true,
                  "width":10,
-                 "x":703,
-                 "y":1115.58333333333
+                 "x":637.5,
+                 "y":1124.08333333333
                 }, 
                 {
                  "height":10,
@@ -1320,28 +1320,6 @@
                  "width":18.5,
                  "x":2028.75,
                  "y":405.417
-                }, 
-                {
-                 "height":14.5,
-                 "id":345,
-                 "name":"npc\/redlady.png",
-                 "properties":[
-                        {
-                         "name":"dialogue",
-                         "type":"string",
-                         "value":"npc\/redlady_1.txt"
-                        }, 
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"npc"
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":18.5,
-                 "x":2047.25,
-                 "y":301.25
                 }],
          "opacity":1,
          "type":"objectgroup",
