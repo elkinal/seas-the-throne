@@ -4449,8 +4449,8 @@
                  "type":"",
                  "visible":true,
                  "width":18.5,
-                 "x":873.256667632278,
-                 "y":1169.77338727969
+                 "x":897.256667632278,
+                 "y":1185.27338727969
                 }, 
                 {
                  "height":7.5,
@@ -4468,6 +4468,72 @@
                  "width":10,
                  "x":668.206048928592,
                  "y":1875.73852688737
+                }, 
+                {
+                 "height":14.5,
+                 "id":1034,
+                 "name":"npc\/blueguy.png",
+                 "properties":[
+                        {
+                         "name":"dialogue",
+                         "type":"string",
+                         "value":"npc\/blueguy_1.txt"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"npc"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":18.5,
+                 "x":2627.91666666667,
+                 "y":224
+                }, 
+                {
+                 "height":14.5,
+                 "id":1035,
+                 "name":"npc\/blueguy.png",
+                 "properties":[
+                        {
+                         "name":"dialogue",
+                         "type":"string",
+                         "value":"npc\/blueguy_2.txt"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"npc"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":18.5,
+                 "x":2440.75,
+                 "y":1879.25
+                }, 
+                {
+                 "height":14.5,
+                 "id":1037,
+                 "name":"npc\/blueguy.png",
+                 "properties":[
+                        {
+                         "name":"dialogue",
+                         "type":"string",
+                         "value":"npc\/blueguy_3.txt"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"npc"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":18.5,
+                 "x":693.083333333333,
+                 "y":755.416666666667
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -17168,7 +17234,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -18081,7 +18147,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -18627,8 +18693,8 @@
                  "type":"",
                  "visible":true,
                  "width":20,
-                 "x":920.023154103422,
-                 "y":1267.33470542835
+                 "x":1012.02315410342,
+                 "y":1330.00137209502
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -18665,31 +18731,31 @@
          "name":"portals",
          "objects":[
                 {
-                 "height":18.6875,
+                 "height":7.6875,
                  "id":974,
                  "name":"",
                  "properties":[
                         {
                          "name":"playerX",
                          "type":"float",
-                         "value":109
+                         "value":335
                         }, 
                         {
                          "name":"playerY",
                          "type":"float",
-                         "value":275
+                         "value":366
                         }, 
                         {
                          "name":"target",
                          "type":"string",
-                         "value":"levels\/tablet_room_1.json"
+                         "value":"levels\/crypt.json"
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":20.1023,
                  "x":2295.4,
-                 "y":1312.47
+                 "y":1319.37909090909
                 }, 
                 {
                  "height":20,
@@ -18736,7 +18802,7 @@
                         {
                          "name":"target",
                          "type":"string",
-                         "value":"levels\/tablet_room_2.json"
+                         "value":"levels\/tablet_room.json"
                         }],
                  "rotation":0,
                  "type":"",
@@ -18779,7 +18845,7 @@
          "y":0
         }],
  "nextlayerid":15,
- "nextobjectid":1034,
+ "nextobjectid":1038,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

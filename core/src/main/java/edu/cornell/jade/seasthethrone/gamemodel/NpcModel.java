@@ -13,14 +13,15 @@ import edu.cornell.jade.seasthethrone.util.FilmStrip;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class NpcModel extends BoxModel implements Interactable, Renderable {
 
   private boolean playerInRange;
 
+  /** Texture for floating interact arrow */
   private FilmStrip arrow;
 
+  /** Filmstrip for NPC */
   private FilmStrip filmStrip;
 
   private final float WORLD_SCALE;
@@ -31,6 +32,7 @@ public class NpcModel extends BoxModel implements Interactable, Renderable {
 
   private int frameCounter;
 
+  /** This NPC's dialogue */
   private DialogueBox dialogue;
 
   /** Range within which the player can interact with this checkpoint */
@@ -82,6 +84,7 @@ public class NpcModel extends BoxModel implements Interactable, Renderable {
     }
   }
 
+  /** Reads this characters dialogue string from the specified file */
   private String parseDialogue(String file) {
     Path path = Path.of(file);
     try {
