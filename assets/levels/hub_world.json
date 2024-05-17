@@ -929,7 +929,7 @@
                         {
                          "name":"requiredCheckpoint",
                          "type":"int",
-                         "value":8
+                         "value":-1
                         }, 
                         {
                          "name":"target",

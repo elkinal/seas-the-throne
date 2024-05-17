@@ -169,6 +169,7 @@ public class HeadBossController implements BossController {
   /** Progresses to the next state of the controller. */
   private void nextState() {
     if (boss.isDead()) {
+      dispose();
       state = State.DEAD;
     } else if (boss.reachedHealthThreshold()) {
       state = State.ATTACK_MOVE;
@@ -208,7 +209,6 @@ public class HeadBossController implements BossController {
         }
         break;
       case DEAD:
-        dispose();
         break;
     }
   }
