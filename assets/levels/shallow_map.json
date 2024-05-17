@@ -4300,8 +4300,8 @@
                  "type":"",
                  "visible":true,
                  "width":18.5,
-                 "x":2760,
-                 "y":240
+                 "x":2824.33333333333,
+                 "y":236.333333333333
                 }, 
                 {
                  "height":10,
@@ -17143,6 +17143,28 @@
                  "width":9.81818,
                  "x":825.15341,
                  "y":438.142045
+                }, 
+                {
+                 "height":7.5,
+                 "id":1032,
+                 "name":"levels\/bluelight.png",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":9,
+                 "x":2740.25,
+                 "y":182.75
+                }, 
+                {
+                 "height":7.5,
+                 "id":1033,
+                 "name":"levels\/bluelight.png",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":9,
+                 "x":2805.5,
+                 "y":182.375
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -18059,7 +18081,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -18757,7 +18779,7 @@
          "y":0
         }],
  "nextlayerid":15,
- "nextobjectid":1032,
+ "nextobjectid":1034,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

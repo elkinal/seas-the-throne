@@ -9,7 +9,7 @@ public class DialogueBoxController implements Controllable {
   private DialogueBox dialogueBox;
   private boolean toggle;
 
-  /** If this controller should be reading input */
+  /** If the dialogue box is displayed and the controller should be reading input */
   private boolean active;
 
   public DialogueBoxController(DialogueBox dialogueBox) {
@@ -23,6 +23,8 @@ public class DialogueBoxController implements Controllable {
   }
 
   public void setActive(boolean active) {this.active = active;}
+
+  public boolean isActive() {return active;}
 
   /** Sets the dialogue box */
   public void setDialogueBox(DialogueBox dialogueBox) {

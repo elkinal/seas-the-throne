@@ -29,11 +29,16 @@ public class InteractableController implements Controllable {
   /** Controller for npc dialogue */
   private DialogueBoxController dialogueController;
 
+  private int interactTimer;
+
+  private int npcInteractDelay = 10;
+
   public InteractableController() {
     this.interactables = new Array<>();
     this.interactPressed = false;
     checkpointActivated = false;
     checkpointID = -1;
+    interactTimer = 0;
 
     this.dialogueController = new DialogueBoxController();
   }
@@ -93,14 +98,22 @@ public class InteractableController implements Controllable {
         }
       } else if (interactable instanceof NpcModel) {
         // interact with NPCs
-        if (interactable.getPlayerInRange()) {
+        if (interactable.getPlayerInRange() && !(interactTimer > 0)) {
           if (BuildConfig.DEBUG) System.out.println("Npc interacted");
-          dialogueController.setDialogueBox(((NpcModel) interactable).getDialogueBox());
-          dialogueController.getDialogueBox().show();
-          dialogueController.setActive(true);
+          interactTimer ++;
+          if (!dialogueController.isActive()) {
+            dialogueController.setDialogueBox(((NpcModel) interactable).getDialogueBox());
+            dialogueController.getDialogueBox().show();
+            dialogueController.setActive(true);
+          } else {
+            dialogueController.getDialogueBox().hide();
+            dialogueController.setActive(false);
+          }
         }
       }
     }
+    if (interactTimer > 0) interactTimer ++;
+    if (interactTimer >= npcInteractDelay) interactTimer = 0;
     interactPressed = false;
   }
 
