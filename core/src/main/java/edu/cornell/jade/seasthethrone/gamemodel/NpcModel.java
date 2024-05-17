@@ -10,7 +10,9 @@ import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.ui.DialogueBox;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class NpcModel extends BoxModel implements Interactable, Renderable {
@@ -42,7 +44,7 @@ public class NpcModel extends BoxModel implements Interactable, Renderable {
     this.frameDelay = 45;
     this.arrowFrameDelay = 4;
 
-    this.filmStrip = new FilmStrip(obj.texture.getTexture(),1, 2);
+    this.filmStrip = new FilmStrip(obj.texture.getTexture(), 1, 2);
     this.arrow = new FilmStrip(new Texture("levels/interactable_arrow.png"), 1, 20);
     CollisionMask.setCategoryMaskBits(this);
 
@@ -52,14 +54,15 @@ public class NpcModel extends BoxModel implements Interactable, Renderable {
 
   @Override
   public void draw(RenderingEngine renderer) {
-    float y_offset = WORLD_SCALE*filmStrip.getRegionHeight()/2f - getHeight()/2f;
+    float y_offset = WORLD_SCALE * filmStrip.getRegionHeight() / 2f - getHeight() / 2f;
 
     // draw character
-    renderer.draw(filmStrip, getX(), getY()+y_offset);
+    renderer.draw(filmStrip, getX(), getY() + y_offset);
 
     // draw arrow
     if (playerInRange) {
-      renderer.draw(arrow, getX(), getY() + y_offset + WORLD_SCALE*0.4f*filmStrip.getRegionHeight());
+      renderer.draw(
+          arrow, getX(), getY() + y_offset + WORLD_SCALE * 0.4f * filmStrip.getRegionHeight());
     }
 
     progressFrame();
@@ -80,29 +83,27 @@ public class NpcModel extends BoxModel implements Interactable, Renderable {
   }
 
   private String parseDialogue(String file) {
+    Path path = Path.of(file);
     try {
-      return new String(Files.readAllBytes(Paths.get(file)));
+      return Files.readString(path, StandardCharsets.UTF_8);
     } catch (Exception e) {
-      return file;
+      System.out.println(e);
+      return null;
     }
   }
 
-  public DialogueBox getDialogueBox() {return dialogue;}
-
-  @Override
-  public void alwaysUpdate() {
-
+  public DialogueBox getDialogueBox() {
+    return dialogue;
   }
 
   @Override
-  public void neverUpdate() {
-
-  }
+  public void alwaysUpdate() {}
 
   @Override
-  public void setAlwaysAnimate(boolean animate) {
+  public void neverUpdate() {}
 
-  }
+  @Override
+  public void setAlwaysAnimate(boolean animate) {}
 
   @Override
   public boolean alwaysAnimate() {

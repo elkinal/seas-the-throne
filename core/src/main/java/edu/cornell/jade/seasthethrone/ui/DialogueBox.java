@@ -24,11 +24,10 @@ public class DialogueBox implements Renderable, Dialogueable {
   private float screenWidth, screenHeight;
 
   // Textures
-  private final Texture boxTexture = new Texture("ui/dialoguebox.png");
   private final TextureRegion boxTextureRegion;
 
   // Text rendering
-  private BitmapFont menuFont, menuShadowFont;
+  private BitmapFont menuFont;
   private float textSpacingY;
   private final float fontSize = 2.0f;
   private ArrayList<String> texts;
@@ -40,34 +39,9 @@ public class DialogueBox implements Renderable, Dialogueable {
   public DialogueBox() {
 
     // Loading scroll texture
-    boxTextureRegion = new TextureRegion(boxTexture);
-
-    // Setting up text
-    FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Alagard.ttf"));
-    FreeTypeFontGenerator.FreeTypeFontParameter parameter =
-        new FreeTypeFontGenerator.FreeTypeFontParameter();
-
-    menuFont = generator.generateFont(parameter);
-    menuFont.setUseIntegerPositions(false);
-    menuFont.getData().setScale(fontSize);
-    menuFont.setColor(Color.BLACK);
-
-    menuShadowFont = generator.generateFont(parameter);
-    menuShadowFont.setUseIntegerPositions(false);
-    menuShadowFont.getData().setScale(fontSize);
-    menuShadowFont.setColor(Color.WHITE);
+    boxTextureRegion = new TextureRegion(new Texture("ui/dialoguebox.png"));
 
     texts = new ArrayList<>();
-
-    generator.dispose();
-
-    // Calculating spacings between menu options
-    GlyphLayout layout = new GlyphLayout(menuFont, "Sample");
-    textSpacingY = layout.height + 25;
-
-    // Setting scaling
-    width = 1000;
-    height = 300;
   }
 
   /**
@@ -83,16 +57,6 @@ public class DialogueBox implements Renderable, Dialogueable {
     // New position of dialogue box after resizing
     x = ((float) screenWidth / 2) - width / 2;
     y = 25;
-  }
-
-  /** Returns the X position of the text */
-  private float getTextX() {
-    return x + 65;
-  }
-
-  /** Returns the Y position of the text */
-  private float getTextY() {
-    return y + height / 2 + 30;
   }
 
   /** Switches to the next text page */
@@ -127,7 +91,14 @@ public class DialogueBox implements Renderable, Dialogueable {
 
   @Override
   public void draw(RenderingEngine renderer) {
+    // Setting scaling
+    float scale = 0.7f * ((float)renderer.getGameCanvas().getWidth() / boxTextureRegion.getRegionWidth());
+    width = boxTextureRegion.getRegionWidth() * scale;
+    height = boxTextureRegion.getRegionHeight() * scale;
+
     if (display) {
+      x = (renderer.getGameCanvas().getWidth() - width)/2f;
+      y = 0.08f * renderer.getGameCanvas().getHeight();
       renderer.getGameCanvas().drawUI(boxTextureRegion, x, y, width, height);
       drawText(renderer);
     }
@@ -137,35 +108,36 @@ public class DialogueBox implements Renderable, Dialogueable {
   private void drawText(RenderingEngine renderer) {
     if (display) {
       // Drawing the main text
+      FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Alagard.ttf"));
+      FreeTypeFontGenerator.FreeTypeFontParameter parameter =
+              new FreeTypeFontGenerator.FreeTypeFontParameter();
+
+      // NOTE: this is just a hardcoded magic number to get text scaling right
+      float fontScale = (float) renderer.getGameCanvas().getWidth() / 1500;
+
+      menuFont = generator.generateFont(parameter);
+      menuFont.setUseIntegerPositions(false);
+      menuFont.getData().setScale(fontScale*fontSize);
+      menuFont.setColor(Color.BLACK);
+      generator.dispose();
+
       if (!texts.isEmpty()) {
-        renderer
-            .getGameCanvas()
-            .drawTextUI(
-                texts.get(currentText),
-                menuFont,
-                getTextX(),
-                getTextY() + textSpacingY * 1.5f,
-                false);
+        float ox = x + 0.06f*width;
+        float oy = y + 0.8f*height;
+
+        renderer.getGameCanvas().drawTextUI(texts.get(currentText), menuFont, ox, oy, false);
       }
 
       // Drawing info messages
-      float xTextOffset = 120;
-      renderer
-          .getGameCanvas()
-          .drawTextUI(
-              "Press [primary1] to hide",
-              menuShadowFont,
-              width - xTextOffset + 2,
-              getTextY() + textSpacingY * 1.5f - 2,
-              false);
-      renderer
-          .getGameCanvas()
-          .drawTextUI(
-              "Press [primary1] to hide",
-              menuFont,
-              width - xTextOffset,
-              getTextY() + textSpacingY * 1.5f,
-              false);
+//      float xTextOffset = 120;
+//      renderer
+//          .getGameCanvas()
+//          .drawTextUI(
+//              "Press [primary1] to hide",
+//              menuShadowFont,
+//              width - xTextOffset + 2,
+//              getTextY() + textSpacingY * 1.5f - 2,
+//              false);
       renderer
           .getGameCanvas()
           .drawTextUI(
