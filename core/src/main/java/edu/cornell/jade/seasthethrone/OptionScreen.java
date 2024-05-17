@@ -114,12 +114,7 @@ public class OptionScreen implements Screen {
   /** Enum to see if option screen should exit to the title or game Default exit to title */
   private int exitTo;
 
-  /**
-   * Creates a new Options screen
-   *
-   * @param exitCode the screen that the optionscreen should change to on exit
-   */
-  public OptionScreen(String file, GameCanvas canvas, int exitCode) {
+  public OptionScreen(String file, GameCanvas canvas) {
     internal = new AssetDirectory(file);
     internal.loadAssets();
     internal.finishLoading();
@@ -134,7 +129,7 @@ public class OptionScreen implements Screen {
         new String[] {
           "aimAssist", "dashControl", "attackButton", "dashButton", "backButton", "resetButton"
         };
-    exitTo = exitCode;
+    exitTo = GDXRoot.EXIT_TITLE;
 
     // initialize controller
     if (Controllers.get().getControllers().size > 0) {
@@ -163,8 +158,9 @@ public class OptionScreen implements Screen {
     stage.setViewport(v);
   }
 
-  //  public void setExit(int exitCode) {
-  //  }
+  public void setExit(int exitCode) {
+    exitTo = exitCode;
+  }
 
   /** Makes the controls table and adds buttons/listeners to it. */
   private void makeControls() {
@@ -362,7 +358,6 @@ public class OptionScreen implements Screen {
 
       /** --------- selecting the option */
       if (xbox.getB()) {
-        System.out.println("got B");
         // 2 options only
         if (hoverIndex == 0) {
           if (buttonMaps.get(aimAssistButton).equals("Off")) {
@@ -382,7 +377,6 @@ public class OptionScreen implements Screen {
           }
         } else if (hoverIndex == 4) {
           exit = true;
-          System.out.println("exit is true");
         } else if (hoverIndex == 5) {
           setDefault();
         }
@@ -479,7 +473,6 @@ public class OptionScreen implements Screen {
 
   @Override
   public void show() {
-    System.out.println("exit is false");
     exit = false;
   }
 
@@ -499,8 +492,5 @@ public class OptionScreen implements Screen {
   public void hide() {}
 
   @Override
-  public void dispose() {
-    xbox = null;
-    internal.dispose();
-  }
+  public void dispose() {}
 }

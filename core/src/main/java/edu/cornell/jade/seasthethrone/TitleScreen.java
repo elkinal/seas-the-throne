@@ -37,6 +37,9 @@ public class TitleScreen implements Screen, Controllable {
 
   private boolean toggle;
 
+  /** Whether to check for interacts (to prevent interact issues with option screen) */
+  private boolean leaveScreen;
+
   private float MENU_SPACING = 200f;
 
   public enum TitleSelection {
@@ -72,6 +75,7 @@ public class TitleScreen implements Screen, Controllable {
     background = internal.getEntry("title:background", Texture.class);
     logo = internal.getEntry("title:logo", Texture.class);
     textFont = internal.getEntry("loading:alagard", BitmapFont.class);
+    leaveScreen = false;
 
     // Calculating spacings between menu options
     canvas.resize();
@@ -84,6 +88,16 @@ public class TitleScreen implements Screen, Controllable {
    */
   public void setScreenListener(ScreenListener listener) {
     this.listener = listener;
+  }
+
+  /**
+   * Whether you left the title screen
+   *
+   * @param left true if left screen, false if still on screen
+   */
+  public void leftScreen(boolean left) {
+    System.out.println("left screen: " + left);
+    leaveScreen = left;
   }
 
   public void update() {
@@ -110,20 +124,20 @@ public class TitleScreen implements Screen, Controllable {
     canvas.getSpriteBatch().setProjectionMatrix(viewport.getCamera().combined);
 
     // draw the background
-    float ox = -canvas.getWidth()/2f;
-    float oy = -canvas.getHeight()/2f;
+    float ox = -canvas.getWidth() / 2f;
+    float oy = -canvas.getHeight() / 2f;
     canvas.draw(background, Color.WHITE, ox, oy, canvas.getWidth(), canvas.getHeight());
 
     // draw the logo
     float scale = Math.min(2 / 3f, (float) canvas.getWidth() / logo.getWidth());
     float width = logo.getWidth() * scale;
-    ox = -canvas.getWidth()/2f + 10f;
+    ox = -canvas.getWidth() / 2f + 10f;
 
     canvas.draw(logo, Color.WHITE, ox, 0, width, scale * logo.getHeight());
 
     // draw the menu
     float y_offset = -100f;
-    float x_offset = 50f - canvas.getWidth()/2f;
+    float x_offset = 50f - canvas.getWidth() / 2f;
     for (TitleSelection s : TitleSelection.values()) {
       if (selection == s) {
         canvas.drawText(s.optionName, textFont, x_offset, y_offset, Color.GOLDENROD);
@@ -144,14 +158,17 @@ public class TitleScreen implements Screen, Controllable {
 
   /** Selects the current menu option */
   public void pressInteract() {
-    switch (selection) {
-      case PLAY -> {
-        listener.exitScreen(this, 1);
+    if (!leaveScreen) {
+      switch (selection) {
+        case PLAY -> {
+          listener.exitScreen(this, 1);
+        }
+        case OPTIONS -> {
+          System.out.println("switch says options");
+          listener.exitScreen(this, 3);
+        }
+        case QUIT -> System.exit(0);
       }
-      case OPTIONS -> {
-        listener.exitScreen(this, 3);
-      }
-      case QUIT -> System.exit(0);
     }
   }
 

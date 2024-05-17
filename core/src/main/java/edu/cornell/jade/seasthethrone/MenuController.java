@@ -15,18 +15,20 @@ public class MenuController implements Screen {
 
   private ScreenListener listener;
 
-
   public MenuController(GameCanvas canvas) {
     viewport = new ScreenViewport();
     inputController = new InputController(viewport);
     titleScreen = new TitleScreen("loading.json", canvas, viewport);
 
     inputController.add(titleScreen);
-
   }
 
   public void update() {
     inputController.update();
+  }
+
+  public void leftScreen(boolean left) {
+    titleScreen.leftScreen(left);
   }
 
   public void setScreenListener(ScreenListener listener) {
@@ -35,9 +37,7 @@ public class MenuController implements Screen {
   }
 
   @Override
-  public void show() {
-
-  }
+  public void show() {}
 
   @Override
   public void render(float v) {
@@ -46,27 +46,17 @@ public class MenuController implements Screen {
   }
 
   @Override
-  public void resize(int i, int i1) {
-
-  }
+  public void resize(int i, int i1) {}
 
   @Override
-  public void pause() {
-
-  }
+  public void pause() {}
 
   @Override
-  public void resume() {
-
-  }
+  public void resume() {}
 
   @Override
-  public void hide() {
-
-  }
+  public void hide() {}
 
   @Override
-  public void dispose() {
-
-  }
+  public void dispose() {}
 }

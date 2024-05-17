@@ -50,7 +50,7 @@ public class GDXRoot extends Game implements ScreenListener {
     menus = new MenuController(canvas);
     menus.setScreenListener(this);
 
-    options = new OptionScreen("loading.json", canvas, EXIT_TITLE);
+    options = new OptionScreen("loading.json", canvas);
     options.setViewport(new FitViewport(canvas.getWidth(), canvas.getHeight()));
     options.setScreenListener(this);
 
@@ -92,10 +92,10 @@ public class GDXRoot extends Game implements ScreenListener {
 
     // title to options
     if (screen instanceof TitleScreen && exitCode == EXIT_OPTIONS) {
-      options = new OptionScreen("loading.json", canvas, EXIT_TITLE);
-      options.setViewport(new FitViewport(canvas.getWidth(), canvas.getHeight()));
-      options.setScreenListener(this);
+      System.out.println("title to options");
+      options.setExit(EXIT_TITLE);
       setScreen(options);
+      menus.leftScreen(true);
     }
 
     // anything to loading (to title)
@@ -116,18 +116,16 @@ public class GDXRoot extends Game implements ScreenListener {
     // ----- options screen exits
     // options to title
     if (screen == options && exitCode == EXIT_TITLE) {
-      setScreen(menus);
+      System.out.println("options to title");
       controller.getPrefs();
-      options.dispose();
-      options = null;
+      setScreen(menus);
+      menus.leftScreen(false);
     }
 
     // options to pause menu (in game)
     if (screen == options && exitCode == EXIT_PAUSE) {
-      setScreen(controller);
       controller.getPrefs();
-      options.dispose();
-      options = null;
+      setScreen(controller);
     }
 
     // ---- game screen exits
@@ -138,18 +136,16 @@ public class GDXRoot extends Game implements ScreenListener {
       setScreen(loading);
     }
 
-    // to title
-    if (screen == controller && exitCode == EXIT_TITLE) {
-      loading = new LoadScreen("loading.json", canvas, MIN_LOAD_TIME, EXIT_TITLE);
-      loading.setScreenListener(this);
-      setScreen(loading);
-    }
+    // game to title
+    //    if (screen == controller && exitCode == EXIT_TITLE) {
+    //      loading = new LoadScreen("loading.json", canvas, MIN_LOAD_TIME, EXIT_TITLE);
+    //      loading.setScreenListener(this);
+    //      setScreen(loading);
+    //    }
 
     // game to options
     if (screen == controller && exitCode == EXIT_OPTIONS) {
-      options = new OptionScreen("loading.json", canvas, EXIT_PAUSE);
-      options.setViewport(new FitViewport(canvas.getWidth(), canvas.getHeight()));
-      options.setScreenListener(this);
+      options.setExit(EXIT_PAUSE);
       setScreen(options);
     }
   }
