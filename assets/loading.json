@@ -4,7 +4,7 @@
     "loading:player_run": "loading/player_run_right.png",
     "title:background": "title/background.png",
     "title:logo": "title/logo.png",
-    "title:options_background": "title/options_background.jpg"
+    "options:background": "title/options_background.jpg"
   },
   "fonts": {
     "loading:alagard": {

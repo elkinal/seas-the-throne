@@ -28,6 +28,9 @@ public class SwordfishBossModel extends BossModel{
           case RIGHT -> filmStrip = attackRightAnimation;
         }
       }
+      else if (isIdle()){
+        filmStrip = idleAnimation;
+      }
       else {
         switch (faceDirection) {
           case UP -> filmStrip = shootUpAnimation;

@@ -14,6 +14,10 @@ public class PortalController {
     this.portals.add(portal);
   }
 
+  public void dispose() {
+    portals.clear();
+  }
+
   public void update(StateController state) {
     for (PortalModel portal : portals) {
       if (state.getCheckpoint() >= portal.getRequiredCheckpoint()) {

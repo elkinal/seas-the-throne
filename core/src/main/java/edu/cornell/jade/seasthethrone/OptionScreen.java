@@ -4,6 +4,7 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -39,7 +40,7 @@ public class OptionScreen implements Screen {
   /** The game canvas */
   private GameCanvas canvas;
 
-  /** === Custom colors */
+  /** Custom colors */
   private Color blue = new Color(90 / 255f, 148 / 255f, 156 / 255f, 1);
 
   /** XBox Controller support */
@@ -143,8 +144,7 @@ public class OptionScreen implements Screen {
     hoverIndex = 0;
     moveCount = 0;
     clickCount = 0;
-
-    background = internal.getEntry("title:options_background", Texture.class);
+    background = internal.getEntry("options:background", Texture.class);
     textFont = internal.getEntry("loading:alagard", BitmapFont.class);
     headingStyle = new Label.LabelStyle(textFont, Color.WHITE);
     buttonStyle = new Label.LabelStyle(textFont, Color.WHITE);

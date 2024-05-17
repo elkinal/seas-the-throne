@@ -142,6 +142,11 @@ public class CrabBossController implements BossController {
   }
 
   @Override
+  public int getMaxHealth() {
+    return boss.getFullHealth();
+  }
+
+  @Override
   public boolean isDead() {
     return boss.isDead();
   }
@@ -211,7 +216,7 @@ public class CrabBossController implements BossController {
         break;
       case THRESHOLD:
         if (timer <= 0) {
-          int r = rand.nextInt(0, 2);
+          int r = rand.nextInt(0, 3);
           if (r == 0) {
             state = State.MOVE;
             findNewGoalPos();
@@ -226,7 +231,7 @@ public class CrabBossController implements BossController {
         break;
       case HOMING_SPEED_ATTACK:
         if (timer <= 0) {
-          int r = rand.nextInt(0, 2);
+          int r = rand.nextInt(0, 3);
           if (r == 0) {
             state = State.MOVE;
             findNewGoalPos();
@@ -241,7 +246,7 @@ public class CrabBossController implements BossController {
         break;
       case ROTATE_RING_ATTACK:
         if (timer <= 0) {
-          int r = rand.nextInt(0, 2);
+          int r = rand.nextInt(0, 3);
           if (r == 0) {
             state = State.MOVE;
             findNewGoalPos();

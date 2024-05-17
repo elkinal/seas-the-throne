@@ -50,8 +50,8 @@ public class BossHealthBar implements Renderable {
    *
    * @param currHealth the player's current health
    */
-  protected void changeHP(int currHealth) {
-    hWidth = width * (currHealth / 200f);
+  protected void changeHP(int currHealth, int maxHealth) {
+    hWidth = width * (currHealth / (float) maxHealth);
     if (hWidth < 0) {
       hWidth = 0;
     }

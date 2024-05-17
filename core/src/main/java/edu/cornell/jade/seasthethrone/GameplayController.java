@@ -11,14 +11,11 @@ import com.badlogic.gdx.utils.viewport.*;
 
 import edu.cornell.jade.seasthethrone.ai.BossController;
 import edu.cornell.jade.seasthethrone.assets.AssetDirectory;
-import edu.cornell.jade.seasthethrone.gamemodel.CheckpointModel;
-import edu.cornell.jade.seasthethrone.gamemodel.PortalModel;
+import edu.cornell.jade.seasthethrone.gamemodel.*;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
-import edu.cornell.jade.seasthethrone.gamemodel.ObstacleModel;
 import edu.cornell.jade.seasthethrone.gamemodel.gate.GateModel;
 import edu.cornell.jade.seasthethrone.gamemodel.gate.GateWallModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.PlayerModel;
-import edu.cornell.jade.seasthethrone.gamemodel.HealthpackModel;
 import edu.cornell.jade.seasthethrone.input.InputController;
 import edu.cornell.jade.seasthethrone.bpedit.AttackPattern;
 import edu.cornell.jade.seasthethrone.level.*;
@@ -29,7 +26,6 @@ import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.ui.*;
 import edu.cornell.jade.seasthethrone.util.ScreenListener;
-import edu.cornell.jade.seasthethrone.gamemodel.BulletModel;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -199,10 +195,39 @@ public class GameplayController implements Screen {
     this.portalController = new PortalController();
     this.interactController = new InteractableController();
     inputController.add(interactController);
+    inputController.add(interactController.getDialogueController());
     this.renderEngine = new RenderingEngine(worldWidth, worldHeight, viewport, worldScale);
-    // Initialize physics engine
-    World world = new World(new Vector2(0, 0), false);
-    physicsEngine = new PhysicsEngine(bounds, world);
+
+////     Initialize physics engine
+//    World world = new World(new Vector2(0, 0), false);
+//    physicsEngine = new PhysicsEngine(bounds, world);
+
+    // Load UI
+    PauseMenu pauseMenu = new PauseMenu(viewport);
+    PauseMenuController pauseMenuController = new PauseMenuController(pauseMenu);
+    pauseMenuController.setGameplayController(this);
+    inputController.add(pauseMenuController);
+
+////     Initlize controllers
+//    playerController = new PlayerController(physicsEngine);
+//    inputController.add(playerController);
+//    interactController.setPlayerController(playerController);
+
+    // Initialize pause controller
+    pauseController = new PauseController(renderEngine);
+
+    // Load the Pause Menu's dialogue box
+    DialogueBoxController pauseMenuDialogueBoxController = pauseMenu.getDialogueBoxController();
+    inputController.add(pauseMenuDialogueBoxController);
+    uiController =
+            new UIController(
+                    pauseMenuController,
+                    renderEngine,
+                    renderEngine.getGameCanvas(),
+                    uiViewport);
+    uiController.setInteractController(interactController);
+    uiController.gatherAssets(assets);
+
     setupGameplay();
   }
 
@@ -230,6 +255,10 @@ public class GameplayController implements Screen {
     } else {
       playerLoc = level.getPlayerLoc();
     }
+
+    // Initialize physics engine
+    World world = new World(new Vector2(0, 0), false);
+    physicsEngine = new PhysicsEngine(bounds, world);
 
     gameState = GameState.PLAY;
 
@@ -284,9 +313,20 @@ public class GameplayController implements Screen {
             .setShootCooldownLimit(20)
             .build();
 
-    renderEngine.addRenderable(player);
+//    playerController.setPlayer(player);
+    // Initlize controllers
+    playerController = new PlayerController(physicsEngine, player);
+    inputController.add(playerController);
+    interactController.setPlayerController(playerController);
 
+    renderEngine.addRenderable(player);
     physicsEngine.addObject(player);
+
+    // Initialize pause controller
+    pauseController.setPhysicsEngine(physicsEngine);
+    pauseController.setPlayerController(playerController);
+    uiController.setPlayer(playerController);
+
     // Load fish bullets builder
     fishBulletBuilder =
         BulletModel.Builder.newInstance()
@@ -334,6 +374,7 @@ public class GameplayController implements Screen {
               .setGetHitAnimation(new Texture("bosses/" + assetName + "/hurt.png"))
               .setDeathAnimation(new Texture("bosses/" + assetName + "/death.png"))
               .setAttackAnimation(new Texture("bosses/" + assetName + "/attack.png"))
+              .setIdleAnimation(new Texture("bosses/" + assetName + "/idle.png"))
               .setFrameDelay(12)
               .setRoomId(bossContainer.roomId);
       if (name.contains("swordfish")) {
@@ -348,8 +389,11 @@ public class GameplayController implements Screen {
             .setGetHitUpAnimation(new Texture("bosses/" + assetName + "/up_hurt.png"))
             .setGetHitRightAnimation(new Texture("bosses/" + assetName + "/right_hurt.png"));
       }
-      if (name.contains("final")) {
-        bossBuilder.setSpawnAnimation(new Texture("bosses/" + assetName + "/spawn.png"));
+      if (name.contains("final")){
+        bossBuilder.setTransformAnimation(new Texture("bosses/" + assetName + "/transform.png"))
+            .setFinalAttackAnimation(new Texture("bosses/" + assetName + "/final_attack.png"))
+            .setFinalShootAnimation(new Texture("bosses/" + assetName + "/final_shoot.png"))
+            .setFinalGetHitAnimation(new Texture("bosses/" + assetName + "/final_hurt.png"));
       }
       BossModel boss = bossBuilder.build();
       BossController bossController =
@@ -409,32 +453,14 @@ public class GameplayController implements Screen {
       interactController.add(model);
     }
 
-    // Initlize controllers
-    playerController = new PlayerController(physicsEngine, player);
-    inputController.add(playerController);
-    interactController.setPlayerController(playerController);
-
-    // Initialize pause controller
-    pauseController = new PauseController(renderEngine, physicsEngine, playerController);
-
-    // Load UI
-    PauseMenu pauseMenu = new PauseMenu(viewport);
-    PauseMenuController pauseMenuController = new PauseMenuController(pauseMenu);
-    pauseMenuController.setGameplayController(this);
-    inputController.add(pauseMenuController);
-
-    // Load the Pause Menu's dialogue box
-    DialogueBoxController pauseMenuDialogueBoxController = pauseMenu.getDialogueBoxController();
-    pauseMenuDialogueBoxController.setGameplayController(this);
-    inputController.add(pauseMenuDialogueBoxController);
-    uiController =
-        new UIController(
-            playerController,
-            pauseMenuController,
-            renderEngine,
-            renderEngine.getGameCanvas(),
-            uiViewport);
-    uiController.gatherAssets(assets);
+    // Load NPCs
+    for (LevelObject npc : layers.get("npc")) {
+      NpcModel model = new NpcModel(npc, worldScale);
+      model.setBodyType(BodyDef.BodyType.StaticBody);
+      physicsEngine.addObject(model);
+      renderEngine.addRenderable(model);
+      interactController.add(model);
+    }
 
     // load foreground
     renderEngine.addRenderable(level.getForeground());
@@ -618,13 +644,6 @@ public class GameplayController implements Screen {
     }
     stateController.setCurrentLevel(level.name);
 
-    // Clear game
-    this.renderEngine.clear();
-    physicsEngine.dispose();
-    playerController = null;
-    pauseController = null;
-    uiController = null;
-    bossControllers.clear();
     // Reload
     setupGameplay();
 
@@ -757,7 +776,13 @@ public class GameplayController implements Screen {
   }
 
   public void dispose() {
-    if (physicsEngine != null) physicsEngine.dispose();
+//    playerController.setPlayer(null);
+    bossControllers.clear();
+    uiController.clear();
+//    renderEngine.clear();
+    interactController.dispose();
+    portalController.dispose();
+    if (physicsEngine!=null) physicsEngine.dispose();
   }
 
   public boolean allBossesDefeated() {

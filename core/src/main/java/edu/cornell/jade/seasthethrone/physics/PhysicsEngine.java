@@ -37,6 +37,11 @@ public class PhysicsEngine implements ContactListener {
   /** The location to spawn in the player when the level is loaded */
   private Vector2 spawnPoint;
 
+  /** Flag to check if spear has made contact with boss in this frame
+   * (due to a strange bug where collisions were counted twice in one frame?)
+   */
+  private boolean hasSpeared;
+
   /** To keep track of the continuous player-boss collision */
   private Optional<Contact> playerBossCollision;
 
@@ -56,6 +61,12 @@ public class PhysicsEngine implements ContactListener {
   }
 
   public void dispose() {
+//    Iterator<PooledList<Model>.Entry> iterator = objects.entryIterator();
+//    while (iterator.hasNext()) {
+//      PooledList<Model>.Entry entry = iterator.next();
+//      Model obj = entry.getValue();
+//      obj.markRemoved(true);
+//    }
     objects.clear();
     //    world.dispose();
   }
@@ -76,11 +87,7 @@ public class PhysicsEngine implements ContactListener {
    * @param builder the bullet model builder
    */
   public void spawnBullet(Vector2 pos, Vector2 vel, float speed, BulletModel.Builder builder) {
-    BulletModel bullet = builder
-            .setX(pos.x)
-            .setY(pos.y)
-            .setRadius(0.5f)
-            .build();
+    BulletModel bullet = builder.setX(pos.x).setY(pos.y).setRadius(0.5f).build();
     bullet.setVX(speed * vel.x);
     bullet.setVY(speed * vel.y);
     addObject(bullet);
@@ -97,6 +104,7 @@ public class PhysicsEngine implements ContactListener {
   public void update(float delta) {
     // turn the physics engine crank
     world.step(delta, 8, 4);
+    hasSpeared = false;
     // Garbage collect the deleted objects.
     // Note how we use the linked list nodes to delete O(1) in place.
     // This is O(n) without copying.
@@ -130,9 +138,7 @@ public class PhysicsEngine implements ContactListener {
     }
   }
 
-  /**
-   * Removes any models currently marked for removal
-   */
+  /** Removes any models currently marked for removal */
   public void removeMarked() {
     // Garbage collect the deleted objects.
     // Note how we use the linked list nodes to delete O(1) in place.
@@ -192,7 +198,9 @@ public class PhysicsEngine implements ContactListener {
     Fixture fix1 = contact.getFixtureA();
     Fixture fix2 = contact.getFixtureB();
 
-    if (fix1 == null || fix2 == null) {return;}
+    if (fix1 == null || fix2 == null) {
+      return;
+    }
 
     Body body1 = fix1.getBody();
     Body body2 = fix2.getBody();
@@ -212,11 +220,13 @@ public class PhysicsEngine implements ContactListener {
         if (BuildConfig.DEBUG) System.out.println("player hit");
 
         handleCollision((PlayerBodyModel) bd2, (BulletModel) bd1, contact);
-      } else if (bd1 instanceof PlayerSpearModel && bd2 instanceof BulletModel
-              && !((BulletModel) bd2).isUnbreakable()) {
+      } else if (bd1 instanceof PlayerSpearModel
+          && bd2 instanceof BulletModel
+          && !((BulletModel) bd2).isUnbreakable()) {
         handleCollision((PlayerSpearModel) bd1, (BulletModel) bd2);
-      } else if (bd2 instanceof PlayerSpearModel && bd1 instanceof BulletModel
-              && !((BulletModel) bd1).isUnbreakable()) {
+      } else if (bd2 instanceof PlayerSpearModel
+          && bd1 instanceof BulletModel
+          && !((BulletModel) bd1).isUnbreakable()) {
         handleCollision((PlayerSpearModel) bd2, (BulletModel) bd1);
       } else if (bd1 instanceof PlayerSpearModel && bd2 instanceof BossModel) {
         handleCollision((PlayerSpearModel) bd1, (BossModel) bd2);
@@ -232,21 +242,27 @@ public class PhysicsEngine implements ContactListener {
         handleCollision((PlayerBulletModel) bd2, (BossModel) bd1);
       }
       // Handle obstacles
-      else if (bd1 instanceof BulletModel && bd2 instanceof ObstacleModel && !((BulletModel) bd1).isUnbreakable()) {
-        bd1.markRemoved(true);
-      } else if (bd2 instanceof BulletModel && bd1 instanceof ObstacleModel && !((BulletModel) bd2).isUnbreakable()) {
-        bd2.markRemoved(true);
+      else if (bd1 instanceof BulletModel && bd2 instanceof ObstacleModel) {
+        BulletModel b = (BulletModel) bd1;
+        if (!b.isUnbreakable() || (b.isUnbreakable() && !b.getLinearVelocity().isZero()) )
+          bd1.markRemoved(true);
+      } else if (bd2 instanceof BulletModel && bd1 instanceof ObstacleModel) {
+        BulletModel b = (BulletModel) bd2;
+        if (!b.isUnbreakable() || (b.isUnbreakable() && !b.getLinearVelocity().isZero()) )
+          bd2.markRemoved(true);
       }
       // Handle portal sensors
       else if (bd1 instanceof PortalModel && bd2 instanceof PlayerShadowModel) {
-        if (BuildConfig.DEBUG) System.out.println("portal detected: " + ((PortalModel) bd1).requiredCheckpoint);
+        if (BuildConfig.DEBUG)
+          System.out.println("portal detected: " + ((PortalModel) bd1).requiredCheckpoint);
 
         if (((PortalModel) bd1).isActivated()) {
-        setTarget(((PortalModel) bd1).getTarget());
-        setSpawnPoint(((PortalModel) bd1).getPlayerLoc());
+          setTarget(((PortalModel) bd1).getTarget());
+          setSpawnPoint(((PortalModel) bd1).getPlayerLoc());
         }
       } else if (bd2 instanceof PortalModel && bd1 instanceof PlayerShadowModel) {
-        if (BuildConfig.DEBUG) System.out.println("portal detected: " + ((PortalModel) bd2).requiredCheckpoint);
+        if (BuildConfig.DEBUG)
+          System.out.println("portal detected: " + ((PortalModel) bd2).requiredCheckpoint);
 
         if (((PortalModel) bd2).isActivated()) {
           setTarget(((PortalModel) bd2).getTarget());
@@ -278,9 +294,13 @@ public class PhysicsEngine implements ContactListener {
     return target;
   }
 
-  public void setSpawnPoint(Vector2 spawn) {this.spawnPoint = spawn;}
+  public void setSpawnPoint(Vector2 spawn) {
+    this.spawnPoint = spawn;
+  }
 
-  public Vector2 getSpawnPoint() {return spawnPoint;}
+  public Vector2 getSpawnPoint() {
+    return spawnPoint;
+  }
 
   public boolean hasTarget() {
     return this.target != null;
@@ -321,7 +341,7 @@ public class PhysicsEngine implements ContactListener {
 
   /** Handle collision between player body and boss */
   public void handleCollision(PlayerBodyModel pb, BossModel b, Contact c) {
-    if (BuildConfig.DEBUG) System.out.println("player invincible: "+pb.isInvincible());
+    if (BuildConfig.DEBUG) System.out.println("player invincible: " + pb.isInvincible());
 
     if (!pb.isInvincible() && !b.isDead()) {
       pb.decrementHealth();
@@ -339,7 +359,9 @@ public class PhysicsEngine implements ContactListener {
 
   /** Handle collision between player spear and boss */
   public void handleCollision(PlayerSpearModel ps, BossModel b) {
-    if(!b.isDead()){
+    if(!b.isDead() && !hasSpeared){
+      hasSpeared = true;
+
       b.decrementHealth(ps.getDamage());
       ps.getMainBody().setKnockedBack(b.getPosition(), b.getSpearKnockbackForce(), 15);
 

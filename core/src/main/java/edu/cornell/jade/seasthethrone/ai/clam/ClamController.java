@@ -91,6 +91,9 @@ abstract class ClamController implements BossController {
   }
 
   @Override
+  public int getMaxHealth() { return boss.getFullHealth(); }
+
+  @Override
   public void transferState(int storedHp) {
     boss.setHealth(storedHp);
   }

@@ -37,6 +37,9 @@ public interface BossController {
   /** Gets the health of the boss */
   public int getHealth();
 
+  /** Gets the max health of the boss */
+  public int getMaxHealth();
+
   /** Loads in the boss's previous state */
   public void transferState(int storedHp);
 }
