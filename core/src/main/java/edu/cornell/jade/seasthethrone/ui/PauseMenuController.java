@@ -8,7 +8,7 @@ public class PauseMenuController implements Controllable {
 
   private PauseMenu pauseMenu;
   private boolean toggle;
-  private final int PRESS_DELAY = 8;
+  private final int PRESS_DELAY = 10;
 
   /** Delay for player selecting an option on the pause menu */
   private int pressTimer;

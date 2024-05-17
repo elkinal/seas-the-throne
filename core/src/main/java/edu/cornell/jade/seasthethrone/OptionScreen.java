@@ -363,17 +363,21 @@ public class OptionScreen implements Screen {
           if (buttonMaps.get(aimAssistButton).equals("Off")) {
             buttonMaps.put(aimAssistButton, "On");
             aimAssistButton.setText("On");
+            currentControls.put("aimAssist", "On");
           } else {
             buttonMaps.put(aimAssistButton, "Off");
             aimAssistButton.setText("Off");
+            currentControls.put("aimAssist", "Off");
           }
         } else if (hoverIndex == 1) {
           if (buttonMaps.get(dashControlButton).equals("Movement")) {
             buttonMaps.put(dashControlButton, "Indicator");
             dashControlButton.setText("Indicator");
+            currentControls.put("dashControl", "Indicator");
           } else {
             buttonMaps.put(dashControlButton, "Movement");
             dashControlButton.setText("Movement");
+            currentControls.put("dashControl", "Movement");
           }
         } else if (hoverIndex == 4) {
           exit = true;
@@ -468,6 +472,7 @@ public class OptionScreen implements Screen {
     for (int i = 0; i < buttonMaps.size(); i++) {
       prefs.putString(buttonNames[i], currentControls.get(buttonNames[i]));
     }
+    System.out.println(prefs.get());
     prefs.flush();
   }
 
