@@ -297,6 +297,7 @@ public class GameplayController implements Screen {
             .setDeathDown(new Texture("player/player_death_down.png"))
             .setDeathLeft(new Texture("player/player_death_left.png"))
             .setDeathRight(new Texture("player/player_death_right.png"))
+            .setEmpty(new Texture("player/emptyfilmstrip.png"))
             .setFramesInAnimation(12)
             .setFramesInAnimationDash(5)
             .setFramesInAnimationDashDiagonal(5)

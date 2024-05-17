@@ -38,6 +38,7 @@ public class PlayerBodyModel extends CircleModel {
 
   /** Flag to be passed to the main model to stop dashing */
   private boolean stopDashing;
+  private boolean execute;
 
   /** Create new player body at position (x,y) */
   public PlayerBodyModel(float x, float y) {
@@ -119,6 +120,9 @@ public class PlayerBodyModel extends CircleModel {
 
   public boolean shouldStopDashing() { return stopDashing; }
   public void setStopDashing(boolean value) { stopDashing = value; }
+  public void startExecuting(){execute = true;}
+  public void stopExecuting(){execute = false;}
+  public boolean isExecute(){return execute;}
 
 
   @Override

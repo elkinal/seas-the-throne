@@ -98,6 +98,8 @@ public class PlayerModel extends ComplexModel implements Renderable {
   /** Player texture for dying right */
   private Texture dieRight;
 
+  /** Empty texture */
+  private Texture empty;
   /** FilmStrip cache object */
   public FilmStrip filmStrip;
 
@@ -118,6 +120,8 @@ public class PlayerModel extends ComplexModel implements Renderable {
 
   /** FilmStrip cache object for dying */
   public FilmStrip filmStripDeath;
+  /** Empty filmstrip for execution */
+  public FilmStrip emptyFilmstrip;
   /** Current FilmStrip */
   public FilmStrip currentStrip;
 
@@ -186,6 +190,8 @@ public class PlayerModel extends ComplexModel implements Renderable {
 
   /** Whether the player should always be animated regardless of game state. */
   private boolean alwaysAnimate;
+  /** Whether the player has finished executing a boss */
+  private boolean finishExecute;
 
   /**
    * {@link PlayerModel} constructor using an x and y coordinate.
@@ -238,6 +244,7 @@ public class PlayerModel extends ComplexModel implements Renderable {
     dieDown = builder.dieDown;
     dieLeft = builder.dieLeft;
     dieRight = builder.dieRight;
+    empty = builder.empty;
 
     shootCooldownLimit = builder.shootCooldownLimit;
     shootCounter = 0;
@@ -262,7 +269,9 @@ public class PlayerModel extends ComplexModel implements Renderable {
     filmStripIdle = new FilmStrip(idleDown, 1, 1);
     filmStripShoot = new FilmStrip(shootDown, 1, framesInAnimationShoot);
     filmStripDeath = new FilmStrip(dieDown, 1, framesInAnimationDeath);
+    emptyFilmstrip = new FilmStrip(dieDown, 1, 1);
     prevHealth = playerBody.getHealth();
+    finishExecute = false;
   }
 
   @Override
@@ -281,7 +290,10 @@ public class PlayerModel extends ComplexModel implements Renderable {
   @Override
   public void progressFrame() {
     currentStrip = getFilmStrip();
-    if (!isDashing()){
+    if (isExecuting()){
+      currentStrip.setTexture(empty);
+    }
+    else if (!isDashing()){
       switch (direction()) {
         case UP:
           if (isDead())
@@ -350,7 +362,10 @@ public class PlayerModel extends ComplexModel implements Renderable {
     currentStrip.setFrame(frame);
 
     // Only move to next frame of animation every frameDelay number of frames
-    if (isDead()) {
+    if (isExecuting()){
+      setFrameNumber(0);
+    }
+    else if (isDead()) {
       if (frameCounter % frameDelay == 0 && getFrameNumber() < getFramesInAnimation() - 1) {
         setFrameNumber(getFrameNumber() + 1);
       } else setFrameNumber(getFrameNumber());
@@ -394,8 +409,18 @@ public class PlayerModel extends ComplexModel implements Renderable {
   public boolean alwaysAnimate() {
     return alwaysAnimate;
   }
+  public boolean isExecuting(){return getBodyModel().isExecute();}
+  public void setFinishExecute(boolean execute){
+    finishExecute = execute;
+  }
+  public boolean isFinishExecute(){
+    return finishExecute;
+  }
 
   public FilmStrip getFilmStrip() {
+    if(isExecuting()){
+      return emptyFilmstrip;
+    }
     if (isDead()) return filmStripDeath;
     else if (isDashing) {
       if (faceDirection == Direction.DOWN || faceDirection == Direction.UP) return filmStripDashUD;
@@ -518,6 +543,9 @@ public class PlayerModel extends ComplexModel implements Renderable {
 
   public Texture getDieRight() {
     return dieRight;
+  }
+  public Texture getEmpty() {
+    return empty;
   }
 
   /**
@@ -882,6 +910,8 @@ public class PlayerModel extends ComplexModel implements Renderable {
 
     /** Player texture for dying right */
     private Texture dieRight;
+    /** Empty Texture */
+    private Texture empty;
 
     /** The number of frames to skip before animating the next player frame */
     private int frameDelay;
@@ -1061,6 +1091,10 @@ public class PlayerModel extends ComplexModel implements Renderable {
 
     public Builder setDeathDown(Texture texture) {
       dieDown = texture;
+      return this;
+    }
+    public Builder setEmpty(Texture texture){
+      empty = texture;
       return this;
     }
 
