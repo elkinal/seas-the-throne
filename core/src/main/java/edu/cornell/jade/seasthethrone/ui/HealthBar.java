@@ -1,8 +1,10 @@
 package edu.cornell.jade.seasthethrone.ui;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
+import edu.cornell.jade.seasthethrone.render.GameCanvas;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
@@ -16,13 +18,8 @@ public class HealthBar implements Renderable {
   /** Textures for each health state, ordered from lowest to highest hp */
   private Array<TextureRegion> textures;
 
-  /** Ratio of width/height for the health bar texture */
-  private float aspectRatio;
-
-  /** Scale of health bar on the screen */
-  private final float SCALE = 100f;
-
-  private float height;
+  /** Proportion of the screen width the health bar should take up */
+  private float SCALE = 0.2f;
 
   /** Creates a new Health Bar */
   public HealthBar() {
@@ -35,8 +32,6 @@ public class HealthBar implements Renderable {
     textures.add(new TextureRegion(new Texture("ui/health_v3_5.png")));
 
     this.texture = textures.get(textures.size - 1);
-    this.aspectRatio = (float) texture.getRegionWidth() / texture.getRegionHeight();
-    height = 0;
   }
 
   /** Updates the texture of this health bar to be zero (player is dead) */
@@ -55,10 +50,11 @@ public class HealthBar implements Renderable {
 
   @Override
   public void draw(RenderingEngine renderer) {
-    if (height == 0) {
-      height = renderer.getGameCanvas().getHeight();
-    }
-    renderer.getGameCanvas().drawUI(texture, 10f, 0.9f * height, SCALE * aspectRatio, SCALE);
+    GameCanvas canvas = renderer.getGameCanvas();
+    float drawScale = SCALE * ((float)renderer.getGameCanvas().getWidth()/texture.getRegionWidth());
+    float width = texture.getRegionWidth() * drawScale;
+    float height = texture.getRegionHeight() * drawScale;
+    canvas.drawUI(texture, 0.01f * canvas.getWidth(), 0.9f * canvas.getHeight(), width, height);
   }
 
   @Override

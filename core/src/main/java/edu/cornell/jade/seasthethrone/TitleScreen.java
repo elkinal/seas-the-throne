@@ -1,9 +1,11 @@
 package edu.cornell.jade.seasthethrone;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import edu.cornell.jade.seasthethrone.assets.AssetDirectory;
@@ -117,13 +119,25 @@ public class TitleScreen implements Screen, Controllable {
     canvas.draw(background, Color.WHITE, ox, oy, canvas.getWidth(), canvas.getHeight());
 
     // draw the logo
-    float scale = Math.min(1 / 2f, (float) canvas.getWidth() / logo.getWidth());
-    float width = logo.getWidth() * scale;
+    float scale = 0.4f * canvas.getHeight() / logo.getHeight();
     ox = -canvas.getWidth()/2f + 10f;
 
-    canvas.draw(logo, Color.WHITE, ox, 0, width, scale * logo.getHeight());
+    canvas.draw(logo, Color.WHITE, ox, 0, scale * logo.getWidth(), scale * logo.getHeight());
 
     // draw the menu
+    // NOTE: this is just a hardcoded magic number to get text scaling right
+    float fontScale = (float) canvas.getHeight() / 275;
+
+    FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Alagard.ttf"));
+    FreeTypeFontGenerator.FreeTypeFontParameter parameter =
+            new FreeTypeFontGenerator.FreeTypeFontParameter();
+
+    textFont = generator.generateFont(parameter);
+    textFont.setUseIntegerPositions(false);
+    textFont.getData().setScale(fontScale);
+    textFont.setColor(Color.WHITE);
+    generator.dispose();
+
     float y_offset = -canvas.getHeight()/15f;
     float x_offset =  canvas.getWidth()*(1/20f - 1/2f);
     float menuSpacing = canvas.getHeight() / 10f;
