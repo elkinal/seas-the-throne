@@ -44,6 +44,9 @@ public class LevelObject {
   // Checkpoint state
   public int checkpointID;
 
+  // NPC state
+  public String dialogue;
+
   public LevelObject() {}
 
   public LevelObject(float x, float y) {

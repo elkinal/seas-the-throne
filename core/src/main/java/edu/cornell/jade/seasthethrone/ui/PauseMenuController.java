@@ -80,7 +80,7 @@ public class PauseMenuController implements Controllable {
   private void options() {
     gameplayController.setOptions(true);
   }
-
+  
   /** Selects between menu options */
   @Override
   public void moveVertical(float movement) {

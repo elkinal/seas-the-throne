@@ -40,7 +40,7 @@
                  "value":1000
                 }],
          "type":"imagelayer",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -390,7 +390,24 @@
          "draworder":"topdown",
          "id":14,
          "name":"interactables",
-         "objects":[],
+         "objects":[
+                {
+                 "height":7.5,
+                 "id":391,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"healthpack"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":10,
+                 "x":463.980302827281,
+                 "y":319.846408950824
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -423,7 +440,25 @@
          "draworder":"topdown",
          "id":2,
          "name":"bosses",
-         "objects":[],
+         "objects":[
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":389,
+                 "name":"final",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":-1
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":469.66241878226,
+                 "y":475.678181977142
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -465,7 +500,7 @@
          "y":0
         }],
  "nextlayerid":17,
- "nextobjectid":389,
+ "nextobjectid":392,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

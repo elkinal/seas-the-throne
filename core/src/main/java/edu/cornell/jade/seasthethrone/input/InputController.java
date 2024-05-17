@@ -49,6 +49,9 @@ public class InputController {
   /** Preference file for the player */
   Preferences prefs;
 
+  /** Default cursor location for controllers */
+  Vector2 defaultLoc = new Vector2();
+
   /**
    * Returns true if the reset button was pressed.
    *
@@ -138,10 +141,9 @@ public class InputController {
     float vind = -xbox.getRightY();
 
     Vector2 location = obj.getLocation();
-    if (location != null) {
-      dashCoordCache.set(location.x + hind, location.y + vind);
-      obj.updateDirection(dashCoordCache);
-    }
+    if (location == null) location = defaultLoc;
+    dashCoordCache.set(location.x + hind, location.y + vind);
+    obj.updateDirection(dashCoordCache);
 
     // dashing
     switch (controllerPrimary) {

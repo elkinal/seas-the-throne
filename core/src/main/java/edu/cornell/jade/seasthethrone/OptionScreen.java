@@ -4,6 +4,7 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -34,7 +35,7 @@ public class OptionScreen implements Screen {
   private AssetDirectory internal;
 
   /** Background texture for start-up */
-  private Texture background;
+  private TextureRegion background;
 
   /** The game canvas */
   private GameCanvas canvas;
@@ -137,7 +138,7 @@ public class OptionScreen implements Screen {
     }
     hoverIndex = 0;
     moveCount = 0;
-
+    
     background = internal.getEntry("title:options_background", Texture.class);
     textFont = internal.getEntry("loading:alagard", BitmapFont.class);
     headingStyle = new Label.LabelStyle(textFont, Color.WHITE);

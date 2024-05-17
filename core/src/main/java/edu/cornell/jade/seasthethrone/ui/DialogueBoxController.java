@@ -9,11 +9,22 @@ public class DialogueBoxController implements Controllable {
   private DialogueBox dialogueBox;
   private boolean toggle;
 
-  private GameplayController gameplayController;
+  /** If the dialogue box is displayed and the controller should be reading input */
+  private boolean active;
 
   public DialogueBoxController(DialogueBox dialogueBox) {
+    this();
     this.dialogueBox = dialogueBox;
   }
+
+  public DialogueBoxController() {
+    toggle = false;
+    active = false;
+  }
+
+  public void setActive(boolean active) {this.active = active;}
+
+  public boolean isActive() {return active;}
 
   /** Sets the dialogue box */
   public void setDialogueBox(DialogueBox dialogueBox) {
@@ -25,24 +36,26 @@ public class DialogueBoxController implements Controllable {
     return dialogueBox;
   }
 
-  public void setGameplayController(GameplayController gameplayController) {
-    this.gameplayController = gameplayController;
-  }
-
   /** Hides the dialogue box */
   @Override
   public void pressPrimary() {
+    if (!active) return;
+
     dialogueBox.hide();
   }
 
   @Override
   public void pressPause() {
+    if (!active) return;
+
     dialogueBox.hide();
   }
 
   /** Selects between dialogue box pages */
   @Override
   public void moveHorizontal(float movement) {
+    if (!active) return;
+
     if (movement > 0 && !toggle) {
       dialogueBox.cycleLeft();
       toggle = true;

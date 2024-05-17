@@ -109,6 +109,29 @@ public class PlayerController implements Controllable {
     else this.toggleEasyMode = false;
   }
 
+  public PlayerController(PhysicsEngine physicsEngine) {
+    this.physicsEngine = physicsEngine;
+    // start dash indicator down
+    indicatorDirection = new Vector2(0, -1);
+    moveDirection = new Vector2();
+
+    Preferences prefs = Gdx.app.getPreferences("options");
+    String savedDashControl = prefs.getString("dashControl");
+    String savedEasyMode = prefs.getString("easyMode");
+
+    if (!savedDashControl.isEmpty()) this.isAimToDashMode = savedDashControl.equals("Indicator");
+    else this.isAimToDashMode = true;
+    this.dashToggleCounter = 0;
+
+    if (!savedEasyMode.isEmpty()) toggleEasyMode = savedEasyMode.equals("On");
+    else this.toggleEasyMode = false;
+    bulletBuilder = BulletModel.Builder.newInstance()
+            .setBaseTexture(new Texture("bullet/whitefish.png"))
+            .setType(BulletModel.Builder.Type.PLAYER);
+  }
+
+  public void setPlayer(PlayerModel player) {this.player = player;}
+
   /**
    * Returns true if the currently active player is terminated.
    *

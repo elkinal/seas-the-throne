@@ -154,7 +154,7 @@
     },
     "swordfish": {
       "idle": {
-        "file": "bosses/swordfish/side_idle.png"
+        "file": "bosses/swordfish/idle.png"
       },
       "front_idle": {
         "file": "bosses/swordfish/front_idle.png"
@@ -196,6 +196,31 @@
       },
       "death": {
         "file": "bosses/final/death.png"
+      }
+    },
+    "blueguy": {
+      "idle": {
+        "file": "npc/blueguy.png"
+      }
+    },
+    "drunkguy": {
+      "idle": {
+        "file": "npc/drunkguy.png"
+      }
+    },
+    "oldturtleguy": {
+      "idle": {
+        "file": "npc/oldturtleguy.png"
+      }
+    },
+    "redlady": {
+        "idle": {
+          "file": "npc/redlady.png"
+        }
+    },
+    "squidlady": {
+      "idle": {
+        "file": "npc/squidlady.png"
       }
     }
   },

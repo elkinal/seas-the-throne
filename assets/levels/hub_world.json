@@ -365,7 +365,29 @@
          "draworder":"topdown",
          "id":14,
          "name":"interactables",
-         "objects":[],
+         "objects":[
+                {
+                 "height":14.5,
+                 "id":390,
+                 "name":"npc\/drunkguy.png",
+                 "properties":[
+                        {
+                         "name":"dialogue",
+                         "type":"string",
+                         "value":"npc\/drunkguy_1.txt"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"npc"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":18.5,
+                 "x":447.75,
+                 "y":255.75
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -574,10 +596,76 @@
                  "width":6,
                  "x":405,
                  "y":282.833
+                }, 
+                {
+                 "height":5,
+                 "id":391,
+                 "name":"levels\/shortseagrasslobby_filmstrip.png",
+                 "properties":[
+                        {
+                         "name":"animated",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"framesInAnimation",
+                         "type":"int",
+                         "value":6
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":6,
+                 "x":470.666666666667,
+                 "y":302.5
+                }, 
+                {
+                 "height":5,
+                 "id":394,
+                 "name":"levels\/shortseagrasslobby_filmstrip.png",
+                 "properties":[
+                        {
+                         "name":"animated",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"framesInAnimation",
+                         "type":"int",
+                         "value":6
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":6,
+                 "x":361,
+                 "y":422.75
+                }, 
+                {
+                 "height":5,
+                 "id":395,
+                 "name":"levels\/shortseagrasslobby_filmstrip.png",
+                 "properties":[
+                        {
+                         "name":"animated",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"framesInAnimation",
+                         "type":"int",
+                         "value":6
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":6,
+                 "x":518.75,
+                 "y":415.5
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -617,8 +705,8 @@
                  "type":"",
                  "visible":true,
                  "width":20,
-                 "x":440,
-                 "y":387.160777430762
+                 "x":431,
+                 "y":397.494110764095
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -647,6 +735,11 @@
                          "value":225
                         }, 
                         {
+                         "name":"requiredCheckpoint",
+                         "type":"int",
+                         "value":-1
+                        }, 
+                        {
                          "name":"target",
                          "type":"string",
                          "value":"levels\/tutorial_map.json"
@@ -672,6 +765,11 @@
                          "name":"playerY",
                          "type":"float",
                          "value":200
+                        }, 
+                        {
+                         "name":"requiredCheckpoint",
+                         "type":"int",
+                         "value":-1
                         }, 
                         {
                          "name":"target",
@@ -884,7 +982,7 @@
          "y":0
         }],
  "nextlayerid":17,
- "nextobjectid":388,
+ "nextobjectid":396,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

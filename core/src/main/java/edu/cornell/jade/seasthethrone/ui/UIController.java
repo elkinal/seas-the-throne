@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import edu.cornell.jade.seasthethrone.GameplayController;
+import edu.cornell.jade.seasthethrone.InteractableController;
 import edu.cornell.jade.seasthethrone.PlayerController;
 import edu.cornell.jade.seasthethrone.ai.BossController;
 import edu.cornell.jade.seasthethrone.assets.AssetDirectory;
@@ -28,6 +29,9 @@ public class UIController {
 
   /** A reference to the pause menu */
   PauseMenuController pauseMenuController;
+
+  /** A reference to the interactable controller */
+  InteractableController interactController;
 
   /** A reference to the current boss that the player is facing */
   BossController boss;
@@ -72,6 +76,30 @@ public class UIController {
     uiModel = new UIModel(viewport.getScreenWidth(), viewport.getScreenHeight());
   }
 
+  public UIController (
+          PauseMenuController pauseMenuController,
+          RenderingEngine render,
+          GameCanvas canvas,
+          ScreenViewport view
+  ) {
+    this.pauseMenuController = pauseMenuController;
+
+    this.render = render;
+    viewport = view;
+    boss = null;
+    drawSave = false;
+
+    this.canvas = canvas;
+    uiModel = new UIModel(viewport.getScreenWidth(), viewport.getScreenHeight());
+  }
+
+  public void setPlayer(PlayerController player) {
+    this.player = player;
+  }
+  public void setInteractController(InteractableController ic) {
+    this.interactController = ic;
+  }
+
   public void gatherAssets(AssetDirectory assets) {
     this.messageFont = assets.getEntry("ui:alagard", BitmapFont.class);
   }
@@ -109,8 +137,11 @@ public class UIController {
       String message = "Game Saved!";
       canvas.drawTextUI(message, messageFont, canvas.getWidth() - 300, 100, true);
     }
-
     pauseMenuController.getPauseMenu().draw(render);
+
+    DialogueBox npcDialogue = interactController.getDialogueController().getDialogueBox();
+    if (npcDialogue != null) npcDialogue.draw(render);
+
     canvas.endUI();
   }
 
@@ -146,6 +177,6 @@ public class UIController {
 
   /** Clears all the UI elements */
   public void clear() {
-    uiModel.clear();
+    boss = null;
   }
 }

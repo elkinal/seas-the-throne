@@ -44,8 +44,10 @@ public class TitleScreen implements Screen, Controllable {
 
   public enum TitleSelection {
     PLAY(0, "Play"),
-    OPTIONS(1, "Options"),
-    QUIT(2, "Quit");
+
+    NEW_GAME(1, "New Game"),
+    OPTIONS(2, "Options"),
+    QUIT(3, "Quit");
 
     public final String optionName;
     public final int optionValue;
@@ -60,7 +62,7 @@ public class TitleScreen implements Screen, Controllable {
     }
 
     public TitleSelection cycleDown() {
-      return values()[(optionValue < 2 ? optionValue + 1 : 0)];
+      return values()[(optionValue < TitleSelection.values().length-1 ? optionValue + 1 : 0)];
     }
   }
 
@@ -129,15 +131,16 @@ public class TitleScreen implements Screen, Controllable {
     canvas.draw(background, Color.WHITE, ox, oy, canvas.getWidth(), canvas.getHeight());
 
     // draw the logo
-    float scale = Math.min(2 / 3f, (float) canvas.getWidth() / logo.getWidth());
+    float scale = Math.min(1 / 2f, (float) canvas.getWidth() / logo.getWidth());
     float width = logo.getWidth() * scale;
     ox = -canvas.getWidth() / 2f + 10f;
 
     canvas.draw(logo, Color.WHITE, ox, 0, width, scale * logo.getHeight());
 
     // draw the menu
-    float y_offset = -100f;
-    float x_offset = 50f - canvas.getWidth() / 2f;
+    float y_offset = -canvas.getHeight()/15f;
+    float x_offset =  canvas.getWidth()*(1/20f - 1/2f);
+    float menuSpacing = canvas.getHeight() / 10f;
     for (TitleSelection s : TitleSelection.values()) {
       if (selection == s) {
         canvas.drawText(s.optionName, textFont, x_offset, y_offset, Color.GOLDENROD);
@@ -146,7 +149,7 @@ public class TitleScreen implements Screen, Controllable {
         canvas.drawText(s.optionName, textFont, x_offset, y_offset, Color.WHITE);
       }
 
-      y_offset -= MENU_SPACING;
+      y_offset -= menuSpacing;
     }
     canvas.end();
   }
@@ -198,7 +201,10 @@ public class TitleScreen implements Screen, Controllable {
   public void show() {}
 
   @Override
-  public void resize(int i, int i1) {}
+  public void resize(int width, int height) {
+    viewport.update(width, height);
+    canvas.resize();
+  }
 
   @Override
   public void pause() {}
