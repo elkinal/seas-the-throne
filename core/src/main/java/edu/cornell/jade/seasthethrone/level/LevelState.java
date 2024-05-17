@@ -31,4 +31,8 @@ public class LevelState {
     return bossHps;
   }
 
+  public void clear() {
+    bossHps.clear();
+  }
+
 }

@@ -662,6 +662,8 @@ public class GameplayController implements Screen {
     if (BuildConfig.DEBUG) {
       System.out.println("Respawning");
     }
+    bossControllers.clear();
+    stateController.restart();
     setupGameplay();
 //    try {
 //      System.out.println("respawn loc " + stateController.getRespawnLoc());
