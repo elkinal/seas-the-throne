@@ -94,13 +94,13 @@ public class OptionScreen implements Screen {
   /** The hover index of the controller */
   private int hoverIndex;
 
-  /** Scroll cooldown */
-  private int cooldown = 10;
+  /** Scroll toggle cooldown (only move down one at a time): true if can scroll, false if not */
+  boolean canScroll;
 
-  private int keyCooldown = 5;
+  private final int KEY_DELAY = 5;
 
-  /** Int to check if cooldown is reached (prevents scrolling too fast) */
-  private int moveCount;
+  private final int CONTROL_DELAY = 10;
+
 
   /** Int to check if cooldown is reached (for clicks: faster cooldown than scroll) */
   private int clickCount;
@@ -142,8 +142,9 @@ public class OptionScreen implements Screen {
       xbox = Controllers.get().getXBoxControllers().get(0);
     }
     hoverIndex = 0;
-    moveCount = 0;
     clickCount = 0;
+    canScroll = true;
+
     background = internal.getEntry("options:background", Texture.class);
     textFont = internal.getEntry("loading:alagard", BitmapFont.class);
     headingStyle = new Label.LabelStyle(textFont, Color.WHITE);
@@ -329,7 +330,6 @@ public class OptionScreen implements Screen {
   }
 
   private void xboxListener() {
-    /** --------- scrolling to the option */
     // controller buttonstyles
     TextButton.TextButtonStyle style = new TextButton.TextButtonStyle(null, null, null, textFont);
     style.fontColor = Color.WHITE;
@@ -337,32 +337,41 @@ public class OptionScreen implements Screen {
         new TextButton.TextButtonStyle(null, null, null, textFont);
     hoverStyle.fontColor = blue;
 
+    /** ---- scrolling to the option */
     // go down
-    if (moveCount == 0) {
-      if (xbox.getLeftY() == 1 || xbox.getRightY() == 1) {
-        if (hoverIndex >= buttons.length - 1) {
-          hoverIndex = 0;
-        } else {
-          hoverIndex++;
-        }
+    if ((xbox.getLeftY() >= 1 || xbox.getRightY() >= 1) && canScroll) {
+      if (hoverIndex >= buttons.length - 1) {
+        hoverIndex = 0;
+      } else {
+        hoverIndex++;
       }
-
-      // go up
-      if (xbox.getLeftY() == -1 || xbox.getRightY() == -1) {
-        if (hoverIndex == 0) {
-          hoverIndex = buttons.length - 1;
-        } else {
-          hoverIndex--;
-        }
+      canScroll = false;
+    }
+    // go up
+    else if ((xbox.getLeftY() <= -1 || xbox.getRightY() <= -1) && canScroll) {
+      if (hoverIndex == 0) {
+        hoverIndex = buttons.length - 1;
+      } else {
+        hoverIndex--;
       }
+      canScroll = false;
+    }
+    // no movement
+    else if (xbox.getLeftY() <= 0.2
+        && xbox.getLeftY() >= -0.2
+        && xbox.getRightY() <= 0.2
+        && xbox.getRightY() >= -0.2) {
+      canScroll = true;
+    }
 
-      for (int i = 0; i < buttons.length; i++) {
-        buttons[i].setStyle(style);
-      }
+    for (int i = 0; i < buttons.length; i++) {
+      buttons[i].setStyle(style);
+    }
 
-      buttons[hoverIndex].setStyle(hoverStyle);
+    buttons[hoverIndex].setStyle(hoverStyle);
 
-      /** --------- selecting the option */
+    /** --------- selecting the option */
+    if (clickCount == 0) {
       if (xbox.getB()) {
         // 2 options only
         if (hoverIndex == 0) {
@@ -404,9 +413,9 @@ public class OptionScreen implements Screen {
       }
     }
 
-    if (moveCount >= cooldown) {
-      moveCount = 0;
-    } else moveCount++;
+    if (clickCount >= CONTROL_DELAY) {
+      clickCount = 0;
+    } else clickCount++;
   }
 
   /**
@@ -447,9 +456,10 @@ public class OptionScreen implements Screen {
         stage.getViewport().getWorldWidth(),
         stage.getViewport().getWorldHeight());
 
-    keyboardListener();
     if (xbox != null) {
       xboxListener();
+    } else {
+      keyboardListener();
     }
     stage.getBatch().end();
     canvas.end();
@@ -489,7 +499,6 @@ public class OptionScreen implements Screen {
    * <p>======================================================================
    */
   private void keyboardListener() {
-    /** --------- scrolling to the option */
     // controller buttonstyles
     TextButton.TextButtonStyle style = new TextButton.TextButtonStyle(null, null, null, textFont);
     style.fontColor = Color.WHITE;
@@ -497,37 +506,41 @@ public class OptionScreen implements Screen {
         new TextButton.TextButtonStyle(null, null, null, textFont);
     hoverStyle.fontColor = blue;
 
+    /** --------- scrolling to the option */
     // go down
-    if (moveCount == 0) {
-      System.out.println("hover index prior " + hoverIndex);
-      if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-        if (hoverIndex >= buttons.length - 1) {
-          hoverIndex = 0;
-        } else if (hoverIndex == 1 || hoverIndex == 2) {
-          hoverIndex = 4;
-        } else {
-          hoverIndex++;
-        }
-        System.out.println("hover index posterior " + hoverIndex);
+    if (Gdx.input.isKeyJustPressed(Input.Keys.S) && canScroll) {
+      if (hoverIndex >= buttons.length - 1) {
+        hoverIndex = 0;
+      } else if (hoverIndex == 1 || hoverIndex == 2) {
+        hoverIndex = 4;
+      } else {
+        hoverIndex++;
       }
-
-      // go up
-      if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-        if (hoverIndex == 0) {
-          hoverIndex = buttons.length - 1;
-        } else if (hoverIndex == 3 || hoverIndex == 4) {
-          hoverIndex = 1;
-        } else {
-          hoverIndex--;
-        }
-      }
-
-      for (int i = 0; i < buttons.length; i++) {
-        buttons[i].setStyle(style);
-      }
-
-      buttons[hoverIndex].setStyle(hoverStyle);
+      canScroll = false;
+      System.out.println("go down");
     }
+    // go up
+    else if (Gdx.input.isKeyJustPressed(Input.Keys.W) && canScroll) {
+      if (hoverIndex == 0) {
+        hoverIndex = buttons.length - 1;
+      } else if (hoverIndex == 3 || hoverIndex == 4) {
+        hoverIndex = 1;
+      } else {
+        hoverIndex--;
+      }
+      canScroll = false;
+      System.out.println("go up");
+    } else {
+      canScroll = true;
+      System.out.println("can scroll true");
+    }
+
+    for (int i = 0; i < buttons.length; i++) {
+      buttons[i].setStyle(style);
+    }
+
+    buttons[hoverIndex].setStyle(hoverStyle);
+
     /** selecting the option (can only select non controller settings) */
     if (clickCount == 0) {
       if (Gdx.input.isKeyPressed(Input.Keys.E) || Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
@@ -559,12 +572,7 @@ public class OptionScreen implements Screen {
         }
       }
     }
-
-    if (moveCount >= cooldown) {
-      moveCount = 0;
-    } else moveCount++;
-
-    if (clickCount >= keyCooldown) {
+    if (clickCount >= KEY_DELAY) {
       clickCount = 0;
     } else clickCount++;
   }
