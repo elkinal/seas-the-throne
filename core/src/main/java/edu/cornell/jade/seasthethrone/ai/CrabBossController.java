@@ -208,7 +208,6 @@ public class CrabBossController implements BossController {
         state = State.EXECUTED;
         player.setFinishExecute(true);
         player.getBodyModel().stopExecuting();
-        System.out.println("hahahaah");
       }
     } else if (boss.reachedHealthThreshold()) {
       state = State.THRESHOLD;

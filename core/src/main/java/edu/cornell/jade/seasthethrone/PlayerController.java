@@ -348,6 +348,9 @@ public class PlayerController implements Controllable {
     }
 
     setVelPercentages(hoff, voff);
+    if (isExecuting()){
+      setVelPercentages(0,0);
+    }
     player.setDirection(moveDirection);
     orientPlayer();
 
