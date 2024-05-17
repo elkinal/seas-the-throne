@@ -242,14 +242,14 @@ public class PhysicsEngine implements ContactListener {
         handleCollision((PlayerBulletModel) bd2, (BossModel) bd1);
       }
       // Handle obstacles
-      else if (bd1 instanceof BulletModel
-          && bd2 instanceof ObstacleModel
-          && !((BulletModel) bd1).isUnbreakable()) {
-        bd1.markRemoved(true);
-      } else if (bd2 instanceof BulletModel
-          && bd1 instanceof ObstacleModel
-          && !((BulletModel) bd2).isUnbreakable()) {
-        bd2.markRemoved(true);
+      else if (bd1 instanceof BulletModel && bd2 instanceof ObstacleModel) {
+        BulletModel b = (BulletModel) bd1;
+        if (!b.isUnbreakable() || (b.isUnbreakable() && !b.getLinearVelocity().isZero()) )
+          bd1.markRemoved(true);
+      } else if (bd2 instanceof BulletModel && bd1 instanceof ObstacleModel) {
+        BulletModel b = (BulletModel) bd2;
+        if (!b.isUnbreakable() || (b.isUnbreakable() && !b.getLinearVelocity().isZero()) )
+          bd2.markRemoved(true);
       }
       // Handle portal sensors
       else if (bd1 instanceof PortalModel && bd2 instanceof PlayerShadowModel) {

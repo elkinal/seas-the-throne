@@ -354,11 +354,11 @@ public class FinalBossController implements BossController {
         break;
       case S_DELAY_ROTATE_SPIRAL:
         unbreakableDelayRotateSpiralAttack.update(player.getX(), player.getY());
-        if (timer < 200) homingSpeedAttack.update(player.getX(), player.getY());
+        if (timer < 300) homingSpeedAttack.update(player.getX(), player.getY());
         timer -=1;
         break;
       case S_DELAY_SPEED_RING:
-        unbreakableDelaySpeedRingAttack.update(player.getX(), player.getY());
+        if (timer < 200) unbreakableDelaySpeedRingAttack.update(player.getX(), player.getY());
         oscRingAttack.update(player.getX(), player.getY());
         aimedSingleAttack.update(player.getX(), player.getY());
         timer -=1;
@@ -372,7 +372,7 @@ public class FinalBossController implements BossController {
         ringStack1Attack.update(player.getX(), player.getY());
         ringStack2Attack.update(player.getX(), player.getY());
         ringStack3Attack.update(player.getX(), player.getY());
-        denseRingAttack.update(player.getX(), player.getY());
+        if (timer < 400) denseRingAttack.update(player.getX(), player.getY());
         unbreakableAimedSingleAttack.update(player.getX(), player.getY());
         timer -=1;
         break;
