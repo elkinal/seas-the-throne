@@ -38,12 +38,11 @@ public class PauseMenuController implements Controllable {
   /** Clicks on a pause menu item */
   @Override
   public void pressInteract() {
-    if (!pauseMenu.isPaused())
-      return;
+    if (!pauseMenu.isPaused()) return;
     switch (pauseMenu.getSelection()) {
       case RESUME -> pauseMenu.setPaused(false);
       case RESTART -> restart();
-      case OPTIONS -> pauseMenu.getDialogueBox().show();
+      case OPTIONS -> options();
       case LEVEL_SELECT -> levelSelect();
       case QUIT -> gameplayController.setQuit(true);
     }
@@ -57,6 +56,10 @@ public class PauseMenuController implements Controllable {
   private void levelSelect() {
     gameplayController.setReturnToHub(true);
     pauseMenu.setPaused(false);
+  }
+
+  private void options() {
+    gameplayController.setOptions(true);
   }
 
   /** Selects between menu options */

@@ -17,7 +17,6 @@ import edu.cornell.jade.seasthethrone.render.GameCanvas;
 import edu.cornell.jade.seasthethrone.util.Controllers;
 import edu.cornell.jade.seasthethrone.util.ScreenListener;
 import edu.cornell.jade.seasthethrone.util.XBoxController;
-import org.w3c.dom.Text;
 
 import java.util.HashMap;
 
@@ -27,9 +26,11 @@ import java.util.HashMap;
  * <p>Keybindings: Keybindings are saved into a hashmap with key = action, value = keybind (string).
  * This hashmap will be saved in the save file (has default values which are there from beginning)
  * and will be loaded by InputController to get keybindings.
+ *
+ * <p>Based off code from Crested Gecko Studios' Bubblegum Bandit (2023)
  */
 public class OptionScreen implements Screen {
-  /** Internal assets for this title screen */
+  /** Internal assets for the options screen */
   private AssetDirectory internal;
 
   /** Background texture for start-up */
@@ -40,8 +41,6 @@ public class OptionScreen implements Screen {
 
   /** === Custom colors */
   private Color blue = new Color(90 / 255f, 148 / 255f, 156 / 255f, 1);
-
-  //  private Color coral = new Color(185 / 255f, 75 / 255f, 78 / 255f, 1);
 
   /** XBox Controller support */
   private XBoxController xbox;
@@ -61,21 +60,16 @@ public class OptionScreen implements Screen {
   /** Button for going back to previous screen */
   private TextButton backButton;
 
-  /** Button for toggling aim assist True = off, False = on */
+  /** Button for toggling aim assist */
   private TextButton aimAssistButton;
 
-  /**
-   * Button for setting dash direction as indicator or movement direction True = movement direction,
-   * False = indicator
-   */
+  /** Button for setting dash direction as indicator or movement direction */
   private TextButton dashControlButton;
 
-  /**
-   * Button for setting attack button (controller only) True = left trigger, False = right trigger
-   */
+  /** Button for setting attack button (controller only) */
   private TextButton attackButton;
 
-  /** Button for setting dash button (controller only) True = right trigger, False = left trigger */
+  /** Button for setting dash button (controller only) */
   private TextButton dashButton;
 
   /** Button for resetting settings to default */
@@ -99,7 +93,10 @@ public class OptionScreen implements Screen {
   /** The hover index of the controller */
   private int hoverIndex;
 
-  private int cooldown = 9;
+  /** Scroll cooldown */
+  private int cooldown = 10;
+
+  /** Int to check if cooldown is reached (prevents scrolling too fast) */
   private int moveCount;
 
   /** The screen listener to know when to exit screen */
@@ -114,7 +111,15 @@ public class OptionScreen implements Screen {
   /** Indicates screen should close (exit options page) */
   private boolean exit;
 
-  public OptionScreen(String file, GameCanvas canvas) {
+  /** Enum to see if option screen should exit to the title or game Default exit to title */
+  private int exitTo;
+
+  /**
+   * Creates a new Options screen
+   *
+   * @param exitCode the screen that the optionscreen should change to on exit
+   */
+  public OptionScreen(String file, GameCanvas canvas, int exitCode) {
     internal = new AssetDirectory(file);
     internal.loadAssets();
     internal.finishLoading();
@@ -129,6 +134,7 @@ public class OptionScreen implements Screen {
         new String[] {
           "aimAssist", "dashControl", "attackButton", "dashButton", "backButton", "resetButton"
         };
+    exitTo = exitCode;
 
     // initialize controller
     if (Controllers.get().getControllers().size > 0) {
@@ -150,14 +156,15 @@ public class OptionScreen implements Screen {
     controlsTable.setFillParent(true);
     stage.addActor(controlsTable);
 
-    setDefault();
     makeControls();
-    loadPrefs();
   }
 
   public void setViewport(FitViewport v) {
     stage.setViewport(v);
   }
+
+  //  public void setExit(int exitCode) {
+  //  }
 
   /** Makes the controls table and adds buttons/listeners to it. */
   private void makeControls() {
@@ -201,21 +208,21 @@ public class OptionScreen implements Screen {
     defaultSettings.put(attackButton, "LT");
     defaultSettings.put(dashButton, "RT");
 
-    // fill controls as default
-    buttonMaps.put(aimAssistButton, "Off");
-    currentControls.put("aimAssist", "Off");
-    buttonMaps.put(dashControlButton, "Movement");
-    currentControls.put("dashControl", "Movement");
-    buttonMaps.put(attackButton, "LT");
-    currentControls.put("attackButton", "LT");
-    buttonMaps.put(dashButton, "RT");
-    currentControls.put("dashButton", "RT");
+    // fill controls as preference, or default if prefs don't exist
+    buttonMaps.put(aimAssistButton, prefs.getString("aimAssist", "Off"));
+    currentControls.put("aimAssist", prefs.getString("aimAssist", "Off"));
+    buttonMaps.put(dashControlButton, prefs.getString("dashControl", "Movement"));
+    currentControls.put("dashControl", prefs.getString("dashControl", "Movement"));
+    buttonMaps.put(attackButton, prefs.getString("attackButton", "LT"));
+    currentControls.put("attackButton", prefs.getString("attackButton", "LT"));
+    buttonMaps.put(dashButton, prefs.getString("dashButton", "RT"));
+    currentControls.put("dashButton", prefs.getString("dashButton", "RT"));
 
     TextButton[] button =
         new TextButton[] {aimAssistButton, dashControlButton, attackButton, dashButton};
 
-    for (TextButton t : button) {
-      t.setText(defaultSettings.get(t));
+    for (int i = 0; i < button.length; i++) {
+      button[i].setText(currentControls.get(buttonNames[i]));
     }
 
     // back and reset buttons
@@ -355,6 +362,7 @@ public class OptionScreen implements Screen {
 
       /** --------- selecting the option */
       if (xbox.getB()) {
+        System.out.println("got B");
         // 2 options only
         if (hoverIndex == 0) {
           if (buttonMaps.get(aimAssistButton).equals("Off")) {
@@ -374,6 +382,7 @@ public class OptionScreen implements Screen {
           }
         } else if (hoverIndex == 4) {
           exit = true;
+          System.out.println("exit is true");
         } else if (hoverIndex == 5) {
           setDefault();
         }
@@ -408,8 +417,14 @@ public class OptionScreen implements Screen {
   }
 
   private void setDefault() {
+    // update button draw
     for (TextButton k : buttonMaps.keySet()) {
       k.setText(defaultSettings.get(k));
+    }
+
+    // update preferences
+    for (int i = 0; i < buttonMaps.size(); i++) {
+      currentControls.put(buttonNames[i], defaultSettings.get(buttons[i]));
     }
   }
 
@@ -443,13 +458,14 @@ public class OptionScreen implements Screen {
     stage.getViewport().apply();
   }
 
+  @Override
   public void render(float delta) {
     update();
     draw();
     stage.act(delta);
     if (exit) {
       saveOptions();
-      listener.exitScreen(this, 4);
+      listener.exitScreen(this, exitTo);
     }
   }
 
@@ -459,27 +475,11 @@ public class OptionScreen implements Screen {
       prefs.putString(buttonNames[i], currentControls.get(buttonNames[i]));
     }
     prefs.flush();
-    if (BuildConfig.DEBUG) {
-      System.out.println("Saved options: " + prefs.get());
-    }
-  }
-
-  /** Loads in option settings from the options preference file */
-  private void loadPrefs() {
-    String savedEasyMode = prefs.getString("easyMode");
-    String savedDashControl = prefs.getString("dashControl");
-    if (!savedEasyMode.isEmpty()) {
-      buttonMaps.put(aimAssistButton, savedEasyMode);
-      aimAssistButton.setText(savedEasyMode);
-    }
-    if (!savedDashControl.isEmpty()) {
-      buttonMaps.put(dashControlButton, savedDashControl);
-      dashControlButton.setText(savedDashControl);
-    }
   }
 
   @Override
   public void show() {
+    System.out.println("exit is false");
     exit = false;
   }
 
@@ -499,8 +499,8 @@ public class OptionScreen implements Screen {
   public void hide() {}
 
   @Override
-  public void dispose() {}
-
-  /** Options inputcontroller to see key up/down presses. */
-  public class OptionsInputController extends InputAdapter {}
+  public void dispose() {
+    xbox = null;
+    internal.dispose();
+  }
 }

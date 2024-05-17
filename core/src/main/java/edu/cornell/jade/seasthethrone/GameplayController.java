@@ -133,6 +133,9 @@ public class GameplayController implements Screen {
   /** If level select was clicked in the pause menu */
   private boolean returnToHub;
 
+  /** If options was clicked in the pause menu */
+  private boolean options;
+
   /** Temporary cache to sort physics renderables */
   private final Array<Model> objectCache = new Array<>();
 
@@ -183,6 +186,7 @@ public class GameplayController implements Screen {
     restart = false;
     quit = false;
     returnToHub = false;
+    options = false;
     saveTimer = 0;
 
     this.stateController = new StateController();
@@ -286,8 +290,8 @@ public class GameplayController implements Screen {
     // Load fish bullets builder
     fishBulletBuilder =
         BulletModel.Builder.newInstance()
-                .setBaseTexture(new Texture("bullet/whitefish.png"))
-                .setUnbreakableTexture(new Texture("bullet/urchinbullet.png"));
+            .setBaseTexture(new Texture("bullet/whitefish.png"))
+            .setUnbreakableTexture(new Texture("bullet/urchinbullet.png"));
     // Load bosses
     bossControllers.clear();
 
@@ -312,7 +316,7 @@ public class GameplayController implements Screen {
       // this number is in degrees
       String[] splitName = name.replaceAll("[^a-zA-Z_]", "").split("_");
       // Assuming that names are going to be of the format "_..._(boss)"
-      String assetName = splitName[splitName.length-1];
+      String assetName = splitName[splitName.length - 1];
 
       JsonValue bossInfo = assets.getEntry(assetName, JsonValue.class);
       var bossBuilder =
@@ -332,8 +336,9 @@ public class GameplayController implements Screen {
               .setAttackAnimation(new Texture("bosses/" + assetName + "/attack.png"))
               .setFrameDelay(12)
               .setRoomId(bossContainer.roomId);
-      if (name.contains("swordfish")){
-        bossBuilder.setShootDownAnimation(new Texture("bosses/" + assetName + "/shoot_vertical.png"))
+      if (name.contains("swordfish")) {
+        bossBuilder
+            .setShootDownAnimation(new Texture("bosses/" + assetName + "/shoot_vertical.png"))
             .setShootUpAnimation(new Texture("bosses/" + assetName + "/shoot_vertical_up.png"))
             .setShootRightAnimation(new Texture("bosses/" + assetName + "/shoot_side_right.png"))
             .setAttackDownAnimation(new Texture("bosses/" + assetName + "/attack_vertical.png"))
@@ -343,11 +348,12 @@ public class GameplayController implements Screen {
             .setGetHitUpAnimation(new Texture("bosses/" + assetName + "/up_hurt.png"))
             .setGetHitRightAnimation(new Texture("bosses/" + assetName + "/right_hurt.png"));
       }
-      if (name.contains("final")){
+      if (name.contains("final")) {
         bossBuilder.setSpawnAnimation(new Texture("bosses/" + assetName + "/spawn.png"));
       }
       BossModel boss = bossBuilder.build();
-      BossController bossController = bossBuilder.buildController(boss, player, fishBulletBuilder, physicsEngine);
+      BossController bossController =
+          bossBuilder.buildController(boss, player, fishBulletBuilder, physicsEngine);
       renderEngine.addRenderable(boss);
       physicsEngine.addObject(boss);
       bossControllers.add(bossController);
@@ -522,14 +528,14 @@ public class GameplayController implements Screen {
       changeLevelFlag = true;
       // Save the current level state
       stateController.updateState(level.name, playerController, bossControllers);
-      listener.exitScreen(this, GDXRoot.EXIT_SWAP);
+      listener.exitScreen(this, GDXRoot.EXIT_GAME);
     }
 
     // Render frame
     renderEngine.clear();
     renderEngine.addRenderable(level.getBackground());
     renderEngine.addRenderable(uiController.getAmmoBar());
-    for (EnemyHealthBar e : uiController.getEnemies()){
+    for (EnemyHealthBar e : uiController.getEnemies()) {
       renderEngine.addRenderable(e);
     }
 
@@ -567,7 +573,6 @@ public class GameplayController implements Screen {
           physicsEngine.getWorld(), renderEngine.getViewport().getCamera().combined);
     }
 
-
     if (returnToHub) {
       physicsEngine.setTarget("levels/hub_world.json");
       returnToHub = false;
@@ -575,13 +580,16 @@ public class GameplayController implements Screen {
 
     if (restart) restart();
 
-
     if (quit) {
       if (BuildConfig.DEBUG) {
         System.out.println("Exiting game");
       }
       quitGame();
-//      listener.exitScreen(this, 4);
+    }
+
+    if (options) {
+      toOptions();
+      options = false;
     }
 
     // Draw reset and debug screen for wins and losses
@@ -646,13 +654,13 @@ public class GameplayController implements Screen {
       System.out.println("Respawning");
     }
     setupGameplay();
-//    try {
-//      System.out.println("respawn loc " + stateController.getRespawnLoc());
-//      playerController.setPlayerLocation(stateController.getRespawnLoc());
-//    } catch (NullPointerException e) {
-//      System.out.println("respawn to default loc");
-//      playerController.setPlayerLocation(level.getPlayerLoc());
-//    }
+    //    try {
+    //      System.out.println("respawn loc " + stateController.getRespawnLoc());
+    //      playerController.setPlayerLocation(stateController.getRespawnLoc());
+    //    } catch (NullPointerException e) {
+    //      System.out.println("respawn to default loc");
+    //      playerController.setPlayerLocation(level.getPlayerLoc());
+    //    }
     restart = false;
   }
 
@@ -705,6 +713,10 @@ public class GameplayController implements Screen {
     this.returnToHub = returnToHub;
   }
 
+  public void setOptions(boolean options) {
+    this.options = options;
+  }
+
   public void setRestart(boolean restart) {
     this.restart = restart;
   }
@@ -721,6 +733,15 @@ public class GameplayController implements Screen {
     dispose();
     ((GDXRoot) listener).dispose();
     System.exit(0);
+  }
+
+  private void toOptions() {
+    listener.exitScreen(this, 3);
+  }
+
+  public void getPrefs() {
+    inputController.getPrefs();
+    playerController.getPrefs();
   }
 
   public void pause() {

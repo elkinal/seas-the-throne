@@ -64,8 +64,8 @@ public class PlayerController implements Controllable {
   int dashToggleCounter;
 
   /**
-   * The vector direction of the player indicator NOTE: this vector will always
-   * be normalized, and nonzero
+   * The vector direction of the player indicator NOTE: this vector will always be normalized, and
+   * nonzero
    */
   Vector2 indicatorDirection;
 
@@ -75,6 +75,9 @@ public class PlayerController implements Controllable {
   /** Bullet model builder */
   BulletModel.Builder bulletBuilder;
 
+  /** Preferences for the player */
+  Preferences prefs;
+
   /** Constructs PlayerController */
   public PlayerController(PhysicsEngine physicsEngine, PlayerModel player) {
     this.physicsEngine = physicsEngine;
@@ -82,21 +85,28 @@ public class PlayerController implements Controllable {
     // start dash indicator down
     indicatorDirection = new Vector2(0, -1);
     moveDirection = new Vector2();
+    prefs = Gdx.app.getPreferences("options");
+    getPrefs();
 
-    Preferences prefs = Gdx.app.getPreferences("options");
+    bulletBuilder =
+        BulletModel.Builder.newInstance()
+            .setBaseTexture(new Texture("bullet/whitefish.png"))
+            .setType(BulletModel.Builder.Type.PLAYER);
+  }
+
+  public void getPrefs() {
     String savedDashControl = prefs.getString("dashControl");
     String savedEasyMode = prefs.getString("easyMode");
 
-    if (!savedDashControl.isEmpty()) this.isAimToDashMode = savedDashControl.equals("Indicator");
-    else this.isAimToDashMode = true;
+    if (!savedDashControl.isEmpty()) {
+      this.isAimToDashMode = savedDashControl.equals("Indicator");
+    } else {
+      this.isAimToDashMode = true;
+    }
     this.dashToggleCounter = 0;
 
     if (!savedEasyMode.isEmpty()) toggleEasyMode = savedEasyMode.equals("On");
     else this.toggleEasyMode = false;
-    bulletBuilder = BulletModel.Builder.newInstance()
-            .setBaseTexture(new Texture("bullet/whitefish.png"))
-            .setType(BulletModel.Builder.Type.PLAYER);
-
   }
 
   /**
@@ -125,7 +135,9 @@ public class PlayerController implements Controllable {
     else shootingPressed = true;
   }
 
-  public void pressTertiary() { assistedShootingPressed = true; }
+  public void pressTertiary() {
+    assistedShootingPressed = true;
+  }
 
   public void pressInteract() {
     interactPressed = true;
@@ -145,12 +157,10 @@ public class PlayerController implements Controllable {
   /**
    * Move in given direction based on offset
    *
-   * @param x a value from -1 to 1 representing the percentage of movement speed
-   *          to be at in the
-   *          given direction
-   * @param y a value from -1 to 1 representing the percentage of movement speed
-   *          to be at in the
-   *          given direction
+   * @param x a value from -1 to 1 representing the percentage of movement speed to be at in the
+   *     given direction
+   * @param y a value from -1 to 1 representing the percentage of movement speed to be at in the
+   *     given direction
    */
   public void setVelPercentages(float x, float y) {
     float mag = (float) Math.sqrt(x * x + y * y);
@@ -175,7 +185,8 @@ public class PlayerController implements Controllable {
       } else {
         // If not moving in a direction, just dash in currently facing direction
         if (xNorm == 0 && yNorm == 0) {
-          moveDirection.set(-MathUtils.sin(player.getAngle()) * moveSpeed,
+          moveDirection.set(
+              -MathUtils.sin(player.getAngle()) * moveSpeed,
               MathUtils.cos(player.getAngle()) * moveSpeed);
         } else {
           moveDirection.set(xNorm * moveSpeed * mag, yNorm * moveSpeed * mag);
@@ -225,8 +236,7 @@ public class PlayerController implements Controllable {
   }
 
   /**
-   * Transforms the player and mouse positions to the same, centered coordinate
-   * system and sets this
+   * Transforms the player and mouse positions to the same, centered coordinate system and sets this
    * player's dash direction to the vector difference of those positions.
    *
    * @param mousePos the position of the mouse in screen coordinates
@@ -247,9 +257,9 @@ public class PlayerController implements Controllable {
   }
 
   /**
-   * Sets the {@link #indicatorDirection} field to point in the direction
-   * of the nearest enemy, if the indicator is already close enough.
-   * If no enemies are near the player, this method will not do anything.
+   * Sets the {@link #indicatorDirection} field to point in the direction of the nearest enemy, if
+   * the indicator is already close enough. If no enemies are near the player, this method will not
+   * do anything.
    */
   public void pointToClosestEnemy() {
     EnemyModel closestEnemy = null;
@@ -258,7 +268,7 @@ public class PlayerController implements Controllable {
       if (!b.isActive()) continue;
       float dist = player.getPosition().dst(b.getPosition());
       if (dist < closestDist) {
-        //Check if the angle is "close enough"
+        // Check if the angle is "close enough"
         float angle = b.getPosition().sub(player.getPosition()).angleDeg(indicatorDirection);
         if (angle > 45 && angle < 315) continue;
         closestEnemy = b;
@@ -275,7 +285,9 @@ public class PlayerController implements Controllable {
     return player.getPosition();
   }
 
-  public Vector2 getShadowLocation() { return player.getShadowModel().getPosition(); }
+  public Vector2 getShadowLocation() {
+    return player.getShadowModel().getPosition();
+  }
 
   /**
    * Set the player to always animate.
@@ -294,7 +306,9 @@ public class PlayerController implements Controllable {
     return player.getHealth();
   }
 
-  public void setHealth(int hp) {player.setHealth(hp);}
+  public void setHealth(int hp) {
+    player.setHealth(hp);
+  }
 
   public int getAmmo() {
     return player.getSpearModel().getNumSpeared();
@@ -312,7 +326,9 @@ public class PlayerController implements Controllable {
       player.updateSpear(moveDirection.nor());
     }
 
-    if (assistedShootingPressed) { pointToClosestEnemy(); }
+    if (assistedShootingPressed) {
+      pointToClosestEnemy();
+    }
     player.updateDashIndicator(indicatorDirection);
 
     if (dashingPressed && player.canDash()) {
