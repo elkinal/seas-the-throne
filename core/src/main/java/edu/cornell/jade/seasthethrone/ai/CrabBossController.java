@@ -166,6 +166,10 @@ public class CrabBossController implements BossController {
   public void remove() {
     boss.markRemoved(true);
   }
+  @Override
+  public boolean isTerminated(){
+    return isDead() && boss.isFinishExecute();
+  }
 
   /** Cleans up this boss's attack pattern */
   public void dispose() {
@@ -201,6 +205,10 @@ public class CrabBossController implements BossController {
     if (boss.isDead()) {
       dispose();
       state = State.DEAD;
+      if (boss.isFinishExecute()){
+        player.setFinishExecute(true);
+        player.getBodyModel().stopExecuting();
+      }
     } else if (boss.reachedHealthThreshold()) {
       state = State.THRESHOLD;
       timer = rand.nextInt(480, 600);
@@ -272,15 +280,13 @@ public class CrabBossController implements BossController {
           timer = rand.nextInt(300, 600);
         }
         break;
-      case DEAD:
-        break;
     }
   }
 
   /** Performs actions based on the controller state */
   private void act() {
     switch (state) {
-      case IDLE, DEAD, MOVE:
+      case IDLE, MOVE:
         break;
       case THRESHOLD:
         ringStack1Attack.update(player.getX(), player.getY());
