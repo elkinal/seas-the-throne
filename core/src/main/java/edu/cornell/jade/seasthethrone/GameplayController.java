@@ -673,7 +673,7 @@ public class GameplayController implements Screen {
       System.out.println("Respawning");
     }
     bossControllers.clear();
-    stateController.restart();
+    stateController.reset();
     setupGameplay();
 //    try {
 //      System.out.println("respawn loc " + stateController.getRespawnLoc());
@@ -743,13 +743,14 @@ public class GameplayController implements Screen {
   }
 
   private void quitGame() {
-    loadedLevels.clear();
-    renderEngine.clear();
-    bossControllers.clear();
-    assets.dispose();
-    dispose();
-    ((GDXRoot) listener).dispose();
-    System.exit(0);
+    this.quit = false;
+    this.level = loadedLevels.get("levels/hub_world.json");
+    stateController.setCurrentLevel(level.name);
+    stateController.setRespawnLevel(level.name);
+    stateController.setRespawnLoc(level.getPlayerLoc());
+    stateController.clear();
+    restart();
+    listener.exitScreen(this, 4);
   }
 
   public void pause() {
