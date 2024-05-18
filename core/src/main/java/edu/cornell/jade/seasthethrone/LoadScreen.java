@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import edu.cornell.jade.seasthethrone.assets.AssetDirectory;
+import edu.cornell.jade.seasthethrone.audio.SoundPlayer;
 import edu.cornell.jade.seasthethrone.render.GameCanvas;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 import edu.cornell.jade.seasthethrone.util.ScreenListener;
@@ -59,6 +60,9 @@ public class LoadScreen implements Screen {
 
   private int exitCode;
 
+  /** object to play music and sound effects */
+  private SoundPlayer soundPlayer;
+
   /** Stored canvas width to know when the canvas is resized */
   private int storedWidth;
 
@@ -71,12 +75,13 @@ public class LoadScreen implements Screen {
    * @param file  	The asset directory to load in the background
    * @param canvas 	The game canvas to draw to
    */
-  public LoadScreen(String file, GameCanvas canvas, int exitCode) {
-    this(file, canvas, DEFAULT_BUDGET, exitCode);
+  public LoadScreen(String file, GameCanvas canvas, int exitCode, SoundPlayer soundPlayer) {
+    this(file, canvas, DEFAULT_BUDGET, exitCode, soundPlayer);
   }
 
-  public LoadScreen(String file, GameCanvas canvas, int millis, int exitCode) {
+  public LoadScreen(String file, GameCanvas canvas, int millis, int exitCode, SoundPlayer soundPlayer) {
     this.canvas = canvas;
+    this.soundPlayer = soundPlayer;
     storedWidth = canvas.getWidth();
     fontScale = (float) canvas.getHeight() / 200;
     this.viewport = new ScreenViewport();
@@ -102,6 +107,16 @@ public class LoadScreen implements Screen {
 
     assets = new AssetDirectory( file );
     active = true;
+  }
+
+  /** Sets exit code of the loading screen
+   *
+   * @param exitCode exit code returns when the screen changes
+   */
+  public void resetWithExitCode(int exitCode) {
+    this.exitCode = exitCode;
+    this.active = true;
+    this.timer = 0;
   }
 
   /**

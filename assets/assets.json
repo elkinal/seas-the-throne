@@ -238,5 +238,20 @@
     "head": "bosses/head/head.json",
     "swordfish": "bosses/swordfish/swordfish.json",
     "final": "bosses/final/final.json"
+  },
+  "soundfx": {
+    "dash": "sounds/dash.wav",
+    "door-close": "sounds/door-close.wav",
+    "enemy-hit": "sounds/enemy-hit.wav",
+    "get-ammo": "sounds/get-ammo.wav",
+    "hit-enemy-with-spear": "sounds/hit-enemy-with-spear.wav",
+    "interact": "sounds/interact.wav",
+    "shoot-bullet": "sounds/shoot-bullet.wav",
+    "player-hit": "sounds/player-hit.wav",
+    "menu-change": "sounds/menu-change.wav",
+    "menu-select": "sounds/menu-select.wav"
+  },
+  "samples": {
+    "music": "sounds/music.ogg"
   }
 }

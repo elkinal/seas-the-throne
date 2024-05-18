@@ -25,6 +25,7 @@ mac() {
        --platform mac \
        --jdk $JDK \
        --useZgcIfSupportedOs \
+       --vmargs "XstartOnFirstThread" \
        --executable seasthethrone-mac \
        --classpath lwjgl3/build/lib/seasthethrone-1.0.0.jar \
        --mainclass edu.cornell.jade.seasthethrone.lwjgl3.Lwjgl3Launcher \

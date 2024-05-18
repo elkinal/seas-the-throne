@@ -3,6 +3,7 @@ package edu.cornell.jade.seasthethrone.gamemodel.gate;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
 import edu.cornell.jade.seasthethrone.ai.BossController;
+import edu.cornell.jade.seasthethrone.audio.SoundPlayer;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.level.LevelObject;
 import edu.cornell.jade.seasthethrone.model.ComplexModel;
@@ -32,7 +33,10 @@ public class GateModel extends ComplexModel implements Renderable {
     /** World scale to render gate texture */
     private final float WORLD_SCALE;
 
-    public GateModel(LevelObject obs, float worldScale) {
+    private final SoundPlayer soundPlayer;
+
+    public GateModel(LevelObject obs, float worldScale, SoundPlayer soundPlayer) {
+        this.soundPlayer = soundPlayer;
         this.WORLD_SCALE = worldScale;
         this.raised = false;
         this.permaLower = false;
@@ -120,6 +124,9 @@ public class GateModel extends ComplexModel implements Renderable {
     /** Sets this gate to active and sets all its walls to active in the physics engine */
     public void activate() {
         if (!permaLower) {
+            if (this.raised != true)
+              soundPlayer.playSoundEffect("door-close");
+
             this.raised = true;
 
             for (GateWallModel wall : walls) {
@@ -137,6 +144,8 @@ public class GateModel extends ComplexModel implements Renderable {
 
     /** Resets all sensors and walls to inactive */
     public void deactivate(){
+        if (raised)
+          soundPlayer.playSoundEffect("door-close");
         raised = false;
         for (GateWallModel wall : walls) {
             wall.setActive(false);

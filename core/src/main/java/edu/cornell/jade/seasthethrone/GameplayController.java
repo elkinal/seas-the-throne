@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.viewport.*;
 
 import edu.cornell.jade.seasthethrone.ai.BossController;
 import edu.cornell.jade.seasthethrone.assets.AssetDirectory;
+import edu.cornell.jade.seasthethrone.audio.SoundPlayer;
 import edu.cornell.jade.seasthethrone.gamemodel.*;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.gate.GateModel;
@@ -50,6 +51,9 @@ public class GameplayController implements Screen {
 
   /** State defining the current logic of the GameplayController. */
   private GameState gameState;
+
+  /** Player for sound effects and music */
+  private SoundPlayer soundPlayer;
 
   /** Assets to be loaded */
   private AssetDirectory assets;
@@ -129,6 +133,9 @@ public class GameplayController implements Screen {
   /** If level select was clicked in the pause menu */
   private boolean returnToHub;
 
+  /** If level select was clicked in the pause menu */
+  private boolean options;
+
   /** Temporary cache to sort physics renderables */
   private final Array<Model> objectCache = new Array<>();
 
@@ -156,16 +163,20 @@ public class GameplayController implements Screen {
   /** Listener that will update the player mode when we are done */
   private ScreenListener listener;
 
-  protected GameplayController() {
+  /**
+   * Constructs a <code>GameplayController</code>
+   *
+   * @param soundPlayer player for sound effects and music
+   */
+  protected GameplayController(SoundPlayer soundPlayer, AssetDirectory assets) {
     gameState = GameState.PLAY;
+
+    this.soundPlayer = soundPlayer;
+    this.assets = assets;
 
     loadedLevels = new HashMap<>();
     this.level = new Level("levels/hub_world.json");
     loadedLevels.put(level.name, level);
-
-    this.assets = new AssetDirectory("assets.json");
-    assets.loadAssets();
-    assets.finishLoading();
 
     worldHeight = level.DEFAULT_HEIGHT;
     worldWidth = level.DEFAULT_WIDTH;
@@ -179,6 +190,7 @@ public class GameplayController implements Screen {
     restart = false;
     quit = false;
     returnToHub = false;
+    options = false;
     saveTimer = 0;
 
     this.stateController = new StateController();
@@ -189,25 +201,16 @@ public class GameplayController implements Screen {
     this.bossControllers = new Array<>();
     this.inputController = new InputController(viewport);
     this.portalController = new PortalController();
-    this.interactController = new InteractableController();
+    this.interactController = new InteractableController(soundPlayer);
     inputController.add(interactController);
     inputController.add(interactController.getDialogueController());
     this.renderEngine = new RenderingEngine(worldWidth, worldHeight, viewport, worldScale);
-
-////     Initialize physics engine
-//    World world = new World(new Vector2(0, 0), false);
-//    physicsEngine = new PhysicsEngine(bounds, world);
 
     // Load UI
     PauseMenu pauseMenu = new PauseMenu(viewport);
     PauseMenuController pauseMenuController = new PauseMenuController(pauseMenu);
     pauseMenuController.setGameplayController(this);
     inputController.add(pauseMenuController);
-
-////     Initlize controllers
-//    playerController = new PlayerController(physicsEngine);
-//    inputController.add(playerController);
-//    interactController.setPlayerController(playerController);
 
     // Initialize pause controller
     pauseController = new PauseController(renderEngine);
@@ -216,15 +219,10 @@ public class GameplayController implements Screen {
     DialogueBoxController pauseMenuDialogueBoxController = pauseMenu.getDialogueBoxController();
     inputController.add(pauseMenuDialogueBoxController);
     uiController =
-            new UIController(
-                    pauseMenuController,
-                    renderEngine,
-                    renderEngine.getGameCanvas(),
-                    uiViewport);
+        new UIController(
+            pauseMenuController, renderEngine, renderEngine.getGameCanvas(), uiViewport);
     uiController.setInteractController(interactController);
     uiController.gatherAssets(assets);
-
-    setupGameplay();
   }
 
   public void show() {
@@ -254,7 +252,7 @@ public class GameplayController implements Screen {
 
     // Initialize physics engine
     World world = new World(new Vector2(0, 0), false);
-    physicsEngine = new PhysicsEngine(bounds, world);
+    physicsEngine = new PhysicsEngine(bounds, world, soundPlayer);
 
     gameState = GameState.PLAY;
 
@@ -308,9 +306,10 @@ public class GameplayController implements Screen {
             .setMoveSpeed(12f)
             .setCooldownLimit(10)
             .setShootCooldownLimit(20)
+            .setSoundPlayer(soundPlayer)
             .build();
 
-//    playerController.setPlayer(player);
+    //    playerController.setPlayer(player);
     // Initlize controllers
     playerController = new PlayerController(physicsEngine, player);
     inputController.add(playerController);
@@ -353,7 +352,7 @@ public class GameplayController implements Screen {
       // this number is in degrees
       String[] splitName = name.replaceAll("[^a-zA-Z_]", "").split("_");
       // Assuming that names are going to be of the format "_..._(boss)"
-      String assetName = splitName[splitName.length-1];
+      String assetName = splitName[splitName.length - 1];
 
       JsonValue bossInfo = assets.getEntry(assetName, JsonValue.class);
       var bossBuilder =
@@ -374,8 +373,9 @@ public class GameplayController implements Screen {
               .setIdleAnimation(new Texture("bosses/" + assetName + "/idle.png"))
               .setFrameDelay(12)
               .setRoomId(bossContainer.roomId);
-      if (name.contains("swordfish")){
-        bossBuilder.setShootDownAnimation(new Texture("bosses/" + assetName + "/shoot_vertical.png"))
+      if (name.contains("swordfish")) {
+        bossBuilder
+            .setShootDownAnimation(new Texture("bosses/" + assetName + "/shoot_vertical.png"))
             .setShootUpAnimation(new Texture("bosses/" + assetName + "/shoot_vertical_up.png"))
             .setShootRightAnimation(new Texture("bosses/" + assetName + "/shoot_side_right.png"))
             .setAttackDownAnimation(new Texture("bosses/" + assetName + "/attack_vertical.png"))
@@ -385,23 +385,26 @@ public class GameplayController implements Screen {
             .setGetHitUpAnimation(new Texture("bosses/" + assetName + "/up_hurt.png"))
             .setGetHitRightAnimation(new Texture("bosses/" + assetName + "/right_hurt.png"));
       }
-      if (name.contains("final")){
-        bossBuilder.setTransformAnimation(new Texture("bosses/" + assetName + "/transform.png"))
+      if (name.contains("final")) {
+        bossBuilder
+            .setTransformAnimation(new Texture("bosses/" + assetName + "/transform.png"))
             .setFinalAttackAnimation(new Texture("bosses/" + assetName + "/final_attack.png"))
             .setFinalShootAnimation(new Texture("bosses/" + assetName + "/final_shoot.png"))
             .setFinalGetHitAnimation(new Texture("bosses/" + assetName + "/final_hurt.png"))
             .setCatchBreathAnimation(new Texture("bosses/" + assetName + "/catch_breath.png"))
             .setTerminatedAnimation(new Texture("bosses/" + assetName + "/terminated.png"));
       }
-      if (name.contains("crab")){
+      if (name.contains("crab")) {
         bossBuilder.setTerminatedAnimation(new Texture("bosses/" + assetName + "/terminated.png"));
       }
-      if (name.contains("shark")){
-        bossBuilder.setGetHitUpAnimation(new Texture("bosses/" + assetName + "/up_hurt.png"))
+      if (name.contains("shark")) {
+        bossBuilder
+            .setGetHitUpAnimation(new Texture("bosses/" + assetName + "/up_hurt.png"))
             .setIdleUpAnimation(new Texture("bosses/" + assetName + "/up_idle.png"));
       }
       BossModel boss = bossBuilder.build();
-      BossController bossController = bossBuilder.buildController(boss, player, fishBulletBuilder, physicsEngine);
+      BossController bossController =
+          bossBuilder.buildController(boss, player, fishBulletBuilder, physicsEngine);
       renderEngine.addRenderable(boss);
       physicsEngine.addObject(boss);
       bossControllers.add(bossController);
@@ -428,7 +431,7 @@ public class GameplayController implements Screen {
     // Load gates
     for (LevelObject gate : layers.get("gates")) {
       int roomId = gate.roomId;
-      GateModel model = new GateModel(gate, level.WORLD_SCALE);
+      GateModel model = new GateModel(gate, level.WORLD_SCALE, soundPlayer);
       for (BossController bc : bossControllers) {
         if (bc.getBoss().getRoomId() == roomId) {
           model.addBoss(bc.getBoss());
@@ -564,7 +567,7 @@ public class GameplayController implements Screen {
     renderEngine.clear();
     renderEngine.addRenderable(level.getBackground());
     renderEngine.addRenderable(uiController.getAmmoBar());
-    for (EnemyHealthBar e : uiController.getEnemies()){
+    for (EnemyHealthBar e : uiController.getEnemies()) {
       renderEngine.addRenderable(e);
     }
 
@@ -614,7 +617,11 @@ public class GameplayController implements Screen {
         System.out.println("Exiting game");
       }
       quitGame();
-//      listener.exitScreen(this, 4);
+    }
+
+    if (options) {
+      toOptions();
+      options = false;
     }
 
     // Draw reset and debug screen for wins and losses
@@ -672,16 +679,17 @@ public class GameplayController implements Screen {
     if (BuildConfig.DEBUG) {
       System.out.println("Respawning");
     }
+    soundPlayer.replaceCurrentMusic("music");
     bossControllers.clear();
     stateController.reset();
     setupGameplay();
-//    try {
-//      System.out.println("respawn loc " + stateController.getRespawnLoc());
-//      playerController.setPlayerLocation(stateController.getRespawnLoc());
-//    } catch (NullPointerException e) {
-//      System.out.println("respawn to default loc");
-//      playerController.setPlayerLocation(level.getPlayerLoc());
-//    }
+    //    try {
+    //      System.out.println("respawn loc " + stateController.getRespawnLoc());
+    //      playerController.setPlayerLocation(stateController.getRespawnLoc());
+    //    } catch (NullPointerException e) {
+    //      System.out.println("respawn to default loc");
+    //      playerController.setPlayerLocation(level.getPlayerLoc());
+    //    }
     restart = false;
   }
 
@@ -734,6 +742,10 @@ public class GameplayController implements Screen {
     this.returnToHub = returnToHub;
   }
 
+  public void setOptions(boolean options) {
+    this.options = options;
+  }
+
   public void setRestart(boolean restart) {
     this.restart = restart;
   }
@@ -743,14 +755,22 @@ public class GameplayController implements Screen {
   }
 
   private void quitGame() {
-    this.quit = false;
-    this.level = loadedLevels.get("levels/hub_world.json");
-    stateController.setCurrentLevel(level.name);
-    stateController.setRespawnLevel(level.name);
-    stateController.setRespawnLoc(level.getPlayerLoc());
-    stateController.clear();
-    restart();
-    listener.exitScreen(this, 4);
+    loadedLevels.clear();
+    renderEngine.clear();
+    bossControllers.clear();
+    assets.dispose();
+    dispose();
+    ((GDXRoot) listener).dispose();
+    System.exit(0);
+  }
+
+  private void toOptions() {
+    listener.exitScreen(this, 3);
+  }
+
+  public void getPrefs() {
+    inputController.getPrefs();
+    playerController.getPrefs();
   }
 
   public void pause() {
@@ -766,13 +786,13 @@ public class GameplayController implements Screen {
   }
 
   public void dispose() {
-//    playerController.setPlayer(null);
+    //    playerController.setPlayer(null);
     bossControllers.clear();
     uiController.clear();
-//    renderEngine.clear();
+    //    renderEngine.clear();
     interactController.dispose();
     portalController.dispose();
-    if (physicsEngine!=null) physicsEngine.dispose();
+    if (physicsEngine != null) physicsEngine.dispose();
   }
 
   public boolean allBossesDefeated() {

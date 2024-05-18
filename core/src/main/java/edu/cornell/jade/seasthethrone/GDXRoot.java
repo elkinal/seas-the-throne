@@ -3,24 +3,23 @@ package edu.cornell.jade.seasthethrone;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import edu.cornell.jade.seasthethrone.input.InputController;
 import edu.cornell.jade.seasthethrone.render.GameCanvas;
 import edu.cornell.jade.seasthethrone.util.ScreenListener;
 import edu.cornell.jade.seasthethrone.assets.AssetDirectory;
+import edu.cornell.jade.seasthethrone.audio.SoundPlayer;
 
 public class GDXRoot extends Game implements ScreenListener {
-  private static final int MIN_LOAD_TIME = 100;
+  private static final int MIN_LOAD_TIME = 1;
   public static final int EXIT_SWAP = 1;
-  public static final int EXIT_MAIN = 2;
+
+  /** Exit to go to pause screen */
+  public static final int EXIT_PAUSE = 2;
 
   /** Exit to go to options */
   public static final int EXIT_OPTIONS = 3;
 
   /** Exit to go to title screen */
   public static final int EXIT_TITLE = 4;
-
-  public static final int EXIT_QUIT = 0;
 
   /** The game screen */
   private GameplayController controller;
@@ -40,26 +39,29 @@ public class GDXRoot extends Game implements ScreenListener {
   private boolean loadSave;
 
   /** AssetManager to load game assets (textures, sounds, etc.) */
-  AssetDirectory directory;
+  private AssetDirectory directory;
+
+  /** Plays sounds */
+  private SoundPlayer soundPlayer;
 
   @Override
   public void create() {
+    soundPlayer = new SoundPlayer();
+
     canvas = new GameCanvas();
 
-    loading = new LoadScreen("assets.json", canvas, MIN_LOAD_TIME, 1);
+    loading = new LoadScreen("assets.json", canvas, MIN_LOAD_TIME, 1, soundPlayer);
+    loading.resetWithExitCode(EXIT_TITLE);
     loading.setScreenListener(this);
 
-    controller = new GameplayController();
-    controller.setScreenListener(this);
-
-    menus = new MenuController(canvas);
+    menus = new MenuController(canvas, soundPlayer);
     menus.setScreenListener(this);
 
-    options = new OptionScreen("loading.json", canvas);
+    options = new OptionScreen("loading.json", canvas, soundPlayer);
     options.setViewport(new FitViewport(canvas.getWidth(), canvas.getHeight()));
     options.setScreenListener(this);
 
-    setScreen(menus);
+    setScreen(loading);
   }
 
   @Override
@@ -87,69 +89,70 @@ public class GDXRoot extends Game implements ScreenListener {
    */
   @Override
   public void exitScreen(Screen screen, int exitCode) {
+    soundPlayer.stopMusic();
+
     // ------- title screen exits
-    // to loading (game)
+    // title to loading (to game)
     if (screen instanceof TitleScreen && exitCode == EXIT_SWAP) {
-      loading = new LoadScreen("assets.json", canvas, MIN_LOAD_TIME, EXIT_SWAP);
+      loading.resetWithExitCode(EXIT_SWAP);
       loading.setScreenListener(this);
       setScreen(loading);
     }
 
-    // to loading (options)
+    // title to options
     if (screen instanceof TitleScreen && exitCode == EXIT_OPTIONS) {
-      loading = new LoadScreen("assets.json", canvas, MIN_LOAD_TIME, EXIT_OPTIONS);
-      loading.setScreenListener(this);
-      setScreen(loading);
+      options.setExit(EXIT_TITLE);
+      setScreen(options);
     }
 
     // ------- loading screen exits
-    // to options menu
-    if (screen == loading && exitCode == EXIT_OPTIONS) {
-      setScreen(options);
-      loading.dispose();
-      loading = null;
-    }
-
-    // to title
+    // to loading (to title)
     if (screen == loading && exitCode == EXIT_TITLE) {
+      // this means this is the first load, i.e. we just started the game
+      if (!soundPlayer.populated()) {
+        soundPlayer.populate(loading.getAssets());
+        controller = new GameplayController(soundPlayer, loading.getAssets());
+        controller.setupGameplay();
+        controller.setScreenListener(this);
+      }
+
       setScreen(menus);
-      loading.dispose();
-      loading = null;
     }
 
-    // to game (from start screen)
+    // from loading to game (from start screen)
     if (screen == loading && exitCode == EXIT_SWAP) {
+      soundPlayer.replaceCurrentMusic("music");
       setScreen(controller);
-      controller.setAssets(loading.getAssets());
       if (shouldLoadSave()) {
         controller.loadState();
         loadSave = false;
       }
-      loading.dispose();
-      loading = null;
     }
 
     // ----- options screen exits
-    // to loading (to title)
+    // options to title
     if (screen == options && exitCode == EXIT_TITLE) {
-      loading = new LoadScreen("assets.json", canvas, MIN_LOAD_TIME, EXIT_TITLE);
-      loading.setScreenListener(this);
-      setScreen(loading);
+      controller.getPrefs();
+      setScreen(menus);
+    }
+
+    // options to pause menu (in game)
+    if (screen == options && exitCode == EXIT_PAUSE) {
+      controller.getPrefs();
+      setScreen(controller);
     }
 
     // ---- game screen exits
-    // exit from game
+    // game to hub world
     if (screen == controller && exitCode == EXIT_SWAP) {
-      loading = new LoadScreen("assets.json", canvas, MIN_LOAD_TIME, EXIT_SWAP);
+      loading.resetWithExitCode(EXIT_SWAP);
       loading.setScreenListener(this);
       setScreen(loading);
     }
-
-    // to title
-    if (screen == controller && exitCode == EXIT_TITLE) {
-      loading = new LoadScreen("loading.json", canvas, MIN_LOAD_TIME, EXIT_TITLE);
-      loading.setScreenListener(this);
-      setScreen(loading);
+    // game to options
+    if (screen == controller && exitCode == EXIT_OPTIONS) {
+      options.setExit(EXIT_PAUSE);
+      setScreen(options);
     }
   }
 
@@ -157,8 +160,7 @@ public class GDXRoot extends Game implements ScreenListener {
     this.loadSave = loadSave;
   }
 
-  public boolean shouldLoadSave() {return loadSave;}
-
-
-
+  public boolean shouldLoadSave() {
+    return loadSave;
+  }
 }

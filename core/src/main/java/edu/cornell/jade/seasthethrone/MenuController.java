@@ -2,6 +2,8 @@ package edu.cornell.jade.seasthethrone;
 
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+
+import edu.cornell.jade.seasthethrone.audio.SoundPlayer;
 import edu.cornell.jade.seasthethrone.input.InputController;
 import edu.cornell.jade.seasthethrone.render.GameCanvas;
 import edu.cornell.jade.seasthethrone.util.ScreenListener;
@@ -15,11 +17,14 @@ public class MenuController implements Screen {
 
   private ScreenListener listener;
 
+  private SoundPlayer soundPlayer;
 
-  public MenuController(GameCanvas canvas) {
+
+  public MenuController(GameCanvas canvas, SoundPlayer soundPlayer) {
+    this.soundPlayer = soundPlayer;
     viewport = new ScreenViewport();
     inputController = new InputController(viewport);
-    titleScreen = new TitleScreen("loading.json", canvas, viewport);
+    titleScreen = new TitleScreen("loading.json", canvas, viewport, soundPlayer);
 
     inputController.add(titleScreen);
 
