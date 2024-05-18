@@ -80,7 +80,7 @@ public class BossModel extends EnemyModel implements Renderable {
   protected int deathCount;
 
   /** Execute animation countdown */
-  private int executeCount;
+  int executeCount;
 
   /** Whether the boss should continue being animated. */
   private boolean shouldUpdate;
@@ -104,6 +104,8 @@ public class BossModel extends EnemyModel implements Renderable {
 
   /** If the player is in the room as the boss */
   private boolean inRoom;
+  /** If the player finish executing the boss*/
+  boolean finishExecute;
 
   /**
    * {@link BossModel} constructor using an x and y coordinate.
@@ -149,6 +151,7 @@ public class BossModel extends EnemyModel implements Renderable {
     isExecute = false;
     color = Color.WHITE;
     inRoom = roomId == -1;
+    finishExecute = false;
 
     //Hack so that the chasing jellies dont shove you past walls
     setBodyType(BodyDef.BodyType.DynamicBody);
@@ -203,8 +206,7 @@ public class BossModel extends EnemyModel implements Renderable {
   public void progressFrame() {
     int frame = getFrameNumber();
     if (isDead()) {
-      if (isExecute) filmStrip = deathAnimation;
-      else filmStrip = falloverAnimation;
+      filmStrip = falloverAnimation;
     } else if (isHit()) {
       filmStrip = getHitAnimation;
     } else {
@@ -345,9 +347,12 @@ public class BossModel extends EnemyModel implements Renderable {
 
   /** Lets the player execute the boss */
   public void executeBoss() {
-    setFrameNumber(0);
-    executeCount = frameDelay * deathAnimation.getSize();
-    isExecute = true;
+  }
+  public boolean isFinishExecute(){
+    return finishExecute;
+  }
+  public boolean isExecute(){
+    return isExecute;
   }
 
   /** Lets the boss attack */
@@ -394,11 +399,14 @@ public class BossModel extends EnemyModel implements Renderable {
     private FilmStrip shootDownAnimation;
     private FilmStrip getHitRightAnimation;
     private FilmStrip getHitDownAnimation;
-    private FilmStrip getHitUpAnimation;
+    FilmStrip getHitUpAnimation;
     FilmStrip transformAnimation;
     FilmStrip finalAttackAnimation;
     FilmStrip finalGetHitAnimation;
     FilmStrip finalShootAnimation;
+    FilmStrip catchBreathAnimation;
+    FilmStrip terminatedAnimation;
+    FilmStrip idleUpAnimation;
 
 
     /** The number of frames between animation updates */
@@ -487,6 +495,9 @@ public class BossModel extends EnemyModel implements Renderable {
     public Builder setDeathAnimation(Texture texture) {
       int width = texture.getWidth();
       deathAnimation = new FilmStrip(texture, 1, width / frameSize);
+      if (type.equals("crab")) {
+        deathAnimation = new FilmStrip(texture, 1, 18);
+      }
       return this;
     }
 
@@ -560,8 +571,21 @@ public class BossModel extends EnemyModel implements Renderable {
       finalShootAnimation = new FilmStrip(texture, 1, width / frameSize);
       return this;
     }
-
-
+    public Builder setCatchBreathAnimation (Texture texture){
+      int width = texture.getWidth();
+      catchBreathAnimation = new FilmStrip(texture, 1, width / frameSize);
+      return this;
+    }
+    public Builder setTerminatedAnimation (Texture texture){
+      int width = texture.getWidth();
+      terminatedAnimation = new FilmStrip(texture, 1, 1);
+      return this;
+    }
+    public Builder setIdleUpAnimation(Texture texture){
+      int width = texture.getWidth();
+      idleUpAnimation = new FilmStrip(texture, 1, 1);
+      return this;
+    }
 
     public Builder setFrameDelay(int frameDelay) {
       this.frameDelay = frameDelay;
@@ -593,6 +617,10 @@ public class BossModel extends EnemyModel implements Renderable {
         return new SwordfishBossModel(this);
       } else if (type.contains("final")){
         return new FinalBossModel(this);
+      } else if (type.contains("crab")) {
+        return new CrabBossModel(this);
+      } else if (type.contains("shark")) {
+        return new SharkBossModel(this);
       } else {
         // Other bosses don't need specific functionality
         return new BossModel(this);

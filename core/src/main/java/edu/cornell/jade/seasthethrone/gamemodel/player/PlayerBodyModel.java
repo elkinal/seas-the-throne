@@ -14,6 +14,8 @@ public class PlayerBodyModel extends CircleModel {
 
   /** Number of iFrames of the player on hit */
   private static int HIT_IFRAMES = 60;
+  /** Number of frames for heal */
+  private static int HEAL_FRAMES = 60;
 
   /** Number of health points the player has */
   private int health;
@@ -36,8 +38,11 @@ public class PlayerBodyModel extends CircleModel {
   /** The counter for the time the player is hit */
   private float hitCounter;
 
+  /** The counter for the time the player is healed */
+  private float healCounter;
   /** Flag to be passed to the main model to stop dashing */
   private boolean stopDashing;
+  private boolean execute;
 
   /** Create new player body at position (x,y) */
   public PlayerBodyModel(float x, float y) {
@@ -47,6 +52,7 @@ public class PlayerBodyModel extends CircleModel {
     knockbackTime = 0;
     justKnocked = false;
     hitCounter = 0;
+    healCounter = 0;
   }
 
 
@@ -71,6 +77,8 @@ public class PlayerBodyModel extends CircleModel {
 
   /** Returns if the player is in iFrames & was hit */
   public boolean isHit() { return hitCounter > 0; }
+  /** Returns whether the player is healing */
+  public boolean isHeal() { return healCounter > 0;}
 
   /** Returns if the player is stunned (during iframes) */
   public boolean isKnockedBack() {
@@ -116,9 +124,16 @@ public class PlayerBodyModel extends CircleModel {
   public void setHit(int time) {
     hitCounter = time;
   }
+  /** Sets the player in heal status for short period of time */
+  public void setHeal(){
+    healCounter = HEAL_FRAMES;
+  }
 
   public boolean shouldStopDashing() { return stopDashing; }
   public void setStopDashing(boolean value) { stopDashing = value; }
+  public void startExecuting(){execute = true;}
+  public void stopExecuting(){execute = false;}
+  public boolean isExecute(){return execute;}
 
 
   @Override
@@ -128,6 +143,9 @@ public class PlayerBodyModel extends CircleModel {
     }
     if (isHit()) {
       hitCounter -= 1;
+    }
+    if (isHeal()) {
+      healCounter -= 1;
     }
     knockbackTime = Math.max(0, knockbackTime - 1);
   }

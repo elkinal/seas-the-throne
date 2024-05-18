@@ -305,7 +305,7 @@ public class InputController {
       obj.pressPause();
     }
 
-    resetPressed = mainInputsXbox();
+    resetPressed = xbox.getB();
 
     // movement
     float hoff = xbox.getLeftX();
@@ -327,7 +327,7 @@ public class InputController {
   private void readKeyboard(Controllable obj) {
     float hoff = 0;
     float voff = 0;
-    resetPressed = mainInputsKeyboard();
+    resetPressed = (Gdx.input.isKeyPressed(Input.Keys.ENTER) || Gdx.input.isKeyPressed(Input.Keys.E));
 
     if (Gdx.input.isKeyPressed(Input.Keys.D)) {
       hoff += 1;

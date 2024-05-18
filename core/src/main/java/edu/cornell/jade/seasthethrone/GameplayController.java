@@ -300,6 +300,7 @@ public class GameplayController implements Screen {
             .setDeathDown(new Texture("player/player_death_down.png"))
             .setDeathLeft(new Texture("player/player_death_left.png"))
             .setDeathRight(new Texture("player/player_death_right.png"))
+            .setEmpty(new Texture("player/emptyfilmstrip.png"))
             .setFramesInAnimation(12)
             .setFramesInAnimationDash(5)
             .setFramesInAnimationDashDiagonal(5)
@@ -393,7 +394,16 @@ public class GameplayController implements Screen {
             .setTransformAnimation(new Texture("bosses/" + assetName + "/transform.png"))
             .setFinalAttackAnimation(new Texture("bosses/" + assetName + "/final_attack.png"))
             .setFinalShootAnimation(new Texture("bosses/" + assetName + "/final_shoot.png"))
-            .setFinalGetHitAnimation(new Texture("bosses/" + assetName + "/final_hurt.png"));
+            .setFinalGetHitAnimation(new Texture("bosses/" + assetName + "/final_hurt.png"))
+            .setCatchBreathAnimation(new Texture("bosses/" + assetName + "/catch_breath.png"))
+            .setTerminatedAnimation(new Texture("bosses/" + assetName + "/terminated.png"));
+      }
+      if (name.contains("crab")){
+        bossBuilder.setTerminatedAnimation(new Texture("bosses/" + assetName + "/terminated.png"));
+      }
+      if (name.contains("shark")){
+        bossBuilder.setGetHitUpAnimation(new Texture("bosses/" + assetName + "/up_hurt.png"))
+            .setIdleUpAnimation(new Texture("bosses/" + assetName + "/up_idle.png"));
       }
       BossModel boss = bossBuilder.build();
       BossController bossController =
@@ -801,7 +811,7 @@ public class GameplayController implements Screen {
   }
 
   public boolean allBossesDefeated() {
-    for (BossController bc : bossControllers) if (!bc.isDead()) return false;
+    for (BossController bc : bossControllers) if (!bc.isTerminated()) return false;
     return true;
   }
 
