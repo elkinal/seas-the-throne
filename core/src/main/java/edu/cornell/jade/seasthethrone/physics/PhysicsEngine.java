@@ -368,12 +368,10 @@ public class PhysicsEngine implements ContactListener {
 
   /** Handle collision between player spear and boss */
   public void handleCollision(PlayerSpearModel ps, BossModel b) {
-    if(!b.isDead() && !hasSpeared && ps.isSpearExtended()){
-      System.out.println(ps.getPosition() + " " + b.getPosition());
+    if(!b.isDead() && !hasSpeared){
       hasSpeared = true;
 
       b.decrementHealth(ps.getDamage());
-      System.out.println("SPEAR" + " " + ps.isActive());
       ps.getMainBody().setKnockedBack(b.getPosition(), b.getSpearKnockbackForce(), 15);
 
       // Disable spear collision again so it doesn't double count
