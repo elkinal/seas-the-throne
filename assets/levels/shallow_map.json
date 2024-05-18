@@ -20183,6 +20183,28 @@
                  "width":119.123191908675,
                  "x":821.522701074629,
                  "y":1200.69240038692
+                }, 
+                {
+                 "height":74.4922,
+                 "id":1149,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":-1
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":18.6345,
+                 "x":2577.34941666667,
+                 "y":1384.08723333333
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -20734,6 +20756,24 @@
                  "width":20,
                  "x":1012.02315410342,
                  "y":1330.00137209502
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":1148,
+                 "name":"chasing_jelly",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":-1
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":2213,
+                 "y":1547
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -20884,7 +20924,7 @@
          "y":0
         }],
  "nextlayerid":16,
- "nextobjectid":1147,
+ "nextobjectid":1150,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

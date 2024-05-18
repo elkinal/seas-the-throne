@@ -149,7 +149,7 @@ public class InputController {
       obj.toggleDashMode();
     }
 
-    resetPressed = xbox.getY();
+    resetPressed = mainInputsXbox();
 
     // movement
     float hoff = xbox.getLeftX();
@@ -171,7 +171,7 @@ public class InputController {
   private void readKeyboard(Controllable obj) {
     float hoff = 0;
     float voff = 0;
-    resetPressed = Gdx.input.isKeyPressed(Input.Keys.R);
+    resetPressed = mainInputsKeyboard();
 
     if (Gdx.input.isKeyPressed(Input.Keys.D)) {
       hoff += 1;
@@ -227,5 +227,19 @@ public class InputController {
     if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
       obj.pressTertiary();
     }
+  }
+
+  private boolean mainInputsKeyboard() {
+    return Gdx.input.isKeyPressed(Input.Keys.E)
+            || Gdx.input.isKeyPressed(Input.Keys.ENTER)
+            || Gdx.input.isButtonPressed(Input.Buttons.LEFT)
+            || Gdx.input.isKeyPressed(Input.Keys.SPACE);
+  }
+
+  private boolean mainInputsXbox() {
+    return xbox.getX()
+        || xbox.getY()
+        || xbox.getA()
+        || xbox.getB();
   }
 }

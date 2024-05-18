@@ -613,6 +613,7 @@ public class GameplayController implements Screen {
         restart = true;
         pauseController.continueGame();
       } else {
+        uiController.drawGameOver();
         renderEngine.drawGameState(gameState);
       }
     }
