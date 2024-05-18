@@ -1322,8 +1322,30 @@
                  "y":405.417
                 }, 
                 {
-                 "height":7.5,
+                 "height":14.5,
                  "id":365,
+                 "name":"npc\/squidlady.png",
+                 "properties":[
+                        {
+                         "name":"dialogue",
+                         "type":"string",
+                         "value":"npc\/squidlady_2.txt"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"npc"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":18.5,
+                 "x":1730.25,
+                 "y":1373.25
+                }, 
+                {
+                 "height":7.5,
+                 "id":366,
                  "name":"",
                  "properties":[
                         {
@@ -1335,8 +1357,25 @@
                  "type":"",
                  "visible":true,
                  "width":10,
-                 "x":957.977453905218,
-                 "y":586.067577150682
+                 "x":1775,
+                 "y":1462.91666666667
+                }, 
+                {
+                 "height":7.5,
+                 "id":367,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"healthpack"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":10,
+                 "x":954.734013452105,
+                 "y":596.156719244395
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -2024,7 +2063,7 @@
                 {
                  "height":20,
                  "id":262,
-                 "name":"levels\/portal.png",
+                 "name":"",
                  "properties":[
                         {
                          "name":"playerX",
@@ -2109,7 +2148,7 @@
          "y":0
         }],
  "nextlayerid":16,
- "nextobjectid":367,
+ "nextobjectid":368,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

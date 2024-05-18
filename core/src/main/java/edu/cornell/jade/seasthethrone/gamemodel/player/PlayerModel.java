@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
+
+import edu.cornell.jade.seasthethrone.audio.SoundPlayer;
 import edu.cornell.jade.seasthethrone.model.ComplexModel;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
@@ -25,6 +27,9 @@ public class PlayerModel extends ComplexModel implements Renderable {
   private int framesInAnimationDashDiagonal;
   private int framesInAnimationShoot;
   private int framesInAnimationDeath;
+
+  /** Sound player for player sound effects */
+  private SoundPlayer soundPlayer;
 
   /** Previous frame health */
   private int prevHealth;
@@ -200,6 +205,8 @@ public class PlayerModel extends ComplexModel implements Renderable {
    */
   public PlayerModel(Builder builder) {
     super(builder.x, builder.y);
+
+    this.soundPlayer = builder.soundPlayer;
 
     cooldownCounter = 0;
     cooldownLimit = builder.cooldownLimit;
@@ -635,6 +642,8 @@ public class PlayerModel extends ComplexModel implements Renderable {
     animationFrame = 0;
     dashCounter = dashLength;
     getBodyModel().setInvincible(dashLength);
+
+    soundPlayer.playSoundEffect("dash");
   }
 
   /** Set dashing to false */
@@ -660,6 +669,7 @@ public class PlayerModel extends ComplexModel implements Renderable {
 
   /** Sets the player to shooting */
   public void startShooting() {
+    soundPlayer.playSoundEffect("shoot-bullet");
     isShooting = true;
     shootCounter = shootCooldownLimit;
     animationFrame = 0;
@@ -935,6 +945,8 @@ public class PlayerModel extends ComplexModel implements Renderable {
     /** Scaling factor for player movement */
     private float moveSpeed;
 
+    private SoundPlayer soundPlayer;
+
     public static Builder newInstance() {
       return new Builder();
     }
@@ -1127,6 +1139,11 @@ public class PlayerModel extends ComplexModel implements Renderable {
 
     public Builder setMoveSpeed(float moveSpeed) {
       this.moveSpeed = moveSpeed;
+      return this;
+    }
+
+    public Builder setSoundPlayer(SoundPlayer soundPlayer) {
+      this.soundPlayer = soundPlayer;
       return this;
     }
 

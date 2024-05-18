@@ -12,7 +12,7 @@ package edu.cornell.jade.seasthethrone.assets;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectMap;
-import edu.cornell.jade.seasthethrone.audio.MusicQueue;
+import edu.cornell.gdiac.audio.MusicQueue;
 
 /**
  * This class parses a JSON entry into a {@link MusicQueue}.

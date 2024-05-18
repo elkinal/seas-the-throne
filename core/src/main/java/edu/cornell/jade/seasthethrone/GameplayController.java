@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.viewport.*;
 
 import edu.cornell.jade.seasthethrone.ai.BossController;
 import edu.cornell.jade.seasthethrone.assets.AssetDirectory;
+import edu.cornell.jade.seasthethrone.audio.SoundPlayer;
 import edu.cornell.jade.seasthethrone.gamemodel.*;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.gate.GateModel;
@@ -50,6 +51,9 @@ public class GameplayController implements Screen {
 
   /** State defining the current logic of the GameplayController. */
   private GameState gameState;
+
+  /** Player for sound effects and music */
+  private SoundPlayer soundPlayer;
 
   /** Assets to be loaded */
   private AssetDirectory assets;
@@ -159,16 +163,23 @@ public class GameplayController implements Screen {
   /** Listener that will update the player mode when we are done */
   private ScreenListener listener;
 
-  protected GameplayController() {
+  /** If boss music is playing */
+  boolean playingBossMusic;
+
+  /**
+   * Constructs a <code>GameplayController</code>
+   *
+   * @param soundPlayer player for sound effects and music
+   */
+  protected GameplayController(SoundPlayer soundPlayer, AssetDirectory assets) {
     gameState = GameState.PLAY;
+
+    this.soundPlayer = soundPlayer;
+    this.assets = assets;
 
     loadedLevels = new HashMap<>();
     this.level = new Level("levels/hub_world.json");
     loadedLevels.put(level.name, level);
-
-    this.assets = new AssetDirectory("assets.json");
-    assets.loadAssets();
-    assets.finishLoading();
 
     worldHeight = level.DEFAULT_HEIGHT;
     worldWidth = level.DEFAULT_WIDTH;
@@ -183,6 +194,7 @@ public class GameplayController implements Screen {
     quit = false;
     returnToHub = false;
     options = false;
+    playingBossMusic = false;
     saveTimer = 0;
 
     this.stateController = new StateController();
@@ -193,14 +205,14 @@ public class GameplayController implements Screen {
     this.bossControllers = new Array<>();
     this.inputController = new InputController(viewport);
     this.portalController = new PortalController();
-    this.interactController = new InteractableController();
+    this.interactController = new InteractableController(soundPlayer);
     inputController.add(interactController);
     inputController.add(interactController.getDialogueController());
     this.renderEngine = new RenderingEngine(worldWidth, worldHeight, viewport, worldScale);
 
     // Load UI
     PauseMenu pauseMenu = new PauseMenu(viewport);
-    PauseMenuController pauseMenuController = new PauseMenuController(pauseMenu);
+    PauseMenuController pauseMenuController = new PauseMenuController(pauseMenu, soundPlayer);
     pauseMenuController.setGameplayController(this);
     inputController.add(pauseMenuController);
 
@@ -215,8 +227,6 @@ public class GameplayController implements Screen {
             pauseMenuController, renderEngine, renderEngine.getGameCanvas(), uiViewport);
     uiController.setInteractController(interactController);
     uiController.gatherAssets(assets);
-
-    setupGameplay();
   }
 
   public void show() {
@@ -246,7 +256,7 @@ public class GameplayController implements Screen {
 
     // Initialize physics engine
     World world = new World(new Vector2(0, 0), false);
-    physicsEngine = new PhysicsEngine(bounds, world);
+    physicsEngine = new PhysicsEngine(bounds, world, soundPlayer);
 
     gameState = GameState.PLAY;
 
@@ -300,6 +310,7 @@ public class GameplayController implements Screen {
             .setMoveSpeed(12f)
             .setCooldownLimit(10)
             .setShootCooldownLimit(20)
+            .setSoundPlayer(soundPlayer)
             .build();
 
     //    playerController.setPlayer(player);
@@ -424,7 +435,7 @@ public class GameplayController implements Screen {
     // Load gates
     for (LevelObject gate : layers.get("gates")) {
       int roomId = gate.roomId;
-      GateModel model = new GateModel(gate, level.WORLD_SCALE);
+      GateModel model = new GateModel(gate, level.WORLD_SCALE, soundPlayer);
       for (BossController bc : bossControllers) {
         if (bc.getBoss().getRoomId() == roomId) {
           model.addBoss(bc.getBoss());
@@ -496,6 +507,15 @@ public class GameplayController implements Screen {
       if (saveTimer > SAVE_DELAY) {
         saveTimer = 0;
         uiController.setDrawSave(false);
+      }
+
+      if (uiController.inBossBattle() && !playingBossMusic) {
+        soundPlayer.replaceCurrentMusic("battle-music");
+        playingBossMusic = true;
+      }
+      if (!uiController.inBossBattle() && playingBossMusic) {
+        soundPlayer.replaceCurrentMusic("music");
+        playingBossMusic = false;
       }
 
       if (interactController.isCheckpointActivated() && saveTimer == 0) {
@@ -672,6 +692,7 @@ public class GameplayController implements Screen {
     if (BuildConfig.DEBUG) {
       System.out.println("Respawning");
     }
+//    soundPlayer.replaceCurrentMusic("music");
     bossControllers.clear();
     stateController.reset();
     setupGameplay();
@@ -747,13 +768,14 @@ public class GameplayController implements Screen {
   }
 
   private void quitGame() {
-    loadedLevels.clear();
-    renderEngine.clear();
-    bossControllers.clear();
-    assets.dispose();
-    dispose();
-    ((GDXRoot) listener).dispose();
-    System.exit(0);
+    this.quit = false;
+    this.level = loadedLevels.get("levels/hub_world.json");
+    stateController.setCurrentLevel(level.name);
+    stateController.setRespawnLevel(level.name);
+    stateController.setRespawnLoc(level.getPlayerLoc());
+    stateController.clear();
+    restart();
+    listener.exitScreen(this, 4);
   }
 
   private void toOptions() {

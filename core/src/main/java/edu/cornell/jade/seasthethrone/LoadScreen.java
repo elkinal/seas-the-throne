@@ -6,9 +6,11 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import edu.cornell.jade.seasthethrone.assets.AssetDirectory;
+import edu.cornell.jade.seasthethrone.audio.SoundPlayer;
 import edu.cornell.jade.seasthethrone.render.GameCanvas;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 import edu.cornell.jade.seasthethrone.util.ScreenListener;
@@ -40,7 +42,7 @@ public class LoadScreen implements Screen {
   private int timer;
 
   /** Background texture for start-up */
-  private Texture background;
+  private TextureRegion background;
 
   /** Animation to play while loading */
   private FilmStrip playerRun;
@@ -59,6 +61,9 @@ public class LoadScreen implements Screen {
 
   private int exitCode;
 
+  /** object to play music and sound effects */
+  private SoundPlayer soundPlayer;
+
   /** Stored canvas width to know when the canvas is resized */
   private int storedWidth;
 
@@ -71,14 +76,15 @@ public class LoadScreen implements Screen {
    * @param file  	The asset directory to load in the background
    * @param canvas 	The game canvas to draw to
    */
-  public LoadScreen(String file, GameCanvas canvas, int exitCode) {
-    this(file, canvas, DEFAULT_BUDGET, exitCode);
+  public LoadScreen(String file, GameCanvas canvas, int exitCode, SoundPlayer soundPlayer) {
+    this(file, canvas, DEFAULT_BUDGET, exitCode, soundPlayer);
   }
 
-  public LoadScreen(String file, GameCanvas canvas, int millis, int exitCode) {
+  public LoadScreen(String file, GameCanvas canvas, int millis, int exitCode, SoundPlayer soundPlayer) {
     this.canvas = canvas;
+    this.soundPlayer = soundPlayer;
     storedWidth = canvas.getWidth();
-    fontScale = (float) canvas.getHeight() / 200;
+    fontScale = (float) canvas.getHeight() / 180;
     this.viewport = new ScreenViewport();
     budget = millis;
     timer = 0;
@@ -91,7 +97,7 @@ public class LoadScreen implements Screen {
     internal.loadAssets();
     internal.finishLoading();
 
-    background = internal.getEntry( "loading:background", Texture.class );
+    background = new TextureRegion(internal.getEntry("title:background", Texture.class));
 
     Texture runTexture = internal.getEntry("loading:player_run", Texture.class);
     framesInAnimation = runTexture.getWidth() / runTexture.getHeight();
@@ -102,6 +108,16 @@ public class LoadScreen implements Screen {
 
     assets = new AssetDirectory( file );
     active = true;
+  }
+
+  /** Sets exit code of the loading screen
+   *
+   * @param exitCode exit code returns when the screen changes
+   */
+  public void resetWithExitCode(int exitCode) {
+    this.exitCode = exitCode;
+    this.active = true;
+    this.timer = 0;
   }
 
   /**
@@ -127,8 +143,13 @@ public class LoadScreen implements Screen {
     canvas.begin();
     canvas.getSpriteBatch().setProjectionMatrix(viewport.getCamera().combined);
 
+    // draw background
+    float ox = -canvas.getWidth() / 2f;
+    float oy = -canvas.getHeight() / 2f;
+    canvas.draw(background, Color.WHITE, ox, oy, canvas.getWidth(), canvas.getHeight());
+
     // draw animation
-    drawPlayer();
+//    drawPlayer();
 
     // draw text
     String text = "Loading...";
@@ -136,8 +157,10 @@ public class LoadScreen implements Screen {
     resizeFont();
 
     GlyphLayout layout = new GlyphLayout(textFont, text);
-    float ox = - layout.width / 2.0f;
-    float oy = 0.15f* canvas.getHeight();
+//    ox = - layout.width / 2.0f;
+//    oy = 0.15f* canvas.getHeight();
+    ox = -0.46f*canvas.getWidth();
+    oy = -0.38f*canvas.getHeight();
     canvas.drawText(text, textFont, ox,  oy);
 
     canvas.end();
@@ -158,7 +181,7 @@ public class LoadScreen implements Screen {
   }
 
   private void resizeFont() {
-    fontScale = (float) canvas.getHeight() / 200;
+    fontScale = (float) canvas.getHeight() / 180;
 
     FreeTypeFontGenerator generator =
             new FreeTypeFontGenerator(Gdx.files.internal("Alagard.ttf"));

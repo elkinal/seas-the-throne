@@ -12,6 +12,7 @@ import edu.cornell.jade.seasthethrone.gamemodel.player.*;
 import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.util.PooledList;
 import edu.cornell.jade.seasthethrone.BuildConfig;
+import edu.cornell.jade.seasthethrone.audio.SoundPlayer;
 
 import java.util.Iterator;
 import java.util.Optional;
@@ -42,10 +43,14 @@ public class PhysicsEngine implements ContactListener {
    */
   private boolean hasSpeared;
 
+  /** Sound player for sound effects */
+  private SoundPlayer soundPlayer;
+
   /** To keep track of the continuous player-boss collision */
   private Optional<Contact> playerBossCollision;
 
-  public PhysicsEngine(Rectangle bounds, World world) {
+  public PhysicsEngine(Rectangle bounds, World world, SoundPlayer soundPlayer) {
+    this.soundPlayer = soundPlayer;
     this.world = world;
     this.bounds = new Rectangle(bounds);
     world.setContactListener(this);
@@ -327,6 +332,7 @@ public class PhysicsEngine implements ContactListener {
     }
     pb.setKnockedBack(b.getPosition(), b.getKnockbackForce(), 10);
     if (pb.isInvincible() && pb.isHit() && b.isUnbreakable()) return;
+    soundPlayer.playSoundEffect("player-hit");
     pb.decrementHealth();
     pb.setInvincible(pb.getHitIFrames());
     pb.setHit(pb.getHitIFrames());
@@ -335,6 +341,7 @@ public class PhysicsEngine implements ContactListener {
 
   /** Handle collision between player spear and bullet */
   public void handleCollision(PlayerSpearModel ps, BulletModel b) {
+    soundPlayer.playSoundEffect("get-ammo");
     ps.incrementSpear();
     b.markRemoved(true);
   }
@@ -344,6 +351,7 @@ public class PhysicsEngine implements ContactListener {
     if (BuildConfig.DEBUG) System.out.println("player invincible: " + pb.isInvincible());
 
     if (!pb.isInvincible() && !b.isDead()) {
+      soundPlayer.playSoundEffect("player-hit");
       pb.decrementHealth();
       pb.setInvincible(pb.getHitIFrames());
       pb.setHit(pb.getHitIFrames());
@@ -370,6 +378,7 @@ public class PhysicsEngine implements ContactListener {
   public void handleCollision(PlayerSpearModel ps, BossModel b) {
     if(!b.isDead() && !hasSpeared){
       hasSpeared = true;
+      soundPlayer.playSoundEffect("enemy-hit");
 
       b.decrementHealth(ps.getDamage());
       ps.getMainBody().setKnockedBack(b.getPosition(), b.getSpearKnockbackForce(), 15);
@@ -381,6 +390,7 @@ public class PhysicsEngine implements ContactListener {
 
   /** Handle collision between player bullet and boss */
   public void handleCollision(PlayerBulletModel pb, BossModel b) {
+    soundPlayer.playSoundEffect("enemy-hit");
     b.decrementHealth(pb.getDamage());
     pb.markRemoved(true);
   }

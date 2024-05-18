@@ -22,9 +22,7 @@ import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-import edu.cornell.jade.seasthethrone.audio.AudioEngine;
-import edu.cornell.jade.seasthethrone.audio.AudioSource;
-import edu.cornell.jade.seasthethrone.audio.SoundEffect;
+import edu.cornell.gdiac.audio.*;
 
 /**
  * This class is an {@link AssetLoader} to load {@link SoundEffect} assets.
