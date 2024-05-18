@@ -23,6 +23,7 @@ import edu.cornell.jade.seasthethrone.level.*;
 import edu.cornell.jade.seasthethrone.model.Model;
 import edu.cornell.jade.seasthethrone.model.PolygonModel;
 import edu.cornell.jade.seasthethrone.physics.PhysicsEngine;
+import edu.cornell.jade.seasthethrone.render.Credits;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.ui.*;
@@ -162,6 +163,8 @@ public class GameplayController implements Screen {
 
   /** Listener that will update the player mode when we are done */
   private ScreenListener listener;
+  /** Credit Screen */
+  private Credits credits;
 
   /** If boss music is playing */
   boolean playingBossMusic;
@@ -196,6 +199,7 @@ public class GameplayController implements Screen {
     options = false;
     playingBossMusic = false;
     saveTimer = 0;
+    credits = new Credits(uiViewport);
 
     this.stateController = new StateController();
     stateController.setCurrentLevel(level.name);
@@ -553,8 +557,9 @@ public class GameplayController implements Screen {
     }
 
     // Check if the player is alive and all bosses are dead, if so the player wins
-    if (!bossControllers.isEmpty() && allBossesDefeated() && !playerController.isDead()) {
+    if (bossControllers.size == 1 && allBossesDefeated() && !playerController.isDead()) {
       gameState = GameState.WIN;
+      credits.setRun(true);
       for (BossController bc : bossControllers) {
         bc.remove();
       }
@@ -610,6 +615,8 @@ public class GameplayController implements Screen {
     }
 
     renderEngine.addRenderable(level.getForeground());
+    renderEngine.addRenderable(credits);
+
 
     // Draw the renderables
     draw(delta);
