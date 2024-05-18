@@ -8,7 +8,6 @@ import edu.cornell.jade.seasthethrone.ai.BossController;
 import edu.cornell.jade.seasthethrone.render.Renderable;
 import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 
-
 /**
  * This is a model class that combines all UI objects into one, and contains all of them in one
  * place so they are able to be updated all at once by UIController.
@@ -32,7 +31,14 @@ public class UIModel implements Renderable {
 
   /** The gradient for water */
   private Gradient gradient;
+
+  /** The gradient in the foreground */
+  private Bubbles bubbles;
+
+  /** The red part of the hp bar */
   private TextureRegion foreground = new TextureRegion(new Texture("ui/enemy_hp_full.png"));
+
+  /** The outline of the hp bar */
   private TextureRegion background = new TextureRegion(new Texture("ui/enemy_hp_empty.png"));
 
   /**
@@ -44,7 +50,10 @@ public class UIModel implements Renderable {
   public UIModel(int x, int y) {
     ammo = new AmmoBar();
     boss = new BossHealthBar();
+
     gradient = new Gradient();
+    bubbles = new Bubbles();
+
     health = new HealthBar();
     enemies = new Array<>();
     isBoss = false;
@@ -58,6 +67,7 @@ public class UIModel implements Renderable {
   public AmmoBar getAmmoBar() {
     return ammo;
   }
+
   /**
    * Returns the Enemies
    *
@@ -102,8 +112,7 @@ public class UIModel implements Renderable {
       if (boss.isBoss()) {
         isBoss = true;
         this.boss.changeHP(boss.getHealth(), boss.getMaxHealth());
-      }
-      else{
+      } else {
         EnemyHealthBar newEnemy = new EnemyHealthBar(foreground, background);
         newEnemy.changeHP(boss.getHealth(), boss.getBoss().getFullHealth());
         newEnemy.changeEnemyPosition(boss.getBoss().getPosition());
@@ -111,8 +120,9 @@ public class UIModel implements Renderable {
       }
     }
   }
+
   /** Clear enemy cache */
-  public void clearEnemies (){
+  public void clearEnemies() {
     enemies.clear();
   }
 
@@ -124,6 +134,7 @@ public class UIModel implements Renderable {
   public void draw(RenderingEngine renderer, int finishAnimate) {
     gradient.draw(renderer);
     health.draw(renderer);
+    bubbles.draw(renderer);
     if (isBoss && finishAnimate > 0) {
       boss.draw(renderer);
     }
@@ -138,6 +149,7 @@ public class UIModel implements Renderable {
   public void draw(RenderingEngine renderer) {
     gradient.draw(renderer);
     health.draw(renderer);
+    bubbles.draw(renderer);
     if (isBoss) {
       boss.draw(renderer);
     }

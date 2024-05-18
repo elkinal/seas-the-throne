@@ -101,7 +101,6 @@ public class OptionScreen implements Screen {
 
   private final int CONTROL_DELAY = 10;
 
-
   /** Int to check if cooldown is reached (for clicks: faster cooldown than scroll) */
   private int clickCount;
 
@@ -400,16 +399,28 @@ public class OptionScreen implements Screen {
           setDefault();
         }
       }
-      // any key
-      if (hoverIndex == 2 && xbox.getPressed() != null) {
-        buttonMaps.put(attackButton, xbox.getPressed());
-        currentControls.put("attackButton", xbox.getPressed());
-        attackButton.setText(xbox.getPressed());
-      } else if (hoverIndex == 3 && xbox.getPressed() != null) {
-        buttonMaps.put(dashButton, xbox.getPressed());
-        currentControls.put("dashButton", xbox.getPressed());
+      /** ------- changing keybindings: cannot remap B, X, or Y (interact, pause, restart) */
+      // change attack button
+      if (xbox.getPressed() != null) {
+        String b = xbox.getPressed();
+        System.out.println(b);
+        if (b.equals("B") || b.equals("X") || b.equals("Y")) {
+          TextButton.TextButtonStyle badKeyStyle =
+              new TextButton.TextButtonStyle(null, null, null, textFont);
+          badKeyStyle.fontColor = Color.RED;
+          attackButton.setStyle(badKeyStyle);
+        } else if (hoverIndex == 2) {
+          buttonMaps.put(attackButton, xbox.getPressed());
+          currentControls.put("attackButton", xbox.getPressed());
+          attackButton.setText(xbox.getPressed());
+        }
+        // change dash button
+        else if (hoverIndex == 3) {
+          buttonMaps.put(dashButton, xbox.getPressed());
+          currentControls.put("dashButton", xbox.getPressed());
 
-        dashButton.setText(xbox.getPressed());
+          dashButton.setText(xbox.getPressed());
+        }
       }
     }
 
