@@ -132,7 +132,7 @@ public class UIModel implements Renderable {
    */
   public void draw(RenderingEngine renderer, int finishAnimate) {
     gradient.draw(renderer);
-    bubbles.draw(renderer);
+    //    bubbles.draw(renderer);
     health.draw(renderer);
     if (isBoss && finishAnimate > 0) {
       boss.draw(renderer);
@@ -147,7 +147,7 @@ public class UIModel implements Renderable {
   @Override
   public void draw(RenderingEngine renderer) {
     gradient.draw(renderer);
-    bubbles.draw(renderer);
+    //    bubbles.draw(renderer);
     health.draw(renderer);
     if (isBoss) {
       boss.draw(renderer);
