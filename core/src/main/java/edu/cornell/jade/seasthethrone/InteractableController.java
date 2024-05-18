@@ -97,7 +97,6 @@ public class InteractableController implements Controllable {
           player.setHeal();
           ((HealthpackModel) interactable).setUsed(true);
         } else if (interactable.getPlayerInRange() && player.getHealth() >= 5) {
-          if (interactTimer == 0) soundPlayer.playSoundEffect("cant-interact");
           interactTimer++;
         }
       } else if (interactable instanceof CheckpointModel) {
@@ -195,7 +194,6 @@ public class InteractableController implements Controllable {
 
   @Override
   public void pressPause() {
-    soundPlayer.playSoundEffect("menu-select");
     Controllable.super.pressPause();
   }
 
