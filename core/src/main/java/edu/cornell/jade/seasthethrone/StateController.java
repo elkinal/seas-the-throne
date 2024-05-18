@@ -47,7 +47,7 @@ public class StateController {
 
   public StateController() {
     this.storedLevels = new HashMap<>();
-    this.checkpoint = -1;
+    this.checkpoint = 8;
     this.saveIndex = 1;
     this.prefs = Gdx.app.getPreferences("save");
     json = new Json();
