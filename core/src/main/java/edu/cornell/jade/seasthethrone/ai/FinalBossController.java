@@ -245,12 +245,20 @@ public class FinalBossController implements BossController {
     nextState();
     act();
   }
+  @Override
+  public boolean isTerminated(){
+    return isDead() && boss.isFinishExecute();
+  }
 
   /** Progresses to the next state of the controller. */
   private void nextState() {
     if (boss.isDead()) {
       dispose();
       state = State.DEAD;
+      if (boss.isFinishExecute()){
+        player.setFinishExecute(true);
+        player.getBodyModel().stopExecuting();
+      }
     } else if (boss.reachedHealthThreshold()) {
       if (firstThreshold) {
         firstThreshold = false;

@@ -153,6 +153,8 @@ public class PlayerController implements Controllable {
   public void pressInteract() {
     interactPressed = true;
   }
+  public boolean isFinishExecute(){ return player.isFinishExecute();}
+  public void setFinishExecute(boolean execute){ player.setFinishExecute(execute);}
 
   public void toggleDashMode() {
     if (dashToggleCounter == 0) {
@@ -318,10 +320,12 @@ public class PlayerController implements Controllable {
   }
 
   public void setHealth(int hp) {player.setHealth(hp);}
+  public void setHeal(){player.getBodyModel().setHeal();}
 
   public int getAmmo() {
     return player.getSpearModel().getNumSpeared();
   }
+  public boolean isExecuting(){return player.isExecuting();}
 
   public void transferState(StateController state) {
     player.getBodyModel().setHealth(state.getPlayerHealth());
@@ -345,6 +349,9 @@ public class PlayerController implements Controllable {
     }
 
     setVelPercentages(hoff, voff);
+    if (isExecuting()){
+      setVelPercentages(0,0);
+    }
     player.setDirection(moveDirection);
     orientPlayer();
 
