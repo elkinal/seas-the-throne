@@ -283,6 +283,9 @@ public class PlayerModel extends ComplexModel implements Renderable {
     if (getBodyModel().isHit() && !isDead()) {
       renderer.draw(currentStrip, pos.x, pos.y, 0.12f, Color.RED);
     }
+    else if (getBodyModel().isHeal() && !isDead()) {
+      renderer.draw(currentStrip, pos.x, pos.y, 0.12f, Color.GREEN);
+    }
     else renderer.draw(currentStrip, pos.x, pos.y, 0.12f);
     getSpearModel().draw(renderer);
   }
@@ -600,6 +603,7 @@ public class PlayerModel extends ComplexModel implements Renderable {
   public boolean canDash() {
     return !isDashing
       && !isShooting
+      && !isExecuting()
       && cooldownCounter == 0;
   }
 
