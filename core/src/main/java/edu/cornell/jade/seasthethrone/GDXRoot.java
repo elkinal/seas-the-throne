@@ -34,6 +34,9 @@ public class GDXRoot extends Game implements ScreenListener {
 
   private GameCanvas canvas;
 
+  /** If the game should load from save or start a fresh save */
+  private boolean loadSave;
+
   /** AssetManager to load game assets (textures, sounds, etc.) */
   AssetDirectory directory;
 
@@ -109,6 +112,10 @@ public class GDXRoot extends Game implements ScreenListener {
     if (screen == loading && exitCode == EXIT_GAME) {
       setScreen(controller);
       controller.setAssets(loading.getAssets());
+      if (shouldLoadSave()) {
+        controller.loadState();
+        loadSave = false;
+      }
       loading.dispose();
       loading = null;
     }
@@ -149,4 +156,13 @@ public class GDXRoot extends Game implements ScreenListener {
       setScreen(options);
     }
   }
+
+  public void setLoadSave(boolean loadSave) {
+    this.loadSave = loadSave;
+  }
+
+  public boolean shouldLoadSave() {return loadSave;}
+
+
+
 }

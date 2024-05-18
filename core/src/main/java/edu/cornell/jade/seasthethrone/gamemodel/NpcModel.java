@@ -64,7 +64,7 @@ public class NpcModel extends BoxModel implements Interactable, Renderable {
     // draw arrow
     if (playerInRange) {
       renderer.draw(
-          arrow, getX(), getY() + y_offset + WORLD_SCALE * 0.4f * filmStrip.getRegionHeight());
+          arrow, getX(), getY() + y_offset + WORLD_SCALE * filmStrip.getRegionHeight());
     }
 
     progressFrame();

@@ -199,6 +199,7 @@ public class CrabBossController implements BossController {
   /** Progresses to the next state of the controller. */
   private void nextState() {
     if (boss.isDead()) {
+      dispose();
       state = State.DEAD;
     } else if (boss.reachedHealthThreshold()) {
       state = State.THRESHOLD;
@@ -272,7 +273,6 @@ public class CrabBossController implements BossController {
         }
         break;
       case DEAD:
-        dispose();
         break;
     }
   }
