@@ -389,7 +389,12 @@ public class GameplayController implements Screen {
         bossBuilder.setTransformAnimation(new Texture("bosses/" + assetName + "/transform.png"))
             .setFinalAttackAnimation(new Texture("bosses/" + assetName + "/final_attack.png"))
             .setFinalShootAnimation(new Texture("bosses/" + assetName + "/final_shoot.png"))
-            .setFinalGetHitAnimation(new Texture("bosses/" + assetName + "/final_hurt.png"));
+            .setFinalGetHitAnimation(new Texture("bosses/" + assetName + "/final_hurt.png"))
+            .setCatchBreathAnimation(new Texture("bosses/" + assetName + "/catch_breath.png"))
+            .setTerminatedAnimation(new Texture("bosses/" + assetName + "/terminated.png"));
+      }
+      if (name.contains("crab")){
+        bossBuilder.setTerminatedAnimation(new Texture("bosses/" + assetName + "/terminated.png"));
       }
       BossModel boss = bossBuilder.build();
       BossController bossController = bossBuilder.buildController(boss, player, fishBulletBuilder, physicsEngine);

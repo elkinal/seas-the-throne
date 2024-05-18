@@ -404,6 +404,8 @@ public class BossModel extends EnemyModel implements Renderable {
     FilmStrip finalAttackAnimation;
     FilmStrip finalGetHitAnimation;
     FilmStrip finalShootAnimation;
+    FilmStrip catchBreathAnimation;
+    FilmStrip terminatedAnimation;
 
 
     /** The number of frames between animation updates */
@@ -568,8 +570,16 @@ public class BossModel extends EnemyModel implements Renderable {
       finalShootAnimation = new FilmStrip(texture, 1, width / frameSize);
       return this;
     }
-
-
+    public Builder setCatchBreathAnimation (Texture texture){
+      int width = texture.getWidth();
+      catchBreathAnimation = new FilmStrip(texture, 1, width / frameSize);
+      return this;
+    }
+    public Builder setTerminatedAnimation (Texture texture){
+      int width = texture.getWidth();
+      terminatedAnimation = new FilmStrip(texture, 1, 1);
+      return this;
+    }
 
     public Builder setFrameDelay(int frameDelay) {
       this.frameDelay = frameDelay;

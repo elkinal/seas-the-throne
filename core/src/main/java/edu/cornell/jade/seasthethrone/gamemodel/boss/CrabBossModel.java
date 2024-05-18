@@ -1,8 +1,14 @@
 package edu.cornell.jade.seasthethrone.gamemodel.boss;
 
+import edu.cornell.jade.seasthethrone.util.FilmStrip;
+
 public class CrabBossModel extends BossModel{
+  private FilmStrip terminatedAnimation;
+  private boolean isTerminated;
   public CrabBossModel(Builder builder){
     super(builder);
+    terminatedAnimation = builder.terminatedAnimation;
+    isTerminated = false;
   }
   public void executeBoss() {
     setFrameNumber(0);
@@ -15,6 +21,9 @@ public class CrabBossModel extends BossModel{
     if (isDead()) {
       if (isExecute) {
         filmStrip = deathAnimation;
+      }
+      else if (finishExecute){
+        filmStrip = terminatedAnimation;
       }
       else {
         filmStrip = falloverAnimation;
@@ -40,8 +49,12 @@ public class CrabBossModel extends BossModel{
         if (executeCount <=0){
           finishExecute = true;
           isExecute = false;
+          isTerminated = true;
           setFrameNumber(0);
         }
+      }
+      else if (isTerminated){
+        setFrameNumber(0);
       }
       else {
         if (frameCounter % frameDelay == 0 && getFrameNumber() < getFramesInAnimation() - 1) {
