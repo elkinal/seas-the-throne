@@ -16,13 +16,13 @@ package edu.cornell.jade.seasthethrone.input;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import edu.cornell.jade.seasthethrone.util.Controllers;
 import edu.cornell.jade.seasthethrone.util.XBoxController;
 import java.util.*;
 
-// TODO: make the inputcontroller take input from the json instead of through fixed state
 /** Processes movements for player and AI */
 public class InputController {
   /** Viewport to unproject screen coordinates */
@@ -34,11 +34,20 @@ public class InputController {
   /** XBox Controller support */
   private XBoxController xbox;
 
+  /** Primary button from preferences */
+  private String controllerPrimary;
+
+  /** Secondary button from preferences */
+  private String controllerSecondary;
+
   /** Whether the reset button was pressed. */
   protected boolean resetPressed;
 
   /** Cache vector to return containing the dash coordinates of the previous read */
   Vector2 dashCoordCache;
+
+  /** Preference file for the player */
+  Preferences prefs;
 
   /** Default cursor location for controllers */
   Vector2 defaultLoc = new Vector2();
@@ -84,6 +93,8 @@ public class InputController {
     this.controllables = new ArrayList<>();
     this.viewport = screenToWorld;
     this.dashCoordCache = new Vector2();
+    prefs = Gdx.app.getPreferences("options");
+    getPrefs();
 
     // initializing the xbox controller
     if (Controllers.get().getControllers().size > 0) {
@@ -97,6 +108,12 @@ public class InputController {
     for (Controllable p : controllables) {
       readInput(p);
     }
+  }
+
+  /** Get updated preferences */
+  public void getPrefs() {
+    controllerPrimary = prefs.getString("attackButton");
+    controllerSecondary = prefs.getString("dashButton");
   }
 
   /** Reads the input for the player and converts the result into game logic. */
@@ -130,26 +147,163 @@ public class InputController {
     obj.updateDirection(dashCoordCache);
 
     // dashing
-    if (xbox.getRightTrigger() > 0.6f) {
-      obj.pressPrimary();
+    switch (controllerPrimary) {
+      case "X":
+        if (xbox.getX()) {
+          obj.pressPrimary();
+        }
+        break;
+      case "Y":
+        if (xbox.getY()) {
+          obj.pressPrimary();
+        }
+        break;
+      case "A":
+        if (xbox.getA()) {
+          obj.pressPrimary();
+        }
+        break;
+      case "B":
+        if (xbox.getB()) {
+          obj.pressPrimary();
+        }
+        break;
+      case "LS":
+        if (xbox.getLStick()) {
+          obj.pressPrimary();
+        }
+        break;
+      case "RS":
+        if (xbox.getRStick()) {
+          obj.pressPrimary();
+        }
+        break;
+      case "LB":
+        if (xbox.getLBumper()) {
+          obj.pressPrimary();
+        }
+        break;
+      case "RB":
+        if (xbox.getRBumper()) {
+          obj.pressPrimary();
+        }
+        break;
+      case "LT":
+        if (xbox.getLeftTrigger() > 0.6f) {
+
+          obj.pressPrimary();
+        }
+        break;
+      case "RT":
+        if (xbox.getRightTrigger() > 0.6f) {
+          obj.pressPrimary();
+        }
+        break;
+      case "DU":
+        if (xbox.getDPadUp()) {
+          obj.pressPrimary();
+        }
+        break;
+      case "DD":
+        if (xbox.getDPadDown()) {
+          obj.pressPrimary();
+        }
+        break;
+      case "DL":
+        if (xbox.getDPadLeft()) {
+          obj.pressPrimary();
+        }
+        break;
+      case "DR":
+        if (xbox.getDPadRight()) {
+          obj.pressPrimary();
+        }
+        break;
     }
+
     // shooting
-    if (xbox.getLeftTrigger() > 0.6f) {
-      obj.pressSecondary();
+    switch (controllerSecondary) {
+      case "X":
+        if (xbox.getX()) {
+          obj.pressSecondary();
+        }
+        break;
+      case "Y":
+        if (xbox.getY()) {
+          obj.pressSecondary();
+        }
+        break;
+      case "A":
+        if (xbox.getA()) {
+          obj.pressSecondary();
+        }
+        break;
+      case "B":
+        if (xbox.getB()) {
+          obj.pressSecondary();
+        }
+        break;
+      case "LS":
+        if (xbox.getLStick()) {
+          obj.pressSecondary();
+        }
+        break;
+      case "RS":
+        if (xbox.getRStick()) {
+          obj.pressSecondary();
+        }
+        break;
+      case "LB":
+        if (xbox.getLBumper()) {
+          obj.pressSecondary();
+        }
+        break;
+      case "RB":
+        if (xbox.getRBumper()) {
+          obj.pressSecondary();
+        }
+        break;
+      case "LT":
+        if (xbox.getLeftTrigger() > 0.6f) {
+          obj.pressSecondary();
+        }
+        break;
+      case "RT":
+        if (xbox.getRightTrigger() > 0.6f) {
+          obj.pressSecondary();
+        }
+        break;
+      case "DU":
+        if (xbox.getDPadUp()) {
+          obj.pressSecondary();
+        }
+        break;
+      case "DD":
+        if (xbox.getDPadDown()) {
+          obj.pressSecondary();
+        }
+        break;
+      case "DL":
+        if (xbox.getDPadLeft()) {
+          obj.pressSecondary();
+        }
+        break;
+      case "DR":
+        if (xbox.getDPadRight()) {
+          obj.pressSecondary();
+        }
+        break;
     }
-    // assisted shooting
-    if (xbox.getLBumper()) {
-      obj.pressTertiary();
-    }
-    // interact
+
     if (xbox.getB()) {
       obj.pressInteract();
     }
+
     if (xbox.getX()) {
-      obj.toggleDashMode();
+      obj.pressPause();
     }
 
-    resetPressed = xbox.getB();
+    resetPressed = xbox.getY();
 
     // movement
     float hoff = xbox.getLeftX();
@@ -171,7 +325,8 @@ public class InputController {
   private void readKeyboard(Controllable obj) {
     float hoff = 0;
     float voff = 0;
-    resetPressed = (Gdx.input.isKeyPressed(Input.Keys.ENTER) || Gdx.input.isKeyPressed(Input.Keys.E));
+    resetPressed =
+        (Gdx.input.isKeyPressed(Input.Keys.ENTER) || Gdx.input.isKeyPressed(Input.Keys.E));
 
     if (Gdx.input.isKeyPressed(Input.Keys.D)) {
       hoff += 1;
@@ -231,15 +386,12 @@ public class InputController {
 
   private boolean mainInputsKeyboard() {
     return Gdx.input.isKeyPressed(Input.Keys.E)
-            || Gdx.input.isKeyPressed(Input.Keys.ENTER)
-            || Gdx.input.isButtonPressed(Input.Buttons.LEFT)
-            || Gdx.input.isKeyPressed(Input.Keys.SPACE);
+        || Gdx.input.isKeyPressed(Input.Keys.ENTER)
+        || Gdx.input.isButtonPressed(Input.Buttons.LEFT)
+        || Gdx.input.isKeyPressed(Input.Keys.SPACE);
   }
 
   private boolean mainInputsXbox() {
-    return xbox.getX()
-        || xbox.getY()
-        || xbox.getA()
-        || xbox.getB();
+    return xbox.getX() || xbox.getY() || xbox.getA() || xbox.getB();
   }
 }

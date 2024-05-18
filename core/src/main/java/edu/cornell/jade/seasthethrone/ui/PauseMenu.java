@@ -43,7 +43,7 @@ public class PauseMenu implements Renderable {
     RESTART(1, "Restart"),
     OPTIONS(2, "Options"),
     LEVEL_SELECT(3, "Level Select"),
-    QUIT(4, "Main Menu");
+    QUIT(4, "Quit");
 
     public final String optionName;
     public final int optionValue;
