@@ -302,7 +302,7 @@ public class FinalBossController implements BossController {
               S_DELAY_ROTATE_SPIRAL, S_DELAY_SLOW_RING, S_DELAY_SPEED_RING:
         if (timer <= 0) {
           state = chooseRandomState();
-          if (rand.nextInt(0, 3) <= 1) findNewGoalPos(6);
+          if (rand.nextBoolean()) findNewGoalPos(6);
           timer = rand.nextInt(350, 800);
         }
         break;

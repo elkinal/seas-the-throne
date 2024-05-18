@@ -101,6 +101,7 @@ public class PlayerBodyModel extends CircleModel {
    * @param time    The amount of time the knockback is applied
    */
   public void setKnockedBack(Vector2 b2pos, float force, int time) {
+//    if (knockbackTime > 0) return;
     this.justKnocked = true;
     this.knockingBodyPos = b2pos;
     this.knockbackForce = force;

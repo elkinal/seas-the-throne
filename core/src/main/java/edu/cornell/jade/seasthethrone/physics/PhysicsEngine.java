@@ -325,7 +325,7 @@ public class PhysicsEngine implements ContactListener {
         return;
       }
     }
-    pb.setKnockedBack(b.getPosition(), b.getKnockbackForce(), 7);
+    pb.setKnockedBack(b.getPosition(), b.getKnockbackForce(), 10);
     if (pb.isInvincible() && pb.isHit() && b.isUnbreakable()) return;
     pb.decrementHealth();
     pb.setInvincible(pb.getHitIFrames());
@@ -347,7 +347,7 @@ public class PhysicsEngine implements ContactListener {
       pb.decrementHealth();
       pb.setInvincible(pb.getHitIFrames());
       pb.setHit(pb.getHitIFrames());
-      pb.setKnockedBack(b.getPosition(), b.getBodyKnockbackForce(), 7);
+      pb.setKnockedBack(b.getPosition(), b.getBodyKnockbackForce(), 12);
       pb.setStopDashing(true);
       playerBossCollision = Optional.empty();
     } else {
@@ -359,10 +359,12 @@ public class PhysicsEngine implements ContactListener {
 
   /** Handle collision between player spear and boss */
   public void handleCollision(PlayerSpearModel ps, BossModel b) {
-    if(!b.isDead() && !hasSpeared){
+    if(!b.isDead() && !hasSpeared && ps.isSpearExtended()){
+      System.out.println(ps.getPosition() + " " + b.getPosition());
       hasSpeared = true;
 
       b.decrementHealth(ps.getDamage());
+      System.out.println("SPEAR" + " " + ps.isActive());
       ps.getMainBody().setKnockedBack(b.getPosition(), b.getSpearKnockbackForce(), 15);
 
       // Disable spear collision again so it doesn't double count

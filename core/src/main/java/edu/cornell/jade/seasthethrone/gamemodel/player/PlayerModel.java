@@ -571,7 +571,8 @@ public class PlayerModel extends ComplexModel implements Renderable {
   public boolean canDash() {
     return !isDashing
       && !isShooting
-      && cooldownCounter == 0;
+      && cooldownCounter == 0
+      && !getBodyModel().isKnockedBack();
   }
 
   /** Returns if the player can be set to shooting */
@@ -579,7 +580,8 @@ public class PlayerModel extends ComplexModel implements Renderable {
     return !isDashing
       && !isShooting
       && cooldownCounter == 0
-      && getSpearModel().getNumSpeared() > 0;
+      && getSpearModel().getNumSpeared() > 0
+      && !getBodyModel().isKnockedBack();
   }
 
   /** Returns the number of current health points of the player. */
