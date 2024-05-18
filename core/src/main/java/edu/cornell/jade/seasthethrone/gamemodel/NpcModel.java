@@ -86,7 +86,7 @@ public class NpcModel extends BoxModel implements Interactable, Renderable {
 
   /** Reads this characters dialogue string from the specified file */
   private String parseDialogue(String file) {
-    Path path = Path.of(file);
+    Path path = Path.of("assets/"+file);
     try {
       return Files.readString(path, StandardCharsets.UTF_8);
     } catch (Exception e) {
