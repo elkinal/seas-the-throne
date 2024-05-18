@@ -140,6 +140,7 @@ public class GDXRoot extends Game implements ScreenListener {
     if (screen == options && exitCode == EXIT_PAUSE) {
       controller.getPrefs();
       setScreen(controller);
+      soundPlayer.replaceCurrentMusic("music");
     }
 
     // ---- game screen exits

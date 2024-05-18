@@ -249,7 +249,8 @@
     "shoot-bullet": "sounds/shoot-bullet.wav",
     "player-hit": "sounds/player-hit.wav",
     "menu-change": "sounds/menu-change.wav",
-    "menu-select": "sounds/menu-select.wav"
+    "menu-select": "sounds/menu-select.wav",
+    "cant-interact": "sounds/cant-interact.wav"
   },
   "samples": {
     "music": "sounds/music.ogg"

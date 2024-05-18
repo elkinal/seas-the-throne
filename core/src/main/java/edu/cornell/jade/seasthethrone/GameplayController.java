@@ -679,7 +679,7 @@ public class GameplayController implements Screen {
     if (BuildConfig.DEBUG) {
       System.out.println("Respawning");
     }
-    soundPlayer.replaceCurrentMusic("music");
+//    soundPlayer.replaceCurrentMusic("music");
     bossControllers.clear();
     stateController.reset();
     setupGameplay();

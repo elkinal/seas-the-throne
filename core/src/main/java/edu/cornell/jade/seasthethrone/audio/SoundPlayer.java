@@ -62,6 +62,7 @@ public class SoundPlayer {
     soundEffects.put("player-hit", dir.getEntry("player-hit", SoundEffect.class));
     soundEffects.put("menu-change", dir.getEntry("menu-change", SoundEffect.class));
     soundEffects.put("menu-select", dir.getEntry("menu-select", SoundEffect.class));
+    soundEffects.put("cant-interact", dir.getEntry("cant-interact", SoundEffect.class));
 
     music.put("music", dir.getEntry("music", AudioSource.class));
 
