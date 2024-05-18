@@ -52,7 +52,7 @@ public class BulletModel extends SimpleModel implements Renderable, Poolable {
     setVY(builder.vy);
     shape = new CircleShape();
     shape.setRadius(builder.radius);
-    knockbackForce = 20f;
+    knockbackForce = 30f;
     setBodyType(BodyDef.BodyType.DynamicBody);
     fishTexture = builder.type == Builder.Type.UNBREAKABLE ? builder.UNBREAKABLE_TEXTURE : builder.BASE_TEXTURE;
     filmStrip = new FilmStrip(fishTexture, 1, 1);

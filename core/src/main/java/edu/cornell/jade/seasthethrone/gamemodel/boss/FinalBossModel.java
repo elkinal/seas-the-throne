@@ -29,14 +29,15 @@ public class FinalBossModel extends BossModel{
   }
 
   /**
-   * TODO: this function should set the animation to the spawn animation,
-   * change all relevant assets to the "final" asset version, and (optionally?)
-   * center the screen on the boss/freeze the player during the spawn animation
-   * (this might be a bit hard though, it kinda ties into the execute animations)
+   * Sets the animation to the spawn animation and change all relevant assets to the "final" asset version.
+   * Also changes the boss's hitbox
    */
   public void launchPhaseTwo(){
     isHard = true;
     transformTimer = transformAnimation.getSize() * frameDelay;
+    initShapes(hitbox2());
+    initBounds();
+    createFixtures();
   }
   @Override
   public void executeBoss() {
@@ -150,5 +151,19 @@ public class FinalBossModel extends BossModel{
   @Override
   public void update(float delta) {
     if (finishExecute) setActive(false);
+  }
+
+  private static float[] hitbox2(){
+    return new float[]{
+            -1.6f, 1.2f,
+            -4.5f, 4,
+            -3, 8,
+            -1, 5,
+            0.5f, 7.7f,
+            3.3f, 6,
+            1.2f, 1,
+            1.2f, -6.3f,
+            -1.6f, -6.3f
+    };
   }
 }
