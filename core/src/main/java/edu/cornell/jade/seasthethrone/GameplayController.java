@@ -208,7 +208,7 @@ public class GameplayController implements Screen {
 
     // Load UI
     PauseMenu pauseMenu = new PauseMenu(viewport);
-    PauseMenuController pauseMenuController = new PauseMenuController(pauseMenu);
+    PauseMenuController pauseMenuController = new PauseMenuController(pauseMenu, soundPlayer);
     pauseMenuController.setGameplayController(this);
     inputController.add(pauseMenuController);
 
@@ -755,13 +755,14 @@ public class GameplayController implements Screen {
   }
 
   private void quitGame() {
-    loadedLevels.clear();
-    renderEngine.clear();
-    bossControllers.clear();
-    assets.dispose();
-    dispose();
-    ((GDXRoot) listener).dispose();
-    System.exit(0);
+    this.quit = false;
+    this.level = loadedLevels.get("levels/hub_world.json");
+    stateController.setCurrentLevel(level.name);
+    stateController.setRespawnLevel(level.name);
+    stateController.setRespawnLoc(level.getPlayerLoc());
+    stateController.clear();
+    restart();
+    listener.exitScreen(this, 4);
   }
 
   private void toOptions() {

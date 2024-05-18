@@ -250,7 +250,8 @@
     "player-hit": "sounds/player-hit.wav",
     "menu-change": "sounds/menu-change.wav",
     "menu-select": "sounds/menu-select.wav",
-    "cant-interact": "sounds/cant-interact.wav"
+    "cant-interact": "sounds/cant-interact.wav",
+    "walking": "sounds/walking.wav"
   },
   "samples": {
     "music": "sounds/music.ogg"

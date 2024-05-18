@@ -89,7 +89,7 @@ public class GDXRoot extends Game implements ScreenListener {
    */
   @Override
   public void exitScreen(Screen screen, int exitCode) {
-    soundPlayer.stopMusic();
+//    soundPlayer.stopMusic();
 
     // ------- title screen exits
     // title to loading (to game)
@@ -155,6 +155,15 @@ public class GDXRoot extends Game implements ScreenListener {
       options.setExit(EXIT_PAUSE);
       setScreen(options);
     }
+
+    // to title
+    if (screen == controller && exitCode == EXIT_TITLE) {
+      soundPlayer.stopMusic();
+      loading.resetWithExitCode(EXIT_TITLE);
+      loading.setScreenListener(this);
+      setScreen(loading);
+    }
+
   }
 
   public void setLoadSave(boolean loadSave) {
