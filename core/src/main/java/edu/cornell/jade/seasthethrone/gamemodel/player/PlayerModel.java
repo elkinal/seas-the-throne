@@ -292,6 +292,7 @@ public class PlayerModel extends ComplexModel implements Renderable {
     currentStrip = getFilmStrip();
     if (isExecuting()){
       currentStrip.setTexture(empty);
+      setFrameNumber(0);
     }
     else if (!isDashing()){
       switch (direction()) {

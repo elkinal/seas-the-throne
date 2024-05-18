@@ -255,7 +255,6 @@ public class FinalBossController implements BossController {
     if (boss.isDead()) {
       dispose();
       state = State.DEAD;
-      System.out.println("final dead");
       if (boss.isFinishExecute()){
         player.setFinishExecute(true);
         player.getBodyModel().stopExecuting();

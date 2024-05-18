@@ -11,7 +11,9 @@ public class FinalBossModel extends BossModel{
   private FilmStrip finalGetHitAnimation;
   private FilmStrip terminatedAnimation;
   private FilmStrip catchBreathAnimation;
+  /** Whether the boss is terminated */
   private boolean isTerminated;
+  /**Whether the boss is catching breath */
   private boolean catchBreath;
 
   public FinalBossModel (Builder builder) {
@@ -90,10 +92,11 @@ public class FinalBossModel extends BossModel{
         }
       }
       else if (catchBreath){
-        if (frameCounter % frameDelay == 0 && getFrameNumber() < getFramesInAnimation() - 1) {
-          setFrameNumber(getFrameNumber() + 1);
-        } else {
-          setFrameNumber(getFrameNumber());
+        if (frameCounter % (frameDelay*4) == 0) {
+          if (getFrameNumber() < getFramesInAnimation() - 1)
+            setFrameNumber(getFrameNumber() + 1);
+          else
+            setFrameNumber(0);
         }
       }
       else if (isTerminated){
