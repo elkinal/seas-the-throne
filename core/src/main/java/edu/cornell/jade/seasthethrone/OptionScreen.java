@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import edu.cornell.jade.seasthethrone.assets.AssetDirectory;
+import edu.cornell.jade.seasthethrone.audio.SoundPlayer;
 import edu.cornell.jade.seasthethrone.render.GameCanvas;
 import edu.cornell.jade.seasthethrone.util.Controllers;
 import edu.cornell.jade.seasthethrone.util.ScreenListener;
@@ -32,6 +33,9 @@ import java.util.HashMap;
 public class OptionScreen implements Screen {
   /** Internal assets for the options screen */
   private AssetDirectory internal;
+  
+  /** Sound player for playing music and sound effects */
+  private SoundPlayer soundPlayer;
 
   /** Background texture for start-up */
   private Texture background;
@@ -118,10 +122,12 @@ public class OptionScreen implements Screen {
   /** Enum to see if option screen should exit to the title or game Default exit to title */
   private int exitTo;
 
-  public OptionScreen(String file, GameCanvas canvas) {
+  public OptionScreen(String file, GameCanvas canvas, SoundPlayer soundPlayer) {
     internal = new AssetDirectory(file);
     internal.loadAssets();
     internal.finishLoading();
+
+    this.soundPlayer = soundPlayer;
 
     this.prefs = Gdx.app.getPreferences("options");
 
@@ -139,6 +145,7 @@ public class OptionScreen implements Screen {
     if (Controllers.get().getControllers().size > 0) {
       xbox = Controllers.get().getXBoxControllers().get(0);
     }
+    this.soundPlayer = soundPlayer;
     hoverIndex = 0;
     clickCount = 0;
     canScroll = true;
@@ -338,6 +345,7 @@ public class OptionScreen implements Screen {
     /** ---- scrolling to the option */
     // go down
     if ((xbox.getLeftY() >= 1 || xbox.getRightY() >= 1) && canScroll) {
+      soundPlayer.playSoundEffect("menu-change");
       if (hoverIndex >= buttons.length - 1) {
         hoverIndex = 0;
       } else {
@@ -347,6 +355,7 @@ public class OptionScreen implements Screen {
     }
     // go up
     else if ((xbox.getLeftY() <= -1 || xbox.getRightY() <= -1) && canScroll) {
+      soundPlayer.playSoundEffect("menu-change");
       if (hoverIndex == 0) {
         hoverIndex = buttons.length - 1;
       } else {
@@ -371,6 +380,7 @@ public class OptionScreen implements Screen {
     /** --------- selecting the option */
     if (clickCount == 0) {
       if (xbox.getB()) {
+        soundPlayer.playSoundEffect("menu-select");
         // 2 options only
         if (hoverIndex == 0) {
           if (buttonMaps.get(aimAssistButton).equals("Off")) {
@@ -402,7 +412,6 @@ public class OptionScreen implements Screen {
       // change attack button
       if (xbox.getPressed() != null) {
         String b = xbox.getPressed();
-        System.out.println(b);
         if (b.equals("B") || b.equals("X") || b.equals("Y")) {
           TextButton.TextButtonStyle badKeyStyle =
               new TextButton.TextButtonStyle(null, null, null, textFont);
@@ -497,7 +506,6 @@ public class OptionScreen implements Screen {
     for (int i = 0; i < buttonMaps.size(); i++) {
       prefs.putString(buttonNames[i], currentControls.get(buttonNames[i]));
     }
-    System.out.println(prefs.get());
     prefs.flush();
   }
 
@@ -519,6 +527,7 @@ public class OptionScreen implements Screen {
     /** --------- scrolling to the option */
     // go down
     if (Gdx.input.isKeyJustPressed(Input.Keys.S) && canScroll) {
+      soundPlayer.playSoundEffect("menu-change");
       if (hoverIndex >= buttons.length - 1) {
         hoverIndex = 0;
       } else if (hoverIndex == 1 || hoverIndex == 2) {
@@ -531,6 +540,7 @@ public class OptionScreen implements Screen {
     }
     // go up
     else if (Gdx.input.isKeyJustPressed(Input.Keys.W) && canScroll) {
+      soundPlayer.playSoundEffect("menu-change");
       if (hoverIndex == 0) {
         hoverIndex = buttons.length - 1;
       } else if (hoverIndex == 3 || hoverIndex == 4) {
@@ -552,6 +562,7 @@ public class OptionScreen implements Screen {
     /** selecting the option (can only select non controller settings) */
     if (clickCount == 0) {
       if (Gdx.input.isKeyPressed(Input.Keys.E) || Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
+        soundPlayer.playSoundEffect("menu-select");
         // 2 options only
         if (hoverIndex == 0) {
           if (buttonMaps.get(aimAssistButton).equals("Off")) {

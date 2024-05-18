@@ -30,7 +30,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectMap;
-import edu.cornell.jade.seasthethrone.audio.*;
+import edu.cornell.gdiac.audio.*;
 import edu.cornell.jade.seasthethrone.util.*;
 
 /**
@@ -173,6 +173,7 @@ public class AssetDirectory extends AssetManager {
         topLoader.addParser( new MusicParser() );
         topLoader.addParser( new SoundEffectParser() );
         topLoader.addParser( new MusicQueueParser() );
+        topLoader.addParser( new AudioSourceParser() );
     }
 
     /**

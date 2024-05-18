@@ -9,11 +9,17 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import edu.cornell.jade.seasthethrone.assets.AssetDirectory;
+import edu.cornell.jade.seasthethrone.audio.SoundPlayer;
 import edu.cornell.jade.seasthethrone.input.Controllable;
 import edu.cornell.jade.seasthethrone.render.GameCanvas;
 import edu.cornell.jade.seasthethrone.util.ScreenListener;
 
 public class TitleScreen implements Screen, Controllable {
+  /** Sound player for the title screen */
+  private SoundPlayer soundPlayer;
+
+  public TitleScreen() {
+  }
 
   /** Internal assets for this title screen */
   private AssetDirectory internal;
@@ -73,7 +79,8 @@ public class TitleScreen implements Screen, Controllable {
     }
   }
 
-  public TitleScreen(String file, GameCanvas canvas, ScreenViewport viewport) {
+  public TitleScreen(String file, GameCanvas canvas, ScreenViewport viewport, SoundPlayer soundPlayer) {
+    this.soundPlayer = soundPlayer;
     this.canvas = canvas;
     this.viewport = viewport;
     fontScale = (float) canvas.getHeight() / 275;
@@ -163,6 +170,7 @@ public class TitleScreen implements Screen, Controllable {
   /** Selects the current menu option */
   public void pressInteract() {
     if (pressTimer == 0) {
+      soundPlayer.playSoundEffect("menu-select");
       switch (selection) {
         case PLAY -> {
           ((GDXRoot) listener).setLoadSave(true);
@@ -185,10 +193,12 @@ public class TitleScreen implements Screen, Controllable {
   /** Selects between menu options */
   public void moveVertical(float movement) {
     if (movement > 0 && !toggle) {
+      soundPlayer.playSoundEffect("menu-change");
       cycleUp();
       toggle = true;
     }
     if (movement < 0 && !toggle) {
+      soundPlayer.playSoundEffect("menu-change");
       cycleDown();
       toggle = true;
     }

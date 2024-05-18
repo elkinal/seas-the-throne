@@ -2,6 +2,8 @@ package edu.cornell.jade.seasthethrone;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+
+import edu.cornell.jade.seasthethrone.audio.SoundPlayer;
 import edu.cornell.jade.seasthethrone.gamemodel.CheckpointModel;
 import edu.cornell.jade.seasthethrone.gamemodel.HealthpackModel;
 import edu.cornell.jade.seasthethrone.gamemodel.Interactable;
@@ -33,7 +35,10 @@ public class InteractableController implements Controllable {
 
   private int npcInteractDelay = 12;
 
-  public InteractableController() {
+  private SoundPlayer soundPlayer;
+
+  public InteractableController(SoundPlayer soundPlayer) {
+    this.soundPlayer = soundPlayer;
     this.interactables = new Array<>();
     this.interactPressed = false;
     checkpointActivated = false;
@@ -85,6 +90,9 @@ public class InteractableController implements Controllable {
         // interact with healthpacks
         if (canUseHealthpack((HealthpackModel) interactable)) {
           if (BuildConfig.DEBUG) System.out.println("Health restored!");
+          if (interactTimer == 0)
+            soundPlayer.playSoundEffect("interact");
+          interactTimer ++;
           player.setHealth(5);
           player.setHeal();
           ((HealthpackModel) interactable).setUsed(true);
@@ -92,6 +100,9 @@ public class InteractableController implements Controllable {
       } else if (interactable instanceof CheckpointModel) {
         // interact with checkpoints
         if (interactable.getPlayerInRange() && !checkpointActivated) {
+          if (interactTimer == 0)
+            soundPlayer.playSoundEffect("interact");
+          interactTimer ++;
           player.setHealth(5);
           player.setHeal();
           ((CheckpointModel) interactable).setActivated(true);
@@ -104,6 +115,8 @@ public class InteractableController implements Controllable {
           if (BuildConfig.DEBUG) System.out.println("Npc interacted");
           interactTimer ++;
           if (!dialogueController.isActive()) {
+            if (interactTimer == 1)
+              soundPlayer.playSoundEffect("interact");
             dialogueController.setDialogueBox(((NpcModel) interactable).getDialogueBox());
             dialogueController.getDialogueBox().show();
             dialogueController.setActive(true);
@@ -116,6 +129,7 @@ public class InteractableController implements Controllable {
     }
     if (interactTimer > 0) interactTimer ++;
     if (interactTimer >= npcInteractDelay) interactTimer = 0;
+
     interactPressed = false;
   }
 

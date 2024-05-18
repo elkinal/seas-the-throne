@@ -8,10 +8,11 @@
  * @author Walker M. White
  * @date   4/15/20
  */
-package edu.cornell.jade.seasthethrone.audio;
+package edu.cornell.gdiac.audio;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Disposable;
+
 import java.nio.ByteBuffer;
 
 /**
