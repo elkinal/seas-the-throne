@@ -29,6 +29,12 @@ public class FinalBossModel extends BossModel{
     transformTimer = transformAnimation.getSize() * frameDelay;
   }
   @Override
+  public void executeBoss() {
+    setFrameNumber(0);
+    executeCount = frameDelay * deathAnimation.getSize();
+    isExecute = true;
+  }
+  @Override
   public void progressFrame() {
     int frame = getFrameNumber();
     if (transformTimer>0)
@@ -59,12 +65,28 @@ public class FinalBossModel extends BossModel{
     }
     filmStrip.setFrame(frame);
     if (isDead()) {
-      if (frameCounter % frameDelay == 0 && getFrameNumber() < getFramesInAnimation() - 1) {
-        setFrameNumber(getFrameNumber() + 1);
-        deathCount -= 1;
-      } else {
-        setFrameNumber(getFrameNumber());
-        deathCount -= 1;
+      if (isExecute){
+        if (frameCounter % frameDelay == 0 && getFrameNumber() < getFramesInAnimation() - 1) {
+          setFrameNumber(getFrameNumber() + 1);
+          executeCount -= 1;
+        } else {
+          setFrameNumber(getFrameNumber());
+          executeCount -= 1;
+        }
+        if (executeCount <=0){
+          finishExecute = true;
+          isExecute = false;
+          setFrameNumber(0);
+        }
+      }
+      else {
+        if (frameCounter % frameDelay == 0 && getFrameNumber() < getFramesInAnimation() - 1) {
+          setFrameNumber(getFrameNumber() + 1);
+          deathCount -= 1;
+        } else {
+          setFrameNumber(getFrameNumber());
+          deathCount -= 1;
+        }
       }
     } else if (isHit()) {
       if (frameCounter % frameDelay == 0 && getFrameNumber() < getFramesInAnimation() - 1) {
@@ -98,5 +120,8 @@ public class FinalBossModel extends BossModel{
     }
     frameCounter += 1;
   }
-
+  @Override
+  public void update(float delta) {
+    if (finishExecute) setActive(false);
+  }
 }

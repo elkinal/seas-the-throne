@@ -19,6 +19,14 @@ public interface BossController {
    * @return if the boss controller is dead
    */
   public boolean isDead();
+  /**
+   * Returns if the boss this model controller is dead and executed.
+   *
+   * @return if the boss controller is dead and executed.
+   */
+  default public boolean isTerminated(){
+    return isDead();
+  }
 
   /**
    * Returns if an enemy is a boss or a mob. Bosses are opponents which are combinations of all

@@ -529,6 +529,7 @@ public class GameplayController implements Screen {
 
     // Check if the player is alive and all bosses are dead, if so the player wins
     if (!bossControllers.isEmpty() && allBossesDefeated() && !playerController.isDead()) {
+      System.out.println("won!!!");
       gameState = GameState.WIN;
       for (BossController bc : bossControllers) {
         bc.remove();
@@ -765,7 +766,7 @@ public class GameplayController implements Screen {
   }
 
   public boolean allBossesDefeated() {
-    for (BossController bc : bossControllers) if (!bc.isDead()) return false;
+    for (BossController bc : bossControllers) if (!bc.isTerminated()) return false;
     return true;
   }
 
