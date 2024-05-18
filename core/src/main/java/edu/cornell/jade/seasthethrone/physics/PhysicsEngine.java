@@ -378,7 +378,7 @@ public class PhysicsEngine implements ContactListener {
   public void handleCollision(PlayerSpearModel ps, BossModel b) {
     if(!b.isDead() && !hasSpeared){
       hasSpeared = true;
-      soundPlayer.playSoundEffect("hit-enemy-with-spear");
+      soundPlayer.playSoundEffect("enemy-hit");
 
       b.decrementHealth(ps.getDamage());
       ps.getMainBody().setKnockedBack(b.getPosition(), b.getSpearKnockbackForce(), 15);
