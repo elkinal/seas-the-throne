@@ -126,12 +126,17 @@ public class StateController {
     }
   }
 
-  public void restart() {
+  public void reset() {
     for (String key : storedLevels.keySet()) {
       storedLevels.get(key).clear();
+
     }
   }
 
+  public void clear() {
+    this.checkpoint = -1;
+    storedLevels.clear();
+  }
 
   /** Returns if this controller has saved state on the specified level */
   public boolean hasLevel(String name) {

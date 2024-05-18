@@ -41,6 +41,12 @@ public class TitleScreen implements Screen, Controllable {
 
   private boolean toggle;
 
+  /** Delay to prevent infinite loop between options and title screen */
+  private final int PRESS_DELAY = 5;
+
+  /** Timer since last click */
+  private int pressTimer;
+
   private float MENU_SPACING = 200f;
 
   public enum TitleSelection {
@@ -63,7 +69,7 @@ public class TitleScreen implements Screen, Controllable {
     }
 
     public TitleSelection cycleDown() {
-      return values()[(optionValue < TitleSelection.values().length-1 ? optionValue + 1 : 0)];
+      return values()[(optionValue < TitleSelection.values().length - 1 ? optionValue + 1 : 0)];
     }
   }
 
@@ -79,6 +85,7 @@ public class TitleScreen implements Screen, Controllable {
     background = internal.getEntry("title:background", Texture.class);
     logo = internal.getEntry("title:logo", Texture.class);
     textFont = internal.getEntry("loading:alagard", BitmapFont.class);
+    pressTimer = 0;
 
     // Calculating spacings between menu options
     canvas.resize();
@@ -117,13 +124,13 @@ public class TitleScreen implements Screen, Controllable {
     canvas.getSpriteBatch().setProjectionMatrix(viewport.getCamera().combined);
 
     // draw the background
-    float ox = -canvas.getWidth()/2f;
-    float oy = -canvas.getHeight()/2f;
+    float ox = -canvas.getWidth() / 2f;
+    float oy = -canvas.getHeight() / 2f;
     canvas.draw(background, Color.WHITE, ox, oy, canvas.getWidth(), canvas.getHeight());
 
     // draw the logo
     float scale = 0.4f * canvas.getHeight() / logo.getHeight();
-    ox = -canvas.getWidth()/2f + 10f;
+    ox = -canvas.getWidth() / 2f + 10f;
 
     canvas.draw(logo, Color.WHITE, ox, 0, scale * logo.getWidth(), scale * logo.getHeight());
 
@@ -132,8 +139,8 @@ public class TitleScreen implements Screen, Controllable {
     textFont.dispose();
     resizeFont();
 
-    float y_offset = -canvas.getHeight()/15f;
-    float x_offset =  canvas.getWidth()*(1/20f - 1/2f);
+    float y_offset = -canvas.getHeight() / 15f;
+    float x_offset = canvas.getWidth() * (1 / 20f - 1 / 2f);
     float menuSpacing = canvas.getHeight() / 10f;
     for (TitleSelection s : TitleSelection.values()) {
       if (selection == s) {
@@ -155,20 +162,24 @@ public class TitleScreen implements Screen, Controllable {
 
   /** Selects the current menu option */
   public void pressInteract() {
-    switch (selection) {
-      case PLAY -> {
-        ((GDXRoot)listener).setLoadSave(true);
-        listener.exitScreen(this, 1);
+    if (pressTimer == 0) {
+      switch (selection) {
+        case PLAY -> {
+          ((GDXRoot) listener).setLoadSave(true);
+          listener.exitScreen(this, 1);
+        }
+        case NEW_GAME -> {
+          ((GDXRoot) listener).setLoadSave(false);
+          listener.exitScreen(this, 1);
+        }
+        case OPTIONS -> {
+          listener.exitScreen(this, 3);
+        }
+        case QUIT -> System.exit(0);
       }
-      case NEW_GAME -> {
-        ((GDXRoot)listener).setLoadSave(false);
-        listener.exitScreen(this, 1);
-      }
-      case OPTIONS -> {
-        listener.exitScreen(this, 3);
-      }
-      case QUIT -> System.exit(0);
     }
+    if (pressTimer >= PRESS_DELAY) pressTimer = 0;
+    else pressTimer++;
   }
 
   /** Selects between menu options */
@@ -189,10 +200,9 @@ public class TitleScreen implements Screen, Controllable {
   private void resizeFont() {
     fontScale = (float) canvas.getHeight() / 275;
 
-    FreeTypeFontGenerator generator =
-            new FreeTypeFontGenerator(Gdx.files.internal("Alagard.ttf"));
+    FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Alagard.ttf"));
     FreeTypeFontGenerator.FreeTypeFontParameter parameter =
-            new FreeTypeFontGenerator.FreeTypeFontParameter();
+        new FreeTypeFontGenerator.FreeTypeFontParameter();
 
     textFont = generator.generateFont(parameter);
     textFont.setUseIntegerPositions(false);

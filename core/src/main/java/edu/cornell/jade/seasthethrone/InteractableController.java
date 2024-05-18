@@ -86,12 +86,14 @@ public class InteractableController implements Controllable {
         if (canUseHealthpack((HealthpackModel) interactable)) {
           if (BuildConfig.DEBUG) System.out.println("Health restored!");
           player.setHealth(5);
+          player.setHeal();
           ((HealthpackModel) interactable).setUsed(true);
         }
       } else if (interactable instanceof CheckpointModel) {
         // interact with checkpoints
         if (interactable.getPlayerInRange() && !checkpointActivated) {
-           player.setHealth(5);
+          player.setHealth(5);
+          player.setHeal();
           ((CheckpointModel) interactable).setActivated(true);
           this.checkpointID = ((CheckpointModel) interactable).getCheckpointID();
           this.checkpointActivated = true;

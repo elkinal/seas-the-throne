@@ -350,7 +350,16 @@ public class PhysicsEngine implements ContactListener {
       pb.setKnockedBack(b.getPosition(), b.getBodyKnockbackForce(), 12);
       pb.setStopDashing(true);
       playerBossCollision = Optional.empty();
-    } else {
+      System.out.println("hit!!!");
+    }
+    else if (b.isDead()){
+      if (!b.isExecute()) {
+        System.out.println("executing!!!");
+        b.executeBoss();
+        pb.startExecuting();
+      }
+    }
+    else {
       if (playerBossCollision.isEmpty() && pb.getHealth() > 0) {
         playerBossCollision = Optional.of(c);
       }
