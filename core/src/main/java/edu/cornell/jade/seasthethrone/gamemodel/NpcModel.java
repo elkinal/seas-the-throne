@@ -10,6 +10,7 @@ import edu.cornell.jade.seasthethrone.render.RenderingEngine;
 import edu.cornell.jade.seasthethrone.ui.DialogueBox;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -86,8 +87,10 @@ public class NpcModel extends BoxModel implements Interactable, Renderable {
 
   /** Reads this characters dialogue string from the specified file */
   private String parseDialogue(String file) {
-    Path path = Path.of("assets/"+file);
+    Path path = Path.of("../app/assets/"+file);
     try {
+      String currentPath = new java.io.File(".").getCanonicalPath();
+      System.out.println("Current dir:" + currentPath);
       return Files.readString(path, StandardCharsets.UTF_8);
     } catch (Exception e) {
       System.out.println(e);
