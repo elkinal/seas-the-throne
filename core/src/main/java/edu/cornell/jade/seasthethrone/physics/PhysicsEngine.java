@@ -6,7 +6,9 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import edu.cornell.jade.seasthethrone.gamemodel.*;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.BossModel;
+import edu.cornell.jade.seasthethrone.gamemodel.boss.CrabBossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.boss.EnemyModel;
+import edu.cornell.jade.seasthethrone.gamemodel.boss.FinalBossModel;
 import edu.cornell.jade.seasthethrone.gamemodel.gate.GateSensorModel;
 import edu.cornell.jade.seasthethrone.gamemodel.player.*;
 import edu.cornell.jade.seasthethrone.model.Model;
@@ -361,7 +363,7 @@ public class PhysicsEngine implements ContactListener {
       System.out.println("hit!!!");
     }
     else if (b.isDead()){
-      if (!b.isExecute()) {
+      if (!b.isExecute() && ((b instanceof CrabBossModel)||(b instanceof FinalBossModel))) {
         System.out.println("executing!!!");
         b.executeBoss();
         pb.startExecuting();
