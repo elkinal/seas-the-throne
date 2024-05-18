@@ -113,6 +113,8 @@ public class StateController {
       for (int i = 0; i < levelsRoot.size; i++) {
         LevelState thisLevel = new LevelState(levelsRoot.get(i).get("bossHps").asIntArray());
         storedLevels.put(levelsRoot.get(i).name, thisLevel);
+
+        if (BuildConfig.DEBUG) System.out.println("State loaded successfully");
       }
     } catch (Exception e) {
       if (BuildConfig.DEBUG) {
@@ -123,6 +125,13 @@ public class StateController {
       this.playerAmmo = 0;
     }
   }
+
+  public void restart() {
+    for (String key : storedLevels.keySet()) {
+      storedLevels.get(key).clear();
+    }
+  }
+
 
   /** Returns if this controller has saved state on the specified level */
   public boolean hasLevel(String name) {

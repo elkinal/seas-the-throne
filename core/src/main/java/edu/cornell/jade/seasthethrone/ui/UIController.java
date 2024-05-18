@@ -1,6 +1,12 @@
 package edu.cornell.jade.seasthethrone.ui;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import edu.cornell.jade.seasthethrone.GameplayController;
@@ -48,6 +54,14 @@ public class UIController {
   /** Internal UI canvas to handle rendering */
   private GameCanvas canvas;
 
+  private TextureRegion gameOver;
+
+  /** Font for display text */
+  private BitmapFont textFont;
+
+  private float fontScale;
+
+
   /**
    * Constructs a UIController object.
    *
@@ -74,6 +88,8 @@ public class UIController {
 
     this.canvas = canvas;
     uiModel = new UIModel(viewport.getScreenWidth(), viewport.getScreenHeight());
+    gameOver = new TextureRegion(new Texture("ui/game_over.png"));
+
   }
 
   public UIController (
@@ -91,6 +107,20 @@ public class UIController {
 
     this.canvas = canvas;
     uiModel = new UIModel(viewport.getScreenWidth(), viewport.getScreenHeight());
+    gameOver = new TextureRegion(new Texture("ui/game_over.png"));
+
+    fontScale = (float) canvas.getHeight() / 275;
+    FreeTypeFontGenerator generator =
+            new FreeTypeFontGenerator(Gdx.files.internal("Alagard.ttf"));
+    FreeTypeFontGenerator.FreeTypeFontParameter parameter =
+            new FreeTypeFontGenerator.FreeTypeFontParameter();
+    textFont = generator.generateFont(parameter);
+    textFont.setUseIntegerPositions(false);
+    textFont.getData().setScale(fontScale);
+    textFont.setColor(Color.WHITE);
+    generator.dispose();
+
+
   }
 
   public void setPlayer(PlayerController player) {
@@ -164,6 +194,45 @@ public class UIController {
     }
     // update boss hp
     uiModel.update(boss);
+  }
+
+  public void drawGameOver() {
+    canvas.beginUI();
+    canvas.getUiBatch().setProjectionMatrix(viewport.getCamera().combined);
+
+    // draw image
+    float scale = 0.5f * canvas.getHeight() / gameOver.getRegionHeight();
+    float width = scale * gameOver.getRegionWidth();
+    float height = scale * gameOver.getRegionHeight();
+    float ox = (canvas.getWidth()/2f - width/2f);
+    float oy = (canvas.getHeight()/2f - height/2f);
+    canvas.drawUI(gameOver, Color.WHITE, ox, oy, width, height);
+
+    // draw text
+    String text = "Try again?";
+    textFont.dispose();
+    resizeFont();
+    GlyphLayout layout = new GlyphLayout(textFont, text);
+    ox = canvas.getWidth()/2f - layout.width / 2f;
+    oy = 0.25f* canvas.getHeight();
+    canvas.drawTextUI(text, textFont, ox,  oy, false);
+
+    canvas.endUI();
+  }
+
+  private void resizeFont() {
+    fontScale = (float) canvas.getHeight() / 275;
+
+    FreeTypeFontGenerator generator =
+            new FreeTypeFontGenerator(Gdx.files.internal("Alagard.ttf"));
+    FreeTypeFontGenerator.FreeTypeFontParameter parameter =
+            new FreeTypeFontGenerator.FreeTypeFontParameter();
+
+    textFont = generator.generateFont(parameter);
+    textFont.setUseIntegerPositions(false);
+    textFont.getData().setScale(fontScale);
+    textFont.setColor(Color.WHITE);
+    generator.dispose();
   }
 
   public void setDrawSave(boolean draw) {

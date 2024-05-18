@@ -509,15 +509,14 @@ public class GameplayController implements Screen {
         stateController.setRespawnLoc(playerController.getLocation().cpy());
         stateController.setRespawnLevel(level.name);
         stateController.updateState(level.name, playerController, bossControllers);
+        stateController.setCheckpoint(interactController.getCheckpointID());
         stateController.saveGame();
         uiController.setDrawSave(true);
         saveTimer++;
       }
 
       for (BossController bc : bossControllers) {
-        if (!bc.isDead()) {
-          bc.update(delta);
-        }
+        bc.update(delta);
       }
 
       if (!pauseController.getPaused()) {
@@ -637,6 +636,7 @@ public class GameplayController implements Screen {
         restart = true;
         pauseController.continueGame();
       } else {
+        uiController.drawGameOver();
         renderEngine.drawGameState(gameState);
       }
     }
@@ -685,6 +685,8 @@ public class GameplayController implements Screen {
     if (BuildConfig.DEBUG) {
       System.out.println("Respawning");
     }
+    bossControllers.clear();
+    stateController.restart();
     setupGameplay();
     //    try {
     //      System.out.println("respawn loc " + stateController.getRespawnLoc());
@@ -808,6 +810,10 @@ public class GameplayController implements Screen {
     for (BossController boss : bossControllers) {
       boss.dispose();
     }
+  }
+
+  public void loadState() {
+    stateController.loadState();
   }
 
   /** Compares Models based on height in the world */

@@ -4512,7 +4512,7 @@
                         {
                          "name":"checkpointID",
                          "type":"int",
-                         "value":0
+                         "value":2
                         }, 
                         {
                          "name":"type",
@@ -4534,7 +4534,7 @@
                         {
                          "name":"checkpointID",
                          "type":"int",
-                         "value":6
+                         "value":8
                         }, 
                         {
                          "name":"type",
@@ -4573,7 +4573,7 @@
                         {
                          "name":"checkpointID",
                          "type":"int",
-                         "value":2
+                         "value":4
                         }, 
                         {
                          "name":"type",
@@ -4584,8 +4584,8 @@
                  "type":"",
                  "visible":true,
                  "width":18.5,
-                 "x":2459.95658949944,
-                 "y":1409.00305718913
+                 "x":2466.45658949944,
+                 "y":1417.50305718913
                 }, 
                 {
                  "height":10,
@@ -4595,7 +4595,7 @@
                         {
                          "name":"checkpointID",
                          "type":"int",
-                         "value":1
+                         "value":3
                         }, 
                         {
                          "name":"type",
@@ -4606,8 +4606,8 @@
                  "type":"",
                  "visible":true,
                  "width":18.5,
-                 "x":2425.28841472692,
-                 "y":939.506984495803
+                 "x":2500.28841472692,
+                 "y":964.840317829136
                 }, 
                 {
                  "height":10,
@@ -4617,7 +4617,7 @@
                         {
                          "name":"checkpointID",
                          "type":"int",
-                         "value":3
+                         "value":5
                         }, 
                         {
                          "name":"type",
@@ -4639,7 +4639,7 @@
                         {
                          "name":"checkpointID",
                          "type":"int",
-                         "value":4
+                         "value":6
                         }, 
                         {
                          "name":"type",
@@ -4650,8 +4650,8 @@
                  "type":"",
                  "visible":true,
                  "width":18.5,
-                 "x":725.163721018624,
-                 "y":2168.28734321551
+                 "x":712.830387685291,
+                 "y":2165.28734321551
                 }, 
                 {
                  "height":10,
@@ -4661,7 +4661,7 @@
                         {
                          "name":"checkpointID",
                          "type":"int",
-                         "value":5
+                         "value":7
                         }, 
                         {
                          "name":"type",
@@ -4755,8 +4755,8 @@
                  "type":"",
                  "visible":true,
                  "width":18.5,
-                 "x":693.083333333333,
-                 "y":755.416666666667
+                 "x":671.416666666666,
+                 "y":762.75
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -19193,10 +19193,87 @@
                  "width":6,
                  "x":2434.33333333333,
                  "y":361.5
+                }, 
+                {
+                 "height":17.25,
+                 "id":1140,
+                 "name":"levels\/column.png",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":17.25,
+                 "x":1961.25,
+                 "y":1060.75
+                }, 
+                {
+                 "height":17.25,
+                 "id":1141,
+                 "name":"levels\/column.png",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":17.25,
+                 "x":1981.26136363636,
+                 "y":1060.53409090909
+                }, 
+                {
+                 "height":17.25,
+                 "id":1142,
+                 "name":"levels\/columndelapitated.png",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":17.25,
+                 "x":1920.625,
+                 "y":1061.125
+                }, 
+                {
+                 "height":17.25,
+                 "id":1143,
+                 "name":"levels\/columndelapitated.png",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":17.25,
+                 "x":2101.375,
+                 "y":1060.375
+                }, 
+                {
+                 "height":17.25,
+                 "id":1144,
+                 "name":"levels\/column.png",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":17.25,
+                 "x":2241.125,
+                 "y":1380.375
+                }, 
+                {
+                 "height":17.25,
+                 "id":1145,
+                 "name":"levels\/column.png",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":17.25,
+                 "x":2161.375,
+                 "y":1380.625
+                }, 
+                {
+                 "height":17.25,
+                 "id":1146,
+                 "name":"levels\/column.png",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":17.25,
+                 "x":2301.375,
+                 "y":1381
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":true,
+         "visible":false,
          "x":0,
          "y":0
         }, 
@@ -19470,7 +19547,7 @@
                  "y":927.813903495998
                 }, 
                 {
-                 "height":52.2122176232299,
+                 "height":105.697066108078,
                  "id":243,
                  "name":"levels\/gate.png",
                  "properties":[
@@ -19488,11 +19565,11 @@
                  "type":"",
                  "visible":true,
                  "width":2.21836,
-                 "x":2478.94337256097,
-                 "y":947.789988735016
+                 "x":2554.61003922764,
+                 "y":958.971806916834
                 }, 
                 {
-                 "height":58.6657661691542,
+                 "height":116.999099502488,
                  "id":244,
                  "name":"",
                  "properties":[
@@ -19509,9 +19586,9 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":18.6345151385926,
-                 "x":2486.06671479927,
-                 "y":952.089664609426
+                 "width":24.6345151385926,
+                 "x":2565.06671479927,
+                 "y":962.756331276093
                 }, 
                 {
                  "height":39.675720900982,
@@ -20106,10 +20183,32 @@
                  "width":119.123191908675,
                  "x":821.522701074629,
                  "y":1200.69240038692
+                }, 
+                {
+                 "height":74.4922,
+                 "id":1149,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":-1
+                        }, 
+                        {
+                         "name":"sensor",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":18.6345,
+                 "x":2577.34941666667,
+                 "y":1384.08723333333
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -20657,6 +20756,24 @@
                  "width":20,
                  "x":1012.02315410342,
                  "y":1330.00137209502
+                }, 
+                {
+                 "gid":40,
+                 "height":20,
+                 "id":1148,
+                 "name":"chasing_jelly",
+                 "properties":[
+                        {
+                         "name":"id",
+                         "type":"int",
+                         "value":-1
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":20,
+                 "x":2213,
+                 "y":1547
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -20807,7 +20924,7 @@
          "y":0
         }],
  "nextlayerid":16,
- "nextobjectid":1139,
+ "nextobjectid":1150,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

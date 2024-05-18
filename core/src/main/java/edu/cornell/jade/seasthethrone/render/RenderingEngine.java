@@ -2,6 +2,7 @@ package edu.cornell.jade.seasthethrone.render;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -30,8 +31,6 @@ public class RenderingEngine {
 
   /** The ratio of a pixel in a texture to a meter in the world */
   private float worldScale;
-
-  private BackgroundImage BACKGROUND;
 
   /**
    * Creates a new RenderingEngine based on the world width and world height for the camera.
@@ -81,27 +80,6 @@ public class RenderingEngine {
     }
   }
 
-  public void setBackground(BackgroundImage bg) {
-    BACKGROUND = bg;
-  }
-
-  /** Draw the background for the game */
-  public void drawBackground() {
-    canvas.clear();
-    canvas.begin();
-    canvas.draw(
-        BACKGROUND.getTexture(),
-        Color.BLACK,
-        BACKGROUND.getPosition().x,
-        BACKGROUND.getPosition().y,
-        0,
-        0,
-        0,
-        8f,
-        8f);
-    canvas.end();
-  }
-
   /** Draws all the renderable objects in the list to be rendered */
   public void drawRenderables() {
     canvas.clear();
@@ -145,9 +123,9 @@ public class RenderingEngine {
         canvas.drawTextCentered("YOU WIN!", textFont, 60f);
         break;
       default:
-        canvas.drawTextCentered("Game Over!", textFont, 60f);
+//        canvas.drawTextCentered("Game Over!", textFont, 60f);
     }
-    canvas.drawTextCentered("Press R to Restart", textFont, 0);
+//    canvas.drawTextCentered("Press R to Restart", textFont, 0);
     canvas.end();
   }
 

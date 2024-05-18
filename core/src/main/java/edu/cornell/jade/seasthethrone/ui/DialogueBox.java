@@ -108,6 +108,7 @@ public class DialogueBox implements Renderable, Dialogueable {
   private void drawText(RenderingEngine renderer) {
     if (display) {
       // Drawing the main text
+      if (this.menuFont != null) menuFont.dispose();
       FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Alagard.ttf"));
       FreeTypeFontGenerator.FreeTypeFontParameter parameter =
               new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -138,14 +139,14 @@ public class DialogueBox implements Renderable, Dialogueable {
 //              width - xTextOffset + 2,
 //              getTextY() + textSpacingY * 1.5f - 2,
 //              false);
-      renderer
-          .getGameCanvas()
-          .drawTextUI(
-              "Page " + (currentText + 1) + "/" + (texts.size()),
-              menuFont,
-              x + width / 2,
-              110,
-              true);
+//      renderer
+//          .getGameCanvas()
+//          .drawTextUI(
+//              "Page " + (currentText + 1) + "/" + (texts.size()),
+//              menuFont,
+//              x + width / 2,
+//              110,
+//              true);
     }
   }
 

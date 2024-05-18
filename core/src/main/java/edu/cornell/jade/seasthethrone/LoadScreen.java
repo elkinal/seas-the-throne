@@ -59,6 +59,12 @@ public class LoadScreen implements Screen {
 
   private int exitCode;
 
+  /** Stored canvas width to know when the canvas is resized */
+  private int storedWidth;
+
+  /** Scale of font */
+  private float fontScale;
+
   /**
    * Creates a LoadScreen with the default budget, size and position.
    *
@@ -71,6 +77,8 @@ public class LoadScreen implements Screen {
 
   public LoadScreen(String file, GameCanvas canvas, int millis, int exitCode) {
     this.canvas = canvas;
+    storedWidth = canvas.getWidth();
+    fontScale = (float) canvas.getHeight() / 200;
     this.viewport = new ScreenViewport();
     budget = millis;
     timer = 0;
@@ -90,6 +98,7 @@ public class LoadScreen implements Screen {
     playerRun = new FilmStrip(runTexture, 1, framesInAnimation);
 
     textFont = internal.getEntry("loading:alagard", BitmapFont.class);
+    resizeFont();
 
     assets = new AssetDirectory( file );
     active = true;
@@ -107,7 +116,6 @@ public class LoadScreen implements Screen {
    * @param delta Number of seconds since last animation frame
    */
   private void update(float delta) {
-//    canvas.resize();
     viewport.update(canvas.getWidth(), canvas.getHeight());
     viewport.apply();
 
@@ -119,16 +127,18 @@ public class LoadScreen implements Screen {
     canvas.begin();
     canvas.getSpriteBatch().setProjectionMatrix(viewport.getCamera().combined);
 
-    // draw text
-    String text = "Loading...";
-
-    GlyphLayout layout = new GlyphLayout(textFont, text);
-    float x = - layout.width / 2.0f;
-    float y = 200f;
-    textFont.draw(canvas.getSpriteBatch(), layout, x, y);
-
     // draw animation
     drawPlayer();
+
+    // draw text
+    String text = "Loading...";
+    textFont.dispose();
+    resizeFont();
+
+    GlyphLayout layout = new GlyphLayout(textFont, text);
+    float ox = - layout.width / 2.0f;
+    float oy = 0.15f* canvas.getHeight();
+    canvas.drawText(text, textFont, ox,  oy);
 
     canvas.end();
   }
@@ -142,11 +152,25 @@ public class LoadScreen implements Screen {
 
     float width = playerRun.getRegionWidth();
     float height = playerRun.getRegionHeight();
-    float scale = 1f;
     float ox = -width/2f - 2*width + playerRun.getFrame()*(4f/11)*width;
-    canvas.draw(playerRun, Color.WHITE, ox, -height, scale*width, scale*height);
+    float scale = fontScale / 5f;
+    canvas.draw(playerRun, Color.WHITE, ox, -scale*height, scale*width, scale*height);
   }
 
+  private void resizeFont() {
+    fontScale = (float) canvas.getHeight() / 200;
+
+    FreeTypeFontGenerator generator =
+            new FreeTypeFontGenerator(Gdx.files.internal("Alagard.ttf"));
+    FreeTypeFontGenerator.FreeTypeFontParameter parameter =
+            new FreeTypeFontGenerator.FreeTypeFontParameter();
+
+    textFont = generator.generateFont(parameter);
+    textFont.setUseIntegerPositions(false);
+    textFont.getData().setScale(fontScale);
+    textFont.setColor(Color.WHITE);
+    generator.dispose();
+  }
 
   /**
    * Called when the Screen should render itself.
@@ -207,8 +231,9 @@ public class LoadScreen implements Screen {
   }
 
   @Override
-  public void resize(int i, int i1) {
-
+  public void resize(int width, int height) {
+    viewport.update(width, height);
+    canvas.resize();
   }
 
   @Override

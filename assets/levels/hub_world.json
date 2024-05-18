@@ -705,8 +705,8 @@
                  "type":"",
                  "visible":true,
                  "width":20,
-                 "x":431,
-                 "y":397.494110764095
+                 "x":433.865603209476,
+                 "y":389.374901670581
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -769,7 +769,7 @@
                         {
                          "name":"requiredCheckpoint",
                          "type":"int",
-                         "value":-1
+                         "value":2
                         }, 
                         {
                          "name":"target",
@@ -801,7 +801,7 @@
                         {
                          "name":"requiredCheckpoint",
                          "type":"int",
-                         "value":-1
+                         "value":4
                         }, 
                         {
                          "name":"target",
@@ -823,17 +823,17 @@
                         {
                          "name":"playerX",
                          "type":"float",
-                         "value":2425
+                         "value":2510
                         }, 
                         {
                          "name":"playerY",
                          "type":"float",
-                         "value":945
+                         "value":955
                         }, 
                         {
                          "name":"requiredCheckpoint",
                          "type":"int",
-                         "value":-1
+                         "value":3
                         }, 
                         {
                          "name":"target",
@@ -865,7 +865,7 @@
                         {
                          "name":"requiredCheckpoint",
                          "type":"int",
-                         "value":-1
+                         "value":6
                         }, 
                         {
                          "name":"target",
@@ -897,7 +897,7 @@
                         {
                          "name":"requiredCheckpoint",
                          "type":"int",
-                         "value":-1
+                         "value":5
                         }, 
                         {
                          "name":"target",
@@ -929,7 +929,7 @@
                         {
                          "name":"requiredCheckpoint",
                          "type":"int",
-                         "value":-1
+                         "value":8
                         }, 
                         {
                          "name":"target",
@@ -961,7 +961,7 @@
                         {
                          "name":"requiredCheckpoint",
                          "type":"int",
-                         "value":-1
+                         "value":7
                         }, 
                         {
                          "name":"target",
