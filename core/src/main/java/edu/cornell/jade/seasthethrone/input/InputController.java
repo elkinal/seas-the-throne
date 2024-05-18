@@ -112,8 +112,8 @@ public class InputController {
 
   /** Get updated preferences */
   public void getPrefs() {
-    controllerPrimary = prefs.getString("attackButton");
-    controllerSecondary = prefs.getString("dashButton");
+    controllerPrimary = prefs.getString("dashButton");
+    controllerSecondary = prefs.getString("attackButton");
   }
 
   /** Reads the input for the player and converts the result into game logic. */
