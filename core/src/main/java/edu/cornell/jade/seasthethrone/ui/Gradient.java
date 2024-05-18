@@ -22,14 +22,12 @@ public class Gradient implements Renderable {
 
   @Override
   public void draw(RenderingEngine renderer) {
-    renderer
-        .getGameCanvas()
-        .drawUI(
-            texture,
-            originX,
-            originY,
-            renderer.getGameCanvas().getWidth(),
-            renderer.getGameCanvas().getHeight());
+    renderer.draw(
+        texture,
+        originX,
+        originY,
+        renderer.getGameCanvas().getWidth(),
+        renderer.getGameCanvas().getHeight());
   }
 
   @Override

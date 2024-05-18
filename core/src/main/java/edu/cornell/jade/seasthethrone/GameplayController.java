@@ -198,9 +198,9 @@ public class GameplayController implements Screen {
     inputController.add(interactController.getDialogueController());
     this.renderEngine = new RenderingEngine(worldWidth, worldHeight, viewport, worldScale);
 
-////     Initialize physics engine
-//    World world = new World(new Vector2(0, 0), false);
-//    physicsEngine = new PhysicsEngine(bounds, world);
+    ////     Initialize physics engine
+    //    World world = new World(new Vector2(0, 0), false);
+    //    physicsEngine = new PhysicsEngine(bounds, world);
 
     // Load UI
     PauseMenu pauseMenu = new PauseMenu(viewport);
@@ -208,10 +208,12 @@ public class GameplayController implements Screen {
     pauseMenuController.setGameplayController(this);
     inputController.add(pauseMenuController);
 
-////     Initlize controllers
-//    playerController = new PlayerController(physicsEngine);
-//    inputController.add(playerController);
-//    interactController.setPlayerController(playerController);
+    // load midground
+
+    ////     Initlize controllers
+    //    playerController = new PlayerController(physicsEngine);
+    //    inputController.add(playerController);
+    //    interactController.setPlayerController(playerController);
 
     // Initialize pause controller
     pauseController = new PauseController(renderEngine);
@@ -220,11 +222,8 @@ public class GameplayController implements Screen {
     DialogueBoxController pauseMenuDialogueBoxController = pauseMenu.getDialogueBoxController();
     inputController.add(pauseMenuDialogueBoxController);
     uiController =
-            new UIController(
-                    pauseMenuController,
-                    renderEngine,
-                    renderEngine.getGameCanvas(),
-                    uiViewport);
+        new UIController(
+            pauseMenuController, renderEngine, renderEngine.getGameCanvas(), uiViewport);
     uiController.setInteractController(interactController);
     uiController.gatherAssets(assets);
 
@@ -313,7 +312,7 @@ public class GameplayController implements Screen {
             .setShootCooldownLimit(20)
             .build();
 
-//    playerController.setPlayer(player);
+    //    playerController.setPlayer(player);
     // Initlize controllers
     playerController = new PlayerController(physicsEngine, player);
     inputController.add(playerController);
@@ -389,8 +388,9 @@ public class GameplayController implements Screen {
             .setGetHitUpAnimation(new Texture("bosses/" + assetName + "/up_hurt.png"))
             .setGetHitRightAnimation(new Texture("bosses/" + assetName + "/right_hurt.png"));
       }
-      if (name.contains("final")){
-        bossBuilder.setTransformAnimation(new Texture("bosses/" + assetName + "/transform.png"))
+      if (name.contains("final")) {
+        bossBuilder
+            .setTransformAnimation(new Texture("bosses/" + assetName + "/transform.png"))
             .setFinalAttackAnimation(new Texture("bosses/" + assetName + "/final_attack.png"))
             .setFinalShootAnimation(new Texture("bosses/" + assetName + "/final_shoot.png"))
             .setFinalGetHitAnimation(new Texture("bosses/" + assetName + "/final_hurt.png"));
@@ -461,6 +461,13 @@ public class GameplayController implements Screen {
       renderEngine.addRenderable(model);
       interactController.add(model);
     }
+
+    // load midground
+    Gradient gradient = new Gradient();
+    Bubbles bubbles = new Bubbles();
+
+    renderEngine.addRenderable(gradient);
+    renderEngine.addRenderable(bubbles);
 
     // load foreground
     renderEngine.addRenderable(level.getForeground());
@@ -590,6 +597,12 @@ public class GameplayController implements Screen {
       renderEngine.addRenderable((Renderable) r);
     }
 
+    // reload midground and foreground
+    Gradient gradient = new Gradient();
+    Bubbles bubbles = new Bubbles();
+
+    renderEngine.addRenderable(gradient);
+    renderEngine.addRenderable(bubbles);
     renderEngine.addRenderable(level.getForeground());
 
     // Draw the renderables
@@ -776,13 +789,13 @@ public class GameplayController implements Screen {
   }
 
   public void dispose() {
-//    playerController.setPlayer(null);
+    //    playerController.setPlayer(null);
     bossControllers.clear();
     uiController.clear();
-//    renderEngine.clear();
+    //    renderEngine.clear();
     interactController.dispose();
     portalController.dispose();
-    if (physicsEngine!=null) physicsEngine.dispose();
+    if (physicsEngine != null) physicsEngine.dispose();
   }
 
   public boolean allBossesDefeated() {

@@ -29,12 +29,6 @@ public class UIModel implements Renderable {
   /** Whether the player is fighting a boss (need to render HP bar) */
   private boolean isBoss;
 
-  /** The gradient for water */
-  private Gradient gradient;
-
-  /** The gradient in the foreground */
-  private Bubbles bubbles;
-
   /** The red part of the hp bar */
   private TextureRegion foreground = new TextureRegion(new Texture("ui/enemy_hp_full.png"));
 
@@ -50,9 +44,6 @@ public class UIModel implements Renderable {
   public UIModel(int x, int y) {
     ammo = new AmmoBar();
     boss = new BossHealthBar();
-
-    gradient = new Gradient();
-    bubbles = new Bubbles();
 
     health = new HealthBar();
     enemies = new Array<>();
@@ -132,9 +123,7 @@ public class UIModel implements Renderable {
    * @param renderer the rendering engine
    */
   public void draw(RenderingEngine renderer, int finishAnimate) {
-    gradient.draw(renderer);
     health.draw(renderer);
-    bubbles.draw(renderer);
     if (isBoss && finishAnimate > 0) {
       boss.draw(renderer);
     }
@@ -147,9 +136,7 @@ public class UIModel implements Renderable {
    */
   @Override
   public void draw(RenderingEngine renderer) {
-    gradient.draw(renderer);
     health.draw(renderer);
-    bubbles.draw(renderer);
     if (isBoss) {
       boss.draw(renderer);
     }

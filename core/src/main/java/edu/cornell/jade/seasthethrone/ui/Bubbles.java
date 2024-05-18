@@ -32,7 +32,7 @@ public class Bubbles implements Renderable {
   public Bubbles() {
     framesInAnimation = 6;
     animationFrame = 0;
-    frameDelay = 10;
+    frameDelay = 13;
 
     texture = new Texture("ui/bubbleeffect.png");
     filmstrip = new FilmStrip(texture, 1, framesInAnimation);
@@ -41,35 +41,23 @@ public class Bubbles implements Renderable {
   @Override
   public void draw(RenderingEngine renderer) {
     progressFrame();
-    renderer
-        .getGameCanvas()
-        .drawUI(
-            filmstrip,
-            ORIGIN_X,
-            ORIGIN_Y,
-            renderer.getGameCanvas().getWidth(),
-            renderer.getGameCanvas().getHeight());
+    renderer.draw(
+        filmstrip,
+        ORIGIN_X,
+        ORIGIN_Y,
+        renderer.getGameCanvas().getWidth(),
+        renderer.getGameCanvas().getHeight());
   }
 
   @Override
   public void progressFrame() {
     filmstrip.setFrame(animationFrame);
 
-    //    // Only move to next frame of animation every frameDelay number of frames
-    //    if (frameCounter % frameDelay == 0 && animationFrame < framesInAnimation - 1) {
-    //      animationFrame++;
-    //    }
-    //    //    } else{ animationFrame = animationFrame; }
-    //    frameCounter += 1;
-    //
-
     if (frameCounter % frameDelay == 0) {
       animationFrame = (animationFrame + 1) % framesInAnimation;
       //        setFrameNumber((getFrameNumber() + 1) % getFramesInAnimation());
     }
     frameCounter++;
-    //      dashFrameCounter += 1;
-    System.out.println("progressed frame");
   }
 
   @Override

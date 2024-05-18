@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import edu.cornell.jade.seasthethrone.GameplayController;
 import edu.cornell.jade.seasthethrone.level.BackgroundImage;
+import edu.cornell.jade.seasthethrone.ui.Bubbles;
 import edu.cornell.jade.seasthethrone.util.FilmStrip;
 
 public class RenderingEngine {
@@ -62,6 +63,7 @@ public class RenderingEngine {
   public void addRenderable(Renderable r) {
     if (r != null) {
       renderables.add(r);
+      System.out.println("added " + r);
     }
   }
 
@@ -106,8 +108,8 @@ public class RenderingEngine {
     canvas.begin();
     canvas.getSpriteBatch().setProjectionMatrix(getViewport().getCamera().combined);
     for (Renderable r : renderables) {
-      if (r instanceof BackgroundImage) {
-        BackgroundImage b = (BackgroundImage) r;
+      if (r instanceof Bubbles) {
+        System.out.println("draw bubbles");
       }
       r.draw(this);
     }
@@ -197,11 +199,12 @@ public class RenderingEngine {
 
     canvas.draw(filmStrip, color, oy, ox, x, y, 0, scale, scale);
   }
+
   public void draw(TextureRegion texture, float x, float y, float scalex, float scaley) {
     float ox = texture.getRegionWidth() / 2f;
     float oy = texture.getRegionHeight() / 2f;
 
-    canvas.draw(texture, Color.WHITE, ox, oy, x, y, 0, scalex*worldScale, scaley*worldScale);
+    canvas.draw(texture, Color.WHITE, ox, oy, x, y, 0, scalex * worldScale, scaley * worldScale);
   }
 
   public void clear() {
