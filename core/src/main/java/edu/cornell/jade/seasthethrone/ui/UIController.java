@@ -209,7 +209,7 @@ public class UIController {
     canvas.drawUI(gameOver, Color.WHITE, ox, oy, width, height);
 
     // draw text
-    String text = "Try again?";
+    String text = "Try again? (Interact)";
     textFont.dispose();
     resizeFont();
     GlyphLayout layout = new GlyphLayout(textFont, text);
