@@ -9,6 +9,10 @@ public class FinalBossModel extends BossModel{
   private FilmStrip finalAttackAnimation;
   private FilmStrip finalShootAnimation;
   private FilmStrip finalGetHitAnimation;
+  private FilmStrip terminatedAnimation;
+  private FilmStrip catchBreathAnimation;
+  private boolean isTerminated;
+  private boolean catchBreath;
 
   public FinalBossModel (Builder builder) {
     super(builder);
@@ -16,6 +20,10 @@ public class FinalBossModel extends BossModel{
     finalAttackAnimation = builder.finalAttackAnimation;
     finalShootAnimation = builder.finalShootAnimation;
     finalGetHitAnimation = builder.finalGetHitAnimation;
+    terminatedAnimation = builder.terminatedAnimation;
+    catchBreathAnimation = builder.catchBreathAnimation;
+    isTerminated = false;
+    catchBreath = false;
   }
 
   /**
@@ -41,6 +49,8 @@ public class FinalBossModel extends BossModel{
       filmStrip = transformAnimation;
     else if (isDead()) {
       if (isExecute) filmStrip = deathAnimation;
+      else if (catchBreath) filmStrip = catchBreathAnimation;
+      else if (finishExecute) filmStrip = terminatedAnimation;
       else filmStrip = falloverAnimation;
     } else if (isHit()) {
       if (isHard)
@@ -79,6 +89,16 @@ public class FinalBossModel extends BossModel{
           setFrameNumber(0);
         }
       }
+      else if (catchBreath){
+        if (frameCounter % frameDelay == 0 && getFrameNumber() < getFramesInAnimation() - 1) {
+          setFrameNumber(getFrameNumber() + 1);
+        } else {
+          setFrameNumber(getFrameNumber());
+        }
+      }
+      else if (isTerminated){
+        setFrameNumber(0);
+      }
       else {
         if (frameCounter % frameDelay == 0 && getFrameNumber() < getFramesInAnimation() - 1) {
           setFrameNumber(getFrameNumber() + 1);
@@ -86,6 +106,10 @@ public class FinalBossModel extends BossModel{
         } else {
           setFrameNumber(getFrameNumber());
           deathCount -= 1;
+        }
+        if (deathCount<= 0){
+          catchBreath = true;
+          setFrameNumber(0);
         }
       }
     } else if (isHit()) {
