@@ -65,6 +65,7 @@ public class SoundPlayer {
     soundEffects.put("cant-interact", dir.getEntry("cant-interact", SoundEffect.class));
 
     music.put("music", dir.getEntry("music", AudioSource.class));
+    music.put("battle-music", dir.getEntry("battle-music", AudioSource.class));
 
     populated = true;
   }

@@ -96,7 +96,7 @@ public class UIModel implements Renderable {
    * @param boss the boss that the player is fighting; null if none
    */
   public void update(BossController boss) {
-    if (boss == null) {
+    if (boss == null || boss.getHealth() == 0) {
       isBoss = false;
     } else {
       if (boss.isBoss()) {
@@ -141,6 +141,10 @@ public class UIModel implements Renderable {
     if (isBoss) {
       boss.draw(renderer);
     }
+  }
+
+  public boolean inBossBattle() {
+    return isBoss;
   }
 
   @Override

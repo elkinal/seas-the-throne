@@ -163,6 +163,9 @@ public class GameplayController implements Screen {
   /** Listener that will update the player mode when we are done */
   private ScreenListener listener;
 
+  /** If boss music is playing */
+  boolean playingBossMusic;
+
   /**
    * Constructs a <code>GameplayController</code>
    *
@@ -191,6 +194,7 @@ public class GameplayController implements Screen {
     quit = false;
     returnToHub = false;
     options = false;
+    playingBossMusic = false;
     saveTimer = 0;
 
     this.stateController = new StateController();
@@ -503,6 +507,15 @@ public class GameplayController implements Screen {
       if (saveTimer > SAVE_DELAY) {
         saveTimer = 0;
         uiController.setDrawSave(false);
+      }
+
+      if (uiController.inBossBattle() && !playingBossMusic) {
+        soundPlayer.replaceCurrentMusic("battle-music");
+        playingBossMusic = true;
+      }
+      if (!uiController.inBossBattle() && playingBossMusic) {
+        soundPlayer.replaceCurrentMusic("music");
+        playingBossMusic = false;
       }
 
       if (interactController.isCheckpointActivated() && saveTimer == 0) {

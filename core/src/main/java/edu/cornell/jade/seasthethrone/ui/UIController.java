@@ -248,4 +248,8 @@ public class UIController {
   public void clear() {
     boss = null;
   }
+
+  public boolean inBossBattle() {
+    return uiModel.inBossBattle();
+  }
 }

@@ -405,8 +405,25 @@
                  "type":"",
                  "visible":true,
                  "width":10,
-                 "x":463.980302827281,
-                 "y":319.846408950824
+                 "x":285.980302827281,
+                 "y":435.346408950824
+                }, 
+                {
+                 "height":7.5,
+                 "id":392,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"healthpack"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":10,
+                 "x":615,
+                 "y":436.25
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -500,7 +517,7 @@
          "y":0
         }],
  "nextlayerid":17,
- "nextobjectid":392,
+ "nextobjectid":393,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

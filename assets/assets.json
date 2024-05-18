@@ -254,6 +254,7 @@
     "walking": "sounds/walking.wav"
   },
   "samples": {
-    "music": "sounds/music.ogg"
+    "music": "sounds/music.ogg",
+    "battle-music": "sounds/battle-music.ogg"
   }
 }
