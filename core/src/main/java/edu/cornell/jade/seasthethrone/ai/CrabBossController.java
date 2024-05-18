@@ -269,7 +269,7 @@ public class CrabBossController implements BossController {
         }
         break;
       case ATTACK_MOVE, MOVE:
-        if (goalPosReached()) {
+        if (goalPosReached() || boss.isDead()) {
           boss.setVX(0);
           boss.setVY(0);
           if (rand.nextBoolean()) {

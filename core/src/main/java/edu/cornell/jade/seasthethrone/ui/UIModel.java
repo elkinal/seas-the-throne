@@ -96,7 +96,7 @@ public class UIModel implements Renderable {
    * @param boss the boss that the player is fighting; null if none
    */
   public void update(BossController boss) {
-    if (boss == null || boss.getHealth() == 0) {
+    if (boss == null || boss.getHealth() == 0 || boss.isTerminated() || boss.isDead()) {
       isBoss = false;
     } else {
       if (boss.isBoss()) {
