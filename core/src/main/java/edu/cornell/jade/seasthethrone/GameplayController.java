@@ -396,6 +396,10 @@ public class GameplayController implements Screen {
       if (name.contains("crab")){
         bossBuilder.setTerminatedAnimation(new Texture("bosses/" + assetName + "/terminated.png"));
       }
+      if (name.contains("shark")){
+        bossBuilder.setGetHitUpAnimation(new Texture("bosses/" + assetName + "/up_hurt.png"))
+            .setIdleUpAnimation(new Texture("bosses/" + assetName + "/up_idle.png"));
+      }
       BossModel boss = bossBuilder.build();
       BossController bossController = bossBuilder.buildController(boss, player, fishBulletBuilder, physicsEngine);
       renderEngine.addRenderable(boss);

@@ -399,13 +399,14 @@ public class BossModel extends EnemyModel implements Renderable {
     private FilmStrip shootDownAnimation;
     private FilmStrip getHitRightAnimation;
     private FilmStrip getHitDownAnimation;
-    private FilmStrip getHitUpAnimation;
+    FilmStrip getHitUpAnimation;
     FilmStrip transformAnimation;
     FilmStrip finalAttackAnimation;
     FilmStrip finalGetHitAnimation;
     FilmStrip finalShootAnimation;
     FilmStrip catchBreathAnimation;
     FilmStrip terminatedAnimation;
+    FilmStrip idleUpAnimation;
 
 
     /** The number of frames between animation updates */
@@ -580,6 +581,11 @@ public class BossModel extends EnemyModel implements Renderable {
       terminatedAnimation = new FilmStrip(texture, 1, 1);
       return this;
     }
+    public Builder setIdleUpAnimation(Texture texture){
+      int width = texture.getWidth();
+      idleUpAnimation = new FilmStrip(texture, 1, 1);
+      return this;
+    }
 
     public Builder setFrameDelay(int frameDelay) {
       this.frameDelay = frameDelay;
@@ -613,6 +619,8 @@ public class BossModel extends EnemyModel implements Renderable {
         return new FinalBossModel(this);
       } else if (type.contains("crab")) {
         return new CrabBossModel(this);
+      } else if (type.contains("shark")) {
+        return new SharkBossModel(this);
       } else {
         // Other bosses don't need specific functionality
         return new BossModel(this);
