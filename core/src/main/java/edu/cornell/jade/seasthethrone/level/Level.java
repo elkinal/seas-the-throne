@@ -24,8 +24,6 @@ public class Level {
 
   private BackgroundImage foreground;
 
-  private final Array<Tile> tiles = new Array<>();
-
   /** The array of tileSets, each tileSet being a nested list of textures representing tiles */
   private final Array<TextureRegion[][]> tileSets = new Array<>();
 
@@ -90,7 +88,6 @@ public class Level {
     parseForegroundLayer(getLayer(layerArray, "foreground"));
     parsePlayerLayer(getLayer(layerArray,"player"));
     parseGatesLayer(getLayer(layerArray,"gates"));
-    parseTileLayer(getLayer(layerArray,"tiles"));
     parseBossLayer(getLayer(layerArray,"bosses"));
     parseWallLayer(getLayer(layerArray,"walls"));
     parseObstacleLayer(getLayer(layerArray,"obstacles"));
@@ -131,10 +128,6 @@ public class Level {
 
   public ExtendViewport getViewport() {
     return viewport;
-  }
-
-  public Array<Tile> getTiles() {
-    return tiles;
   }
 
   private void parseBackgroundLayer(HashMap<String, Object> bgLayer) {
@@ -212,33 +205,6 @@ public class Level {
     Vector2 playerPos = new Vector2(x, y);
 
     playerLoc = tiledToWorldCoords(playerPos);
-  }
-
-  /**
-   * Reads a JSON Tiled tile layer into an array of Tile objects
-   *
-   * @param tileLayer the JSON Tiled tile layer
-   */
-  private void parseTileLayer(HashMap<String, Object> tileLayer) {
-    if (tileLayer.isEmpty()) {
-      return;
-    }
-
-    Array<String> tileList = (Array<String>) tileLayer.get("data");
-
-    for (int row = 0; row < TILED_WORLD_HEIGHT; row++) {
-      for (int col = 0; col < TILED_WORLD_WIDTH; col++) {
-        int index = col + row * TILED_WORLD_WIDTH;
-        String s = tileList.get(index);
-        int tileSetIndex = Integer.parseInt(s) - 1;
-        if (tileSetIndex > 0) {
-          TextureRegion tileTexture = indexToTexture(tileSetIndex);
-          Vector2 pos = tiledCoordsFromIndex(index);
-          pos = tiledToWorldCoords(pos);
-          tiles.add(new Tile(tileTexture, pos.x, pos.y));
-        }
-      }
-    }
   }
 
   /**
@@ -513,47 +479,6 @@ public class Level {
     float y = -(tiledCoords.y - (TILED_WORLD_HEIGHT * TILE_SIZE) / 2f);
 
     return new Vector2(WORLD_SCALE * x, WORLD_SCALE * y);
-  }
-
-  /**
-   * Takes an index from a tile in the JSON 'data' array and converts it into a TextureRegion of the
-   * corresponding tile in the tile set.
-   *
-   * @param index the index from the array
-   * @return
-   */
-  public TextureRegion indexToTexture(int index) {
-    // the tileset that the inputed texture is in
-    int tileSetIndex = tileSets.size - 1;
-    TextureRegion[][] thisTileSet = tileSets.get(tileSetIndex);
-    // find which tile set the tile is in
-    // index should never be > firstGids[last index]
-    while (tileSetIndex >= 0) {
-      if (index > firstGids.get(tileSetIndex)) {
-        thisTileSet = tileSets.get(tileSetIndex);
-      }
-      tileSetIndex--;
-    }
-
-    // split the texture that the tile belongs to into tiles
-    int numCols = thisTileSet.length;
-
-    // return the specific tile
-    TextureRegion a = thisTileSet[index / numCols][index % numCols];
-    return thisTileSet[index / numCols][index % numCols];
-  }
-
-  /**
-   * Finds the position of a tile in the world from its index in the tile layer array.
-   *
-   * <p>NOTE: This index is NOT the same as the index of the tile in the TileSet, it is the index in
-   * the array of tile cells in the world.
-   */
-  public Vector2 tiledCoordsFromIndex(int index) {
-    int x = TILE_SIZE * (index % TILED_WORLD_WIDTH) + TILE_SIZE / 2;
-    int y = TILE_SIZE * (index / TILED_WORLD_WIDTH) + TILE_SIZE / 2;
-    tempPos.set(x, y);
-    return tempPos;
   }
 
   /**

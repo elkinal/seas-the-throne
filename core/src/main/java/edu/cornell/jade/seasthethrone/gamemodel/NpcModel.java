@@ -87,7 +87,7 @@ public class NpcModel extends BoxModel implements Interactable, Renderable {
 
   /** Reads this characters dialogue string from the specified file */
   private String parseDialogue(String file) {
-    Path path = Path.of("../app/assets/"+file);
+    Path path = Path.of("../assets/"+file);
     try {
       String currentPath = new java.io.File(".").getCanonicalPath();
       System.out.println("Current dir:" + currentPath);

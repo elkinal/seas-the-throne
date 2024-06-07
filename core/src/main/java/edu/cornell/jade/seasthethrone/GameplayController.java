@@ -269,11 +269,6 @@ public class GameplayController implements Screen {
     // Load background
     renderEngine.addRenderable(level.getBackground());
 
-    // Load tiles
-    for (Tile tile : level.getTiles()) {
-      renderEngine.addRenderable(tile);
-    }
-
     PlayerModel player =
         PlayerModel.Builder.newInstance()
             .setX(playerLoc.x)
@@ -587,10 +582,6 @@ public class GameplayController implements Screen {
     renderEngine.addRenderable(uiController.getAmmoBar());
     for (EnemyHealthBar e : uiController.getEnemies()) {
       renderEngine.addRenderable(e);
-    }
-
-    for (Tile tile : level.getTiles()) {
-      renderEngine.addRenderable(tile);
     }
 
     // Add physics objects to rendering engine in height-sorted order
