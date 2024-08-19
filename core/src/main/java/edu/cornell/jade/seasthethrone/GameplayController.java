@@ -163,6 +163,7 @@ public class GameplayController implements Screen {
 
   /** Listener that will update the player mode when we are done */
   private ScreenListener listener;
+
   /** Credit Screen */
   private Credits credits;
 
@@ -477,6 +478,13 @@ public class GameplayController implements Screen {
       interactController.add(model);
     }
 
+    // Load tutorial
+    for (LevelObject tut : layers.get("tutorial")) {
+      System.out.println("new tut object");
+      TutorialModel tutModel = new TutorialModel(tut);
+      interactController.add(tutModel);
+    }
+
     // load foreground
     renderEngine.addRenderable(level.getForeground());
   }
@@ -617,7 +625,6 @@ public class GameplayController implements Screen {
     renderEngine.addRenderable(level.getForeground());
     renderEngine.addRenderable(credits);
 
-
     // Draw the renderables
     draw(delta);
     if (BuildConfig.DEBUG) {
@@ -699,7 +706,7 @@ public class GameplayController implements Screen {
     if (BuildConfig.DEBUG) {
       System.out.println("Respawning");
     }
-//    soundPlayer.replaceCurrentMusic("music");
+    //    soundPlayer.replaceCurrentMusic("music");
     bossControllers.clear();
     stateController.reset();
     setupGameplay();

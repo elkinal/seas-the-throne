@@ -92,12 +92,13 @@ public class DialogueBox implements Renderable, Dialogueable {
   @Override
   public void draw(RenderingEngine renderer) {
     // Setting scaling
-    float scale = 0.7f * ((float)renderer.getGameCanvas().getWidth() / boxTextureRegion.getRegionWidth());
+    float scale =
+        0.7f * ((float) renderer.getGameCanvas().getWidth() / boxTextureRegion.getRegionWidth());
     width = boxTextureRegion.getRegionWidth() * scale;
     height = boxTextureRegion.getRegionHeight() * scale;
 
     if (display) {
-      x = (renderer.getGameCanvas().getWidth() - width)/2f;
+      x = (renderer.getGameCanvas().getWidth() - width) / 2f;
       y = 0.08f * renderer.getGameCanvas().getHeight();
       renderer.getGameCanvas().drawUI(boxTextureRegion, x, y, width, height);
       drawText(renderer);
@@ -109,44 +110,43 @@ public class DialogueBox implements Renderable, Dialogueable {
     if (display) {
       // Drawing the main text
       if (this.menuFont != null) menuFont.dispose();
-      FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("Alagard.ttf"));
+      FreeTypeFontGenerator generator =
+          new FreeTypeFontGenerator(Gdx.files.internal("Alagard.ttf"));
       FreeTypeFontGenerator.FreeTypeFontParameter parameter =
-              new FreeTypeFontGenerator.FreeTypeFontParameter();
+          new FreeTypeFontGenerator.FreeTypeFontParameter();
 
       // NOTE: this is just a hardcoded magic number to get text scaling right
       float fontScale = (float) renderer.getGameCanvas().getWidth() / 1500;
 
       menuFont = generator.generateFont(parameter);
       menuFont.setUseIntegerPositions(false);
-      menuFont.getData().setScale(fontScale*fontSize);
+      menuFont.getData().setScale(fontScale * fontSize);
       menuFont.setColor(Color.BLACK);
       generator.dispose();
 
       if (!texts.isEmpty()) {
-        float ox = x + 0.06f*width;
-        float oy = y + 0.8f*height;
-
+        float ox = x + 0.06f * width;
+        float oy = y + 0.8f * height;
         renderer.getGameCanvas().drawTextUI(texts.get(currentText), menuFont, ox, oy, false);
       }
-
       // Drawing info messages
-//      float xTextOffset = 120;
-//      renderer
-//          .getGameCanvas()
-//          .drawTextUI(
-//              "Press [primary1] to hide",
-//              menuShadowFont,
-//              width - xTextOffset + 2,
-//              getTextY() + textSpacingY * 1.5f - 2,
-//              false);
-//      renderer
-//          .getGameCanvas()
-//          .drawTextUI(
-//              "Page " + (currentText + 1) + "/" + (texts.size()),
-//              menuFont,
-//              x + width / 2,
-//              110,
-//              true);
+      //      float xTextOffset = 120;
+      //      renderer
+      //          .getGameCanvas()
+      //          .drawTextUI(
+      //              "Press [primary1] to hide",
+      //              menuShadowFont,
+      //              width - xTextOffset + 2,
+      //              getTextY() + textSpacingY * 1.5f - 2,
+      //              false);
+      //      renderer
+      //          .getGameCanvas()
+      //          .drawTextUI(
+      //              "Page " + (currentText + 1) + "/" + (texts.size()),
+      //              menuFont,
+      //              x + width / 2,
+      //              110,
+      //              true);
     }
   }
 

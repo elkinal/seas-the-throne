@@ -1,0 +1,2 @@
+Dash into bullets to pick them up. The amount of available
+ammo is indicated by white dots below the player.

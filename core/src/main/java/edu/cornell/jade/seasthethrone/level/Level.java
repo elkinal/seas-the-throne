@@ -82,19 +82,20 @@ public class Level {
     }
 
     // Load in layers
-    Array<HashMap<String, Object>> layerArray = (Array<HashMap<String, Object>>) levelMap.get("layers");
+    Array<HashMap<String, Object>> layerArray =
+        (Array<HashMap<String, Object>>) levelMap.get("layers");
 
     layers = new HashMap<>();
 
     parseBackgroundLayer(getLayer(layerArray, "background"));
     parseForegroundLayer(getLayer(layerArray, "foreground"));
-    parsePlayerLayer(getLayer(layerArray,"player"));
-    parseGatesLayer(getLayer(layerArray,"gates"));
-    parseTileLayer(getLayer(layerArray,"tiles"));
-    parseBossLayer(getLayer(layerArray,"bosses"));
-    parseWallLayer(getLayer(layerArray,"walls"));
-    parseObstacleLayer(getLayer(layerArray,"obstacles"));
-    parsePortalLayer(getLayer(layerArray,"portals"));
+    parsePlayerLayer(getLayer(layerArray, "player"));
+    parseGatesLayer(getLayer(layerArray, "gates"));
+    parseTileLayer(getLayer(layerArray, "tiles"));
+    parseBossLayer(getLayer(layerArray, "bosses"));
+    parseWallLayer(getLayer(layerArray, "walls"));
+    parseObstacleLayer(getLayer(layerArray, "obstacles"));
+    parsePortalLayer(getLayer(layerArray, "portals"));
     parseInteractableLayer(getLayer(layerArray, "interactables"));
   }
 
@@ -105,7 +106,8 @@ public class Level {
    * @return the layer with the given name
    * @throws Error if the provided name doesn't match any layer in the level
    */
-  private HashMap<String, Object> getLayer(Array<HashMap<String, Object>> layerArray, String layerName) {
+  private HashMap<String, Object> getLayer(
+      Array<HashMap<String, Object>> layerArray, String layerName) {
     for (HashMap<String, Object> layer : layerArray) {
       if (((String) layer.get("name")).equals(layerName)) {
         return layer;
@@ -123,7 +125,9 @@ public class Level {
     return background;
   }
 
-  public BackgroundImage getForeground() {return foreground;}
+  public BackgroundImage getForeground() {
+    return foreground;
+  }
 
   public Vector2 getPlayerLoc() {
     return playerLoc;
@@ -178,7 +182,7 @@ public class Level {
 
     int height = JsonHandler.getIntProperty(fgLayer, "height");
     TextureRegion texture =
-            new TextureRegion(new Texture("levels/" + JsonHandler.getString(fgLayer, "image")));
+        new TextureRegion(new Texture("levels/" + JsonHandler.getString(fgLayer, "image")));
     float x, y;
     if ((String) fgLayer.get("offsetx") == null) {
       x = width / 2f;
@@ -189,10 +193,10 @@ public class Level {
     }
 
     Vector2 pos = tiledToWorldCoords(new Vector2(x, y));
-    foreground = new BackgroundImage(
+    foreground =
+        new BackgroundImage(
             pos, (int) (width * WORLD_SCALE), (int) (height * WORLD_SCALE), texture, 100);
   }
-
 
   /**
    * Extracts the position of the player from the player layer.
@@ -459,13 +463,15 @@ public class Level {
   }
 
   private void parseInteractableLayer(HashMap<String, Object> interactLayer) {
+
     layers.put("checkpoints", new Array<>());
     layers.put("healthpacks", new Array<>());
     layers.put("npc", new Array<>());
+    layers.put("tutorial", new Array<>());
+
     if (interactLayer.isEmpty()) {
       return;
     }
-
     Array<HashMap<String, Object>> interactWrapperList =
         (Array<HashMap<String, Object>>) interactLayer.get("objects");
 
@@ -494,6 +500,11 @@ public class Level {
         case "npc":
           obj.dialogue = JsonHandler.getStringProperty(interactWrapper, "dialogue");
           layers.get("npc").add(obj);
+          break;
+        case "tutorial":
+          obj.tutID = JsonHandler.getIntProperty(interactWrapper, "tutID");
+          layers.get("tutorial").add(obj);
+          break;
         default:
           break;
       }

@@ -1,0 +1,10 @@
+{
+  "jrePath": "jre",
+  "classPath": [
+    "seasthethrone-1.0.0.jar"
+  ],
+  "mainClass": "edu.cornell.jade.seasthethrone.lwjgl3.Lwjgl3Launcher",
+  "useZgcIfSupportedOs": true,
+  "vmArgs": [
+  ]
+}

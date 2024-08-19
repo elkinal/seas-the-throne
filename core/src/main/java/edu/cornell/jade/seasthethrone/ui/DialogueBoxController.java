@@ -22,9 +22,13 @@ public class DialogueBoxController implements Controllable {
     active = false;
   }
 
-  public void setActive(boolean active) {this.active = active;}
+  public void setActive(boolean active) {
+    this.active = active;
+  }
 
-  public boolean isActive() {return active;}
+  public boolean isActive() {
+    return active;
+  }
 
   /** Sets the dialogue box */
   public void setDialogueBox(DialogueBox dialogueBox) {

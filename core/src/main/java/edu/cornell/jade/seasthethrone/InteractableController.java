@@ -4,10 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 import edu.cornell.jade.seasthethrone.audio.SoundPlayer;
-import edu.cornell.jade.seasthethrone.gamemodel.CheckpointModel;
-import edu.cornell.jade.seasthethrone.gamemodel.HealthpackModel;
-import edu.cornell.jade.seasthethrone.gamemodel.Interactable;
-import edu.cornell.jade.seasthethrone.gamemodel.NpcModel;
+import edu.cornell.jade.seasthethrone.gamemodel.*;
 import edu.cornell.jade.seasthethrone.input.Controllable;
 import edu.cornell.jade.seasthethrone.ui.DialogueBoxController;
 
@@ -32,6 +29,7 @@ public class InteractableController implements Controllable {
   private DialogueBoxController dialogueController;
 
   private int interactTimer;
+  private int tutorialTimer;
 
   private int npcInteractDelay = 12;
 
@@ -44,6 +42,7 @@ public class InteractableController implements Controllable {
     checkpointActivated = false;
     checkpointID = -1;
     interactTimer = 0;
+    tutorialTimer = 0;
 
     this.dialogueController = new DialogueBoxController();
   }
@@ -58,29 +57,40 @@ public class InteractableController implements Controllable {
 
   public void dispose() {
     interactables.clear();
-
   }
 
   /** Checks if interact was pressed this frame. If so, interacts with all interactables in range */
   public void update() {
     this.checkpointActivated = false;
     boolean nearNpc = false;
+    boolean nearTut = false;
+    Array<Interactable> tutorial = new Array<>();
+
     for (Interactable interactable : interactables) {
       // Check if player is in range
       interactable.setPlayerInRange(interactable.isPlayerInRange(player.getShadowLocation()));
 
-      if (interactable instanceof CheckpointModel) ((CheckpointModel) interactable).setActivated(false);
+      if (interactable instanceof CheckpointModel) {
+        ((CheckpointModel) interactable).setActivated(false);
+      }
       if (interactable instanceof NpcModel) {
         nearNpc = nearNpc || interactable.getPlayerInRange();
       }
+      if (interactable instanceof TutorialModel) {
+        nearTut = nearTut || interactable.getPlayerInRange();
+        tutorial.add(interactable);
+      }
     }
 
-    if (!nearNpc) {
+    if (!nearNpc && !nearTut) {
       dialogueController.setDialogueBox(null);
       dialogueController.setActive(false);
     }
 
     if (!interactPressed) {
+      for (Interactable t : tutorial) {
+        activateTutorial(nearNpc, t);
+      }
       return;
     }
 
@@ -90,9 +100,8 @@ public class InteractableController implements Controllable {
         // interact with healthpacks
         if (canUseHealthpack((HealthpackModel) interactable)) {
           if (BuildConfig.DEBUG) System.out.println("Health restored!");
-          if (interactTimer == 0)
-            soundPlayer.playSoundEffect("interact");
-          interactTimer ++;
+          if (interactTimer == 0) soundPlayer.playSoundEffect("interact");
+          interactTimer++;
           player.setHealth(5);
           player.setHeal();
           ((HealthpackModel) interactable).setUsed(true);
@@ -102,9 +111,8 @@ public class InteractableController implements Controllable {
       } else if (interactable instanceof CheckpointModel) {
         // interact with checkpoints
         if (interactable.getPlayerInRange() && !checkpointActivated) {
-          if (interactTimer == 0)
-            soundPlayer.playSoundEffect("interact");
-          interactTimer ++;
+          if (interactTimer == 0) soundPlayer.playSoundEffect("interact");
+          interactTimer++;
           player.setHealth(5);
           player.setHeal();
           ((CheckpointModel) interactable).setActivated(true);
@@ -114,11 +122,9 @@ public class InteractableController implements Controllable {
       } else if (interactable instanceof NpcModel) {
         // interact with NPCs
         if (interactable.getPlayerInRange() && !(interactTimer > 0)) {
-          if (BuildConfig.DEBUG) System.out.println("Npc interacted");
-          interactTimer ++;
+          interactTimer++;
           if (!dialogueController.isActive()) {
-            if (interactTimer == 1)
-              soundPlayer.playSoundEffect("interact");
+            if (interactTimer == 1) soundPlayer.playSoundEffect("interact");
             dialogueController.setDialogueBox(((NpcModel) interactable).getDialogueBox());
             dialogueController.getDialogueBox().show();
             dialogueController.setActive(true);
@@ -129,10 +135,36 @@ public class InteractableController implements Controllable {
         }
       }
     }
-    if (interactTimer > 0) interactTimer ++;
+    if (interactTimer > 0) interactTimer++;
     if (interactTimer >= npcInteractDelay) interactTimer = 0;
 
     interactPressed = false;
+  }
+
+  /**
+   * Whether to activate the Tutorial dialogue box
+   *
+   * @param npc whether the player is within range of a npc
+   * @param model the model for the tutorial
+   */
+  private void activateTutorial(boolean npc, Interactable model) {
+    // near tutorial model
+    if (model.getPlayerInRange() && tutorialTimer == 0) {
+      tutorialTimer++;
+      if (!dialogueController.isActive()) {
+        if (tutorialTimer == 1) soundPlayer.playSoundEffect("interact");
+        dialogueController.setDialogueBox(((TutorialModel) model).getDialogueBox());
+        dialogueController.getDialogueBox().show();
+        dialogueController.setActive(true);
+      }
+    }
+
+    if (tutorialTimer > 0) {
+      tutorialTimer++;
+    }
+    if (tutorialTimer >= npcInteractDelay) {
+      tutorialTimer = 0;
+    }
   }
 
   private boolean canUseHealthpack(HealthpackModel model) {
@@ -157,10 +189,10 @@ public class InteractableController implements Controllable {
   }
 
   /*
-  * ===============================
-  * Unused stub methods
-  * ===============================
-  * */
+   * ===============================
+   * Unused stub methods
+   * ===============================
+   * */
 
   @Override
   public void moveHorizontal(float movement) {
