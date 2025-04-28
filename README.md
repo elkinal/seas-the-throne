@@ -1,9 +1,19 @@
+# Seas the Throne
+
+> Dash, skewer, and fight your way to claim the throne of a fallen underwater kingdom.
+
+![Cover Image](./cover.png)
+
+---
+
 ## 🕹 Gameplay Overview
 
-**Seas the Throne** is a 2D pixel-art action-adventure set in the turbulent aftermath of Triton’s mysterious disappearance.  
-You play as a swordfish humanoid hero, fighting through waves of hostile sea creatures to seize the throne of the underwater kingdom.
+Combining **bullet-hell dodging**, **resource-based attacks**, and **high-risk melee combat**,  
+**Seas the Throne** delivers a fast-paced, high-stakes underwater adventure where players fight to seize control after the mysterious disappearance of Triton, ruler of the sea.
 
-The game combines **bullet-hell dodging**, **resource-based combat**, and **strategic melee attacks** in a fast-paced, challenging experience.
+You play as a swordfish humanoid hero, battling through waves of hostile sea creatures, mastering dashes, skewering foes, and reclaiming the power of the throne.
+
+---
 
 ### ⚔️ Core Mechanics
 
@@ -21,6 +31,8 @@ The game combines **bullet-hell dodging**, **resource-based combat**, and **stra
 
 - **Strategic Movement:**  
   Dashing provides a burst of speed but is constrained by cooldowns and limited space, creating intense decision-making moments in tight arenas.
+
+---
 
 ### 🌊 World and Story
 
@@ -47,15 +59,23 @@ Was Triton murdered, trapped, or did he vanish willingly? Only those who survive
 ## 📸 Screenshots
 
 <p align="center">
-  <img src="./project_images/cover.png" alt="Seas the Throne Cover" width="30%" style="margin:10px;">
-  <img src="./project_images/seas_1.png" alt="Gameplay Screenshot 1" width="30%" style="margin:10px;">
-  <img src="./project_images/seas_2.png" alt="Gameplay Screenshot 2" width="30%" style="margin:10px;">
+  <img src="./cover.png" alt="Seas the Throne Cover" width="100%" style="margin:20px 0;">
 </p>
 
 <p align="center">
-  <img src="./project_images/seas_3.png" alt="Gameplay Screenshot 3" width="30%" style="margin:10px;">
-  <img src="./project_images/seas_5.png" alt="Gameplay Screenshot 4" width="30%" style="margin:10px;">
-  <img src="./project_images/squid.png" alt="Boss Fight Screenshot" width="30%" style="margin:10px;">
+  <img src="./seas_2.png" alt="Gameplay Screenshot 2" width="100%" style="margin:20px 0;">
+</p>
+
+<p align="center">
+  <img src="./seas_3.png" alt="Gameplay Screenshot 3" width="100%" style="margin:20px 0;">
+</p>
+
+<p align="center">
+  <img src="./seas_5.png" alt="Gameplay Screenshot 4" width="100%" style="margin:20px 0;">
+</p>
+
+<p align="center">
+  <img src="./squid.png" alt="Boss Fight Screenshot" width="100%" style="margin:20px 0;">
 </p>
 
 ---
